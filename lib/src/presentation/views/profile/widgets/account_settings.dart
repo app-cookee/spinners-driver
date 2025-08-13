@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class AccountSettings extends StatelessWidget {
@@ -45,7 +45,7 @@ class AccountSettings extends StatelessWidget {
                       fontSize: 14.dp,
                       color: textColor,
                     )),
-            Spacer(),
+            const Spacer(),
             Image.asset(
               imagePath,
               height: 20,

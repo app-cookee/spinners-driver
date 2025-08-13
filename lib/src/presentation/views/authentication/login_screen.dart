@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
@@ -11,7 +8,7 @@ import 'package:spinners_driver/src/presentation/constants/app_strings.dart';
 import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/widgets/login_field.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_keyboard.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -35,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final debouncer = Debouncer();
   final ValueNotifier<bool> hasPhoneError = ValueNotifier(false);
 
-
   @override
   void initState() {
     super.initState();
@@ -58,18 +54,14 @@ class _LoginScreenState extends State<LoginScreen> {
     phoneNumberListener.addListener(() {
       final phone = phoneNumberListener.value.trim();
       if (phone.length >= 9 && phone.length <= 15) {
-        debouncer.run(() {
-         
-        });
+        debouncer.run(() {});
       }
     });
 
     referralCodeListener.addListener(() {
       final referral = referralCodeListener.value.trim();
       if (referral.length >= 10) {
-        debouncer.run(() {
-         
-        });
+        debouncer.run(() {});
       }
     });
   }
@@ -150,8 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       child: Stack(
         children: [
-          Positioned.fill(
-              child: Image.asset(AppImages.loginSpinBg, fit: BoxFit.fill)),
+          Positioned.fill(child: Image.asset(AppImages.loginSpinBg, fit: BoxFit.fill)),
           SafeArea(
             child: Column(
               children: [
@@ -172,8 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text(
                                     maxLines: 2,
                                     'Let\'s get started',
-                                    style: AppTypography.ruskaDisplayRegular
-                                        .copyWith(
+                                    style: AppTypography.ruskaDisplayRegular.copyWith(
                                       fontSize: 32.sp,
                                       color: AppColors.primary950,
                                     ),
@@ -191,8 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: 40.w,
                                 child: Text(
                                   AppStrings.signInText,
-                                  style:
-                                      AppTypography.sfProRoundedMedium.copyWith(
+                                  style: AppTypography.sfProRoundedMedium.copyWith(
                                     fontSize: 12.sp,
                                     color: AppColors.textGrey,
                                   ),
@@ -211,8 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 AppStrings.loginFieldLabelText,
-                                style:
-                                    AppTypography.sfProRoundedMedium.copyWith(
+                                style: AppTypography.sfProRoundedMedium.copyWith(
                                   color: AppColors.textGrey,
                                   fontSize: 16.sp,
                                 ),
@@ -235,15 +223,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             referralCodeListener.value = value;
                           },
                           onCountryCodeChanged: (p0) {
-                            countryCodeListener.value=p0;
+                            countryCodeListener.value = p0;
                           },
                           onTap: () {
                             if (!_focusNode.hasFocus) {
                               _focusNode.requestFocus();
                             } else {
                               _focusNode.unfocus();
-                              Future.delayed(const Duration(milliseconds: 100),
-                                  () {
+                              Future.delayed(const Duration(milliseconds: 100), () {
                                 _focusNode.requestFocus();
                               });
                             }
@@ -256,78 +243,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         Gap(8.dp),
                         ValueListenableBuilder(
                             valueListenable: phoneNumberListener,
-                            builder: (context, value, child) =>
-                                ValueListenableBuilder(
-                                  valueListenable:
-                                      referralCodeListener, // Add nested ValueListenableBuilder
-                                  builder: (context, referralValue, child) =>
-                                      Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 16.dp),
-                                    child: BlocConsumer<AuthBloc, AuthState>(
-                                      listener: (context, state) {
-                                        if (state.sendOtpStatus
-                                            is StatusSuccess) {
-                                          log(value,
-                                              name:
-                                                  'phoneNumberListener.value');
-                                          context.router.push(OtpRoute(countryCode: countryCodeListener.value,
-                                            phoneNumber: phoneNumberListener
-                                                .value
-                                                .trim(),
-                                            referralCode: referralCodeListener
-                                                    .value
-                                                    .trim()
-                                                    .isEmpty
-                                                ? ''
-                                                : referralCodeListener.value
-                                                    .trim(),
-                                          ));
-                                        } else if (state.sendOtpStatus
-                                            is StatusFailure) {
-                                          log(state.sendOtpStatus.errorMessage,
-                                              name:
-                                                  'state.sendOtpStatus.errorMessage');
-                                          TheToast.show(
-                                              message: state
-                                                  .sendOtpStatus.errorMessage,
-                                              context: context);
-                                        }
-                                      },
-                                      listenWhen: (previous, current) =>
-                                          current.sendOtpStatus !=
-                                          previous.sendOtpStatus,
-                                      builder: (context, state) {
-                                        return PrimaryButtonWidget(
-                                          isLoading: state.sendOtpStatus
-                                              is StatusLoading,
-                                          text: AppStrings.loginButtonText,
-                                          onPressed: () {
-                                            if (value.isNotEmpty&&!hasPhoneError.value) {
-                                              if (!state.checkPhoneSuccess) {
-                                                if (referralValue
-                                                        .trim()
-                                                        .isNotEmpty &&
-                                                    state.checkReferralCodeStatus
-                                                        is! StatusSuccess) {
-                                                  TheToast.show(
-                                                      message:
-                                                          'Invalid referral code.',
-                                                      context: context);
-                                                  return;
-                                                }
-                                              }
-                                              onButtonSubmit(
-                                                  value, referralValue);
-                                            } else {
-                                              TheToast.show(
-                                                  message:
-                                                      'Please enter a valid phone number',
-                                                  context: context);
-                                            }
-                                          },
-                                        );
-                                      },
+                            builder: (context, value, child) => ValueListenableBuilder(
+                                  valueListenable: referralCodeListener, // Add nested ValueListenableBuilder
+                                  builder: (context, referralValue, child) => Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                                    child: PrimaryButtonWidget(
+                                      text: AppStrings.loginButtonText,
+                                      onPressed: () {},
                                     ),
                                   ),
                                 )),

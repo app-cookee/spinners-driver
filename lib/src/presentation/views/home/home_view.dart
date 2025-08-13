@@ -1,19 +1,11 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:spinners_laundry/app/app_router/app_router.dart';
-import 'package:spinners_laundry/app/constants/status/status.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
-import 'package:spinners_laundry/src/application/home_bloc/home_bloc.dart';
-import 'package:spinners_laundry/src/presentation/constants/app_images.dart';
-import 'package:spinners_laundry/src/presentation/views/home/placeholders/service_category_placeholder.dart';
-import 'package:spinners_laundry/src/presentation/views/home/widgets/home_delivery_details.dart';
-import 'package:spinners_laundry/src/presentation/views/home/widgets/service_category.dart';
-
-import 'package:spinners_laundry/src/presentation/views/home/widgets/video_stepper.dart';
-import 'package:spinners_laundry/src/presentation/views/widgets/youtube_video_dialog_widget.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/home_delivery_details.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/video_stepper.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/youtube_video_dialog_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class HomeView extends StatefulWidget {
@@ -29,7 +21,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeBloc>().add(HomeEvent.getServiceCategoriesList());
+
     _scrollController = ScrollController();
   }
 
@@ -55,97 +47,89 @@ class _HomeViewState extends State<HomeView> {
                 top: 22.h,
                 child: SingleChildScrollView(
                   controller: _scrollController,
-                  child: BlocBuilder<HomeBloc, HomeState>(
-                    builder: (context, state) {
-                      return Column(
-                        children: [
-                          SizedBox(
-                            width: 100.w,
-                            height: 100.h > 800 ? 25.h : 26.h,
-                            child: Stack(
-                              children: [
-                                // Home image at the bottom
-                                Positioned(
-                                  top: -16.h,
-                                  left: 0,
-                                  right: 0,
-                                  child: Image.asset(
-                                    AppImages.home,
-                                    width: 100.w,
-                                  ),
-                                ),
-                                // Description text above the image
-                                Positioned(
-                                  top: 100.h > 800 ? 16.h : 17.h,
-                                  left: 0,
-                                  right: 0,
-                                  child: Text(
-                                    textAlign: TextAlign.center,
-                                    "Watch how we handle your clothes\nsafely, hygienically, and with care.",
-                                    style: AppTypography.sfProRoundedSemiBold
-                                        .copyWith(
-                                      color: AppColors.white,
-                                      fontSize: 10.sp,
-                                    ),
-                                  ),
-                                ),
-                                // Play button above the text
-                                Positioned(
-                                  top: 100.h > 800 ? 17.5.h : 18.5.h,
-                                  left: 0,
-                                  right: 0,
-                                  child: InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) => YoutubeVideoDialog(
-                                          youtubeUrl:
-                                              'https://youtu.be/xV9HnITo2C0?si=MDXrRb8FSKSVAeAw', // your URL
-                                        ),
-                                      );
-                                    },
-                                    child: Image.asset(
-                                      AppImages.play,
-                                      height: 75.dp,
-                                      width: 80.dp,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: 100.w,
+                        height: 100.h > 800 ? 25.h : 26.h,
+                        child: Stack(
+                          children: [
+                            // Home image at the bottom
+                            Positioned(
+                              top: -16.h,
+                              left: 0,
+                              right: 0,
+                              child: Image.asset(
+                                AppImages.home,
+                                width: 100.w,
+                              ),
                             ),
+                            // Description text above the image
+                            Positioned(
+                              top: 100.h > 800 ? 16.h : 17.h,
+                              left: 0,
+                              right: 0,
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                "Watch how we handle your clothes\nsafely, hygienically, and with care.",
+                                style: AppTypography.sfProRoundedSemiBold.copyWith(
+                                  color: AppColors.white,
+                                  fontSize: 10.sp,
+                                ),
+                              ),
+                            ),
+                            // Play button above the text
+                            Positioned(
+                              top: 100.h > 800 ? 17.5.h : 18.5.h,
+                              left: 0,
+                              right: 0,
+                              child: InkWell(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => const YoutubeVideoDialog(
+                                      youtubeUrl: 'https://youtu.be/xV9HnITo2C0?si=MDXrRb8FSKSVAeAw', // your URL
+                                    ),
+                                  );
+                                },
+                                child: Image.asset(
+                                  AppImages.play,
+                                  height: 75.dp,
+                                  width: 80.dp,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const HomeDeliveryDetails(),
+                      Gap(12.dp),
+                      const VideoStepper(
+                        steps: [
+                          StepData(
+                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
+                            stepNumber: 1,
+                            isActive: true,
                           ),
-                          HomeDeliveryDetails(),
-                          Gap(12.dp),
-                          state.getServiceCategoriesListStatus is StatusLoading ? ServiceCategoryShimmer() :
-                          state.serviceCategoriesList.isNotEmpty ? ServiceCategory(services: state.serviceCategoriesList,) : SizedBox.shrink(),
-                          VideoStepper(
-                            steps: [
-                              StepData(
-                                title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                                stepNumber: 1,
-                                isActive: true,
-                              ),
-                              StepData(
-                                title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                                stepNumber: 2,
-                                isActive: false,
-                              ),
-                              StepData(
-                                title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                                stepNumber: 3,
-                                isActive: false,
-                              ),
-                              StepData(
-                                title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                                stepNumber: 4,
-                                isActive: false,
-                              ),
-                            ],
+                          StepData(
+                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
+                            stepNumber: 2,
+                            isActive: false,
                           ),
-                          Gap(8.h)
+                          StepData(
+                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
+                            stepNumber: 3,
+                            isActive: false,
+                          ),
+                          StepData(
+                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
+                            stepNumber: 4,
+                            isActive: false,
+                          ),
                         ],
-                      );
-                    },
+                      ),
+                      Gap(8.h)
+                    ],
                   ),
                 )),
             appBarContent(),
@@ -159,8 +143,7 @@ class _HomeViewState extends State<HomeView> {
     return AnimatedBuilder(
         animation: _scrollController,
         builder: (context, child) {
-          double scrollOffset =
-              _scrollController.hasClients ? _scrollController.offset : 0.0;
+          double scrollOffset = _scrollController.hasClients ? _scrollController.offset : 0.0;
           // Subtle upward movement - moves up only 20-30 pixels max
           double translateY = -(scrollOffset * 0.1).clamp(0.0, 5.0);
 
@@ -170,7 +153,7 @@ class _HomeViewState extends State<HomeView> {
               right: 16.dp,
               child: Column(
                 children: [
-                  UserDetail(
+                  const UserDetail(
                     initial: 'N',
                     name: 'Hello, Naseeb!',
                     phone: 'you’ve earned 120 points.',
@@ -256,25 +239,13 @@ class _HomeViewState extends State<HomeView> {
 
   Container gradientBackground() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: AppColors.white,
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              stops: [
-                0,
-                0.2,
-                0.35,
-                0.7,
-                1
-              ],
-              colors: [
-                AppColors.primaryColor,
-                AppColors.gradientbg,
-                AppColors.white,
-                AppColors.white,
-                AppColors.white
-              ])),
+              stops: [0, 0.2, 0.35, 0.7, 1],
+              colors: [AppColors.primaryColor, AppColors.gradientbg, AppColors.white, AppColors.white, AppColors.white])),
       height: 100.h,
       width: 100.w,
     );
@@ -302,14 +273,10 @@ class UserDetail extends StatelessWidget {
           width: 40.dp,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF98D5F0),
-                Colors.transparent,
-                Color(0xFF98D5F0)
-              ],
+              colors: [Color(0xFF98D5F0), Colors.transparent, Color(0xFF98D5F0)],
               stops: [0.89, 0.89, 1],
             ),
             boxShadow: [
@@ -383,17 +350,17 @@ class UserDetail extends StatelessWidget {
             ),
           ],
         ),
-        Spacer(),
+        const Spacer(),
         GestureDetector(
           onTap: () {
-            context.router.push(NotificationRoute());
+            // context.router.push(NotificationRoute());
           },
           child: Container(
             height: 40.dp,
             width: 40.dp,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
@@ -437,21 +404,3 @@ class UserDetail extends StatelessWidget {
     );
   }
 }
-
-// class BottomWaveClipper extends CustomClipper<Path> {
-//   @override
-//   Path getClip(Size size) {
-//     final path = Path();
-//     path.lineTo(0, size.height - 61);
-
-//     path.quadraticBezierTo(
-//         size.width / 2, size.height - 4, size.width, size.height - 61);
-
-//     path.lineTo(size.width, 0);
-//     path.close();
-//     return path;
-//   }
-
-//   @override
-//   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
-// }

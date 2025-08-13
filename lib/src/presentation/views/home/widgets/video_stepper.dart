@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
-import 'package:spinners_laundry/src/presentation/constants/app_images.dart';
-import 'package:spinners_laundry/src/presentation/views/home/widgets/video_widget.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/video_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class VideoStepper extends StatefulWidget {
@@ -129,7 +128,7 @@ void _onPageChanged(int index) {
    return   Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              VideoWidget(
+              const VideoWidget(
                 youtubeUrl: 'https://youtu.be/xV9HnITo2C0?si=MDXrRb8FSKSVAeAw',
               ),
               Gap(8.dp),

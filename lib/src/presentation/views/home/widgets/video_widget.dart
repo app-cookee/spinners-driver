@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
-import 'package:spinners_laundry/src/presentation/constants/app_images.dart';
-import 'package:spinners_laundry/src/presentation/views/widgets/youtube_video_dialog_widget.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/youtube_video_dialog_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 

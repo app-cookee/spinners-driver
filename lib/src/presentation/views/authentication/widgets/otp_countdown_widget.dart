@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
-import 'package:spinners_laundry/src/presentation/constants/app_strings.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/constants/app_strings.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OTPCountdownWidget extends StatefulWidget {
@@ -11,10 +11,10 @@ class OTPCountdownWidget extends StatefulWidget {
   final VoidCallback onResend;
 
   const OTPCountdownWidget({
-    Key? key,
+    super.key,
     required this.initialCountdown,
     required this.onResend,
-  }) : super(key: key);
+  });
 
   @override
   State<OTPCountdownWidget> createState() => _OTPCountdownWidgetState();

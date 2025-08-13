@@ -4,11 +4,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spinners_laundry/app/app_router/app_router.dart';
-import 'package:spinners_laundry/app/constants/status/status.dart';
-import 'package:spinners_laundry/src/application/auth_bloc/auth_bloc.dart';
-import 'package:spinners_laundry/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -54,10 +50,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     precacheImage(const AssetImage(AppImages.onboardingScreen2Person2), context),
     precacheImage(const AssetImage(AppImages.onboardingScreen3Bg3), context),
     precacheImage(const AssetImage(AppImages.onboardingScreen3Person3), context),
-    ]);
-
-    context.read<AuthBloc>().add(AuthEvent.profileAuth());
-    // context.read<AuthBloc>().add(AuthEvent.getConfig());
+    ]);   
   }
 
   @override
@@ -70,65 +63,33 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       body:
-       BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state.profileAuthStatus is StatusSuccess) {
-            // if (state.isPinSet) {
-            //   context.router.pushAndPopUntil(
-            //     const LoginWithPinRoute(),
-            //     predicate: (_) => false,
-            //   );
-            // } else {
-              context.router.pushAndPopUntil(
-                AppBottomNavigationRoute(selectedIndex: 0),
-                predicate: (_) => false,
-              );
-            // }
-          } else if (state.profileAuthStatus is StatusFailure) {
-            // String? isOnboardingSeen = LocalStorage.getString(StorageKey.isOnboardingSeen);
-            // if (isOnboardingSeen == null) {
-              context.router.pushAndPopUntil(
-              const OnboardingRoute(),
-              predicate: (_) => false,
-            );
-            // } else {
-            //   context.router.pushAndPopUntil(
-            //   const LoginRoute(),
-            //   predicate: (_) => false,
-            // );
-            // }
-          }
-        },
-        listenWhen: (previous, current) => current.profileAuthStatus != previous.profileAuthStatus,
-        child: 
-        SizedBox(
-          height: 100.h,
-          width: 100.w,
-          child: Stack(
-            clipBehavior: Clip.none,
-            fit: StackFit.expand,
-            children: [
-              AnimatedBuilder(
-              animation: _scaleAnimation,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: child,
-                );
-              },
-              child: Image.asset(
-                AppImages.splashBgImage,
-                fit: BoxFit.fill,
-              ),
-            ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 86.dp),
-                child: Image.asset(AppImages.splashLogo),
-              ),
-            ],
-          ),
-        ),
-      ),
+       SizedBox(
+         height: 100.h,
+         width: 100.w,
+         child: Stack(
+           clipBehavior: Clip.none,
+           fit: StackFit.expand,
+           children: [
+             AnimatedBuilder(
+             animation: _scaleAnimation,
+             builder: (context, child) {
+               return Transform.scale(
+                 scale: _scaleAnimation.value,
+                 child: child,
+               );
+             },
+             child: Image.asset(
+               AppImages.splashBgImage,
+               fit: BoxFit.fill,
+             ),
+           ),
+             Padding(
+               padding: EdgeInsets.symmetric(horizontal: 86.dp),
+               child: Image.asset(AppImages.splashLogo),
+             ),
+           ],
+         ),
+       ),
     );
   }
 }

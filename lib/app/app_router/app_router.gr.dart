@@ -97,22 +97,6 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [NormalOrderScreen]
-class NormalOrderRoute extends PageRouteInfo<void> {
-  const NormalOrderRoute({List<PageRouteInfo>? children})
-      : super(NormalOrderRoute.name, initialChildren: children);
-
-  static const String name = 'NormalOrderRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const NormalOrderScreen();
-    },
-  );
-}
-
-/// generated route for
 /// [NotificationScreen]
 class NotificationRoute extends PageRouteInfo<void> {
   const NotificationRoute({List<PageRouteInfo>? children})
@@ -124,101 +108,6 @@ class NotificationRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const NotificationScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [OnboardingScreen]
-class OnboardingRoute extends PageRouteInfo<void> {
-  const OnboardingRoute({List<PageRouteInfo>? children})
-      : super(OnboardingRoute.name, initialChildren: children);
-
-  static const String name = 'OnboardingRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const OnboardingScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [OrderDetailScreen]
-class OrderDetailRoute extends PageRouteInfo<OrderDetailRouteArgs> {
-  OrderDetailRoute({
-    Key? key,
-    required String orderId,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OrderDetailRoute.name,
-          args: OrderDetailRouteArgs(key: key, orderId: orderId),
-          initialChildren: children,
-        );
-
-  static const String name = 'OrderDetailRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<OrderDetailRouteArgs>();
-      return OrderDetailScreen(key: args.key, orderId: args.orderId);
-    },
-  );
-}
-
-class OrderDetailRouteArgs {
-  const OrderDetailRouteArgs({this.key, required this.orderId});
-
-  final Key? key;
-
-  final String orderId;
-
-  @override
-  String toString() {
-    return 'OrderDetailRouteArgs{key: $key, orderId: $orderId}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! OrderDetailRouteArgs) return false;
-    return key == other.key && orderId == other.orderId;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ orderId.hashCode;
-}
-
-/// generated route for
-/// [OrderSuccessScreen]
-class OrderSuccessRoute extends PageRouteInfo<void> {
-  const OrderSuccessRoute({List<PageRouteInfo>? children})
-      : super(OrderSuccessRoute.name, initialChildren: children);
-
-  static const String name = 'OrderSuccessRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const OrderSuccessScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [OrdersScreen]
-class OrdersRoute extends PageRouteInfo<void> {
-  const OrdersRoute({List<PageRouteInfo>? children})
-      : super(OrdersRoute.name, initialChildren: children);
-
-  static const String name = 'OrdersRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const OrdersScreen();
     },
   );
 }
@@ -299,69 +188,6 @@ class OtpRouteArgs {
 }
 
 /// generated route for
-/// [QuickOrderDetailScreen]
-class QuickOrderDetailRoute extends PageRouteInfo<QuickOrderDetailRouteArgs> {
-  QuickOrderDetailRoute({
-    Key? key,
-    required String orderId,
-    List<PageRouteInfo>? children,
-  }) : super(
-          QuickOrderDetailRoute.name,
-          args: QuickOrderDetailRouteArgs(key: key, orderId: orderId),
-          initialChildren: children,
-        );
-
-  static const String name = 'QuickOrderDetailRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<QuickOrderDetailRouteArgs>();
-      return QuickOrderDetailScreen(key: args.key, orderId: args.orderId);
-    },
-  );
-}
-
-class QuickOrderDetailRouteArgs {
-  const QuickOrderDetailRouteArgs({this.key, required this.orderId});
-
-  final Key? key;
-
-  final String orderId;
-
-  @override
-  String toString() {
-    return 'QuickOrderDetailRouteArgs{key: $key, orderId: $orderId}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! QuickOrderDetailRouteArgs) return false;
-    return key == other.key && orderId == other.orderId;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ orderId.hashCode;
-}
-
-/// generated route for
-/// [QuickOrderScreen]
-class QuickOrderScreenRoute extends PageRouteInfo<void> {
-  const QuickOrderScreenRoute({List<PageRouteInfo>? children})
-      : super(QuickOrderScreenRoute.name, initialChildren: children);
-
-  static const String name = 'QuickOrderScreenRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const QuickOrderScreen();
-    },
-  );
-}
-
-/// generated route for
 /// [SplashScreen]
 class SplashRoute extends PageRouteInfo<void> {
   const SplashRoute({List<PageRouteInfo>? children})
@@ -373,22 +199,6 @@ class SplashRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SplashScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [WalletScreen]
-class WalletRoute extends PageRouteInfo<void> {
-  const WalletRoute({List<PageRouteInfo>? children})
-      : super(WalletRoute.name, initialChildren: children);
-
-  static const String name = 'WalletRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const WalletScreen();
     },
   );
 }

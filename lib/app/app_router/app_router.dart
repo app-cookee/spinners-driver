@@ -1,5 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:spinners_driver/src/presentation/views/authentication/login_screen.dart';
+import 'package:spinners_driver/src/presentation/views/authentication/otp_screen.dart';
+import 'package:spinners_driver/src/presentation/views/navigation/app_bottom_navigation_view.dart';
+import 'package:spinners_driver/src/presentation/views/notification/notification_screen.dart';
+import 'package:spinners_driver/src/presentation/views/profile/account_screen.dart';
+import 'package:spinners_driver/src/presentation/views/splash/splash_screen.dart';
 
 part 'app_router.gr.dart';
 

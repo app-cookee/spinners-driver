@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+
 
 class UserDetail extends StatelessWidget {
   final String initial;

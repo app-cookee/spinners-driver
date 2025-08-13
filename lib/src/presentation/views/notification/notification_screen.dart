@@ -2,9 +2,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
-import 'package:spinners_laundry/src/presentation/views/widgets/common_header.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/common_header.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -107,7 +107,7 @@ class NotificationSection extends StatelessWidget {
         for (int i = 0; i < notifications.length; i++) ...[
           NotificationItem(notification: notifications[i]),
           if (i < notifications.length - 1) // Add divider if not the last item
-            Divider(color: AppColors.lightGrey, height: 1, thickness: 1),
+            const Divider(color: AppColors.lightGrey, height: 1, thickness: 1),
         ],
       ],
     );
@@ -123,7 +123,7 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 100.w,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.neutral50,
       ),
       padding: EdgeInsets.all(12.dp),

@@ -1,17 +1,15 @@
-import 'dart:math' as math;
 import 'dart:ui';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
-import 'package:spinners_laundry/src/presentation/constants/app_images.dart';
-import 'package:spinners_laundry/src/presentation/views/profile/widgets/account_settings.dart';
-import 'package:spinners_laundry/src/presentation/views/profile/widgets/dashed_coupen_box.dart';
-import 'package:spinners_laundry/src/presentation/views/profile/widgets/user_detail.dart';
-import 'package:spinners_laundry/src/presentation/views/widgets/dashed_divider.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
+import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
+import 'package:spinners_driver/src/presentation/views/profile/widgets/dashed_coupen_box.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
+
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -57,7 +55,7 @@ class AccountScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsetsGeometry.only(left: 16.dp),
-                  child: UserDetail(
+                  child:const UserDetail(
                     initial: 'N',
                     name: 'Naseeb',
                     phone: '+968 9123 4567',
@@ -78,7 +76,7 @@ class AccountScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      DashedDivider(),
+                     const DashedDivider(),
                       Padding(
                         padding: EdgeInsets.all(16.dp),
                         child: Row(
@@ -96,7 +94,7 @@ class AccountScreen extends StatelessWidget {
                                 fontSize: 14.sp,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               "AED 120",
                               style:
@@ -138,7 +136,7 @@ class AccountScreen extends StatelessWidget {
                           Padding(
                             padding:
                                 EdgeInsetsGeometry.symmetric(vertical: 8.dp),
-                            child: DashedCouponBox(),
+                            child:const DashedCouponBox(),
                           ),
                           RichText(
                             text: TextSpan(
@@ -176,7 +174,7 @@ class AccountScreen extends StatelessWidget {
                       top: 20.dp, left: 16.dp, right: 16.dp, bottom: 24.dp),
                   child: Column(
                     spacing: 6.dp,
-                    children: [
+                    children: const [
                       AccountSettings(
                           imagePath: AppImages.arrowRight,
                           text: "Personal Details"),

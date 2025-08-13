@@ -2,9 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spinners_laundry/app/theme/app_colors.dart';
-import 'package:spinners_laundry/app/theme/app_typography.dart';
-import 'package:spinners_laundry/src/presentation/views/profile/account_screen.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/views/profile/account_screen.dart';
+
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class DashedCouponBox extends StatelessWidget {
@@ -37,20 +38,20 @@ class DashedCouponBox extends StatelessWidget {
                 color: AppColors.secondary950,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             InkWell(onTap: () => copyText('SPINAFSAL100'),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                       blurRadius: 8,
                       spreadRadius: 0,
                       color: Colors.black.withValues(alpha: 0.12),
                     ),
                     BoxShadow(
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                       blurRadius: 1,
                       spreadRadius: 0,
                       color: Colors.black.withValues(alpha: 0.04),
