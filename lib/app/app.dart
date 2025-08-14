@@ -14,13 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return TheResponsiveBuilder(
       builder: (context, orientation, screenType) {
-        return MultiBlocProvider(
-            providers: kBlocProviders,
-            child: MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              routerConfig: appRouter.config(),
-              theme: AppThemes.lightTheme,
-            ));
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          routerConfig: appRouter.config(),
+          theme: AppThemes.lightTheme,
+        );
       },
     );
   }
