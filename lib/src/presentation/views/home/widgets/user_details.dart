@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
-
+import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class UserDetail extends StatelessWidget {
-  final String initial;
+  final String avatar;
   final String name;
-  final String phone;
+  final String pickupTime;
 
   const UserDetail({
     super.key,
-    required this.initial,
+    required this.avatar,
     required this.name,
-    required this.phone,
+    required this.pickupTime,
   });
 
   @override
@@ -20,9 +20,9 @@ class UserDetail extends StatelessWidget {
     return Row(
       children: [
         Container(
-          height: 48,
-          width: 48,
-          decoration: BoxDecoration(
+          height: 40.dp,
+          width: 40.dp,
+         decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
@@ -67,7 +67,7 @@ class UserDetail extends StatelessWidget {
                 ],
               ).createShader(bounds),
               child: Text(
-                initial,
+                avatar,
                 style: AppTypography.sfProRoundedSemiBold.copyWith(
                   color: AppColors.white,
                   fontSize: 20,
@@ -83,17 +83,18 @@ class UserDetail extends StatelessWidget {
             Text(
               name,
               style: AppTypography.sfProRoundedSemiBold.copyWith(
-                color: AppColors.primary950,
+                color: AppColors.neutral900,
                 fontSize: 16,
               ),
             ),
-            Text(
-              phone,
-              style: AppTypography.sfProRoundedSemiBold.copyWith(
-                color: AppColors.textGrey,
-                fontSize: 12,
-              ),
+             Text(
+              'Next pickup at $pickupTime',
+               style: AppTypography.sfProRoundedRegular.copyWith(
+                    color: AppColors.textGrey,
+                    fontSize: 12.sp,
+                  ),
             ),
+          
           ],
         ),
       ],

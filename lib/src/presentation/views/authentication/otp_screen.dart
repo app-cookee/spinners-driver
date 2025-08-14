@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
@@ -188,7 +189,11 @@ class _LoginScreenState extends State<OtpScreen> {
                                       child: PrimaryButtonWidget(
                                         text: AppStrings.verifyButtonText,
                                         onPressed: () {
-                                          onButtonSubmit(otpp: value);
+                                          context.router.pushAndPopUntil(
+                AppBottomNavigationRoute(selectedIndex: 0),
+                predicate: (_) => false,
+              );
+                                          // onButtonSubmit(otpp: value);
                                         },
                                       ),
                                     ),

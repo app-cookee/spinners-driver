@@ -8,6 +8,7 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/dashed_coupen_box.dart';
+import 'package:spinners_driver/src/presentation/views/profile/widgets/profile_user_detail.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -55,8 +56,8 @@ class AccountScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsetsGeometry.only(left: 16.dp),
-                  child:const UserDetail(
-                    initial: 'N',
+                  child:const ProfileUserDetail(
+                    avatar: 'A',
                     name: 'Naseeb',
                     phone: '+968 9123 4567',
                   ),

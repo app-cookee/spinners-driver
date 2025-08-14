@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -19,26 +18,26 @@ class AppBottomNavigationView extends StatefulWidget {
 class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
   final PageStorageBucket bucket = PageStorageBucket();
   List<String> bottomNavLabels = [
-    'Home', 'Orders', 'Wallet', 
+    'Home', 'Orders', 'Wallet',
     // 'Support', //manager: hide the support
     'Account'
   ];
   List<String> bottomNavIcons = [
-    AppImages.homeIcon, 'AppImages.orderIcon',' AppImages.walletIcon', 
-    // AppImages.messageIcon,
-     AppImages.accountIcon
+    AppImages.homeIcon,
+    AppImages.reportsIcon,
+    AppImages.accountIcon,
   ];
   List<String> bottomNavIconsSelected = [
-    AppImages.homeSelectedIcon,' AppImages.orderSelectedIcon',' AppImages.walletSelectedIcon', 
-    // AppImages.messageSelectedIcon,
-     AppImages.accountSelectedIcon
+    AppImages.homeSelectedIcon,
+    AppImages.reportsIcon,
+    AppImages.accountSelectedIcon,
   ];
 
   final selectedIndex = ValueNotifier(0);
   List<Widget> screens = [
     const HomeView(),
-   const SizedBox(),
-   const SizedBox(),
+    const SizedBox(),
+    const SizedBox(),
 
     // const AccountScreen(),
   ];
@@ -97,7 +96,7 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
       clipBehavior: Clip.none,
       children: [
         Container(
-          decoration:const BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.white,
           ),
           height: 88.dp,

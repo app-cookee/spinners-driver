@@ -5,8 +5,8 @@ class AppImages {
   static const String loginSpinBg = 'assets/images/loginSpinBg.png';
   static const String keyboardSymbols='assets/images/ic_keyboard_symbols.png';
   static const String backspaceIcon='assets/images/ic_backspace.png';
-
-
+  static const String reportsIcon='assets/images/ic_reports.png';
+  static const String avatarBubble='assets/images/avatar_bubble.png';
 
 
 
