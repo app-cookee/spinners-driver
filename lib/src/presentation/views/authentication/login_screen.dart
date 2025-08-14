@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
@@ -23,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-
   final ValueNotifier<String> phoneNumberListener = ValueNotifier('');
   final ValueNotifier<String> countryCodeListener = ValueNotifier('');
   final ValueNotifier<bool> showKeyboard = ValueNotifier(false);
@@ -105,32 +105,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   showKeyboard.value = false;
                 }
               },
-              child:
-                  // BlocBuilder<NetworkBloc, NetworkState>(
-                  //   builder: (context, state) {
-                  //     return
-                  Scaffold(
+              child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                body: _buildBody(
-                    // state
-                    ),
-              )
-              // },
-              // ),
-              );
+                body: _buildBody(),
+              ));
         });
   }
 
-  Widget _buildBody(
-      // NetworkState state
-      ) {
-    // if (state == const NetworkState.success()) {
+  Widget _buildBody() {
     return _loginBody();
-    // } else {
-    //   return const Center(
-    //     child: NoNetworkWidget(),
-    //   );
-    // }
   }
 
   Widget _loginBody() {
@@ -152,46 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.only(bottom: 21.dp),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Gap(16.dp),
-                            Padding(
-                                padding: EdgeInsets.only(top: 7.h),
-                                child: SizedBox(
-                                  width: 50.w,
-                                  child: Text(
-                                    maxLines: 2,
-                                    'Let\'s get started',
-                                    style: AppTypography.ruskaDisplayRegular.copyWith(
-                                      fontSize: 32.sp,
-                                      color: AppColors.primary950,
-                                    ),
-                                  ),
-                                )),
-                          ],
-                        ),
+                        _letsGetStartedText(),
                         Gap(12.dp),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                              child: SizedBox(
-                                width: 40.w,
-                                child: Text(
-                                  AppStrings.signInText,
-                                  style: AppTypography.sfProRoundedMedium.copyWith(
-                                    fontSize: 12.sp,
-                                    color: AppColors.textGrey,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  maxLines: 2,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        _signInText(),
                         Gap(48.dp),
                         Padding(
                           padding: EdgeInsets.only(left: 16.dp),
@@ -238,21 +184,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           hasPhoneNumberError: hasPhoneError,
                         ),
-                        Gap(66.dp),
-                        buildPrivacyPolicyText(),
-                        Gap(8.dp),
-                        ValueListenableBuilder(
-                            valueListenable: phoneNumberListener,
-                            builder: (context, value, child) => ValueListenableBuilder(
-                                  valueListenable: referralCodeListener, // Add nested ValueListenableBuilder
-                                  builder: (context, referralValue, child) => Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                    child: PrimaryButtonWidget(
-                                      text: AppStrings.loginButtonText,
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                )),
+                        Gap(10.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                          child: PrimaryButtonWidget(
+                            text: AppStrings.loginButtonText,
+                            onPressed: () {
+                              context.router.push(OtpRoute(
+                                countryCode: countryCodeListener.value,
+                                phoneNumber: phoneNumberListener.value.trim(),
+                              ));
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -276,60 +220,48 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void onButtonSubmit(String phoneNumber, String referralCode) {
-    // print('Phone: $phoneNumber');
-    // print('Referral Code: $referralCode');
-  }
-}
-
-Widget buildPrivacyPolicyText() {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 16.dp),
-    child: RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: AppTypography.sfProRoundedRegular.copyWith(
-          fontSize: 12.sp,
-          color: AppColors.grey1Color,
+  Widget _signInText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.dp),
+          child: SizedBox(
+            width: 38.w,
+            child: Text(
+              AppStrings.signInText,
+              style: AppTypography.sfProRoundedMedium.copyWith(
+                fontSize: 12.sp,
+                color: AppColors.textGrey,
+              ),
+              textAlign: TextAlign.start,
+              maxLines: 2,
+            ),
+          ),
         ),
-        children: [
-          TextSpan(
-            text: 'By continuing, you agree to our ',
-            style: AppTypography.sfProRoundedRegular.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.grey1Color,
-            ),
-          ),
-          TextSpan(
-            text: 'Terms of Service',
-            style: AppTypography.sfProRoundedRegular.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.textGrey,
-            ),
-          ),
-          TextSpan(
-            text: ' and ',
-            style: AppTypography.sfProRoundedRegular.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.grey1Color,
-            ),
-          ),
-          TextSpan(
-            text: 'Privacy Policy',
-            style: AppTypography.sfProRoundedRegular.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.textGrey,
-            ),
-          ),
-          TextSpan(
-            text: '.',
-            style: AppTypography.sfProRoundedRegular.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.grey1Color,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+      ],
+    );
+  }
+
+  Widget _letsGetStartedText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Gap(16.dp),
+        Padding(
+            padding: EdgeInsets.only(top: 7.h),
+            child: SizedBox(
+              width: 50.w,
+              child: Text(
+                maxLines: 2,
+                'Let\'s get started',
+                style: AppTypography.ruskaDisplayRegular.copyWith(
+                  fontSize: 32.sp,
+                  color: AppColors.primary950,
+                ),
+              ),
+            )),
+      ],
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -18,6 +19,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  Timer? navigationTimer;
   @override
   void initState() {
     super.initState();
@@ -37,20 +39,26 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadAssetsAndNavigate();
     });
+    _startNavigationTimer();
   }
 
   Future<void> _loadAssetsAndNavigate() async {
     // Precache all splash images
     await Future.wait([
-    precacheImage(const AssetImage(AppImages.splashBgImage), context),
-    precacheImage(const AssetImage(AppImages.splashLogo), context),
-    precacheImage(const AssetImage(AppImages.onboardingScreen1Bg1), context),
-    precacheImage(const AssetImage(AppImages.onboardingScreen1Person1), context),
-    precacheImage(const AssetImage(AppImages.onboardingScreen2Bg2), context),
-    precacheImage(const AssetImage(AppImages.onboardingScreen2Person2), context),
-    precacheImage(const AssetImage(AppImages.onboardingScreen3Bg3), context),
-    precacheImage(const AssetImage(AppImages.onboardingScreen3Person3), context),
-    ]);   
+      precacheImage(const AssetImage(AppImages.splashBgImage), context),
+      precacheImage(const AssetImage(AppImages.splashLogo), context),
+    ]);
+  }
+
+  void _startNavigationTimer() {
+    navigationTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        context.router.pushAndPopUntil(
+          const LoginRoute(),
+          predicate: (_) => false,
+        );
+      }
+    });
   }
 
   @override
@@ -62,34 +70,33 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-       SizedBox(
-         height: 100.h,
-         width: 100.w,
-         child: Stack(
-           clipBehavior: Clip.none,
-           fit: StackFit.expand,
-           children: [
-             AnimatedBuilder(
-             animation: _scaleAnimation,
-             builder: (context, child) {
-               return Transform.scale(
-                 scale: _scaleAnimation.value,
-                 child: child,
-               );
-             },
-             child: Image.asset(
-               AppImages.splashBgImage,
-               fit: BoxFit.fill,
-             ),
-           ),
-             Padding(
-               padding: EdgeInsets.symmetric(horizontal: 86.dp),
-               child: Image.asset(AppImages.splashLogo),
-             ),
-           ],
-         ),
-       ),
+      body: SizedBox(
+        height: 100.h,
+        width: 100.w,
+        child: Stack(
+          clipBehavior: Clip.none,
+          fit: StackFit.expand,
+          children: [
+            AnimatedBuilder(
+              animation: _scaleAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: child,
+                );
+              },
+              child: Image.asset(
+                AppImages.splashBgImage,
+                fit: BoxFit.fill,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 86.dp),
+              child: Image.asset(AppImages.splashLogo),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -117,7 +117,6 @@ class NotificationRoute extends PageRouteInfo<void> {
 class OtpRoute extends PageRouteInfo<OtpRouteArgs> {
   OtpRoute({
     Key? key,
-    required String referralCode,
     required String phoneNumber,
     required String countryCode,
     List<PageRouteInfo>? children,
@@ -125,7 +124,6 @@ class OtpRoute extends PageRouteInfo<OtpRouteArgs> {
           OtpRoute.name,
           args: OtpRouteArgs(
             key: key,
-            referralCode: referralCode,
             phoneNumber: phoneNumber,
             countryCode: countryCode,
           ),
@@ -140,7 +138,6 @@ class OtpRoute extends PageRouteInfo<OtpRouteArgs> {
       final args = data.argsAs<OtpRouteArgs>();
       return OtpScreen(
         key: args.key,
-        referralCode: args.referralCode,
         phoneNumber: args.phoneNumber,
         countryCode: args.countryCode,
       );
@@ -151,14 +148,11 @@ class OtpRoute extends PageRouteInfo<OtpRouteArgs> {
 class OtpRouteArgs {
   const OtpRouteArgs({
     this.key,
-    required this.referralCode,
     required this.phoneNumber,
     required this.countryCode,
   });
 
   final Key? key;
-
-  final String referralCode;
 
   final String phoneNumber;
 
@@ -166,7 +160,7 @@ class OtpRouteArgs {
 
   @override
   String toString() {
-    return 'OtpRouteArgs{key: $key, referralCode: $referralCode, phoneNumber: $phoneNumber, countryCode: $countryCode}';
+    return 'OtpRouteArgs{key: $key, phoneNumber: $phoneNumber, countryCode: $countryCode}';
   }
 
   @override
@@ -174,17 +168,13 @@ class OtpRouteArgs {
     if (identical(this, other)) return true;
     if (other is! OtpRouteArgs) return false;
     return key == other.key &&
-        referralCode == other.referralCode &&
         phoneNumber == other.phoneNumber &&
         countryCode == other.countryCode;
   }
 
   @override
   int get hashCode =>
-      key.hashCode ^
-      referralCode.hashCode ^
-      phoneNumber.hashCode ^
-      countryCode.hashCode;
+      key.hashCode ^ phoneNumber.hashCode ^ countryCode.hashCode;
 }
 
 /// generated route for

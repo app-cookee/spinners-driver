@@ -14,6 +14,12 @@ class AppColors {
   static const Color countrycodeColor = Color(0xffB0B0B0);
   static const Color black1 = Color(0xff252627);
   static const Color black = Color(0xff000000);
+  static const Color keyboardBgColor=Color(0xFFD0D4DC);
+  static const Color keyboardButtonBorderColor=Color(0xFF878A8F);
+
+
+
+
   static const Color redColor = Color(0xffF97770);
   static const Color greyColor = Color(0xFFB9B9B9);
   static const Color primaryButtonTextColor = Color(0xff062B2D);
@@ -39,7 +45,7 @@ class AppColors {
    static const Color red1 = Color(0xFFFF4E40);
   static const Color red2 = Color(0xFFDA1D1D);
   static const Color red3 = Color(0xFFFFE3E3);
-  static const Color keyboardBgColor=Color(0xFFD1D3D9);
+  
   static const Color blue1 = Color(0xffEFFAFF);
   static const Color green1 = Color(0xff448827);
   static const Color green2 = Color(0xffE9FFDF);

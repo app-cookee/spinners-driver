@@ -4,7 +4,6 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/home_delivery_details.dart';
-import 'package:spinners_driver/src/presentation/views/home/widgets/video_stepper.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/youtube_video_dialog_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -103,31 +102,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                       const HomeDeliveryDetails(),
-                      Gap(12.dp),
-                      const VideoStepper(
-                        steps: [
-                          StepData(
-                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                            stepNumber: 1,
-                            isActive: true,
-                          ),
-                          StepData(
-                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                            stepNumber: 2,
-                            isActive: false,
-                          ),
-                          StepData(
-                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                            stepNumber: 3,
-                            isActive: false,
-                          ),
-                          StepData(
-                            title: 'SCHEDULE YOUR PICKUP IN SECONDS',
-                            stepNumber: 4,
-                            isActive: false,
-                          ),
-                        ],
-                      ),
+                   
                       Gap(8.h)
                     ],
                   ),
@@ -169,12 +144,7 @@ class _HomeViewState extends State<HomeView> {
   Stack banner() {
     return Stack(
       children: [
-        Image.asset(
-          AppImages.homeCoupen,
-          width: 100.w,
-          height: 56.dp,
-          fit: BoxFit.cover,
-        ),
+       
         Positioned(
             left: 16.dp,
             top: 12.dp,
@@ -213,18 +183,18 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Positioned backgroundlayerWithBubbles() {
-    return Positioned(
-        top: 7.h,
-        left: -5.w,
-        right: -5.w,
-        child: Image.asset(
-          fit: BoxFit.cover,
-          AppImages.group,
-          // width:120.w,
-          // height: 304.dp,
-        ));
-  }
+  // Positioned backgroundlayerWithBubbles() {
+  //   return Positioned(
+  //       top: 7.h,
+  //       left: -5.w,
+  //       right: -5.w,
+  //       child: Image.asset(
+  //         fit: BoxFit.cover,
+  //         AppImages.group,
+  //         // width:120.w,
+  //         // height: 304.dp,
+  //       ));
+  // }
 
   Positioned homeAppbarBubbles() {
     return Positioned(

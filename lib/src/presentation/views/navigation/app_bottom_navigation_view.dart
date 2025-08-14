@@ -24,12 +24,12 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
     'Account'
   ];
   List<String> bottomNavIcons = [
-    AppImages.homeIcon, AppImages.orderIcon, AppImages.walletIcon, 
+    AppImages.homeIcon, 'AppImages.orderIcon',' AppImages.walletIcon', 
     // AppImages.messageIcon,
      AppImages.accountIcon
   ];
   List<String> bottomNavIconsSelected = [
-    AppImages.homeSelectedIcon, AppImages.orderSelectedIcon, AppImages.walletSelectedIcon, 
+    AppImages.homeSelectedIcon,' AppImages.orderSelectedIcon',' AppImages.walletSelectedIcon', 
     // AppImages.messageSelectedIcon,
      AppImages.accountSelectedIcon
   ];

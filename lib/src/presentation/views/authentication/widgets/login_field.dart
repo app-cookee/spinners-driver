@@ -335,48 +335,6 @@ class _LoginFieldState extends State<LoginField> {
               ],
             ),
           ),
-          Gap(8.dp),
-          // Referral Code Field
-          Container(
-            padding: EdgeInsets.all(12.dp),
-            margin: EdgeInsets.symmetric(horizontal: 16.dp),
-            width: context.screenType == ScreenType.mobile ? 100.h : 328.dp,
-            decoration: BoxDecoration(
-              color: widget.showRefferal ? AppColors.white : AppColors.grey,
-              border: Border.all(
-                  color: AppColors.loginFieldBorderColor, width: 1.dp),
-              borderRadius: BorderRadius.circular(12.dp),
-            ),
-            child: TextFormField(
-              enabled: widget.showRefferal,
-              controller: _referralController,
-              focusNode: _referralFocusNode,
-              maxLength: 20,
-              keyboardType: TextInputType.text,
-              textCapitalization: TextCapitalization.characters,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
-                UpperCaseTextFormatter(),
-              ],
-              decoration: InputDecoration(
-                isDense: true,
-                counterText: '',
-                hintText: 'Referral Code (Optional)',
-                hintStyle: AppTypography.sfProRoundedRegular.copyWith(
-                  fontSize: 16.sp,
-                  color: AppColors.countrycodeColor,
-                ),
-                contentPadding: EdgeInsets.symmetric(vertical: 8.dp),
-                border: InputBorder.none,
-              ),
-              style: AppTypography.sfProRoundedBold.copyWith(
-                fontSize: 16.sp,
-                color: AppColors.black1,
-              ),
-              cursorColor: Colors.black,
-              cursorHeight: 16.sp,
-            ),
-          ),
         ],
       ),
     );

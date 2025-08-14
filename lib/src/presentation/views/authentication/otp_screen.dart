@@ -5,7 +5,6 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/constants/app_strings.dart';
-import 'package:spinners_driver/src/presentation/views/authentication/login_screen.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/widgets/otp_countdown_widget.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/widgets/otp_field_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_keyboard.dart';
@@ -16,8 +15,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key, required this.referralCode, required this.phoneNumber, required this.countryCode});
-  final String referralCode;
+  const OtpScreen({super.key, required this.phoneNumber, required this.countryCode});
   final String phoneNumber;
   final String countryCode;
 
@@ -41,7 +39,7 @@ class _LoginScreenState extends State<OtpScreen> {
     });
     showKeyboard.addListener(() {
       if (showKeyboard.value) {
-        Future.delayed(Duration(milliseconds: 300), () {
+        Future.delayed(const Duration(milliseconds: 300), () {
           if (_scrollController.hasClients) {
             _scrollController.animateTo(
               _scrollController.position.maxScrollExtent,
@@ -175,7 +173,7 @@ class _LoginScreenState extends State<OtpScreen> {
                                     children: [
                                       Gap(16.dp),
                                       OTPCountdownWidget(
-                                        initialCountdown: 0,
+                                        initialCountdown:59,
                                         onResend: () {
                                           otpListener.value = '';
                                         },
@@ -183,8 +181,6 @@ class _LoginScreenState extends State<OtpScreen> {
                                     ],
                                   ),
                                   Gap(10.h),
-                                  buildPrivacyPolicyText(),
-                                  Gap(8.dp),
                                   ValueListenableBuilder(
                                     valueListenable: otpListener,
                                     builder: (context, value, child) => Padding(
