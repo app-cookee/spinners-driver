@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/user_details.dart';
-import 'package:spinners_driver/src/presentation/views/profile/widgets/profile_user_detail.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class HomeAppbar extends StatelessWidget {
@@ -31,6 +30,7 @@ class HomeAppbar extends StatelessWidget {
             AppColors.gradientbg.withValues(alpha: 0.8),
             AppColors.gradientbg.withValues(alpha: 0.1),
             AppColors.white,
+            // const Color(0xFFF4F4F4)
           ],
         ),
       ),

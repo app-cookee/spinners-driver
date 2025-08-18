@@ -7,6 +7,7 @@ class AppImages {
   static const String backspaceIcon='assets/images/ic_backspace.png';
   static const String reportsIcon='assets/images/ic_reports.png';
   static const String avatarBubble='assets/images/avatar_bubble.png';
+  static const String homeDottedRectangle='assets/images/home_dotted_rectangle.png';
 
 
 

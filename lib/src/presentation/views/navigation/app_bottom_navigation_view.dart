@@ -17,11 +17,7 @@ class AppBottomNavigationView extends StatefulWidget {
 
 class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
   final PageStorageBucket bucket = PageStorageBucket();
-  List<String> bottomNavLabels = [
-    'Home', 'Orders', 'Wallet',
-    // 'Support', //manager: hide the support
-    'Account'
-  ];
+  List<String> bottomNavLabels = ['Home', 'Reports', 'Account'];
   List<String> bottomNavIcons = [
     AppImages.homeIcon,
     AppImages.reportsIcon,
@@ -118,7 +114,7 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
                         builder: (BuildContext context, int value, Widget? child) {
                           return AnimatedContainer(
                             duration: const Duration(milliseconds: 100),
-                            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                            padding: EdgeInsets.symmetric(horizontal: 11.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -126,14 +122,14 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
                                 selectedIndex.value == index
                                     ? Image.asset(
                                         bottomNavIconsSelected[index],
-                                        height: 26.dp,
-                                        width: 26.dp,
+                                        height: 24.dp,
+                                        width: 24.dp,
                                         fit: BoxFit.cover,
                                       )
                                     : Image.asset(
                                         bottomNavIcons[index],
-                                        height: 26.dp,
-                                        width: 26.dp,
+                                        height: 24.dp,
+                                        width: 24.dp,
                                         fit: BoxFit.cover,
                                       ),
                                 Gap(4.dp),

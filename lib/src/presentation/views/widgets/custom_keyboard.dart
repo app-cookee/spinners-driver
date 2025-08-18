@@ -175,15 +175,18 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
       child: GestureDetector(
         onTap: () => widget.onKeyPressed(symbol),
         child: Container(
-          height: height,
+          height: 50.dp,
+           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(5.dp),
+            border: Border(
+              bottom: BorderSide(width: 1.dp, color: AppColors.keyboardButtonBorderColor),)
           ),
           child: Center(
             child: Text(
               symbol,
-              style: AppTypography.sfProRoundedSlim.copyWith(
+              style: AppTypography.sfProRoundedMedium.copyWith(
                 fontSize: 25.sp,
                 color: Colors.black,
               ),
