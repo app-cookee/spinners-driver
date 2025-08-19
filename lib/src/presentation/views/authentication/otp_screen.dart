@@ -247,7 +247,7 @@ class _LoginScreenState extends State<OtpScreen> {
                                             onPressed: () {
                                           
                                           log("inside button");
-                                          log(value.toString());
+                                          log(value.toString(),name: "otpvalue");
                                               onButtonSubmit(otpp: value);
                                             },
                                           );

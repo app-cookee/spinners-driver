@@ -5,4 +5,5 @@ abstract class AuthRepository {
   
   Future<int> sendOtp(String phoneNumber);
   Future<AppUser> verifyOtp(String phoneNumber, String otp, String firebaseToken,);
+    Future<String> refreshtoken();
 }

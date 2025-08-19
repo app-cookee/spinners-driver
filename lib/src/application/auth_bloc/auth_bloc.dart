@@ -18,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(  this.authRepository,) : super(AuthState.initial()) {
     on<_SendOtp>(_onSendOtp);
     on<_VerifyOtp>(_verifyOtp);
+    on<_Refreshtoken>(_onRefreshtoken);
   }
 
   FutureOr<void> _onSendOtp(_SendOtp event, Emitter<AuthState> emit) async {
@@ -51,6 +52,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       emit(state.copyWith(
         otpVerifyStatus: Status.failure(e.toString()),
+      ));
+    }
+  }
+
+
+  FutureOr<void> _onRefreshtoken(_Refreshtoken event, Emitter<AuthState> emit) async {
+    try {
+      emit(state.copyWith(refreshtokenStatus: Status.loading()));
+      // var response =
+      //     await authRepository.refreshtoken();
+      emit(
+          state.copyWith(refreshtokenStatus: Status.success(), 
+          ));
+    } catch (e) {
+      emit(state.copyWith(
+        refreshtokenStatus: Status.failure(e.toString()),
       ));
     }
   }

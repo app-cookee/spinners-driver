@@ -14,62 +14,24 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$AuthEvent {
-  String get phoneNumber;
-
-  /// Create a copy of AuthEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $AuthEventCopyWith<AuthEvent> get copyWith =>
-      _$AuthEventCopyWithImpl<AuthEvent>(this as AuthEvent, _$identity);
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is AuthEvent &&
-            (identical(other.phoneNumber, phoneNumber) ||
-                other.phoneNumber == phoneNumber));
+        (other.runtimeType == runtimeType && other is AuthEvent);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, phoneNumber);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
-    return 'AuthEvent(phoneNumber: $phoneNumber)';
+    return 'AuthEvent()';
   }
 }
 
 /// @nodoc
-abstract mixin class $AuthEventCopyWith<$Res> {
-  factory $AuthEventCopyWith(AuthEvent value, $Res Function(AuthEvent) _then) =
-      _$AuthEventCopyWithImpl;
-  @useResult
-  $Res call({String phoneNumber});
-}
-
-/// @nodoc
-class _$AuthEventCopyWithImpl<$Res> implements $AuthEventCopyWith<$Res> {
-  _$AuthEventCopyWithImpl(this._self, this._then);
-
-  final AuthEvent _self;
-  final $Res Function(AuthEvent) _then;
-
-  /// Create a copy of AuthEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? phoneNumber = null,
-  }) {
-    return _then(_self.copyWith(
-      phoneNumber: null == phoneNumber
-          ? _self.phoneNumber
-          : phoneNumber // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+class $AuthEventCopyWith<$Res> {
+  $AuthEventCopyWith(AuthEvent _, $Res Function(AuthEvent) __);
 }
 
 /// Adds pattern-matching-related methods to [AuthEvent].
@@ -90,6 +52,7 @@ extension AuthEventPatterns on AuthEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_SendOtp value)? sendOtp,
     TResult Function(_VerifyOtp value)? verifyOtp,
+    TResult Function(_Refreshtoken value)? refreshtoken,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -98,6 +61,8 @@ extension AuthEventPatterns on AuthEvent {
         return sendOtp(_that);
       case _VerifyOtp() when verifyOtp != null:
         return verifyOtp(_that);
+      case _Refreshtoken() when refreshtoken != null:
+        return refreshtoken(_that);
       case _:
         return orElse();
     }
@@ -120,6 +85,7 @@ extension AuthEventPatterns on AuthEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_SendOtp value) sendOtp,
     required TResult Function(_VerifyOtp value) verifyOtp,
+    required TResult Function(_Refreshtoken value) refreshtoken,
   }) {
     final _that = this;
     switch (_that) {
@@ -127,6 +93,8 @@ extension AuthEventPatterns on AuthEvent {
         return sendOtp(_that);
       case _VerifyOtp():
         return verifyOtp(_that);
+      case _Refreshtoken():
+        return refreshtoken(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -148,6 +116,7 @@ extension AuthEventPatterns on AuthEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_SendOtp value)? sendOtp,
     TResult? Function(_VerifyOtp value)? verifyOtp,
+    TResult? Function(_Refreshtoken value)? refreshtoken,
   }) {
     final _that = this;
     switch (_that) {
@@ -155,6 +124,8 @@ extension AuthEventPatterns on AuthEvent {
         return sendOtp(_that);
       case _VerifyOtp() when verifyOtp != null:
         return verifyOtp(_that);
+      case _Refreshtoken() when refreshtoken != null:
+        return refreshtoken(_that);
       case _:
         return null;
     }
@@ -176,6 +147,7 @@ extension AuthEventPatterns on AuthEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String phoneNumber, bool isResent)? sendOtp,
     TResult Function(String phoneNumber, String otp)? verifyOtp,
+    TResult Function()? refreshtoken,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -184,6 +156,8 @@ extension AuthEventPatterns on AuthEvent {
         return sendOtp(_that.phoneNumber, _that.isResent);
       case _VerifyOtp() when verifyOtp != null:
         return verifyOtp(_that.phoneNumber, _that.otp);
+      case _Refreshtoken() when refreshtoken != null:
+        return refreshtoken();
       case _:
         return orElse();
     }
@@ -206,6 +180,7 @@ extension AuthEventPatterns on AuthEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String phoneNumber, bool isResent) sendOtp,
     required TResult Function(String phoneNumber, String otp) verifyOtp,
+    required TResult Function() refreshtoken,
   }) {
     final _that = this;
     switch (_that) {
@@ -213,6 +188,8 @@ extension AuthEventPatterns on AuthEvent {
         return sendOtp(_that.phoneNumber, _that.isResent);
       case _VerifyOtp():
         return verifyOtp(_that.phoneNumber, _that.otp);
+      case _Refreshtoken():
+        return refreshtoken();
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -234,6 +211,7 @@ extension AuthEventPatterns on AuthEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String phoneNumber, bool isResent)? sendOtp,
     TResult? Function(String phoneNumber, String otp)? verifyOtp,
+    TResult? Function()? refreshtoken,
   }) {
     final _that = this;
     switch (_that) {
@@ -241,6 +219,8 @@ extension AuthEventPatterns on AuthEvent {
         return sendOtp(_that.phoneNumber, _that.isResent);
       case _VerifyOtp() when verifyOtp != null:
         return verifyOtp(_that.phoneNumber, _that.otp);
+      case _Refreshtoken() when refreshtoken != null:
+        return refreshtoken();
       case _:
         return null;
     }
@@ -252,13 +232,11 @@ extension AuthEventPatterns on AuthEvent {
 class _SendOtp implements AuthEvent {
   const _SendOtp({required this.phoneNumber, required this.isResent});
 
-  @override
   final String phoneNumber;
   final bool isResent;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   _$SendOtpCopyWith<_SendOtp> get copyWith =>
@@ -289,7 +267,6 @@ abstract mixin class _$SendOtpCopyWith<$Res>
     implements $AuthEventCopyWith<$Res> {
   factory _$SendOtpCopyWith(_SendOtp value, $Res Function(_SendOtp) _then) =
       __$SendOtpCopyWithImpl;
-  @override
   @useResult
   $Res call({String phoneNumber, bool isResent});
 }
@@ -303,7 +280,6 @@ class __$SendOtpCopyWithImpl<$Res> implements _$SendOtpCopyWith<$Res> {
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @pragma('vm:prefer-inline')
   $Res call({
     Object? phoneNumber = null,
@@ -327,13 +303,11 @@ class __$SendOtpCopyWithImpl<$Res> implements _$SendOtpCopyWith<$Res> {
 class _VerifyOtp implements AuthEvent {
   const _VerifyOtp({required this.phoneNumber, required this.otp});
 
-  @override
   final String phoneNumber;
   final String otp;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   _$VerifyOtpCopyWith<_VerifyOtp> get copyWith =>
@@ -364,7 +338,6 @@ abstract mixin class _$VerifyOtpCopyWith<$Res>
   factory _$VerifyOtpCopyWith(
           _VerifyOtp value, $Res Function(_VerifyOtp) _then) =
       __$VerifyOtpCopyWithImpl;
-  @override
   @useResult
   $Res call({String phoneNumber, String otp});
 }
@@ -378,7 +351,6 @@ class __$VerifyOtpCopyWithImpl<$Res> implements _$VerifyOtpCopyWith<$Res> {
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @pragma('vm:prefer-inline')
   $Res call({
     Object? phoneNumber = null,
@@ -398,11 +370,32 @@ class __$VerifyOtpCopyWithImpl<$Res> implements _$VerifyOtpCopyWith<$Res> {
 }
 
 /// @nodoc
+
+class _Refreshtoken implements AuthEvent {
+  const _Refreshtoken();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Refreshtoken);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'AuthEvent.refreshtoken()';
+  }
+}
+
+/// @nodoc
 mixin _$AuthState {
   Status get sendOtpStatus;
   int get secondsToExpiry;
   Status get otpVerifyStatus;
   AppUser? get appUser;
+  Status get refreshtokenStatus;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -422,16 +415,18 @@ mixin _$AuthState {
                 other.secondsToExpiry == secondsToExpiry) &&
             (identical(other.otpVerifyStatus, otpVerifyStatus) ||
                 other.otpVerifyStatus == otpVerifyStatus) &&
-            const DeepCollectionEquality().equals(other.appUser, appUser));
+            (identical(other.appUser, appUser) || other.appUser == appUser) &&
+            (identical(other.refreshtokenStatus, refreshtokenStatus) ||
+                other.refreshtokenStatus == refreshtokenStatus));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, sendOtpStatus, secondsToExpiry,
-      otpVerifyStatus, const DeepCollectionEquality().hash(appUser));
+      otpVerifyStatus, appUser, refreshtokenStatus);
 
   @override
   String toString() {
-    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser)';
+    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus)';
   }
 }
 
@@ -444,10 +439,13 @@ abstract mixin class $AuthStateCopyWith<$Res> {
       {Status sendOtpStatus,
       int secondsToExpiry,
       Status otpVerifyStatus,
-      AppUser? appUser});
+      AppUser? appUser,
+      Status refreshtokenStatus});
 
   $StatusCopyWith<$Res> get sendOtpStatus;
   $StatusCopyWith<$Res> get otpVerifyStatus;
+  $AppUserCopyWith<$Res>? get appUser;
+  $StatusCopyWith<$Res> get refreshtokenStatus;
 }
 
 /// @nodoc
@@ -466,6 +464,7 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
     Object? secondsToExpiry = null,
     Object? otpVerifyStatus = null,
     Object? appUser = freezed,
+    Object? refreshtokenStatus = null,
   }) {
     return _then(_self.copyWith(
       sendOtpStatus: null == sendOtpStatus
@@ -484,6 +483,10 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
           ? _self.appUser
           : appUser // ignore: cast_nullable_to_non_nullable
               as AppUser?,
+      refreshtokenStatus: null == refreshtokenStatus
+          ? _self.refreshtokenStatus
+          : refreshtokenStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
     ));
   }
 
@@ -504,6 +507,30 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get otpVerifyStatus {
     return $StatusCopyWith<$Res>(_self.otpVerifyStatus, (value) {
       return _then(_self.copyWith(otpVerifyStatus: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AppUserCopyWith<$Res>? get appUser {
+    if (_self.appUser == null) {
+      return null;
+    }
+
+    return $AppUserCopyWith<$Res>(_self.appUser!, (value) {
+      return _then(_self.copyWith(appUser: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get refreshtokenStatus {
+    return $StatusCopyWith<$Res>(_self.refreshtokenStatus, (value) {
+      return _then(_self.copyWith(refreshtokenStatus: value));
     });
   }
 }
@@ -601,8 +628,12 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Status sendOtpStatus, int secondsToExpiry,
-            Status otpVerifyStatus, AppUser? appUser)?
+    TResult Function(
+            Status sendOtpStatus,
+            int secondsToExpiry,
+            Status otpVerifyStatus,
+            AppUser? appUser,
+            Status refreshtokenStatus)?
         $default, {
     required TResult orElse(),
   }) {
@@ -610,7 +641,7 @@ extension AuthStatePatterns on AuthState {
     switch (_that) {
       case _AuthState() when $default != null:
         return $default(_that.sendOtpStatus, _that.secondsToExpiry,
-            _that.otpVerifyStatus, _that.appUser);
+            _that.otpVerifyStatus, _that.appUser, _that.refreshtokenStatus);
       case _:
         return orElse();
     }
@@ -632,14 +663,14 @@ extension AuthStatePatterns on AuthState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(Status sendOtpStatus, int secondsToExpiry,
-            Status otpVerifyStatus, AppUser? appUser)
+            Status otpVerifyStatus, AppUser? appUser, Status refreshtokenStatus)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState():
         return $default(_that.sendOtpStatus, _that.secondsToExpiry,
-            _that.otpVerifyStatus, _that.appUser);
+            _that.otpVerifyStatus, _that.appUser, _that.refreshtokenStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -659,15 +690,19 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Status sendOtpStatus, int secondsToExpiry,
-            Status otpVerifyStatus, AppUser? appUser)?
+    TResult? Function(
+            Status sendOtpStatus,
+            int secondsToExpiry,
+            Status otpVerifyStatus,
+            AppUser? appUser,
+            Status refreshtokenStatus)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState() when $default != null:
         return $default(_that.sendOtpStatus, _that.secondsToExpiry,
-            _that.otpVerifyStatus, _that.appUser);
+            _that.otpVerifyStatus, _that.appUser, _that.refreshtokenStatus);
       case _:
         return null;
     }
@@ -681,7 +716,8 @@ class _AuthState implements AuthState {
       {required this.sendOtpStatus,
       required this.secondsToExpiry,
       required this.otpVerifyStatus,
-      this.appUser});
+      this.appUser,
+      required this.refreshtokenStatus});
 
   @override
   final Status sendOtpStatus;
@@ -691,6 +727,8 @@ class _AuthState implements AuthState {
   final Status otpVerifyStatus;
   @override
   final AppUser? appUser;
+  @override
+  final Status refreshtokenStatus;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -711,16 +749,18 @@ class _AuthState implements AuthState {
                 other.secondsToExpiry == secondsToExpiry) &&
             (identical(other.otpVerifyStatus, otpVerifyStatus) ||
                 other.otpVerifyStatus == otpVerifyStatus) &&
-            const DeepCollectionEquality().equals(other.appUser, appUser));
+            (identical(other.appUser, appUser) || other.appUser == appUser) &&
+            (identical(other.refreshtokenStatus, refreshtokenStatus) ||
+                other.refreshtokenStatus == refreshtokenStatus));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, sendOtpStatus, secondsToExpiry,
-      otpVerifyStatus, const DeepCollectionEquality().hash(appUser));
+      otpVerifyStatus, appUser, refreshtokenStatus);
 
   @override
   String toString() {
-    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser)';
+    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus)';
   }
 }
 
@@ -736,12 +776,17 @@ abstract mixin class _$AuthStateCopyWith<$Res>
       {Status sendOtpStatus,
       int secondsToExpiry,
       Status otpVerifyStatus,
-      AppUser? appUser});
+      AppUser? appUser,
+      Status refreshtokenStatus});
 
   @override
   $StatusCopyWith<$Res> get sendOtpStatus;
   @override
   $StatusCopyWith<$Res> get otpVerifyStatus;
+  @override
+  $AppUserCopyWith<$Res>? get appUser;
+  @override
+  $StatusCopyWith<$Res> get refreshtokenStatus;
 }
 
 /// @nodoc
@@ -760,6 +805,7 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
     Object? secondsToExpiry = null,
     Object? otpVerifyStatus = null,
     Object? appUser = freezed,
+    Object? refreshtokenStatus = null,
   }) {
     return _then(_AuthState(
       sendOtpStatus: null == sendOtpStatus
@@ -778,6 +824,10 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
           ? _self.appUser
           : appUser // ignore: cast_nullable_to_non_nullable
               as AppUser?,
+      refreshtokenStatus: null == refreshtokenStatus
+          ? _self.refreshtokenStatus
+          : refreshtokenStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
     ));
   }
 
@@ -798,6 +848,30 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get otpVerifyStatus {
     return $StatusCopyWith<$Res>(_self.otpVerifyStatus, (value) {
       return _then(_self.copyWith(otpVerifyStatus: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AppUserCopyWith<$Res>? get appUser {
+    if (_self.appUser == null) {
+      return null;
+    }
+
+    return $AppUserCopyWith<$Res>(_self.appUser!, (value) {
+      return _then(_self.copyWith(appUser: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get refreshtokenStatus {
+    return $StatusCopyWith<$Res>(_self.refreshtokenStatus, (value) {
+      return _then(_self.copyWith(refreshtokenStatus: value));
     });
   }
 }

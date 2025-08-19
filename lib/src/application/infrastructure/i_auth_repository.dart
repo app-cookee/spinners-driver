@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/api_constants.dart';
 import 'package:spinners_driver/app/constants/storage_constants.dart';
@@ -51,6 +52,25 @@ import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.
       return userData;
     } catch (e) {
       log(e.toString(), name: 'error in verify otp repo');
+      rethrow;
+    }
+  }
+
+    @override
+  Future<String> refreshtoken() async {
+    try {
+      var refreshToken = LocalStorage.getString(StorageKey.refreshToken);
+      final headers = {
+        "x-refresh-token": "Bearer $refreshToken",
+      };
+      var response = await api.general.post(ApiEndpoints().refreshtoken,
+          options: Options(headers: headers));
+      LocalStorage.setString(StorageKey.accessToken, response.data['token']);
+      LocalStorage.setString(
+          StorageKey.refreshToken, response.data['refreshToken']);
+      return 'Done';
+    } catch (e) {
+      log(e.toString(), name: 'error in refreshtoken repo');
       rethrow;
     }
   }

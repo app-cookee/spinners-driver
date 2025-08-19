@@ -7,6 +7,7 @@ abstract class AuthState with _$AuthState {
       required int secondsToExpiry,
       required Status otpVerifyStatus,
           AppUser? appUser,
+             required Status refreshtokenStatus,
   
    })=_AuthState;
      factory AuthState.initial() => AuthState(
@@ -14,6 +15,7 @@ abstract class AuthState with _$AuthState {
        secondsToExpiry: 0,
        otpVerifyStatus: Status.initial(),
          appUser: AppUser(),
+           refreshtokenStatus: Status.initial(),
 
      );
 }

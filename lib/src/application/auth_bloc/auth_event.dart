@@ -11,4 +11,6 @@ abstract class AuthEvent with _$AuthEvent {
     required String otp,
 
   }) = _VerifyOtp;
+  
+  const factory AuthEvent.refreshtoken() = _Refreshtoken;
 }
