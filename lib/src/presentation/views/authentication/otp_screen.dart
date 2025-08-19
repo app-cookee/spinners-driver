@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/constants/app_strings.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/widgets/otp_countdown_widget.dart';
@@ -16,7 +21,8 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key, required this.phoneNumber, required this.countryCode});
+  const OtpScreen(
+      {super.key, required this.phoneNumber, required this.countryCode});
   final String phoneNumber;
   final String countryCode;
 
@@ -126,7 +132,9 @@ class _LoginScreenState extends State<OtpScreen> {
                                             child: Text(
                                               maxLines: 2,
                                               'Verify Your Number',
-                                              style: AppTypography.ruskaDisplayRegular.copyWith(
+                                              style: AppTypography
+                                                  .ruskaDisplayRegular
+                                                  .copyWith(
                                                 fontSize: 32.sp,
                                                 color: AppColors.primary950,
                                               ),
@@ -139,10 +147,13 @@ class _LoginScreenState extends State<OtpScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16.dp),
                                         child: Text(
                                           'We\'ve sent a 6-digit code to ${widget.countryCode} XXXXXXXX',
-                                          style: AppTypography.sfProRoundedMedium.copyWith(
+                                          style: AppTypography
+                                              .sfProRoundedMedium
+                                              .copyWith(
                                             fontSize: 12.sp,
                                             color: AppColors.textGrey,
                                           ),
@@ -153,7 +164,8 @@ class _LoginScreenState extends State<OtpScreen> {
                                   ),
                                   Gap(10.h),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10.dp),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10.dp),
                                     child: ValueListenableBuilder<String>(
                                       valueListenable: otpListener,
                                       builder: (context, otp, child) {
@@ -173,10 +185,26 @@ class _LoginScreenState extends State<OtpScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Gap(16.dp),
-                                      OTPCountdownWidget(
-                                        initialCountdown:59,
-                                        onResend: () {
-                                          otpListener.value = '';
+                                      BlocBuilder<AuthBloc, AuthState>(
+                                        buildWhen: (previous, current) =>
+                                            previous.secondsToExpiry !=
+                                            current.secondsToExpiry,
+                                        builder: (context, state) {
+                                          return OTPCountdownWidget(
+                                            initialCountdown:
+                                                state.secondsToExpiry,
+                                            onResend: () {
+                                              context.read<AuthBloc>().add(
+                                                    AuthEvent.sendOtp(
+                                                      isResent: true,
+                                                      phoneNumber: widget
+                                                          .phoneNumber
+                                                          .replaceAll(" ", ""),
+                                                    ),
+                                                  );
+                                              otpListener.value = '';
+                                            },
+                                          );
                                         },
                                       ),
                                     ],
@@ -185,15 +213,44 @@ class _LoginScreenState extends State<OtpScreen> {
                                   ValueListenableBuilder(
                                     valueListenable: otpListener,
                                     builder: (context, value, child) => Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                      child: PrimaryButtonWidget(
-                                        text: AppStrings.verifyButtonText,
-                                        onPressed: () {
-                                          context.router.pushAndPopUntil(
-                AppBottomNavigationRoute(selectedIndex: 0),
-                predicate: (_) => false,
-              );
-                                          // onButtonSubmit(otpp: value);
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16.dp),
+                                      child: BlocConsumer<AuthBloc,
+                                          AuthState>(
+                                        listener: (context, state) {
+                                        if (state.otpVerifyStatus is StatusSuccess) {
+                                            context.router.pushAndPopUntil(
+                                              AppBottomNavigationRoute(selectedIndex: 0),
+                                              predicate: (route) => false,
+                                            );
+                                            // context
+                                            //     .read<AuthBloc>()
+                                            //     .add(AuthEvent.getConfig());
+                                          } else if (state.otpVerifyStatus is StatusFailure) {
+                                            log(
+                                                state.otpVerifyStatus.errorMessage,
+                                                name: 'state.otpVerifyStatus.errorMessage');
+                                            TheToast.show(
+                                                message: 'Invalid or Expired OTP',
+                                                context: context);
+                                          }
+                                        },
+                                         listenWhen: (previous, current) =>
+                                            previous.otpVerifyStatus !=
+                                            current.otpVerifyStatus,
+                                        builder: (context, state) {
+                                          return PrimaryButtonWidget(
+                                            text: AppStrings.verifyButtonText,
+                                              isLoading: state.otpVerifyStatus is StatusLoading,
+                                         
+                                   
+                                            onPressed: () {
+                                          
+                                          log("inside button");
+                                          log(value.toString());
+                                              onButtonSubmit(otpp: value);
+                                            },
+                                          );
                                         },
                                       ),
                                     ),
@@ -208,7 +265,8 @@ class _LoginScreenState extends State<OtpScreen> {
                                 ? Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      CustomKeyboard(onKeyPressed: _onKeyPressed),
+                                      CustomKeyboard(
+                                          onKeyPressed: _onKeyPressed),
                                     ],
                                   )
                                 : const SizedBox.shrink(),
@@ -249,10 +307,11 @@ class _LoginScreenState extends State<OtpScreen> {
     if (otpp.length != 6) {
       TheToast.show(message: 'Please enter a 6 digit OTP', context: context);
     } else {
-      // context.read<AuthBloc>().add(AuthEvent.verifyOtp(
-      //     otp: otpp,
-      //     phoneNumber: widget.phoneNumber,
-      //     referralCode: widget.referralCode));
+      log(otpp.toString());
+      context.read<AuthBloc>().add(AuthEvent.verifyOtp(
+          otp: otpp,
+          phoneNumber: widget.phoneNumber,
+         ));
     }
   }
 }

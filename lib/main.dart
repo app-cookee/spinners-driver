@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spinners_driver/app/app.dart';
 import 'package:flutter/services.dart';
+import 'package:spinners_driver/app/services/api_services/environment/env_config.dart';
 import 'package:spinners_driver/app/services/local_storage_service.dart';
 import 'package:spinners_driver/app/locator/locator.dart';
 
@@ -11,7 +12,7 @@ void main() async {
 
 
   /// Configure environment [staging, production, qa]
-  // EnvConfiguration().init(Env.staging);
+  EnvConfiguration().init(Env.staging);
 
   ///Device orientation
   SystemChrome.setPreferredOrientations(

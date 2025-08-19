@@ -1,15 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/constants/app_strings.dart';
 import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/widgets/login_field.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_keyboard.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -51,12 +55,20 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
     });
-    phoneNumberListener.addListener(() {
+       phoneNumberListener.addListener(() {
       final phone = phoneNumberListener.value.trim();
       if (phone.length >= 9 && phone.length <= 15) {
-        debouncer.run(() {});
+        hasPhoneError.value = false;
+      } else if (phone.isNotEmpty) {
+        hasPhoneError.value = true;
       }
     });
+    // phoneNumberListener.addListener(() {
+    //   final phone = phoneNumberListener.value.trim();
+    //   if (phone.length >= 9 && phone.length <= 15) {
+    //     debouncer.run(() {});
+    //   }
+    // });
 
     referralCodeListener.addListener(() {
       final referral = referralCodeListener.value.trim();
@@ -185,18 +197,65 @@ class _LoginScreenState extends State<LoginScreen> {
                           hasPhoneNumberError: hasPhoneError,
                         ),
                         Gap(10.h),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                          child: PrimaryButtonWidget(
-                            text: AppStrings.loginButtonText,
-                            onPressed: () {
-                              context.router.push(OtpRoute(
-                                countryCode: countryCodeListener.value,
-                                phoneNumber: phoneNumberListener.value.trim(),
-                              ));
-                            },
-                          ),
+                        ValueListenableBuilder(
+                          valueListenable: phoneNumberListener,
+                          builder: (context, value, child) => 
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                              child: BlocConsumer<AuthBloc, AuthState>(
+                                listener: (context, state) {
+                                  if (state.sendOtpStatus is StatusSuccess) {
+                                    // Navigate to OTP screen on success
+                                    context.router.push(OtpRoute(
+                                      countryCode: countryCodeListener.value,
+                                      phoneNumber: phoneNumberListener.value.trim(),
+                                    ));
+                                  } else if (state.sendOtpStatus is StatusFailure) {
+                                    // Show error message
+                                    TheToast.show(
+                                      message: state.sendOtpStatus.errorMessage,
+                                      context: context
+                                    );
+                                  }
+                                },
+                                listenWhen: (previous, current) =>
+                                  current.sendOtpStatus != previous.sendOtpStatus,
+                                builder: (context, state) {
+                                  return PrimaryButtonWidget(
+                                    isLoading: state.sendOtpStatus is StatusLoading,
+                                    text: AppStrings.loginButtonText,
+                                    onPressed: () {
+                                      if (value.isNotEmpty && 
+                                          value.length >= 9 && 
+                                          !hasPhoneError.value) {
+                                        // Send OTP API call
+                                        onButtonSubmit(value.trim());
+                                      } else {
+                                        TheToast.show(
+                                          message: 'Please enter a valid phone number',
+                                          context: context
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
                         ),
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                        //   child: PrimaryButtonWidget(
+                        //     text: AppStrings.loginButtonText,
+                        //     onPressed: () {
+                        //           //  onButtonSubmit(
+                        //           //                 value, referralValue);
+                        //       context.router.push(OtpRoute(
+                        //         countryCode: countryCodeListener.value,
+                        //         phoneNumber: phoneNumberListener.value.trim(),
+                        //       ));
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -220,6 +279,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void onButtonSubmit(String phoneNumber) {
+    print('Phone: $phoneNumber');
+    context
+        .read<AuthBloc>()
+        .add(AuthEvent.sendOtp(phoneNumber: phoneNumber, isResent: false));
+  }
   Widget _signInText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
