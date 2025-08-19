@@ -18,13 +18,20 @@ class AppColors {
   static const Color keyboardButtonBorderColor=Color(0xFF878A8F);
   static const Color neutral500 = Color(0xFF6D6D6D);
   static const Color lightGrey = Color(0xFFE7E7E7);
-   static const Color neutral50 = Color(0xFFF6F6F6);
+  static const Color neutral50 = Color(0xFFF6F6F6);
+  static const Color lightGrey1=Color(0xFFEEEEEE);
+  static const Color lightSkyBlue=Color(0xFFADD8E9);
+  static const Color greenColor=Color(0xFF34C759);
+  static const Color grey1Color = Color(0xFF888888);
+  static const Color blue1 = Color(0xffEFFAFF);
+  static const Color blueColor=Color(0xFF0903B3);
+
 
 
   static const Color redColor = Color(0xffF97770);
   static const Color greyColor = Color(0xFFB9B9B9);
   static const Color primaryButtonTextColor = Color(0xff062B2D);
-  static const Color grey1Color = Color(0xFF888888);
+  
   static const Color grey2Color = Color(0xFFD9D9D9);
   static const Color primary950 = Color(0xFF04334D);
   
@@ -46,7 +53,7 @@ class AppColors {
   static const Color red2 = Color(0xFFDA1D1D);
   static const Color red3 = Color(0xFFFFE3E3);
   
-  static const Color blue1 = Color(0xffEFFAFF);
+  
   static const Color green1 = Color(0xff448827);
   static const Color green2 = Color(0xffE9FFDF);
   static const Color green3 = Color(0xffECFFEF);

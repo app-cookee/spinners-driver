@@ -4,6 +4,7 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/notifications/stacked_card_list.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/pickup_and_delivery_overview/pickup_and_delivery_overview.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class Notifications extends StatefulWidget {
@@ -37,6 +38,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
+     
       margin: EdgeInsets.only( top: 5.h),
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -52,15 +54,20 @@ class _NotificationsState extends State<Notifications> {
                 Image.asset(
                   AppImages.homeDottedRectangle,
                   width: 100.w,
-                  height: 16.h,
                 ),
                 _notificationDenotter(notifications),
                 if(notifications.isNotEmpty)
                Padding(
                   padding: EdgeInsets.only(top: 8.h),
-                  child: StackedCardList(
-                    notifications: notifications,
-                    notificationsNotifier: notificationsNotifier,
+                  child: Column(
+                    children: [
+                      StackedCardList(
+                        notifications: notifications,
+                        notificationsNotifier: notificationsNotifier,
+                      ),
+                      Gap(12.dp),
+                       const PickupAndDeliveryOverview(),
+                    ],
                   ),
                 ),
               ],

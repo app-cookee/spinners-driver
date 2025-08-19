@@ -21,10 +21,13 @@ class AppImages {
   static const String completedPickupCard ='assets/images/completed_pickup_card.png';
  static const String deliveriesLeftCard='assets/images/deliveries_left_card.png';
  static const String pickupRemainingCard='assets/images/pickup_remaining_card.png';
-
-
-
-
+static const String box = 'assets/images/box.png';
+static const String bike = 'assets/images/bike.png';
+static const String zip = 'assets/images/zip.png';
+static const String check = 'assets/images/check_verified.png';
+static const String mapIcon='assets/images/ic_map.png';
+static const String clipboardIcon='assets/images/ic_clipboard.png';
+static const String phoneIcon='assets/images/ic_phone.png';
 
 
 
