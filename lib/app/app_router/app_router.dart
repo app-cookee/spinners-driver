@@ -4,6 +4,8 @@ import 'package:spinners_driver/src/presentation/views/authentication/login_scre
 import 'package:spinners_driver/src/presentation/views/authentication/otp_screen.dart';
 import 'package:spinners_driver/src/presentation/views/navigation/app_bottom_navigation_view.dart';
 import 'package:spinners_driver/src/presentation/views/notification/notification_screen.dart';
+import 'package:spinners_driver/src/presentation/views/pickup_order_detail/pickup_order_detail_screen.dart';
+
 import 'package:spinners_driver/src/presentation/views/profile/account_screen.dart';
 import 'package:spinners_driver/src/presentation/views/splash/splash_screen.dart';
 
@@ -30,6 +32,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(
             path: '/appBottomNavigationView',
             page: AppBottomNavigationRoute.page),
+      AutoRoute(path: '/orderDetail', page: OrderDetailRoute.page),
         
       ];
 }

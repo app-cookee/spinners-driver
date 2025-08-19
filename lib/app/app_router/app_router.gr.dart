@@ -97,6 +97,53 @@ class NotificationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [OrderDetailScreen]
+class OrderDetailRoute extends PageRouteInfo<OrderDetailRouteArgs> {
+  OrderDetailRoute({
+    Key? key,
+    required String orderId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderDetailRoute.name,
+          args: OrderDetailRouteArgs(key: key, orderId: orderId),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<OrderDetailRouteArgs>();
+      return OrderDetailScreen(key: args.key, orderId: args.orderId);
+    },
+  );
+}
+
+class OrderDetailRouteArgs {
+  const OrderDetailRouteArgs({this.key, required this.orderId});
+
+  final Key? key;
+
+  final String orderId;
+
+  @override
+  String toString() {
+    return 'OrderDetailRouteArgs{key: $key, orderId: $orderId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! OrderDetailRouteArgs) return false;
+    return key == other.key && orderId == other.orderId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ orderId.hashCode;
+}
+
+/// generated route for
 /// [OtpScreen]
 class OtpRoute extends PageRouteInfo<OtpRouteArgs> {
   OtpRoute({
