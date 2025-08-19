@@ -1,19 +1,15 @@
 import 'dart:ui';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
-import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
-import 'package:spinners_driver/src/presentation/views/profile/widgets/dashed_coupen_box.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/profile_user_detail.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-@RoutePage()
+
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
@@ -58,117 +54,59 @@ class AccountScreen extends StatelessWidget {
                   padding: EdgeInsetsGeometry.only(left: 16.dp),
                   child:const ProfileUserDetail(
                     avatar: 'A',
-                    name: 'Naseeb',
+                    name: 'Ahmed',
                     phone: '+968 9123 4567',
                   ),
                 ),
                 Gap(21.dp),
-                Container(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                        AppColors.primaryColor.withValues(alpha: 0.1),
-                        AppColors.primaryColor.withValues(alpha: 0)
-                      ])),
-                  width: 100.w,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                     const DashedDivider(),
-                      Padding(
-                        padding: EdgeInsets.all(16.dp),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              AppImages.wallet,
-                              height: 24.dp,
-                              width: 24.dp,
-                            ),
-                            Gap(4.dp),
-                            Text(
-                              "Wallet Balance",
-                              style: AppTypography.sfProRoundedMedium.copyWith(
-                                color: AppColors.textGrey,
-                                fontSize: 14.sp,
-                              ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              "AED 120",
-                              style:
-                                  AppTypography.sfProRoundedSemiBold.copyWith(
-                                color: AppColors.primaryColor,
-                                fontSize: 24.sp,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
-                  child: CustomPaint(
-                    painter: DashRectPainter(
-                        gapLength: 4,
-                        strokeWidth: 1,
-                        color: AppColors.lightGrey,
-                        backgroundColor: AppColors.white),
-                    child: Container(
-                      padding: EdgeInsets.all(12.dp),
-                      decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(12.dp)),
-                      width: 100.w,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "🎁 My Referral Code",
-                            style: AppTypography.sfProRoundedSemiBold.copyWith(
-                              color: AppColors.textGrey,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsGeometry.symmetric(vertical: 8.dp),
-                            child:const DashedCouponBox(),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                text: "💸 Earn",
-                                style: AppTypography.sfProRoundedMedium
-                                    .copyWith(
-                                        color: AppColors.textGrey,
-                                        fontSize: 8.dp),
-                                children: [
-                                  TextSpan(
-                                    text: " 100 coins ",
-                                    style: AppTypography.sfProRoundedMedium
-                                        .copyWith(
-                                            color: AppColors.neutral950,
-                                            fontSize: 8.dp),
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        "for every friend who joins using your code. They’ll get 100 coins too!",
-                                    style: AppTypography.sfProRoundedMedium
-                                        .copyWith(
-                                            color: AppColors.textGrey,
-                                            fontSize: 8.dp),
-                                  )
-                                ]),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //       gradient: LinearGradient(
+                //           begin: Alignment.topCenter,
+                //           end: Alignment.bottomCenter,
+                //           colors: [
+                //         AppColors.primaryColor.withValues(alpha: 0.1),
+                //         AppColors.primaryColor.withValues(alpha: 0)
+                //       ])),
+                //   width: 100.w,
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: [
+                //      const DashedDivider(),
+                //       Padding(
+                //         padding: EdgeInsets.all(16.dp),
+                //         child: Row(
+                //           children: [
+                //             Image.asset(
+                //               AppImages.wallet,
+                //               height: 24.dp,
+                //               width: 24.dp,
+                //             ),
+                //             Gap(4.dp),
+                //             Text(
+                //               "Wallet Balance",
+                //               style: AppTypography.sfProRoundedMedium.copyWith(
+                //                 color: AppColors.textGrey,
+                //                 fontSize: 14.sp,
+                //               ),
+                //             ),
+                //             const Spacer(),
+                //             Text(
+                //               "AED 120",
+                //               style:
+                //                   AppTypography.sfProRoundedSemiBold.copyWith(
+                //                 color: AppColors.primaryColor,
+                //                 fontSize: 24.sp,
+                //               ),
+                //             )
+                //           ],
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+            
                 // Gap(20.dp),
                 Padding(
                   padding: EdgeInsets.only(
@@ -176,21 +114,14 @@ class AccountScreen extends StatelessWidget {
                   child: Column(
                     spacing: 6.dp,
                     children: const [
-                      AccountSettings(
-                          imagePath: AppImages.arrowRight,
-                          text: "Personal Details"),
-                      AccountSettings(
-                          imagePath: AppImages.arrowRight, text: "Address"),
-                      AccountSettings(
-                          imagePath: AppImages.arrowRight, text: "Saved Cards"),
-                      AccountSettings(
-                          imagePath: AppImages.arrowRight,
-                          text: "Manage Alerts"),
+                      // AccountSettings(
+                      //     imagePath: AppImages.arrowRight,
+                      //     text: "Personal Details"),
+                 
                       AccountSettings(
                           imagePath: AppImages.arrowRight,
                           text: "Terms of Service"),
-                      AccountSettings(
-                          imagePath: AppImages.share, text: "Referral Code"),
+                    
                       AccountSettings(
                         imagePath: AppImages.arrowRight,
                         text: "Log Out",
@@ -199,8 +130,9 @@ class AccountScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 Padding(
-                  padding: EdgeInsetsGeometry.only(left: 16.dp),
+                  padding: EdgeInsetsGeometry.only(left: 16.dp,top: 50.h),
                   child: Text(
                     "App Version 1.0.0",
                     style: AppTypography.sfProRoundedMedium.copyWith(

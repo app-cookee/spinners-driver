@@ -5,6 +5,7 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
+import 'package:spinners_driver/src/presentation/views/profile/account_screen.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -17,15 +18,15 @@ class AppBottomNavigationView extends StatefulWidget {
 
 class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
   final PageStorageBucket bucket = PageStorageBucket();
-  List<String> bottomNavLabels = ['Home', 'Reports', 'Account'];
+  List<String> bottomNavLabels = ['Home', 'Orders', 'Account'];
   List<String> bottomNavIcons = [
     AppImages.homeIcon,
-    AppImages.reportsIcon,
+    AppImages.ordersIcon,
     AppImages.accountIcon,
   ];
   List<String> bottomNavIconsSelected = [
     AppImages.homeSelectedIcon,
-    AppImages.reportsIcon,
+    AppImages.ordersSelectedIcon,
     AppImages.accountSelectedIcon,
   ];
 
@@ -33,7 +34,7 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
   List<Widget> screens = [
     const HomeView(),
     const SizedBox(),
-    const SizedBox(),
+    const AccountScreen(),
 
     // const AccountScreen(),
   ];

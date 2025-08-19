@@ -11,22 +11,6 @@
 part of 'app_router.dart';
 
 /// generated route for
-/// [AccountScreen]
-class AccountRoute extends PageRouteInfo<void> {
-  const AccountRoute({List<PageRouteInfo>? children})
-      : super(AccountRoute.name, initialChildren: children);
-
-  static const String name = 'AccountRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const AccountScreen();
-    },
-  );
-}
-
-/// generated route for
 /// [AppBottomNavigationView]
 class AppBottomNavigationRoute
     extends PageRouteInfo<AppBottomNavigationRouteArgs> {

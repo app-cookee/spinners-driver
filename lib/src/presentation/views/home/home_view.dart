@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/home_appbar.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/notifications/notifications.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/pickup_and_delivery_overview/pickup_and_delivery_overview.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class HomeView extends StatefulWidget {
@@ -37,7 +38,16 @@ class _HomeViewState extends State<HomeView> {
             const HomeAppbar(),
              Padding(
                padding: EdgeInsets.only(top: 9.h),
-               child: const Notifications()),
+               child: Column(
+                 children: [
+                   const Notifications(),
+                    const PickupAndDeliveryOverview(),
+                 ],
+               )),
+              //  Padding(
+              //     padding: EdgeInsets.only(top: 28.h),
+              //    child: const PickupAndDeliveryOverview(),
+              //  )
           ],
         ),
       ),

@@ -37,6 +37,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
+      margin: EdgeInsets.only( top: 5.h),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 6.dp,
@@ -51,15 +52,12 @@ class _NotificationsState extends State<Notifications> {
                 Image.asset(
                   AppImages.homeDottedRectangle,
                   width: 100.w,
-                  height: 30.h,
+                  height: 16.h,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 6.h),
-                  child: _notificationDenotter(notifications),
-                ),
+                _notificationDenotter(notifications),
                 if(notifications.isNotEmpty)
                Padding(
-                  padding: EdgeInsets.only(top: 12.h),
+                  padding: EdgeInsets.only(top: 8.h),
                   child: StackedCardList(
                     notifications: notifications,
                     notificationsNotifier: notificationsNotifier,

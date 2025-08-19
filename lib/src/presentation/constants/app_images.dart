@@ -5,32 +5,36 @@ class AppImages {
   static const String loginSpinBg = 'assets/images/loginSpinBg.png';
   static const String keyboardSymbols='assets/images/ic_keyboard_symbols.png';
   static const String backspaceIcon='assets/images/ic_backspace.png';
-  static const String reportsIcon='assets/images/ic_reports.png';
   static const String avatarBubble='assets/images/avatar_bubble.png';
   static const String homeDottedRectangle='assets/images/home_dotted_rectangle.png';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   static const String bellIcon = 'assets/images/ic_bell.png';
-  static const String accountIcon = 'assets/images/ic_account.png';
-  static const String accountSelectedIcon =
-      'assets/images/ic_account_selected.png';
+   static const String accountIcon = 'assets/images/ic_account.png';
+  static const String accountSelectedIcon ='assets/images/ic_account_selected.png';
   static const String homeIcon = 'assets/images/ic_home.png';
   static const String homeSelectedIcon = 'assets/images/ic_home_selected.png';
+   static const String ordersIcon='assets/images/ic_order.png';
+  static const String ordersSelectedIcon ='assets/images/ic_order_selected.png';
+  static const String remainingPickupIcon='assets/images/ic_remaining_pickup.png';
+  static const String deliveriesLeftIcon='assets/images/ic_deliveries_left.png';
+  static const String completedDeliveriesIcon = 'assets/images/ic_completed_deliveries.png';
+  static const String completedDeliveryCard ='assets/images/completed_delivery_card.png';
+  static const String completedPickupCard ='assets/images/completed_pickup_card.png';
+ static const String deliveriesLeftCard='assets/images/deliveries_left_card.png';
+ static const String pickupRemainingCard='assets/images/pickup_remaining_card.png';
+
+
+
+
+
+
+
+
+
+
+
+
+  
+ 
 
 
   static const String arrowRightIcon = 'assets/images/ic-arrow-right.png';
