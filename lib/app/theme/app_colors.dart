@@ -25,6 +25,18 @@ class AppColors {
   static const Color grey1Color = Color(0xFF888888);
   static const Color blue1 = Color(0xffEFFAFF);
   static const Color blueColor=Color(0xFF0903B3);
+  static const Color grey2Color = Color(0xFFD9D9D9);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -32,7 +44,7 @@ class AppColors {
   static const Color greyColor = Color(0xFFB9B9B9);
   static const Color primaryButtonTextColor = Color(0xff062B2D);
   
-  static const Color grey2Color = Color(0xFFD9D9D9);
+
   static const Color primary950 = Color(0xFF04334D);
   
   static const Color gradientbg = Color(0xFFD2F3FF);

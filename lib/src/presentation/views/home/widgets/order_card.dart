@@ -180,32 +180,30 @@ class OrderCard extends StatelessWidget {
   }
 
   Widget _footerButtons() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.dp),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildButton(
-            icon: AppImages.mapIcon,
-            label: 'Navigate',
-            isNavigate: true,
-            onPressed: () {},
-          ),
-          _buildButton(
-            icon: AppImages.clipboardIcon,
-            label: 'View',
-            isNavigate: false,
-            onPressed: () {},
-          ),
-          _buildButton(
-            icon: AppImages.phoneIcon,
-            label: 'Navigate',
-            isNavigate: false,
-            isPhone: true,
-            onPressed: () {},
-          )
-        ],
-      ),
+    return Row(
+      spacing:6.dp,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildButton(
+          icon: AppImages.mapIcon,
+          label: 'Navigate',
+          isNavigate: true,
+          onPressed: () {},
+        ),
+        _buildButton(
+          icon: AppImages.clipboardIcon,
+          label: 'View',
+          isNavigate: false,
+          onPressed: () {},
+        ),
+        _buildButton(
+          icon: AppImages.phoneIcon,
+          label: 'Navigate',
+          isNavigate: false,
+          isPhone: true,
+          onPressed: () {},
+        )
+      ],
     );
   }
 
