@@ -115,7 +115,10 @@ class _SecondaryButtonWidgetState extends State<SecondaryButtonWidget> with Sing
               decoration: BoxDecoration(
                 color: widget.backgroundColor ?? AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(widget.isLoading ? 30 : 12.dp),
-                border: Border.all(color: widget.bordercolor ?? AppColors.primaryColor)
+                border:widget.bordercolor!=null?
+                Border.all(
+                  color: 
+                  widget.bordercolor ?? AppColors.primaryColor):null
               ),
               // padding: EdgeInsets.all(5.dp), // 5-6 pixels padding
               child: Material(

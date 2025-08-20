@@ -1,7 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
-
 class DashedDivider extends StatelessWidget {
   const DashedDivider({
     super.key,
