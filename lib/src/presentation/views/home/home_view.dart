@@ -93,14 +93,14 @@ class _HomeViewState extends State<HomeView> {
                                   primary: false,
                                   itemBuilder: (context, index) {
                                     return const OrderCard(
-                                      orderId: '12345',
-                                      services: ['Green (Clean & Press)', 'Pink (Bed & Bath)'],
+                                      orderId: 'SPN12345',
+                                      services: ['Clean & Press', 'Press Only',],
                                       time: 'Today, 4:00 PM – 6:00 PM',
                                       status: 'In Progress',
                                       isDropoff: false,
                                       isQuickOrder: true,
-                                      isService: false,
-                                      notes: 'Deliver to reception.',
+                                      // isService: false,
+                                     
                                     );
                                   })
                             ],

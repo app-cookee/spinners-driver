@@ -7,8 +7,6 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
-import 'package:spinners_driver/src/presentation/views/home/widgets/scan_new_bag_bottomsheet.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderCard extends StatelessWidget {
@@ -18,8 +16,7 @@ class OrderCard extends StatelessWidget {
   final String status;
   final bool isDropoff;
   final bool isQuickOrder;
-  final bool isService;
-  final String notes;
+  // final bool isService;
   const OrderCard({
     super.key,
     required this.orderId,
@@ -28,8 +25,7 @@ class OrderCard extends StatelessWidget {
     required this.status,
     required this.isDropoff,
     required this.isQuickOrder,
-    required this.isService,
-    required this.notes,
+    // required this.isService,
   });
 
   Color getColor(String status) {
@@ -54,7 +50,7 @@ class OrderCard extends StatelessWidget {
           context.router.push(OrderDetailRoute(orderId: orderId));
          }
         // }
-        CustomBottomSheetWidget(context: context, child: const ScanNewBagBottomsheet()).show();
+        
       },
       child: Container(
         padding: EdgeInsets.only(top: 9.dp, bottom: 12.dp),
@@ -139,18 +135,17 @@ class OrderCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(!isService ? "Notes" : "Services", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 10.dp, color: AppColors.primaryColor500)),
+          Text( "Services", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 10.dp, color: AppColors.primaryColor500)),
           Gap(6.dp),
-          !isService
-              ? Text(notes, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950))
-              : Wrap(
+         
+               Wrap(
                   spacing: 8.dp,
                   runSpacing: 6.dp,
                   children: services.map((label) {
                     return Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Image.asset(AppImages.check, height: 16.dp, width: 16.dp),
+                        Image.asset(AppImages.bag, height: 16.dp, width: 16.dp),
                         Gap(2.dp),
                         Text(label, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950)),
                       ],

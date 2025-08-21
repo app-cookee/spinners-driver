@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -48,7 +47,7 @@ class _PickupFilterTabsState extends State<PickupFilterTabs> {
             label: 'Dropoff',
             index: 2,
             onTap: () => selectedIndexNotifier.value = 2,
-            isDropoff: true,
+            // isDropoff: true,
           ),
         ],
       ),
@@ -59,7 +58,7 @@ class _PickupFilterTabsState extends State<PickupFilterTabs> {
     required String label,
     required int index,
     required VoidCallback onTap,
-    bool isDropoff = false,
+    // bool isDropoff = false,
   }) {
     return Expanded(
       child: GestureDetector(
@@ -86,20 +85,20 @@ class _PickupFilterTabsState extends State<PickupFilterTabs> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (isDropoff)
-                    Container(
-                      height: 10.dp,
-                      width: 10.dp,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primaryColor,
-                        border: Border.all(
-                          color: AppColors.lightSkyBlue,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  if (isDropoff) Gap(4.dp),
+                  // if (isDropoff)
+                  //   Container(
+                  //     height: 10.dp,
+                  //     width: 10.dp,
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: AppColors.primaryColor,
+                  //       border: Border.all(
+                  //         color: AppColors.lightSkyBlue,
+                  //         width: 2,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // if (isDropoff) Gap(4.dp),
                   Text(
                     label,
                     style: AppTypography.sfProRoundedSemiBold.copyWith(

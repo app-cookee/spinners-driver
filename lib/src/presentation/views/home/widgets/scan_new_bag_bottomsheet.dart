@@ -5,6 +5,7 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -32,16 +33,49 @@ class _PickupTimingBottomsheetState extends State<ScanNewBagBottomsheet> {
         children: [
           Gap(12.dp),
           _header(),
-          Gap(28.dp),
+          Gap(11.dp),
+          Divider(
+            thickness: 1.dp,
+            color: AppColors.lightGrey,
+          ),
+          Gap(15.dp),
           _bagID(),
-          Gap(16.h),
+          Gap(10.dp),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+            child: CustomDropDownWidget(
+              onChanged: (value) {},
+              items: [
+                CustomDropDownMenuItem(label: 'Clean & Press', value: 'Clean & Press', useImg: AppImages.bag),
+                CustomDropDownMenuItem(label: 'Press Only', value: 'Press Only', useImg: AppImages.bag),
+                CustomDropDownMenuItem(label: 'Bed & Bath', value: 'Bed & Bath', useImg: AppImages.bag),
+                CustomDropDownMenuItem(label: 'Wash & Fold', value: 'Wash & Fold', useImg: AppImages.bag),
+              ],
+              text: 'Select Bag Color/Service',
+              hint: '',
+            ),
+          ),
+          Gap(24.dp),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16.dp,
+              right: 16.dp,
+            ),
+            child: PrimaryButtonWidget(
+              onPressed: () {},
+              text: 'Add Bag',
+            ),
+          ),
+          Gap(8.dp),
           Padding(
             padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
             child: PrimaryButtonWidget(
+              buttonBgImage: AppImages.buttonGreyBg,
+              backgroundColor: AppColors.grey1Color,
               onPressed: () {
                 context.router.pop();
               },
-              text: 'Done',
+              text: 'Cancel',
             ),
           ),
         ],
@@ -51,17 +85,14 @@ class _PickupTimingBottomsheetState extends State<ScanNewBagBottomsheet> {
 
   Widget _bagID() {
     return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 16.dp),
+      padding: EdgeInsets.symmetric(horizontal: 16.dp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('Bag ID', style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 16.sp, color: AppColors.textGrey)),
           Gap(6.dp),
-           CommonTextField(
-            hintText: '',
-           textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp,color: AppColors.grey1Color)
-          ),
+          CommonTextField(hintText: '', textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp, color: AppColors.grey1Color)),
         ],
       ),
     );

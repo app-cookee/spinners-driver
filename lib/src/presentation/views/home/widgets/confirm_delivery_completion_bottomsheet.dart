@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -31,16 +33,59 @@ class _ConfirmDeliveryCompletionBottomsheetState extends State<ConfirmDeliveryCo
         children: [
           Gap(12.dp),
           Text('Confirm Delivery Completion', style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 16.sp, color: AppColors.textGrey)),
-          Gap(28.dp),
+          Gap(11.dp),
+          Divider(
+            thickness: 1.dp,
+            color: AppColors.lightGrey,
+          ),
+          Gap(15.dp),
           _orderID(),
-          Gap(16.h),
+          Gap(8.dp),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+            child: CustomDropDownWidget(
+              onChanged: (value) {},
+              items: [
+                CustomDropDownMenuItem(
+                  label: 'Bank',
+                  value: 'Bank',
+                ),
+                CustomDropDownMenuItem(
+                  label: 'COD',
+                  value: 'COD',
+                ),
+              ],
+              text: 'Payment Method',
+              hint: '',
+              labelstyle: AppTypography.sfProRoundedBold.copyWith(
+                fontSize: 16.sp,
+                color: AppColors.neutral950,
+              ),
+            ),
+          ),
+          Gap(8.dp),
+          _totalCollected(),
+          Gap(18.dp),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16.dp,
+              right: 16.dp,
+            ),
+            child: PrimaryButtonWidget(
+              onPressed: () {},
+              text: 'Confirm',
+            ),
+          ),
+          Gap(8.dp),
           Padding(
             padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
             child: PrimaryButtonWidget(
+              buttonBgImage: AppImages.buttonGreyBg,
+              backgroundColor: AppColors.grey1Color,
               onPressed: () {
                 context.router.pop();
               },
-              text: 'Done',
+              text: 'Cancel',
             ),
           ),
         ],
@@ -50,36 +95,32 @@ class _ConfirmDeliveryCompletionBottomsheetState extends State<ConfirmDeliveryCo
 
   Widget _orderID() {
     return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 16.dp),
+      padding: EdgeInsets.symmetric(horizontal: 16.dp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('Order ID', style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 16.sp, color: AppColors.textGrey)),
           Gap(6.dp),
-           CommonTextField(
-            hintText: '',
-           textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp,color: AppColors.grey1Color)
-          ),
+          CommonTextField(hintText: '', textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp, color: AppColors.grey1Color)),
         ],
       ),
     );
   }
 
-
-    Widget _totalCollected() {
+  Widget _totalCollected() {
     return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 16.dp),
+      padding: EdgeInsets.symmetric(horizontal: 16.dp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('Total Collected', style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 16.sp, color: AppColors.textGrey)),
           Gap(6.dp),
-           CommonTextField(
-            hintText: '',
-           textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp,color: AppColors.neutral950)
-          ),
+          CommonTextField(hintText: '', textStyle: AppTypography.sfProRoundedBold.copyWith(
+                fontSize: 16.sp,
+                color: AppColors.neutral950,
+              ),),
         ],
       ),
     );
