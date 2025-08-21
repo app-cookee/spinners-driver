@@ -27,6 +27,11 @@ class AppColors {
   static const Color blueColor=Color(0xFF0903B3);
     static const Color scanblue=Color(0xFF77C9E8);
   static const Color grey2Color = Color(0xFFD9D9D9);
+    static const Color dialogeBgRedColor = Color(0xFFC73A21);
+      static const Color dialogeBorderColor = Color(0xFFA8ABAB);
+        static const Color dialogeBgColor = Color(0xFFE3FFFF);
+  static const Color dialogeContentColor = Color(0xFF5D6866);
+    static const Color dividerColor = Color(0xFFE8E9E4);
 
 
 

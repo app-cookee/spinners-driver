@@ -7,6 +7,7 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/profile_user_detail.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_dialogue_widget.dart';
 
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -114,7 +115,7 @@ class AccountScreen extends StatelessWidget {
                       top: 20.dp, left: 16.dp, right: 16.dp, bottom: 24.dp),
                   child: Column(
                     spacing: 6.dp,
-                    children: const [
+                    children:  [
                       // AccountSettings(
                       //     imagePath: AppImages.arrowRight,
                       //     text: "Personal Details"),
@@ -127,6 +128,27 @@ class AccountScreen extends StatelessWidget {
                         imagePath: AppImages.arrowRight,
                         text: "Log Out",
                         textColor: AppColors.redText,
+                        onTap: () {
+                             showDialog(
+                              context: context,
+                              builder: (context) => CustomDialogueWidget(
+                                title: 'Are you sure you want to Logout?',
+                                content:
+                                    "Once you log out, you'll need to sign in again to continue. Are you sure you want to proceed?",
+                                confirmText: 'Logout',
+                                onCancel: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                                onConfirm: () {
+                                  // context
+                                  //     .read<AuthBloc>()
+                                  //     .add(AuthEvent.logOut());
+                                },
+                              ),
+                            );
+                          
+                        },
+                        
                       ),
                     ],
                   ),
