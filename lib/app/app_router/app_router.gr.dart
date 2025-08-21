@@ -144,6 +144,22 @@ class OrderDetailRouteArgs {
 }
 
 /// generated route for
+/// [OrderScreen]
+class OrderRoute extends PageRouteInfo<void> {
+  const OrderRoute({List<PageRouteInfo>? children})
+      : super(OrderRoute.name, initialChildren: children);
+
+  static const String name = 'OrderRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const OrderScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [OtpScreen]
 class OtpRoute extends PageRouteInfo<OtpRouteArgs> {
   OtpRoute({

@@ -26,7 +26,7 @@ class _PickupFilterTabsState extends State<PickupFilterTabs> {
       height: 5.h,
       width: 100.w,
       padding: EdgeInsets.all(2.dp),
-      margin: EdgeInsets.symmetric(horizontal: 16.dp),
+      // margin: EdgeInsets.symmetric(horizontal: 16.dp),
       decoration: BoxDecoration(
         color: AppColors.lightGrey,
         borderRadius: BorderRadius.circular(8.dp),
@@ -86,20 +86,20 @@ class _PickupFilterTabsState extends State<PickupFilterTabs> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (isDropoff)
-                    Container(
-                      height: 10.dp,
-                      width: 10.dp,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primaryColor,
-                        border: Border.all(
-                          color: AppColors.lightSkyBlue,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  if (isDropoff) Gap(4.dp),
+                  // if (isDropoff)
+                  //   Container(
+                  //     height: 10.dp,
+                  //     width: 10.dp,
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: AppColors.primaryColor,
+                  //       border: Border.all(
+                  //         color: AppColors.lightSkyBlue,
+                  //         width: 2,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // if (isDropoff) Gap(4.dp),
                   Text(
                     label,
                     style: AppTypography.sfProRoundedSemiBold.copyWith(

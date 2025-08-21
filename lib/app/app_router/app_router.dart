@@ -34,7 +34,7 @@ class AppRouter extends RootStackRouter {
             path: '/appBottomNavigationView',
             page: AppBottomNavigationRoute.page),
       AutoRoute(path: '/orderDetail', page: OrderDetailRoute.page),
-        // AutoRoute(path: '/OrdersScreen', page: OrdersRoute.page),
+        AutoRoute(path: '/ordersScreen', page: OrderRoute.page),
         
       ];
 }

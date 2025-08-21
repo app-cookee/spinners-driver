@@ -44,7 +44,7 @@ class _HomeViewState extends State<HomeView> {
           children: [
             const HomeAppbar(),
             Padding(
-                padding: EdgeInsets.only(top: 13.h,bottom:12.h),
+                padding: EdgeInsets.only(top: 13.h,),
                 child: SingleChildScrollView(
                   primary: true,
                   child: Column(
@@ -66,27 +66,32 @@ class _HomeViewState extends State<HomeView> {
                             ],
                           ),
                         ),
-                        child: SingleChildScrollView(
-                          physics:const NeverScrollableScrollPhysics(),
-                          child: Column(
-                            children: [
-                              const TodaysCollectedCOD(),
-                              const PickupFilterTabs(),
-                              Gap(16.dp),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        child: Column(
+                          children: [
+                            const TodaysCollectedCOD(),
+                            Padding(
+                            padding:EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
+                              child: const PickupFilterTabs(),
+                            ),
+                            Gap(16.dp),
+                            Padding(
+                              padding:EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   ToggleButton(
                                     isToggled: nearestLocationNotifier,
                                     label: 'Nearest Location',
-                                  ),
+                                  ),Gap(12.dp),
                                   ToggleButton(
                                     isToggled: expressOnlyNotifier,
                                     label: 'Express Only',
                                   ),
                                 ],
                               ),
-                              ListView.builder(
+                            ),
+                            Expanded(
+                              child: ListView.builder(physics: NeverScrollableScrollPhysics(),
                                   itemCount: 4,
                                   shrinkWrap: true,
                                   padding: EdgeInsets.only(top: 12.dp,left: 16.dp, right: 16.dp),
@@ -94,19 +99,21 @@ class _HomeViewState extends State<HomeView> {
                                   itemBuilder: (context, index) {
                                     return const OrderCard(
                                       orderId: '12345',
-                                      services: ['Green (Clean & Press)', 'Pink (Bed & Bath)'],
+                                      services: ['Clean & Press', 'Bed & Bath'],
                                       time: 'Today, 4:00 PM – 6:00 PM',
                                       status: 'In Progress',
                                       isDropoff: false,
                                       isQuickOrder: true,
-                                      isService: false,
-                                      notes: 'Deliver to reception.',
+                                      isService: false, service: [],
+                                      // notes: 'Deliver to reception.',
                                     );
-                                  })
-                            ],
-                          ),
+                                  }),
+                            ),
+                                  
+                          ],
                         ),
-                      )
+                      ),
+                   
                     ],
                   ),
                 )),

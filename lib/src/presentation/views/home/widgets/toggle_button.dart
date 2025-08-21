@@ -49,7 +49,7 @@ class _ToggleButtonState extends State<ToggleButton> {
                 ),
               ),
               Gap(8.dp),
-              Text(widget.label,style:AppTypography.sfProRoundedMedium.copyWith(fontSize: 16.sp,color: AppColors.black)),
+              Text(widget.label,style:AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.sp,color: AppColors.black,letterSpacing: -0.08)),
             ],
           ),
         );

@@ -8,6 +8,7 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/scan_new_bag_bottomsheet.dart';
+import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -19,7 +20,8 @@ class OrderCard extends StatelessWidget {
   final bool isDropoff;
   final bool isQuickOrder;
   final bool isService;
-  final String notes;
+  // final String notes;
+  final List service;
   const OrderCard({
     super.key,
     required this.orderId,
@@ -29,7 +31,8 @@ class OrderCard extends StatelessWidget {
     required this.isDropoff,
     required this.isQuickOrder,
     required this.isService,
-    required this.notes,
+    // required this.notes,
+     required this.service,
   });
 
   Color getColor(String status) {
@@ -60,7 +63,13 @@ class OrderCard extends StatelessWidget {
         padding: EdgeInsets.only(top: 9.dp, bottom: 12.dp),
         margin: EdgeInsets.only(bottom: 12.dp),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: AppColors.white,boxShadow: [BoxShadow(
+             color: AppColors.black.withValues(alpha: .11), 
+             offset:const Offset(0, 2), blurRadius : 5,
+           spreadRadius :0.0, 
+             
+
+          )],
           borderRadius: BorderRadius.circular(12.dp),
           border: Border.all(color: AppColors.lightGrey),
         ),
@@ -99,7 +108,8 @@ class OrderCard extends StatelessWidget {
 
             // Dotted Divider
             _divider(),
-            _footerButtons(),
+             _orderedCardButtons(context)
+           
           ],
         ),
       ),
@@ -139,24 +149,32 @@ class OrderCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(!isService ? "Notes" : "Services", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 10.dp, color: AppColors.primaryColor500)),
+          // Text(!isService ? "Notes" : "Services", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 10.dp, color: AppColors.primaryColor500)),
+             Text("Services", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 10.dp, color: AppColors.primaryColor500)),
           Gap(6.dp),
-          !isService
-              ? Text(notes, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950))
-              : Wrap(
+          // !isService
+          //     ? Text(notes, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950))
+              // :
+               Wrap(
                   spacing: 8.dp,
                   runSpacing: 6.dp,
                   children: services.map((label) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(AppImages.check, height: 16.dp, width: 16.dp),
+                    return Row(  mainAxisSize: MainAxisSize.min, children: [
+                        Image.asset(AppImages.bag, height: 16.dp, width: 16.dp),
                         Gap(2.dp),
                         Text(label, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950)),
-                      ],
-                    );
+                      ],);
+                    // return Row(
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   children: [
+                    //     Image.asset(AppImages.check, height: 16.dp, width: 16.dp),
+                    //     Gap(2.dp),
+                    //     Text(label, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950)),
+                    //   ],
+                    // );
                   }).toList(),
                 ),
+               
         ],
       ),
     );
@@ -184,54 +202,48 @@ class OrderCard extends StatelessWidget {
       ),
     );
   }
-
-  Widget _footerButtons() {
-    return Row(
-      spacing:6.dp,
-      mainAxisAlignment: MainAxisAlignment.center,
+Widget _orderedCardButtons(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 12.dp),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildButton(
+        OrderCardButton(
+          widthFactor: 201 / 376,
           icon: AppImages.mapIcon,
-          label: 'Navigate',
-          isNavigate: true,
-          onPressed: () {},
+          text: "Navigate",
+          borderColor: AppColors.primaryColor,
+          backgroundColor: AppColors.blue1,
+          textColor: AppColors.primaryColor,
+          onTap: () {
+          
+          },
         ),
-        _buildButton(
+        OrderCardButton(
+          widthFactor: 71 / 376,
           icon: AppImages.clipboardIcon,
-          label: 'View',
-          isNavigate: false,
-          onPressed: () {},
+          text: "View",
+          borderColor: AppColors.greyColor,
+          textColor: AppColors.grey1Color,
+          onTap: () {
+            
+          },
         ),
-        _buildButton(
+        OrderCardButton(
+          widthFactor: 36 / 376,
           icon: AppImages.phoneIcon,
-          label: 'Navigate',
-          isNavigate: false,
-          isPhone: true,
-          onPressed: () {},
-        )
+          borderColor: AppColors.greyColor,
+          textColor: AppColors.grey1Color,
+          onTap: () {
+          
+          },
+        ),
       ],
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildButton({required String icon, required String label, required VoidCallback onPressed, bool isNavigate = false, bool isPhone = false}) {
-    return Container(
-      padding: isNavigate ? EdgeInsets.symmetric(horizontal: 60.5.dp, vertical: 8.dp) : EdgeInsets.all(8.dp),
-      decoration: BoxDecoration(
-        color: isNavigate ? AppColors.blue1 : AppColors.transparent,
-        borderRadius: BorderRadius.circular(8.dp),
-        border: Border.all(color: isNavigate ? AppColors.primaryColor : AppColors.lightGrey),
-      ),
-      child: Row(
-        children: [
-          Image.asset(icon, height: 20.dp, width: 20.dp),
-          if (!isPhone) ...[
-            Gap(4.dp),
-            Text(label, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 14.dp, color: AppColors.grey1Color)),
-          ]
-        ],
-      ),
-    );
-  }
+ 
 
   Widget _expressLabel() {
     return Container(
@@ -248,7 +260,7 @@ class OrderCard extends StatelessWidget {
           ),
         ),
       child: Container(
-        padding:EdgeInsets.symmetric(horizontal: 8.dp, vertical: 6.5.dp),
+        padding:EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.dp),
           gradient: const LinearGradient(
