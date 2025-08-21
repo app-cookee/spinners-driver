@@ -53,25 +53,6 @@ class _HomeViewState extends State<HomeView> {
         child: Stack(
           children: [
             const HomeAppbar(),
-            // Padding(
-            //   padding: EdgeInsets.only(top: 61.h),
-            //   child: Container(
-            //     width: 100.w,
-            //     height: 100.h,
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.only(
-            //         topLeft: Radius.circular(16.dp),
-            //         topRight: Radius.circular(16.dp),
-            //       ),
-            //       gradient: const LinearGradient(
-            //         colors: [
-            //           AppColors.lightGrey1,
-            //           AppColors.neutral50,
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
                // Use ValueListenableBuilder to conditionally show/hide the container
             ValueListenableBuilder<bool>(
               valueListenable: isScrolling,
