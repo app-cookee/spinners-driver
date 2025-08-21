@@ -92,7 +92,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     ),
                   ),
                 ),
-                OrderDetailnfo(notes:  "Customer requested pickup after prayer time.",customer:  "Ahmed Al Harthy",amount: "45",),
+                const OrderDetailnfo(notes:  "Customer requested pickup after prayer time.",customer:  "Ahmed Al Harthy",amount: "45",),
                 SliverToBoxAdapter(
                   child: Column(
                     children: [

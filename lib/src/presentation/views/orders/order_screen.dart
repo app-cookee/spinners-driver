@@ -1,25 +1,28 @@
 // import 'package:auto_route/auto_route.dart';
+// import 'package:dotted_border/dotted_border.dart';
 // import 'package:flutter/material.dart';
 // import 'package:gap/gap.dart';
 // import 'package:spinners_driver/app/theme/app_colors.dart';
 // import 'package:spinners_driver/app/theme/app_typography.dart';
 // import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 // import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
+// import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card.dart';
+// import 'package:spinners_driver/src/presentation/views/orders/widgets/orders_tab_switcher.dart';
 // import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-// enum OrderStatus {
-//   accepted,
-//   paymentPending,
-//   pickedUp,
-//   pickupScheduled,
-//   recieved,
-//   processing,
-//   readyForDelivery,
-//   cancelled,
-//   delivered,
-// }
+// // enum OrderStatus {
+// //   accepted,
+// //   paymentPending,
+// //   pickedUp,
+// //   pickupScheduled,
+// //   recieved,
+// //   processing,
+// //   readyForDelivery,
+// //   cancelled,
+// //   delivered,
+// // }
 
-// String statusToString(OrderStatus status) => status.name;
+// // String statusToString(OrderStatus status) => status.name;
 
 // @RoutePage()
 // class OrdersScreen extends StatefulWidget {
@@ -30,24 +33,24 @@
 // }
 
 // class _OrdersScreenState extends State<OrdersScreen> {
-//   final _currentOrdersStatuses = [
-//     OrderStatus.accepted,
-//     OrderStatus.pickedUp,
-//     OrderStatus.paymentPending,
-//     OrderStatus.pickupScheduled,
-//     OrderStatus.recieved,
-//     OrderStatus.processing,
-//     OrderStatus.readyForDelivery,
-//   ];
+// //   final _currentOrdersStatuses = [
+// //     OrderStatus.accepted,
+// //     OrderStatus.pickedUp,
+// //     OrderStatus.paymentPending,
+// //     OrderStatus.pickupScheduled,
+// //     OrderStatus.recieved,
+// //     OrderStatus.processing,
+// //     OrderStatus.readyForDelivery,
+// //   ];
 
 //   final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
-//   final int _itemsPerPage = 5;
-//     final ScrollController _scrollController = ScrollController();
+// //   final int _itemsPerPage = 5;
+//   final ScrollController _scrollController = ScrollController();
 
-//   final _pastOrdersStatuses = [
-//     OrderStatus.cancelled,
-//     OrderStatus.delivered,
-//   ];
+// //   final _pastOrdersStatuses = [
+// //     OrderStatus.cancelled,
+// //     OrderStatus.delivered,
+// //   ];
 
 //   @override
 //   void initState() {
@@ -58,7 +61,7 @@
 //     //       _scrollController.position.maxScrollExtent - 200) {
 //     //     _loadMoreItems();
 //     //   }
-     
+
 //     // });
 //   }
 
@@ -74,7 +77,6 @@
 //   //       );
 //   // }
 
-
 // //       void _loadMoreItems() {
 // //     final orderState = context.read<OrderBloc>().state;
 
@@ -83,8 +85,8 @@
 // //       return;
 // //     }
 // //  // Get the current statuses based on selected tab
-// //     final currentStatuses = selectedIndexNotifier.value == 0 
-// //         ? _currentOrdersStatuses 
+// //     final currentStatuses = selectedIndexNotifier.value == 0
+// //         ? _currentOrdersStatuses
 // //         : _pastOrdersStatuses;
 
 // //             // Convert to status strings
@@ -94,7 +96,7 @@
 // //     // Use the LoadMoreOther event instead
 // //     context.read<OrderBloc>().add(OrderEvent.paginateOrdersList(skip: orderState.ordersList.length, limit: _itemsPerPage,status: statusString
 // // ));
-     
+
 // //   }
 
 //   @override
@@ -136,10 +138,16 @@
 //             child: Column(
 //               crossAxisAlignment: CrossAxisAlignment.start,
 //               children: [
-//                 Text("My Orders",
+//                 Text("Pickups",
 //                     style: AppTypography.sfProRoundedSemiBold.copyWith(
 //                         fontSize: 24.dp, color: AppColors.primary950)),
-//                 Gap(12.dp),
+//                         Gap(8.dp),
+//                          Text(  "You have 6 pickups today.  2 are Express",
+//                     // "#SPN${orderListItem.refId.toString()}",
+//                       style: AppTypography.sfProRoundedMedium
+//                           .copyWith(fontSize: 14.dp, color: AppColors.textGrey)),
+//                 Gap(16.dp),
+
 //                 OrdersTabSwitcher(
 //                   selectedIndexNotifier: selectedIndexNotifier,
 //                   onTabChanged: (index) {
@@ -153,42 +161,45 @@
 //                 Gap(12.dp),
 //                 // BlocBuilder<OrderBloc, OrderState>(
 //                 //   builder: (context, state) {
-//                     // if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
-//                     //   return OrdersPlaceholder();
-//                     // }
-//                     // if(state.ordersList.isEmpty){
-//                     //   return Padding(
-//                     //     padding:EdgeInsetsGeometry.only(top: 15.h),
-//                     //     child: Center(child: EmptyPlaceholder(message: "No Orders",),),
-//                     //   );
-//                     // }
-                     
-//                     // return 
-//                     Expanded(
-//                       child: ScrollConfiguration(
-//                         behavior: NoGlowScrollBehavior(),
-//                         child: ListView.builder(
-//                            controller: _scrollController,
-//                               itemCount:5,
-//                               //  state.ordersList.length + (state.isLoadingMore ? 1 : 0),
-//                             padding: EdgeInsets.only(top: 0,bottom: 10.h),
-//                             itemBuilder: (context, index) {
-//                             //     if (index == state.ordersList.length) {
-//                             //   return SpinKitCircle(
-//                             //           color: AppColors.primaryColor,
-//                             //         );
-//                             // }
-                            
-//                               return OrderCard(trailingButton:QuickOrderButton() ,
-//                                 orderListItem: state.ordersList[index],
-                              
-//                               );
-                              
-//                             },
-                           
-//                             ),
-//                       ),
-//                     )
+//                 // if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
+//                 //   return OrdersPlaceholder();
+//                 // }
+//                 // if(state.ordersList.isEmpty){
+//                 //   return Padding(
+//                 //     padding:EdgeInsetsGeometry.only(top: 15.h),
+//                 //     child: Center(child: EmptyPlaceholder(message: "No Orders",),),
+//                 //   );
+//                 // }
+
+//                 // return
+//                 Expanded(
+//                   child: ScrollConfiguration(
+//                     behavior: NoGlowScrollBehavior(),
+//                     child: ListView.builder(
+//                       controller: _scrollController,
+//                       itemCount: 5,
+//                       //  state.ordersList.length + (state.isLoadingMore ? 1 : 0),
+//                       padding: EdgeInsets.only(top: 0, bottom: 10.h),
+//                       itemBuilder: (context, index) {
+//                         //     if (index == state.ordersList.length) {
+//                         //   return SpinKitCircle(
+//                         //           color: AppColors.primaryColor,
+//                         //         );
+//                         // }
+
+//                         return const OrderedCard(pickupStatus: "Inprogress",type: "normal",
+//                           trailingButton: QuickOrderButton(),
+//                           orderId: "1234",
+//                           services: [
+//                             "Green (Clean & Press)",
+//                             "Pink (Bed & Bath)"
+//                           ],
+//                           // orderListItem: state.ordersList[index],
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                 )
 //                 //   },
 //                 // )
 //               ],
@@ -203,7 +214,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final gradient = const LinearGradient(
+//     const gradient =  LinearGradient(
 //       colors: [
 //         Color(0xFF6A61F3),
 //         Color(0xFF43D995),
@@ -222,7 +233,7 @@
 //       child: Container(
 //         padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 6.dp),
 //         decoration: BoxDecoration(
-//           color: Color(0xFFFFF4DE),
+//           color: const Color(0xFFFFF4DE),
 //           borderRadius: BorderRadius.circular(6.dp),
 //           gradient: const LinearGradient(
 //             colors: [Color(0xFFEFEEFF), Color(0xFFEFFFEE)],
