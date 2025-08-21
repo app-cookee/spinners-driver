@@ -32,6 +32,7 @@ static const String whatsapp='assets/images/whatsapp.png';
 static const String dress='assets/images/dress.png';
 static const String bag='assets/images/bag.png';
 static const String scanner='assets/images/scan-barcode.png';
+static const String qrIcon='assets/images/ic_qr.png';
 
 
 

@@ -44,7 +44,7 @@ class _HomeViewState extends State<HomeView> {
           children: [
             const HomeAppbar(),
             Padding(
-                padding: EdgeInsets.only(top: 9.h),
+                padding: EdgeInsets.only(top: 13.h,bottom:12.h),
                 child: SingleChildScrollView(
                   primary: true,
                   child: Column(
@@ -67,7 +67,7 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ),
                         child: SingleChildScrollView(
-                          primary: false,
+                          physics:const NeverScrollableScrollPhysics(),
                           child: Column(
                             children: [
                               const TodaysCollectedCOD(),
@@ -89,7 +89,7 @@ class _HomeViewState extends State<HomeView> {
                               ListView.builder(
                                   itemCount: 4,
                                   shrinkWrap: true,
-                                  padding: EdgeInsets.only(top: 12.dp, bottom: 16.h, left: 16.dp, right: 16.dp),
+                                  padding: EdgeInsets.only(top: 12.dp,left: 16.dp, right: 16.dp),
                                   primary: false,
                                   itemBuilder: (context, index) {
                                     return const OrderCard(

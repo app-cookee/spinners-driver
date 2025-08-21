@@ -4,10 +4,11 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class NotificationCard extends StatefulWidget {
-  const NotificationCard({super.key, required this.notification, required this.isTopCard, required this.isLastCard, });
+  const NotificationCard({super.key, required this.notification, required this.isTopCard, required this.isLastCard,});
  final String notification;
   final bool isTopCard;
   final bool isLastCard;
+
   @override
   State<NotificationCard> createState() => _NotificationCardState();
 }
@@ -27,8 +28,9 @@ class _NotificationCardState extends State<NotificationCard> {
   Widget build(BuildContext context) {
     return Container(
       width: 100.w,
+      alignment: Alignment.center,
       margin: EdgeInsets.symmetric(horizontal: 16.dp),
-      padding: EdgeInsets.symmetric(horizontal: 45.dp, vertical: 12.dp),
+      padding: EdgeInsets.symmetric(vertical: 12.dp),
       decoration: BoxDecoration(
         // color:widget.isTopCard? Colors.white:widget.isLastCard? AppColors.lightGrey.withValues(alpha:0.8):AppColors.neutral50,
          color:_getCardColor(),
@@ -42,3 +44,4 @@ class _NotificationCardState extends State<NotificationCard> {
     );
   }
 }
+
