@@ -75,4 +75,17 @@ import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.
     }
   }
 
+  // Log out ......
+  @override
+  Future<AppUser> logOut() async {
+    try {
+      var response = await api.profile.post(ApiEndpoints().logout);
+      AppUser userData = AppUser.fromJson(response.data);
+      return userData;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 }

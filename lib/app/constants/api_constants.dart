@@ -11,6 +11,7 @@ class ApiEndpoints {
   final String refreshtoken = '$_base/auth/refresh_token';
   final String sendOtp = '$_base/auth/send_otp';
     final String verifyOtp = '$_base/auth/verify_otp';
+        final String logout = '$_base/auth/logout';
 
 
 }

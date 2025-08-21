@@ -19,6 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<_SendOtp>(_onSendOtp);
     on<_VerifyOtp>(_verifyOtp);
     on<_Refreshtoken>(_onRefreshtoken);
+        on<_LogOut>(_logOut);
   }
 
   FutureOr<void> _onSendOtp(_SendOtp event, Emitter<AuthState> emit) async {
@@ -71,4 +72,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ));
     }
   }
+
+  
+  FutureOr<void> _logOut(_LogOut event, Emitter<AuthState> emit) async {
+    try {
+      emit(state.copyWith(logOutStatus: Status.loading()));
+      var response = await authRepository.logOut();
+      emit(state.copyWith(appUser: response, logOutStatus: Status.success()));
+    } catch (e) {
+      emit(state.copyWith(logOutStatus: Status.failure(e.toString())));
+    }
+  }
+
 }

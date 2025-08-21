@@ -1,16 +1,23 @@
 import 'dart:ui';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/app_router/app_router.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
+import 'package:spinners_driver/app/constants/storage_constants.dart';
+import 'package:spinners_driver/app/services/local_storage_service.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/profile_user_detail.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dialogue_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 
 import 'package:the_responsive_builder/the_responsive_builder.dart';
-
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -19,117 +26,137 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.blue1,
-      body: Stack(children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            height: 30.h,
-            width: 100.w,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                  AppColors.primaryColor.withValues(alpha: 0.2),
-                  AppColors.gradientbg.withValues(alpha: 0)
-                ])),
+      body: BlocListener<AuthBloc, AuthState>(
+    listener: (context, state) {
+        if (state.logOutStatus is StatusSuccess) {
+          Navigator.of(context).pop(true);
+          context.router.pushAndPopUntil(
+            SplashRoute(),
+            predicate: (route) => true,
+          );
+          LocalStorage.remove(StorageKey.accessToken);
+          LocalStorage.remove(StorageKey.refreshToken);
+        }
+        if (state.logOutStatus is StatusFailure) {
+          TheToast.show(
+              message: state.logOutStatus.errorMessage,
+              context: context,
+              isError: true);
+        }
+      },
+      listenWhen: (previous, current) =>
+          previous.logOutStatus != current.logOutStatus,
+        child: Stack(children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 30.h,
+              width: 100.w,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                    AppColors.primaryColor.withValues(alpha: 0.2),
+                    AppColors.gradientbg.withValues(alpha: 0)
+                  ])),
+            ),
           ),
-        ),
-        Positioned(
-          top: 0,
-          right: 0,
-          left: 0,
-          child: Image.asset(
-            AppImages.bubbles,
-            fit: BoxFit.cover,
+          Positioned(
+            top: 0,
+            right: 0,
+            left: 0,
+            child: Image.asset(
+              AppImages.bubbles,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        Positioned.fill(
-          top: 8.h.dp,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 16.dp),
-                  child:const ProfileUserDetail(
-                    avatar: 'A',
-                    name: 'Ahmed',
-                    phone: '+968 9123 4567',
+          Positioned.fill(
+            top: 8.h.dp,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(left: 16.dp),
+                    child: const ProfileUserDetail(
+                      avatar: 'A',
+                      name: 'Ahmed',
+                      phone: '+968 9123 4567',
+                    ),
                   ),
-                ),
-                Gap(21.dp),
-                // Container(
-                //   decoration: BoxDecoration(
-                //       gradient: LinearGradient(
-                //           begin: Alignment.topCenter,
-                //           end: Alignment.bottomCenter,
-                //           colors: [
-                //         AppColors.primaryColor.withValues(alpha: 0.1),
-                //         AppColors.primaryColor.withValues(alpha: 0)
-                //       ])),
-                //   width: 100.w,
-                //   child: Column(
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     mainAxisSize: MainAxisSize.min,
-                //     children: [
-                //      const DashedDivider(),
-                //       Padding(
-                //         padding: EdgeInsets.all(16.dp),
-                //         child: Row(
-                //           children: [
-                //             Image.asset(
-                //               AppImages.wallet,
-                //               height: 24.dp,
-                //               width: 24.dp,
-                //             ),
-                //             Gap(4.dp),
-                //             Text(
-                //               "Wallet Balance",
-                //               style: AppTypography.sfProRoundedMedium.copyWith(
-                //                 color: AppColors.textGrey,
-                //                 fontSize: 14.sp,
-                //               ),
-                //             ),
-                //             const Spacer(),
-                //             Text(
-                //               "AED 120",
-                //               style:
-                //                   AppTypography.sfProRoundedSemiBold.copyWith(
-                //                 color: AppColors.primaryColor,
-                //                 fontSize: 24.sp,
-                //               ),
-                //             )
-                //           ],
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-            
-                // Gap(20.dp),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: 20.dp, left: 16.dp, right: 16.dp, bottom: 24.dp),
-                  child: Column(
-                    spacing: 6.dp,
-                    children:  [
-                      // AccountSettings(
-                      //     imagePath: AppImages.arrowRight,
-                      //     text: "Personal Details"),
-                 
-                      AccountSettings(
+                  Gap(21.dp),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //       gradient: LinearGradient(
+                  //           begin: Alignment.topCenter,
+                  //           end: Alignment.bottomCenter,
+                  //           colors: [
+                  //         AppColors.primaryColor.withValues(alpha: 0.1),
+                  //         AppColors.primaryColor.withValues(alpha: 0)
+                  //       ])),
+                  //   width: 100.w,
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.start,
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //      const DashedDivider(),
+                  //       Padding(
+                  //         padding: EdgeInsets.all(16.dp),
+                  //         child: Row(
+                  //           children: [
+                  //             Image.asset(
+                  //               AppImages.wallet,
+                  //               height: 24.dp,
+                  //               width: 24.dp,
+                  //             ),
+                  //             Gap(4.dp),
+                  //             Text(
+                  //               "Wallet Balance",
+                  //               style: AppTypography.sfProRoundedMedium.copyWith(
+                  //                 color: AppColors.textGrey,
+                  //                 fontSize: 14.sp,
+                  //               ),
+                  //             ),
+                  //             const Spacer(),
+                  //             Text(
+                  //               "AED 120",
+                  //               style:
+                  //                   AppTypography.sfProRoundedSemiBold.copyWith(
+                  //                 color: AppColors.primaryColor,
+                  //                 fontSize: 24.sp,
+                  //               ),
+                  //             )
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+
+                  // Gap(20.dp),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 20.dp, left: 16.dp, right: 16.dp, bottom: 24.dp),
+                    child: Column(
+                      spacing: 6.dp,
+                      children: [
+                        // AccountSettings(
+                        //     imagePath: AppImages.arrowRight,
+                        //     text: "Personal Details"),
+
+                        AccountSettings(
+                            imagePath: AppImages.arrowRight,
+                            text: "Terms of Service"),
+
+                        AccountSettings(
                           imagePath: AppImages.arrowRight,
-                          text: "Terms of Service"),
-                    
-                      AccountSettings(
-                        imagePath: AppImages.arrowRight,
-                        text: "Log Out",
-                        textColor: AppColors.redText,
-                        onTap: () {
-                             showDialog(
+                          text: "Log Out",
+                          textColor: AppColors.redText,
+                          onTap: () {
+                            showDialog(
                               context: context,
                               builder: (context) => CustomDialogueWidget(
                                 title: 'Are you sure you want to Logout?',
@@ -140,34 +167,33 @@ class AccountScreen extends StatelessWidget {
                                   Navigator.of(context).pop(false);
                                 },
                                 onConfirm: () {
-                                  // context
-                                  //     .read<AuthBloc>()
-                                  //     .add(AuthEvent.logOut());
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(AuthEvent.logOut());
                                 },
                               ),
                             );
-                          
-                        },
-                        
-                      ),
-                    ],
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 16.dp,top: 50.h),
-                  child: Text(
-                    "App Version 1.0.0",
-                    style: AppTypography.sfProRoundedMedium.copyWith(
-                        color: AppColors.versionColor, fontSize: 9.dp),
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(left: 16.dp, top: 50.h),
+                    child: Text(
+                      "App Version 1.0.0",
+                      style: AppTypography.sfProRoundedMedium.copyWith(
+                          color: AppColors.versionColor, fontSize: 9.dp),
+                    ),
                   ),
-                ),
-                Gap(14.h)
-              ],
+                  Gap(14.h)
+                ],
+              ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }

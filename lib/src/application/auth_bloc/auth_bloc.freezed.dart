@@ -53,6 +53,7 @@ extension AuthEventPatterns on AuthEvent {
     TResult Function(_SendOtp value)? sendOtp,
     TResult Function(_VerifyOtp value)? verifyOtp,
     TResult Function(_Refreshtoken value)? refreshtoken,
+    TResult Function(_LogOut value)? logOut,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -63,6 +64,8 @@ extension AuthEventPatterns on AuthEvent {
         return verifyOtp(_that);
       case _Refreshtoken() when refreshtoken != null:
         return refreshtoken(_that);
+      case _LogOut() when logOut != null:
+        return logOut(_that);
       case _:
         return orElse();
     }
@@ -86,6 +89,7 @@ extension AuthEventPatterns on AuthEvent {
     required TResult Function(_SendOtp value) sendOtp,
     required TResult Function(_VerifyOtp value) verifyOtp,
     required TResult Function(_Refreshtoken value) refreshtoken,
+    required TResult Function(_LogOut value) logOut,
   }) {
     final _that = this;
     switch (_that) {
@@ -95,6 +99,8 @@ extension AuthEventPatterns on AuthEvent {
         return verifyOtp(_that);
       case _Refreshtoken():
         return refreshtoken(_that);
+      case _LogOut():
+        return logOut(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -117,6 +123,7 @@ extension AuthEventPatterns on AuthEvent {
     TResult? Function(_SendOtp value)? sendOtp,
     TResult? Function(_VerifyOtp value)? verifyOtp,
     TResult? Function(_Refreshtoken value)? refreshtoken,
+    TResult? Function(_LogOut value)? logOut,
   }) {
     final _that = this;
     switch (_that) {
@@ -126,6 +133,8 @@ extension AuthEventPatterns on AuthEvent {
         return verifyOtp(_that);
       case _Refreshtoken() when refreshtoken != null:
         return refreshtoken(_that);
+      case _LogOut() when logOut != null:
+        return logOut(_that);
       case _:
         return null;
     }
@@ -148,6 +157,7 @@ extension AuthEventPatterns on AuthEvent {
     TResult Function(String phoneNumber, bool isResent)? sendOtp,
     TResult Function(String phoneNumber, String otp)? verifyOtp,
     TResult Function()? refreshtoken,
+    TResult Function()? logOut,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -158,6 +168,8 @@ extension AuthEventPatterns on AuthEvent {
         return verifyOtp(_that.phoneNumber, _that.otp);
       case _Refreshtoken() when refreshtoken != null:
         return refreshtoken();
+      case _LogOut() when logOut != null:
+        return logOut();
       case _:
         return orElse();
     }
@@ -181,6 +193,7 @@ extension AuthEventPatterns on AuthEvent {
     required TResult Function(String phoneNumber, bool isResent) sendOtp,
     required TResult Function(String phoneNumber, String otp) verifyOtp,
     required TResult Function() refreshtoken,
+    required TResult Function() logOut,
   }) {
     final _that = this;
     switch (_that) {
@@ -190,6 +203,8 @@ extension AuthEventPatterns on AuthEvent {
         return verifyOtp(_that.phoneNumber, _that.otp);
       case _Refreshtoken():
         return refreshtoken();
+      case _LogOut():
+        return logOut();
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -212,6 +227,7 @@ extension AuthEventPatterns on AuthEvent {
     TResult? Function(String phoneNumber, bool isResent)? sendOtp,
     TResult? Function(String phoneNumber, String otp)? verifyOtp,
     TResult? Function()? refreshtoken,
+    TResult? Function()? logOut,
   }) {
     final _that = this;
     switch (_that) {
@@ -221,6 +237,8 @@ extension AuthEventPatterns on AuthEvent {
         return verifyOtp(_that.phoneNumber, _that.otp);
       case _Refreshtoken() when refreshtoken != null:
         return refreshtoken();
+      case _LogOut() when logOut != null:
+        return logOut();
       case _:
         return null;
     }
@@ -390,12 +408,33 @@ class _Refreshtoken implements AuthEvent {
 }
 
 /// @nodoc
+
+class _LogOut implements AuthEvent {
+  const _LogOut();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _LogOut);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'AuthEvent.logOut()';
+  }
+}
+
+/// @nodoc
 mixin _$AuthState {
   Status get sendOtpStatus;
   int get secondsToExpiry;
   Status get otpVerifyStatus;
   AppUser? get appUser;
   Status get refreshtokenStatus;
+  Status get logOutStatus;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -417,16 +456,18 @@ mixin _$AuthState {
                 other.otpVerifyStatus == otpVerifyStatus) &&
             (identical(other.appUser, appUser) || other.appUser == appUser) &&
             (identical(other.refreshtokenStatus, refreshtokenStatus) ||
-                other.refreshtokenStatus == refreshtokenStatus));
+                other.refreshtokenStatus == refreshtokenStatus) &&
+            (identical(other.logOutStatus, logOutStatus) ||
+                other.logOutStatus == logOutStatus));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, sendOtpStatus, secondsToExpiry,
-      otpVerifyStatus, appUser, refreshtokenStatus);
+      otpVerifyStatus, appUser, refreshtokenStatus, logOutStatus);
 
   @override
   String toString() {
-    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus)';
+    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus, logOutStatus: $logOutStatus)';
   }
 }
 
@@ -440,12 +481,14 @@ abstract mixin class $AuthStateCopyWith<$Res> {
       int secondsToExpiry,
       Status otpVerifyStatus,
       AppUser? appUser,
-      Status refreshtokenStatus});
+      Status refreshtokenStatus,
+      Status logOutStatus});
 
   $StatusCopyWith<$Res> get sendOtpStatus;
   $StatusCopyWith<$Res> get otpVerifyStatus;
   $AppUserCopyWith<$Res>? get appUser;
   $StatusCopyWith<$Res> get refreshtokenStatus;
+  $StatusCopyWith<$Res> get logOutStatus;
 }
 
 /// @nodoc
@@ -465,6 +508,7 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
     Object? otpVerifyStatus = null,
     Object? appUser = freezed,
     Object? refreshtokenStatus = null,
+    Object? logOutStatus = null,
   }) {
     return _then(_self.copyWith(
       sendOtpStatus: null == sendOtpStatus
@@ -486,6 +530,10 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
       refreshtokenStatus: null == refreshtokenStatus
           ? _self.refreshtokenStatus
           : refreshtokenStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      logOutStatus: null == logOutStatus
+          ? _self.logOutStatus
+          : logOutStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -531,6 +579,16 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get refreshtokenStatus {
     return $StatusCopyWith<$Res>(_self.refreshtokenStatus, (value) {
       return _then(_self.copyWith(refreshtokenStatus: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get logOutStatus {
+    return $StatusCopyWith<$Res>(_self.logOutStatus, (value) {
+      return _then(_self.copyWith(logOutStatus: value));
     });
   }
 }
@@ -633,15 +691,21 @@ extension AuthStatePatterns on AuthState {
             int secondsToExpiry,
             Status otpVerifyStatus,
             AppUser? appUser,
-            Status refreshtokenStatus)?
+            Status refreshtokenStatus,
+            Status logOutStatus)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _AuthState() when $default != null:
-        return $default(_that.sendOtpStatus, _that.secondsToExpiry,
-            _that.otpVerifyStatus, _that.appUser, _that.refreshtokenStatus);
+        return $default(
+            _that.sendOtpStatus,
+            _that.secondsToExpiry,
+            _that.otpVerifyStatus,
+            _that.appUser,
+            _that.refreshtokenStatus,
+            _that.logOutStatus);
       case _:
         return orElse();
     }
@@ -662,15 +726,25 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Status sendOtpStatus, int secondsToExpiry,
-            Status otpVerifyStatus, AppUser? appUser, Status refreshtokenStatus)
+    TResult Function(
+            Status sendOtpStatus,
+            int secondsToExpiry,
+            Status otpVerifyStatus,
+            AppUser? appUser,
+            Status refreshtokenStatus,
+            Status logOutStatus)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState():
-        return $default(_that.sendOtpStatus, _that.secondsToExpiry,
-            _that.otpVerifyStatus, _that.appUser, _that.refreshtokenStatus);
+        return $default(
+            _that.sendOtpStatus,
+            _that.secondsToExpiry,
+            _that.otpVerifyStatus,
+            _that.appUser,
+            _that.refreshtokenStatus,
+            _that.logOutStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -695,14 +769,20 @@ extension AuthStatePatterns on AuthState {
             int secondsToExpiry,
             Status otpVerifyStatus,
             AppUser? appUser,
-            Status refreshtokenStatus)?
+            Status refreshtokenStatus,
+            Status logOutStatus)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState() when $default != null:
-        return $default(_that.sendOtpStatus, _that.secondsToExpiry,
-            _that.otpVerifyStatus, _that.appUser, _that.refreshtokenStatus);
+        return $default(
+            _that.sendOtpStatus,
+            _that.secondsToExpiry,
+            _that.otpVerifyStatus,
+            _that.appUser,
+            _that.refreshtokenStatus,
+            _that.logOutStatus);
       case _:
         return null;
     }
@@ -717,7 +797,8 @@ class _AuthState implements AuthState {
       required this.secondsToExpiry,
       required this.otpVerifyStatus,
       this.appUser,
-      required this.refreshtokenStatus});
+      required this.refreshtokenStatus,
+      required this.logOutStatus});
 
   @override
   final Status sendOtpStatus;
@@ -729,6 +810,8 @@ class _AuthState implements AuthState {
   final AppUser? appUser;
   @override
   final Status refreshtokenStatus;
+  @override
+  final Status logOutStatus;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -751,16 +834,18 @@ class _AuthState implements AuthState {
                 other.otpVerifyStatus == otpVerifyStatus) &&
             (identical(other.appUser, appUser) || other.appUser == appUser) &&
             (identical(other.refreshtokenStatus, refreshtokenStatus) ||
-                other.refreshtokenStatus == refreshtokenStatus));
+                other.refreshtokenStatus == refreshtokenStatus) &&
+            (identical(other.logOutStatus, logOutStatus) ||
+                other.logOutStatus == logOutStatus));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, sendOtpStatus, secondsToExpiry,
-      otpVerifyStatus, appUser, refreshtokenStatus);
+      otpVerifyStatus, appUser, refreshtokenStatus, logOutStatus);
 
   @override
   String toString() {
-    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus)';
+    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus, logOutStatus: $logOutStatus)';
   }
 }
 
@@ -777,7 +862,8 @@ abstract mixin class _$AuthStateCopyWith<$Res>
       int secondsToExpiry,
       Status otpVerifyStatus,
       AppUser? appUser,
-      Status refreshtokenStatus});
+      Status refreshtokenStatus,
+      Status logOutStatus});
 
   @override
   $StatusCopyWith<$Res> get sendOtpStatus;
@@ -787,6 +873,8 @@ abstract mixin class _$AuthStateCopyWith<$Res>
   $AppUserCopyWith<$Res>? get appUser;
   @override
   $StatusCopyWith<$Res> get refreshtokenStatus;
+  @override
+  $StatusCopyWith<$Res> get logOutStatus;
 }
 
 /// @nodoc
@@ -806,6 +894,7 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
     Object? otpVerifyStatus = null,
     Object? appUser = freezed,
     Object? refreshtokenStatus = null,
+    Object? logOutStatus = null,
   }) {
     return _then(_AuthState(
       sendOtpStatus: null == sendOtpStatus
@@ -827,6 +916,10 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
       refreshtokenStatus: null == refreshtokenStatus
           ? _self.refreshtokenStatus
           : refreshtokenStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      logOutStatus: null == logOutStatus
+          ? _self.logOutStatus
+          : logOutStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -872,6 +965,16 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get refreshtokenStatus {
     return $StatusCopyWith<$Res>(_self.refreshtokenStatus, (value) {
       return _then(_self.copyWith(refreshtokenStatus: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get logOutStatus {
+    return $StatusCopyWith<$Res>(_self.logOutStatus, (value) {
+      return _then(_self.copyWith(logOutStatus: value));
     });
   }
 }
