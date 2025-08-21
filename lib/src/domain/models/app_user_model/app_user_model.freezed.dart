@@ -25,7 +25,17 @@ mixin _$AppUser {
   @JsonKey(name: 'phoneNumber')
   String get phoneNumber;
   @JsonKey(name: 'timestamp')
-  String get timestamp;
+  String get timestamp; // New fields from schema
+  @JsonKey(name: 'referralCode')
+  String get referralCode;
+  @JsonKey(name: 'photo')
+  Map<String, dynamic>? get photo;
+  @JsonKey(name: 'storeName')
+  Map<String, dynamic>? get storeName;
+  @JsonKey(name: 'storeAddress')
+  Map<String, dynamic>? get storeAddress;
+  @JsonKey(name: 'active')
+  bool get active;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -51,17 +61,35 @@ mixin _$AppUser {
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.timestamp, timestamp) ||
-                other.timestamp == timestamp));
+                other.timestamp == timestamp) &&
+            (identical(other.referralCode, referralCode) ||
+                other.referralCode == referralCode) &&
+            const DeepCollectionEquality().equals(other.photo, photo) &&
+            const DeepCollectionEquality().equals(other.storeName, storeName) &&
+            const DeepCollectionEquality()
+                .equals(other.storeAddress, storeAddress) &&
+            (identical(other.active, active) || other.active == active));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, userId, email, firstName, lastName, phoneNumber, timestamp);
+      runtimeType,
+      userId,
+      email,
+      firstName,
+      lastName,
+      phoneNumber,
+      timestamp,
+      referralCode,
+      const DeepCollectionEquality().hash(photo),
+      const DeepCollectionEquality().hash(storeName),
+      const DeepCollectionEquality().hash(storeAddress),
+      active);
 
   @override
   String toString() {
-    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp)';
+    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
   }
 }
 
@@ -76,7 +104,12 @@ abstract mixin class $AppUserCopyWith<$Res> {
       @JsonKey(name: 'firstName') String firstName,
       @JsonKey(name: 'lastName') String lastName,
       @JsonKey(name: 'phoneNumber') String phoneNumber,
-      @JsonKey(name: 'timestamp') String timestamp});
+      @JsonKey(name: 'timestamp') String timestamp,
+      @JsonKey(name: 'referralCode') String referralCode,
+      @JsonKey(name: 'photo') Map<String, dynamic>? photo,
+      @JsonKey(name: 'storeName') Map<String, dynamic>? storeName,
+      @JsonKey(name: 'storeAddress') Map<String, dynamic>? storeAddress,
+      @JsonKey(name: 'active') bool active});
 }
 
 /// @nodoc
@@ -97,6 +130,11 @@ class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
     Object? lastName = null,
     Object? phoneNumber = null,
     Object? timestamp = null,
+    Object? referralCode = null,
+    Object? photo = freezed,
+    Object? storeName = freezed,
+    Object? storeAddress = freezed,
+    Object? active = null,
   }) {
     return _then(_self.copyWith(
       userId: null == userId
@@ -123,6 +161,26 @@ class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
           ? _self.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as String,
+      referralCode: null == referralCode
+          ? _self.referralCode
+          : referralCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      photo: freezed == photo
+          ? _self.photo
+          : photo // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      storeName: freezed == storeName
+          ? _self.storeName
+          : storeName // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      storeAddress: freezed == storeAddress
+          ? _self.storeAddress
+          : storeAddress // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      active: null == active
+          ? _self.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -226,15 +284,30 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'firstName') String firstName,
             @JsonKey(name: 'lastName') String lastName,
             @JsonKey(name: 'phoneNumber') String phoneNumber,
-            @JsonKey(name: 'timestamp') String timestamp)?
+            @JsonKey(name: 'timestamp') String timestamp,
+            @JsonKey(name: 'referralCode') String referralCode,
+            @JsonKey(name: 'photo') Map<String, dynamic>? photo,
+            @JsonKey(name: 'storeName') Map<String, dynamic>? storeName,
+            @JsonKey(name: 'storeAddress') Map<String, dynamic>? storeAddress,
+            @JsonKey(name: 'active') bool active)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _AppUser() when $default != null:
-        return $default(_that.userId, _that.email, _that.firstName,
-            _that.lastName, _that.phoneNumber, _that.timestamp);
+        return $default(
+            _that.userId,
+            _that.email,
+            _that.firstName,
+            _that.lastName,
+            _that.phoneNumber,
+            _that.timestamp,
+            _that.referralCode,
+            _that.photo,
+            _that.storeName,
+            _that.storeAddress,
+            _that.active);
       case _:
         return orElse();
     }
@@ -261,14 +334,29 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'firstName') String firstName,
             @JsonKey(name: 'lastName') String lastName,
             @JsonKey(name: 'phoneNumber') String phoneNumber,
-            @JsonKey(name: 'timestamp') String timestamp)
+            @JsonKey(name: 'timestamp') String timestamp,
+            @JsonKey(name: 'referralCode') String referralCode,
+            @JsonKey(name: 'photo') Map<String, dynamic>? photo,
+            @JsonKey(name: 'storeName') Map<String, dynamic>? storeName,
+            @JsonKey(name: 'storeAddress') Map<String, dynamic>? storeAddress,
+            @JsonKey(name: 'active') bool active)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AppUser():
-        return $default(_that.userId, _that.email, _that.firstName,
-            _that.lastName, _that.phoneNumber, _that.timestamp);
+        return $default(
+            _that.userId,
+            _that.email,
+            _that.firstName,
+            _that.lastName,
+            _that.phoneNumber,
+            _that.timestamp,
+            _that.referralCode,
+            _that.photo,
+            _that.storeName,
+            _that.storeAddress,
+            _that.active);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -294,14 +382,29 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'firstName') String firstName,
             @JsonKey(name: 'lastName') String lastName,
             @JsonKey(name: 'phoneNumber') String phoneNumber,
-            @JsonKey(name: 'timestamp') String timestamp)?
+            @JsonKey(name: 'timestamp') String timestamp,
+            @JsonKey(name: 'referralCode') String referralCode,
+            @JsonKey(name: 'photo') Map<String, dynamic>? photo,
+            @JsonKey(name: 'storeName') Map<String, dynamic>? storeName,
+            @JsonKey(name: 'storeAddress') Map<String, dynamic>? storeAddress,
+            @JsonKey(name: 'active') bool active)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AppUser() when $default != null:
-        return $default(_that.userId, _that.email, _that.firstName,
-            _that.lastName, _that.phoneNumber, _that.timestamp);
+        return $default(
+            _that.userId,
+            _that.email,
+            _that.firstName,
+            _that.lastName,
+            _that.phoneNumber,
+            _that.timestamp,
+            _that.referralCode,
+            _that.photo,
+            _that.storeName,
+            _that.storeAddress,
+            _that.active);
       case _:
         return null;
     }
@@ -317,7 +420,15 @@ class _AppUser implements AppUser {
       @JsonKey(name: 'firstName') this.firstName = '',
       @JsonKey(name: 'lastName') this.lastName = '',
       @JsonKey(name: 'phoneNumber') this.phoneNumber = '',
-      @JsonKey(name: 'timestamp') this.timestamp = ''});
+      @JsonKey(name: 'timestamp') this.timestamp = '',
+      @JsonKey(name: 'referralCode') this.referralCode = '',
+      @JsonKey(name: 'photo') final Map<String, dynamic>? photo,
+      @JsonKey(name: 'storeName') final Map<String, dynamic>? storeName,
+      @JsonKey(name: 'storeAddress') final Map<String, dynamic>? storeAddress,
+      @JsonKey(name: 'active') this.active = false})
+      : _photo = photo,
+        _storeName = storeName,
+        _storeAddress = storeAddress;
   factory _AppUser.fromJson(Map<String, dynamic> json) =>
       _$AppUserFromJson(json);
 
@@ -339,6 +450,46 @@ class _AppUser implements AppUser {
   @override
   @JsonKey(name: 'timestamp')
   final String timestamp;
+// New fields from schema
+  @override
+  @JsonKey(name: 'referralCode')
+  final String referralCode;
+  final Map<String, dynamic>? _photo;
+  @override
+  @JsonKey(name: 'photo')
+  Map<String, dynamic>? get photo {
+    final value = _photo;
+    if (value == null) return null;
+    if (_photo is EqualUnmodifiableMapView) return _photo;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  final Map<String, dynamic>? _storeName;
+  @override
+  @JsonKey(name: 'storeName')
+  Map<String, dynamic>? get storeName {
+    final value = _storeName;
+    if (value == null) return null;
+    if (_storeName is EqualUnmodifiableMapView) return _storeName;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  final Map<String, dynamic>? _storeAddress;
+  @override
+  @JsonKey(name: 'storeAddress')
+  Map<String, dynamic>? get storeAddress {
+    final value = _storeAddress;
+    if (value == null) return null;
+    if (_storeAddress is EqualUnmodifiableMapView) return _storeAddress;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  @override
+  @JsonKey(name: 'active')
+  final bool active;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -369,17 +520,36 @@ class _AppUser implements AppUser {
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.timestamp, timestamp) ||
-                other.timestamp == timestamp));
+                other.timestamp == timestamp) &&
+            (identical(other.referralCode, referralCode) ||
+                other.referralCode == referralCode) &&
+            const DeepCollectionEquality().equals(other._photo, _photo) &&
+            const DeepCollectionEquality()
+                .equals(other._storeName, _storeName) &&
+            const DeepCollectionEquality()
+                .equals(other._storeAddress, _storeAddress) &&
+            (identical(other.active, active) || other.active == active));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, userId, email, firstName, lastName, phoneNumber, timestamp);
+      runtimeType,
+      userId,
+      email,
+      firstName,
+      lastName,
+      phoneNumber,
+      timestamp,
+      referralCode,
+      const DeepCollectionEquality().hash(_photo),
+      const DeepCollectionEquality().hash(_storeName),
+      const DeepCollectionEquality().hash(_storeAddress),
+      active);
 
   @override
   String toString() {
-    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp)';
+    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
   }
 }
 
@@ -395,7 +565,12 @@ abstract mixin class _$AppUserCopyWith<$Res> implements $AppUserCopyWith<$Res> {
       @JsonKey(name: 'firstName') String firstName,
       @JsonKey(name: 'lastName') String lastName,
       @JsonKey(name: 'phoneNumber') String phoneNumber,
-      @JsonKey(name: 'timestamp') String timestamp});
+      @JsonKey(name: 'timestamp') String timestamp,
+      @JsonKey(name: 'referralCode') String referralCode,
+      @JsonKey(name: 'photo') Map<String, dynamic>? photo,
+      @JsonKey(name: 'storeName') Map<String, dynamic>? storeName,
+      @JsonKey(name: 'storeAddress') Map<String, dynamic>? storeAddress,
+      @JsonKey(name: 'active') bool active});
 }
 
 /// @nodoc
@@ -416,6 +591,11 @@ class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
     Object? lastName = null,
     Object? phoneNumber = null,
     Object? timestamp = null,
+    Object? referralCode = null,
+    Object? photo = freezed,
+    Object? storeName = freezed,
+    Object? storeAddress = freezed,
+    Object? active = null,
   }) {
     return _then(_AppUser(
       userId: null == userId
@@ -442,6 +622,26 @@ class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
           ? _self.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as String,
+      referralCode: null == referralCode
+          ? _self.referralCode
+          : referralCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      photo: freezed == photo
+          ? _self._photo
+          : photo // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      storeName: freezed == storeName
+          ? _self._storeName
+          : storeName // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      storeAddress: freezed == storeAddress
+          ? _self._storeAddress
+          : storeAddress // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      active: null == active
+          ? _self.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }

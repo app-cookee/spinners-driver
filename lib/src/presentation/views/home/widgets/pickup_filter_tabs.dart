@@ -25,7 +25,7 @@ class _PickupFilterTabsState extends State<PickupFilterTabs> {
       height: 5.h,
       width: 100.w,
       padding: EdgeInsets.all(2.dp),
-      margin: EdgeInsets.symmetric(horizontal: 16.dp),
+      // margin: EdgeInsets.symmetric(horizontal: 16.dp),
       decoration: BoxDecoration(
         color: AppColors.lightGrey,
         borderRadius: BorderRadius.circular(8.dp),

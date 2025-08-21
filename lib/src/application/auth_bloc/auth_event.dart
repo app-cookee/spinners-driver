@@ -13,4 +13,6 @@ abstract class AuthEvent with _$AuthEvent {
   }) = _VerifyOtp;
   
   const factory AuthEvent.refreshtoken() = _Refreshtoken;
+   const factory AuthEvent.logOut() = _LogOut;
+   const factory AuthEvent.profileAuth() = _ProfileAuth;
 }

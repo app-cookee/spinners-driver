@@ -5,6 +5,7 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
+import 'package:spinners_driver/src/presentation/views/orders/order_screen.dart';
 import 'package:spinners_driver/src/presentation/views/profile/account_screen.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -33,7 +34,7 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
   final selectedIndex = ValueNotifier(0);
   List<Widget> screens = [
     const HomeView(),
-    const SizedBox(),
+    const OrderScreen(),
     const AccountScreen(),
 
     // const AccountScreen(),

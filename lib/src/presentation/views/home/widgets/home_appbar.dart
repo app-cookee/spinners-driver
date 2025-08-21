@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
+import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/user_details.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class HomeAppbar extends StatelessWidget {
   const HomeAppbar({super.key});
+ 
+
 
   @override
   Widget build(BuildContext context) {
+     final profileState=context.read<AuthBloc>().state;
+   AppUser? user=  profileState.appUser;
     return Stack(
       children: [
         gradientBackground(),
         homeAppbarBubbles(),
-        appBarContent(),
+        appBarContent(user),
       ],
     );
   }
@@ -50,14 +57,14 @@ class HomeAppbar extends StatelessWidget {
         ));
   }
 
-  Widget appBarContent() {
+  Widget appBarContent(AppUser? user) {
     return Positioned(
         left: 16.dp,
         top: 7.h,
         right: 16.dp,
-        child: const UserDetail(
-          avatar: 'A',
-          name: 'Good Evening, Ahmed 👋',
+        child:  UserDetail(
+          avatar: user?.firstName[0]??"D",
+          name: 'Good Evening, ${user?.firstName??"Driver"} 👋',
           pickupTime: '3:15 PM',
         ));
   }

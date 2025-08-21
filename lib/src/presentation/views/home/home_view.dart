@@ -86,47 +86,51 @@ class _HomeViewState extends State<HomeView> {
                 padding: EdgeInsets.only(top: 13.h),
                 child: SingleChildScrollView(
                   controller: _scrollController,
-                  child: Column(
-                    children: [
-                      const Notifications(),
-                      Gap(16.dp),
-                      const TodaysCollectedCOD(),
-                      const PickupFilterTabs(),
-                      Gap(16.dp),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ToggleButton(
-                            isToggled: nearestLocationNotifier,
-                            label: 'Nearest Location',
-                          ),
-                          ToggleButton(
-                            isToggled: expressOnlyNotifier,
-                            label: 'Express Only',
-                          ),
-                        ],
-                      ),
-                      ListView.builder(
-                          itemCount: 4,
-                          shrinkWrap: true,
-                          padding: EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp,bottom: 16.h),
-                          primary: false,
-                          itemBuilder: (context, index) {
-                            return const OrderCard(
-                              orderId: 'SPN12345',
-                              services: [
-                                'Clean & Press',
-                                'Press Only',
-                              ],
-                              time: 'Today, 4:00 PM – 6:00 PM',
-                              status: 'In Progress',
-                              isDropoff: false,
-                              isQuickOrder: true,
-                              // isService: false,
-                            );
-                          })
-                    ],
-                  ),
+          child:       Column(
+                          children: [
+                            const TodaysCollectedCOD(),
+                            Padding(
+                            padding:EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
+                              child: const PickupFilterTabs(),
+                            ),
+                            Gap(16.dp),
+                            Padding(
+                              padding:EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ToggleButton(
+                                    isToggled: nearestLocationNotifier,
+                                    label: 'Nearest Location',
+                                  ),Gap(12.dp),
+                                  ToggleButton(
+                                    isToggled: expressOnlyNotifier,
+                                    label: 'Express Only',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(physics: NeverScrollableScrollPhysics(),
+                                  itemCount: 4,
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.only(top: 12.dp,left: 16.dp, right: 16.dp),
+                                  primary: false,
+                                  itemBuilder: (context, index) {
+                                    return const OrderCard(
+                                      orderId: '12345',
+                                      services: ['Clean & Press', 'Bed & Bath'],
+                                      time: 'Today, 4:00 PM – 6:00 PM',
+                                      status: 'In Progress',
+                                      isDropoff: false,
+                                      isQuickOrder: true,
+                                      isService: false, service: [],
+                                      // notes: 'Deliver to reception.',
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
                 )),
           ],
         ),
