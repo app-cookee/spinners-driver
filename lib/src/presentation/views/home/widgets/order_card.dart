@@ -6,6 +6,8 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/scan_new_bag_bottomsheet.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderCard extends StatelessWidget {
@@ -49,6 +51,7 @@ class OrderCard extends StatelessWidget {
         // } else{
         //   context.router.push(OrderDetailRoute(orderId: orderId));
         // }
+        CustomBottomSheetWidget(context: context, child: const ScanNewBagBottomsheet()).show();
       },
       child: Container(
         padding: EdgeInsets.only(top: 9.dp, bottom: 12.dp),

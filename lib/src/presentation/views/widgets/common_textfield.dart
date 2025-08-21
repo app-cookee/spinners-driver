@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
-import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class CommonTextField extends StatelessWidget {
@@ -62,14 +61,15 @@ class CommonTextField extends StatelessWidget {
               ),
             ],
           ),
-          child: TextField(
+          child: TextFormField(
             controller: controller,
             onChanged: onChanged,
-            onSubmitted: onSubmitted,
+            onFieldSubmitted: onSubmitted,
             keyboardType: keyboardType,
             obscureText: obscureText,
             enabled: enabled,
             maxLines: maxLines,
+            spellCheckConfiguration: const SpellCheckConfiguration.disabled(), 
             style: textStyle ?? AppTypography.sfProRoundedMedium.copyWith(
                 fontSize: 12.sp,
                 color: AppColors.neutral500,
@@ -80,7 +80,7 @@ class CommonTextField extends StatelessWidget {
                 fontSize: 12.sp,
                 color: AppColors.neutral500,
               ),
-              prefixIcon: prefixIcon ?? Image.asset(AppImages.searchIcon,),
+              prefixIcon: prefixIcon ,
               suffixIcon: suffixIcon,
               filled: true,
               fillColor: fillColor ?? Colors.white,
@@ -88,6 +88,7 @@ class CommonTextField extends StatelessWidget {
                 horizontal: 12.dp,
                 vertical: 8.dp,
               ),
+              
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(borderRadius??8.dp),
                 borderSide: BorderSide(
@@ -116,6 +117,7 @@ class CommonTextField extends StatelessWidget {
                   width: 1.dp,
                 ),
               ),
+              
             ),
           ),
         ),

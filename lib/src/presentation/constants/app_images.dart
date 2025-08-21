@@ -28,6 +28,7 @@ static const String check = 'assets/images/check_verified.png';
 static const String mapIcon='assets/images/ic_map.png';
 static const String clipboardIcon='assets/images/ic_clipboard.png';
 static const String phoneIcon='assets/images/ic_phone.png';
+static const String qrIcon='assets/images/ic_qr.png';
 
 
 
