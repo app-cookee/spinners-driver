@@ -28,7 +28,7 @@ class AppColors {
     static const Color scanblue=Color(0xFF77C9E8);
   static const Color grey2Color = Color(0xFFD9D9D9);
  static const Color grey1 = Color(0xFFEBEBEB);
-
+static const Color shadowColor = Color(0xFFE2E2E2);
 
 
 
@@ -87,7 +87,7 @@ class AppColors {
     static const Color secGrey = Color(0xFFABB7C2);
      static const Color greyButton = Color(0xFF529EC4);
         static const Color discountRed = Color(0xFFD33528);
-        static const Color shadowColor = Color(0xFFE2E2E2);
+        
             static const Color serviceGreen = Color(0xFF2C8946);
               static const Color serviceFillGreen = Color(0xFFCEFFE3);
               static const Color servicedottedGreen = Color(0xFFB7F3D1);

@@ -58,7 +58,15 @@ class OrderCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12.dp),
-          border: Border.all(color: AppColors.lightGrey),
+          border: Border.all(color: AppColors.shadowColor),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.12),
+              blurRadius: 8,
+              spreadRadius: 1.5,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           children: [

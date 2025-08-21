@@ -18,17 +18,27 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late ScrollController _scrollController;
+  ValueNotifier<bool> isScrolling = ValueNotifier(false);
 
   @override
   void initState() {
     super.initState();
-
     _scrollController = ScrollController();
+    
+    // Add scroll listener to track scrolling state
+    _scrollController.addListener(() {
+      if (_scrollController.offset > 0 && !isScrolling.value) {
+        isScrolling.value = true;
+      } else if (_scrollController.offset <= 0 && isScrolling.value) {
+        isScrolling.value = false;
+      }
+    });
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    isScrolling.dispose();
     super.dispose();
   }
 
@@ -43,70 +53,97 @@ class _HomeViewState extends State<HomeView> {
         child: Stack(
           children: [
             const HomeAppbar(),
+            // Padding(
+            //   padding: EdgeInsets.only(top: 61.h),
+            //   child: Container(
+            //     width: 100.w,
+            //     height: 100.h,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.only(
+            //         topLeft: Radius.circular(16.dp),
+            //         topRight: Radius.circular(16.dp),
+            //       ),
+            //       gradient: const LinearGradient(
+            //         colors: [
+            //           AppColors.lightGrey1,
+            //           AppColors.neutral50,
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
+               // Use ValueListenableBuilder to conditionally show/hide the container
+            ValueListenableBuilder<bool>(
+              valueListenable: isScrolling,
+              builder: (context, scrolling, child) {
+                return AnimatedOpacity(
+                  opacity: scrolling ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 61.h),
+                    child: Container(
+                      width: 100.w,
+                      height: 100.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16.dp),
+                          topRight: Radius.circular(16.dp),
+                        ),
+                        gradient: const LinearGradient(
+                          colors: [
+                            AppColors.lightGrey1,
+                            AppColors.neutral50,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
             Padding(
-                padding: EdgeInsets.only(top: 13.h,bottom:12.h),
+                padding: EdgeInsets.only(top: 13.h),
                 child: SingleChildScrollView(
-                  primary: true,
+                  controller: _scrollController,
                   child: Column(
                     children: [
                       const Notifications(),
                       Gap(16.dp),
-                      Container(
-                        width: 100.w,
-                        height: 100.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.dp),
-                            topRight: Radius.circular(16.dp),
+                      const TodaysCollectedCOD(),
+                      const PickupFilterTabs(),
+                      Gap(16.dp),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ToggleButton(
+                            isToggled: nearestLocationNotifier,
+                            label: 'Nearest Location',
                           ),
-                          gradient: const LinearGradient(
-                            colors: [
-                              AppColors.lightGrey1,
-                              AppColors.neutral50,
-                            ],
+                          ToggleButton(
+                            isToggled: expressOnlyNotifier,
+                            label: 'Express Only',
                           ),
-                        ),
-                        child: SingleChildScrollView(
-                          physics:const NeverScrollableScrollPhysics(),
-                          child: Column(
-                            children: [
-                              const TodaysCollectedCOD(),
-                              const PickupFilterTabs(),
-                              Gap(16.dp),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ToggleButton(
-                                    isToggled: nearestLocationNotifier,
-                                    label: 'Nearest Location',
-                                  ),
-                                  ToggleButton(
-                                    isToggled: expressOnlyNotifier,
-                                    label: 'Express Only',
-                                  ),
-                                ],
-                              ),
-                              ListView.builder(
-                                  itemCount: 4,
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.only(top: 12.dp,left: 16.dp, right: 16.dp),
-                                  primary: false,
-                                  itemBuilder: (context, index) {
-                                    return const OrderCard(
-                                      orderId: 'SPN12345',
-                                      services: ['Clean & Press', 'Press Only',],
-                                      time: 'Today, 4:00 PM – 6:00 PM',
-                                      status: 'In Progress',
-                                      isDropoff: false,
-                                      isQuickOrder: true,
-                                      // isService: false,
-                                     
-                                    );
-                                  })
-                            ],
-                          ),
-                        ),
-                      )
+                        ],
+                      ),
+                      ListView.builder(
+                          itemCount: 4,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp,bottom: 16.h),
+                          primary: false,
+                          itemBuilder: (context, index) {
+                            return const OrderCard(
+                              orderId: 'SPN12345',
+                              services: [
+                                'Clean & Press',
+                                'Press Only',
+                              ],
+                              time: 'Today, 4:00 PM – 6:00 PM',
+                              status: 'In Progress',
+                              isDropoff: false,
+                              isQuickOrder: true,
+                              // isService: false,
+                            );
+                          })
                     ],
                   ),
                 )),
