@@ -13,6 +13,11 @@ _AppUser _$AppUserFromJson(Map<String, dynamic> json) => _AppUser(
       lastName: json['lastName'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
       timestamp: json['timestamp'] as String? ?? '',
+      referralCode: json['referralCode'] as String? ?? '',
+      photo: json['photo'] as Map<String, dynamic>?,
+      storeName: json['storeName'] as Map<String, dynamic>?,
+      storeAddress: json['storeAddress'] as Map<String, dynamic>?,
+      active: json['active'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$AppUserToJson(_AppUser instance) => <String, dynamic>{
@@ -22,4 +27,9 @@ Map<String, dynamic> _$AppUserToJson(_AppUser instance) => <String, dynamic>{
       'lastName': instance.lastName,
       'phoneNumber': instance.phoneNumber,
       'timestamp': instance.timestamp,
+      'referralCode': instance.referralCode,
+      'photo': instance.photo,
+      'storeName': instance.storeName,
+      'storeAddress': instance.storeAddress,
+      'active': instance.active,
     };

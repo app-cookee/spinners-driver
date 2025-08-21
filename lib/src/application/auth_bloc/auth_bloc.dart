@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
-import 'package:spinners_driver/src/application/respositories/auth_respository.dart';
+import 'package:spinners_driver/src/domain/respositories/auth_respository.dart';
 import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.dart';
 
 part 'auth_event.dart';
@@ -20,6 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<_VerifyOtp>(_verifyOtp);
     on<_Refreshtoken>(_onRefreshtoken);
         on<_LogOut>(_logOut);
+            on<_ProfileAuth>(_onProfileAuth);
   }
 
   FutureOr<void> _onSendOtp(_SendOtp event, Emitter<AuthState> emit) async {
@@ -83,5 +84,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(logOutStatus: Status.failure(e.toString())));
     }
   }
+
+
+   // Profile Auth .......
+
+  FutureOr<void> _onProfileAuth(_ProfileAuth event, Emitter<AuthState> emit) async {
+    try {
+      emit(state.copyWith(
+        profileAuthStatus: Status.loading(),
+      ));
+      var response = await authRepository.profileAuth();
+      emit(state.copyWith(
+          profileAuthStatus: Status.success(),
+          appUser: response));
+    } catch (e) {
+      emit(state.copyWith(profileAuthStatus: Status.failure(e.toString())));
+    }
+  }
+
 
 }

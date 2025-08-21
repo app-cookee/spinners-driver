@@ -6,7 +6,7 @@ import 'package:spinners_driver/app/constants/api_constants.dart';
 import 'package:spinners_driver/app/constants/storage_constants.dart';
 import 'package:spinners_driver/app/services/api_services/api_service.dart';
 import 'package:spinners_driver/app/services/local_storage_service.dart';
-import 'package:spinners_driver/src/application/respositories/auth_respository.dart';
+import 'package:spinners_driver/src/domain/respositories/auth_respository.dart';
 import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.dart';
 
 @LazySingleton(as: AuthRepository)
@@ -86,6 +86,18 @@ import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.
       rethrow;
     }
   }
-
+  
+  // profile Auth .........
+  @override
+  Future<AppUser> profileAuth() async {
+    try {
+      var response = await api.profile.get(ApiEndpoints().profile);
+      AppUser userData = AppUser.fromJson(response.data);
+      return userData;
+    } catch (e) {
+      log(e.toString(), name: 'error in profile repo');
+      rethrow;
+    }
+  }
 
 }

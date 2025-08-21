@@ -9,4 +9,5 @@ abstract class AuthRepository {
   );
   Future<String> refreshtoken();
   Future<AppUser> logOut();
+  Future<AppUser> profileAuth();
 }

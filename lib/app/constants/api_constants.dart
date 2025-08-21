@@ -12,6 +12,7 @@ class ApiEndpoints {
   final String sendOtp = '$_base/auth/send_otp';
     final String verifyOtp = '$_base/auth/verify_otp';
         final String logout = '$_base/auth/logout';
+           final String profile= '$_base/auth/profile';
 
 
 }

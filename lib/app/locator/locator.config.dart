@@ -15,9 +15,9 @@ import 'package:spinners_driver/app/services/api_services/api_service.dart'
     as _i551;
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart'
     as _i403;
-import 'package:spinners_driver/src/application/infrastructure/i_auth_repository.dart'
+import 'package:spinners_driver/src/infrastructure/i_auth_repository.dart'
     as _i48;
-import 'package:spinners_driver/src/application/respositories/auth_respository.dart'
+import 'package:spinners_driver/src/domain/respositories/auth_respository.dart'
     as _i533;
 
 extension GetItInjectableX on _i174.GetIt {
