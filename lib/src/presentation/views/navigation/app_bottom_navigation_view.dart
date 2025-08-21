@@ -94,7 +94,13 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
       clipBehavior: Clip.none,
       children: [
         Container(
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(boxShadow:
+          [BoxShadow(
+                 color: AppColors.black.withValues(alpha: .10), 
+             offset:const Offset(0, 0), blurRadius : 96,
+           spreadRadius :0.0,
+
+          )] ,
             color: AppColors.white,
           ),
           height: 88.dp,

@@ -24,7 +24,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    
+
     // Add scroll listener to track scrolling state
     _scrollController.addListener(() {
       if (_scrollController.offset > 0 && !isScrolling.value) {
@@ -53,7 +53,7 @@ class _HomeViewState extends State<HomeView> {
         child: Stack(
           children: [
             const HomeAppbar(),
-               // Use ValueListenableBuilder to conditionally show/hide the container
+            // Use ValueListenableBuilder to conditionally show/hide the container
             ValueListenableBuilder<bool>(
               valueListenable: isScrolling,
               builder: (context, scrolling, child) {
@@ -86,51 +86,56 @@ class _HomeViewState extends State<HomeView> {
                 padding: EdgeInsets.only(top: 13.h),
                 child: SingleChildScrollView(
                   controller: _scrollController,
-          child:       Column(
+                  child: Column(
+                    children: [
+                        const Notifications(),
+                      Gap(16.dp),
+                      const TodaysCollectedCOD(),
+                      Padding(
+                        padding:
+                            EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
+                        child: const PickupFilterTabs(),
+                      ),
+                      Gap(16.dp),
+                      Padding(
+                        padding:
+                            EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const TodaysCollectedCOD(),
-                            Padding(
-                            padding:EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
-                              child: const PickupFilterTabs(),
+                            ToggleButton(
+                              isToggled: nearestLocationNotifier,
+                              label: 'Nearest Location',
                             ),
-                            Gap(16.dp),
-                            Padding(
-                              padding:EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ToggleButton(
-                                    isToggled: nearestLocationNotifier,
-                                    label: 'Nearest Location',
-                                  ),Gap(12.dp),
-                                  ToggleButton(
-                                    isToggled: expressOnlyNotifier,
-                                    label: 'Express Only',
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(physics: NeverScrollableScrollPhysics(),
-                                  itemCount: 4,
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.only(top: 12.dp,left: 16.dp, right: 16.dp),
-                                  primary: false,
-                                  itemBuilder: (context, index) {
-                                    return const OrderCard(
-                                      orderId: '12345',
-                                      services: ['Clean & Press', 'Bed & Bath'],
-                                      time: 'Today, 4:00 PM – 6:00 PM',
-                                      status: 'In Progress',
-                                      isDropoff: false,
-                                      isQuickOrder: true,
-                                      isService: false, service: [],
-                                      // notes: 'Deliver to reception.',
-                                    );
-                                  }),
+                            Gap(12.dp),
+                            ToggleButton(
+                              isToggled: expressOnlyNotifier,
+                              label: 'Express Only',
                             ),
                           ],
                         ),
+                      ),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: 4,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(
+                              top: 12.dp, left: 16.dp, right: 16.dp,bottom: 16.h),
+                          primary: false,
+                          itemBuilder: (context, index) {
+                            return const OrderCard(
+                              orderId: '12345',
+                              services: ['Clean & Press', 'Bed & Bath'],
+                              time: 'Today, 4:00 PM – 6:00 PM',
+                              status: 'In Progress',
+                              isDropoff: false,
+                              isQuickOrder: true,
+                              isService: false, service: [],
+                              // notes: 'Deliver to reception.',
+                            );
+                          }),
+                    ],
+                  ),
                 )),
           ],
         ),
