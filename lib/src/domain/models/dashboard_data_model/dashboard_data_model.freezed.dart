@@ -21,6 +21,7 @@ mixin _$DashboardDataModel {
   int get totalCollectedCash;
   String get nextActivityAt;
   String get activityType;
+  String get lastCollectedCashAt;
 
   /// Create a copy of DashboardDataModel
   /// with the given fields replaced by the non-null parameter values.
@@ -51,7 +52,9 @@ mixin _$DashboardDataModel {
             (identical(other.nextActivityAt, nextActivityAt) ||
                 other.nextActivityAt == nextActivityAt) &&
             (identical(other.activityType, activityType) ||
-                other.activityType == activityType));
+                other.activityType == activityType) &&
+            (identical(other.lastCollectedCashAt, lastCollectedCashAt) ||
+                other.lastCollectedCashAt == lastCollectedCashAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -64,11 +67,12 @@ mixin _$DashboardDataModel {
       completedDeliveries,
       totalCollectedCash,
       nextActivityAt,
-      activityType);
+      activityType,
+      lastCollectedCashAt);
 
   @override
   String toString() {
-    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType)';
+    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType, lastCollectedCashAt: $lastCollectedCashAt)';
   }
 }
 
@@ -85,7 +89,8 @@ abstract mixin class $DashboardDataModelCopyWith<$Res> {
       int completedDeliveries,
       int totalCollectedCash,
       String nextActivityAt,
-      String activityType});
+      String activityType,
+      String lastCollectedCashAt});
 }
 
 /// @nodoc
@@ -108,6 +113,7 @@ class _$DashboardDataModelCopyWithImpl<$Res>
     Object? totalCollectedCash = null,
     Object? nextActivityAt = null,
     Object? activityType = null,
+    Object? lastCollectedCashAt = null,
   }) {
     return _then(_self.copyWith(
       remainingPickups: null == remainingPickups
@@ -137,6 +143,10 @@ class _$DashboardDataModelCopyWithImpl<$Res>
       activityType: null == activityType
           ? _self.activityType
           : activityType // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastCollectedCashAt: null == lastCollectedCashAt
+          ? _self.lastCollectedCashAt
+          : lastCollectedCashAt // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -242,7 +252,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             int completedDeliveries,
             int totalCollectedCash,
             String nextActivityAt,
-            String activityType)?
+            String activityType,
+            String lastCollectedCashAt)?
         $default, {
     required TResult orElse(),
   }) {
@@ -256,7 +267,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             _that.completedDeliveries,
             _that.totalCollectedCash,
             _that.nextActivityAt,
-            _that.activityType);
+            _that.activityType,
+            _that.lastCollectedCashAt);
       case _:
         return orElse();
     }
@@ -284,7 +296,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             int completedDeliveries,
             int totalCollectedCash,
             String nextActivityAt,
-            String activityType)
+            String activityType,
+            String lastCollectedCashAt)
         $default,
   ) {
     final _that = this;
@@ -297,7 +310,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             _that.completedDeliveries,
             _that.totalCollectedCash,
             _that.nextActivityAt,
-            _that.activityType);
+            _that.activityType,
+            _that.lastCollectedCashAt);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -324,7 +338,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             int completedDeliveries,
             int totalCollectedCash,
             String nextActivityAt,
-            String activityType)?
+            String activityType,
+            String lastCollectedCashAt)?
         $default,
   ) {
     final _that = this;
@@ -337,7 +352,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             _that.completedDeliveries,
             _that.totalCollectedCash,
             _that.nextActivityAt,
-            _that.activityType);
+            _that.activityType,
+            _that.lastCollectedCashAt);
       case _:
         return null;
     }
@@ -354,7 +370,8 @@ class _DashboardDataModel implements DashboardDataModel {
       this.completedDeliveries = 0,
       this.totalCollectedCash = 0,
       this.nextActivityAt = '',
-      this.activityType = ''});
+      this.activityType = '',
+      this.lastCollectedCashAt = ''});
   factory _DashboardDataModel.fromJson(Map<String, dynamic> json) =>
       _$DashboardDataModelFromJson(json);
 
@@ -379,6 +396,9 @@ class _DashboardDataModel implements DashboardDataModel {
   @override
   @JsonKey()
   final String activityType;
+  @override
+  @JsonKey()
+  final String lastCollectedCashAt;
 
   /// Create a copy of DashboardDataModel
   /// with the given fields replaced by the non-null parameter values.
@@ -413,7 +433,9 @@ class _DashboardDataModel implements DashboardDataModel {
             (identical(other.nextActivityAt, nextActivityAt) ||
                 other.nextActivityAt == nextActivityAt) &&
             (identical(other.activityType, activityType) ||
-                other.activityType == activityType));
+                other.activityType == activityType) &&
+            (identical(other.lastCollectedCashAt, lastCollectedCashAt) ||
+                other.lastCollectedCashAt == lastCollectedCashAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -426,11 +448,12 @@ class _DashboardDataModel implements DashboardDataModel {
       completedDeliveries,
       totalCollectedCash,
       nextActivityAt,
-      activityType);
+      activityType,
+      lastCollectedCashAt);
 
   @override
   String toString() {
-    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType)';
+    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType, lastCollectedCashAt: $lastCollectedCashAt)';
   }
 }
 
@@ -449,7 +472,8 @@ abstract mixin class _$DashboardDataModelCopyWith<$Res>
       int completedDeliveries,
       int totalCollectedCash,
       String nextActivityAt,
-      String activityType});
+      String activityType,
+      String lastCollectedCashAt});
 }
 
 /// @nodoc
@@ -472,6 +496,7 @@ class __$DashboardDataModelCopyWithImpl<$Res>
     Object? totalCollectedCash = null,
     Object? nextActivityAt = null,
     Object? activityType = null,
+    Object? lastCollectedCashAt = null,
   }) {
     return _then(_DashboardDataModel(
       remainingPickups: null == remainingPickups
@@ -501,6 +526,10 @@ class __$DashboardDataModelCopyWithImpl<$Res>
       activityType: null == activityType
           ? _self.activityType
           : activityType // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastCollectedCashAt: null == lastCollectedCashAt
+          ? _self.lastCollectedCashAt
+          : lastCollectedCashAt // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

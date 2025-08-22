@@ -11,6 +11,7 @@ abstract class DashboardDataModel with _$DashboardDataModel{
     @Default(0) int totalCollectedCash,
     @Default('') String nextActivityAt,
     @Default('') String activityType,
+    @Default('') String lastCollectedCashAt,
   }) = _DashboardDataModel;
 
   factory DashboardDataModel.fromJson(Map<String, dynamic> json) => _$DashboardDataModelFromJson(json);
