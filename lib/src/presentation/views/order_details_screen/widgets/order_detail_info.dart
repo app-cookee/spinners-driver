@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
-import 'package:spinners_driver/src/presentation/views/pickup_order_detail/widgets/status_history.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/status_history.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderDetailnfo extends StatelessWidget {
