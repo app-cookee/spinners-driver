@@ -8,8 +8,11 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/pickup_and_d
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({super.key});
-
+  const Notifications({super.key, required this.remainingPickups, required this.remainingDeliveries, required this.completedPickups, required this.completedDeliveries});
+ final int remainingPickups;
+ final int remainingDeliveries;
+ final int completedPickups;
+ final int completedDeliveries;
   @override
   State<Notifications> createState() => _NotificationsState();
 }
@@ -72,14 +75,24 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                     //   ),
 
                     Gap(32.dp),
-                    const PickupAndDeliveryOverview(),
+                     PickupAndDeliveryOverview(
+                      remainingPickups: widget.remainingPickups,
+                      remainingDeliveries: widget.remainingDeliveries,
+                      completedPickups: widget.completedPickups,
+                      completedDeliveries: widget.completedDeliveries,
+                    ),
                   ],
                 ),
               ),
             ] else ...[
               Padding(
                 padding: EdgeInsets.only(top: 6.h),
-                child: const PickupAndDeliveryOverview(),
+                child:  PickupAndDeliveryOverview(
+                  remainingPickups: widget.remainingPickups,
+                  remainingDeliveries: widget.remainingDeliveries,
+                  completedPickups: widget.completedPickups,
+                  completedDeliveries: widget.completedDeliveries,
+                ),
               ),
             ],
           ],

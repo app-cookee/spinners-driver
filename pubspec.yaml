@@ -57,6 +57,7 @@ dependencies:
   shimmer: ^3.0.0
   mobile_scanner: ^7.0.1
   skeletonizer: ^2.1.0+1
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
