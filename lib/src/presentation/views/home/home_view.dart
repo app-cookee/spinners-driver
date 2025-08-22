@@ -62,6 +62,7 @@ class _HomeViewState extends State<HomeView> {
             builder: (context, dashboardDataState) {
               return Stack(
                 children: [
+
                   const HomeAppbar(),
                   _scrollableContainer(),
                   Padding(
@@ -146,7 +147,7 @@ class _HomeViewState extends State<HomeView> {
                 duration: const Duration(milliseconds: 200),
                 child: Padding(
                   padding: EdgeInsets.only(
-                    top: hasNotifs ? 61.h : 51.h,
+                    top: hasNotifs ? 59.h : 49.h,
                   ),
                   child: Container(
                     width: 100.w,

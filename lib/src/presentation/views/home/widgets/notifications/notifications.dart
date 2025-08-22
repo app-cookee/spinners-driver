@@ -53,16 +53,19 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      margin: EdgeInsets.only(top: 3.h),
+      // margin: EdgeInsets.only(top: 3.h),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.dp),
         child: Stack(
           alignment: Alignment.topCenter,
           clipBehavior: Clip.none,
           children: [
-            Image.asset(
-              AppImages.homeDottedRectangle,
-              width: 100.w,
+            Padding(
+              padding: EdgeInsets.only(top: 6.dp),
+              child: Image.asset(
+                AppImages.homeDottedRectangle,
+                width: 100.w,
+              ),
             ),
             _notificationDenotter(notifications),
             if (notifications.isNotEmpty) ...[

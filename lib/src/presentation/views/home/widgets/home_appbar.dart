@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
@@ -18,13 +17,14 @@ class HomeAppbar extends StatelessWidget {
 
         // if no user loaded yet, trigger the event once
         if (user == null) {
-          context.read<AuthBloc>().add(AuthEvent.profileAuth());
+          context.read<AuthBloc>().add(const AuthEvent.profileAuth());
         }
 
         return Stack(
           children: [
             gradientBackground(),
-            homeAppbarBubbles(),
+            // homeAppbarBubbles(),
+            // Image.asset(AppImages.homeBg, fit: BoxFit.cover, width: 100.w, height: 100.h),
             appBarContent(user),
           ],
         );
@@ -33,17 +33,21 @@ class HomeAppbar extends StatelessWidget {
   }
 
   Widget gradientBackground() => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0, 0.09, 0.33, 0.6],
-            colors: [
-              AppColors.primaryColor,
-              AppColors.gradientbg.withValues(alpha: 0.8),
-              AppColors.gradientbg.withValues(alpha: 0.1),
-              AppColors.white,
-            ],
+        decoration: const BoxDecoration(
+          // gradient: LinearGradient(
+          //   begin: Alignment.topCenter,
+          //   end: Alignment.bottomCenter,
+          //   stops: const [0, 0.09, 0.33, 0.6],
+          //   colors: [
+          //     AppColors.primaryColor,
+          //     AppColors.gradientbg.withValues(alpha: 0.8),
+          //     AppColors.gradientbg.withValues(alpha: 0.1),
+          //     AppColors.white,
+          //   ],
+          // ),
+          image: DecorationImage(
+            image: AssetImage(AppImages.homeBg),
+            fit: BoxFit.fill,
           ),
         ),
         height: 100.h,
