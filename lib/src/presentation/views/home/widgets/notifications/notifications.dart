@@ -8,11 +8,19 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/pickup_and_d
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({super.key, required this.remainingPickups, required this.remainingDeliveries, required this.completedPickups, required this.completedDeliveries});
- final int remainingPickups;
- final int remainingDeliveries;
- final int completedPickups;
- final int completedDeliveries;
+  const Notifications({
+    super.key,
+    required this.remainingPickups,
+    required this.remainingDeliveries,
+    required this.completedPickups,
+    required this.completedDeliveries,
+    required this.onNotificationsChanged,
+  });
+  final int remainingPickups;
+  final int remainingDeliveries;
+  final int completedPickups;
+  final int completedDeliveries;
+  final Function(bool hasNotifications) onNotificationsChanged;
   @override
   State<Notifications> createState() => _NotificationsState();
 }
@@ -25,9 +33,19 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
     'Customer feedback received',
     'Delivery completed successfully',
   ];
+   @override
+  void initState() {
+    super.initState();
+    // Initial callback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onNotificationsChanged(notifications.isNotEmpty);
+    });
+  }
   void _removeNotification(int index) {
     setState(() {
       notifications.removeAt(index);
+        // Notify parent about the change
+      widget.onNotificationsChanged(notifications.isNotEmpty);
     });
   }
 
@@ -35,16 +53,19 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      margin: EdgeInsets.only(top: 3.h),
+      // margin: EdgeInsets.only(top: 3.h),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.dp),
         child: Stack(
           alignment: Alignment.topCenter,
           clipBehavior: Clip.none,
           children: [
-            Image.asset(
-              AppImages.homeDottedRectangle,
-              width: 100.w,
+            Padding(
+              padding: EdgeInsets.only(top: 6.dp),
+              child: Image.asset(
+                AppImages.homeDottedRectangle,
+                width: 100.w,
+              ),
             ),
             _notificationDenotter(notifications),
             if (notifications.isNotEmpty) ...[
@@ -75,7 +96,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                     //   ),
 
                     Gap(32.dp),
-                     PickupAndDeliveryOverview(
+                    PickupAndDeliveryOverview(
                       remainingPickups: widget.remainingPickups,
                       remainingDeliveries: widget.remainingDeliveries,
                       completedPickups: widget.completedPickups,
@@ -87,7 +108,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
             ] else ...[
               Padding(
                 padding: EdgeInsets.only(top: 6.h),
-                child:  PickupAndDeliveryOverview(
+                child: PickupAndDeliveryOverview(
                   remainingPickups: widget.remainingPickups,
                   remainingDeliveries: widget.remainingDeliveries,
                   completedPickups: widget.completedPickups,
@@ -109,18 +130,8 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
         children: List.generate(
           notifications.length > 3 ? 3 : notifications.length,
           (i) {
-            // int index = i;
-            // Reverse the order so first item (index 0) is on top
             int reverseIndex = (notifications.length > 3 ? 3 : notifications.length) - 1 - i;
             int actualIndex = reverseIndex;
-            // return Dismissible(
-            //   key: ValueKey(notifications[index]),
-            //   direction: DismissDirection.horizontal,
-            //   onDismissed: (_) => _removeNotification(index),
-            //   child: Transform.translate(
-            //       offset: Offset(0, i * 8), // stacked look
-            //       child: NotificationCard(notification: notifications[index], isTopCard: i == 2, isLastCard: i == 0)),
-            // );
             return Dismissible(
               key: ValueKey('${notifications[actualIndex]}_$actualIndex'),
               direction: DismissDirection.horizontal,

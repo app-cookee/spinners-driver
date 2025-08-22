@@ -47,9 +47,9 @@ class _HomeAppbarState extends State<HomeAppbar> {
         return Stack(
           children: [
             gradientBackground(),
-            homeAppbarBubbles(),
-          
-            appBarContent(user,),
+            // homeAppbarBubbles(),
+            // Image.asset(AppImages.homeBg, fit: BoxFit.cover, width: 100.w, height: 100.h),
+            appBarContent(user),
           ],
         );
       },
@@ -57,17 +57,21 @@ class _HomeAppbarState extends State<HomeAppbar> {
   }
 
   Widget gradientBackground() => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0, 0.09, 0.33, 0.6],
-            colors: [
-              AppColors.primaryColor,
-              AppColors.gradientbg.withValues(alpha: 0.8),
-              AppColors.gradientbg.withValues(alpha: 0.1),
-              AppColors.white,
-            ],
+        decoration: const BoxDecoration(
+          // gradient: LinearGradient(
+          //   begin: Alignment.topCenter,
+          //   end: Alignment.bottomCenter,
+          //   stops: const [0, 0.09, 0.33, 0.6],
+          //   colors: [
+          //     AppColors.primaryColor,
+          //     AppColors.gradientbg.withValues(alpha: 0.8),
+          //     AppColors.gradientbg.withValues(alpha: 0.1),
+          //     AppColors.white,
+          //   ],
+          // ),
+          image: DecorationImage(
+            image: AssetImage(AppImages.homeBg),
+            fit: BoxFit.fill,
           ),
         ),
         height: 100.h,

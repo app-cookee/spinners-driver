@@ -34,7 +34,7 @@ static const String bag='assets/images/bag.png';
 static const String scanner='assets/images/scan-barcode.png';
 static const String qrIcon='assets/images/ic_qr.png';
 static const String arrowDownIcon='assets/images/ic_arrow_down.png';
-
+static const String homeBg='assets/images/home_bg.png';
 
 
 
