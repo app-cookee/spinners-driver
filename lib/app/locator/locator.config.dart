@@ -15,6 +15,10 @@ import 'package:spinners_driver/app/services/api_services/api_service.dart'
     as _i551;
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart'
     as _i403;
+import 'package:spinners_driver/src/domain/respositories/auth_respository.dart'
+    as _i701;
+import 'package:spinners_driver/src/infrastructure/i_auth_repository.dart'
+    as _i1058;
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart'
     as _i766;
 import 'package:spinners_driver/src/domain/respositories/auth_respository.dart'
