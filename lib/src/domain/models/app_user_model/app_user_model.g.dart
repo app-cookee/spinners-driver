@@ -14,9 +14,9 @@ _AppUser _$AppUserFromJson(Map<String, dynamic> json) => _AppUser(
       phoneNumber: json['phoneNumber'] as String? ?? '',
       timestamp: json['timestamp'] as String? ?? '',
       referralCode: json['referralCode'] as String? ?? '',
-      photo: json['photo'] as Map<String, dynamic>?,
-      storeName: json['storeName'] as Map<String, dynamic>?,
-      storeAddress: json['storeAddress'] as Map<String, dynamic>?,
+      photo: json['photo'] as String?,
+      storeName: json['storeName'] as String?,
+      storeAddress: json['storeAddress'] as String?,
       active: json['active'] as bool? ?? false,
     );
 

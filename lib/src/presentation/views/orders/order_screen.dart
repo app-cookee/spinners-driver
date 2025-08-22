@@ -98,7 +98,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         isDropoff: false,
                         isQuickOrder: true,
                         isService: false,
-                        service: ["Clean & Press","Press Only"],
+                       
                       );
                     }),
               ),

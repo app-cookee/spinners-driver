@@ -1,22 +1,49 @@
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:spinners_driver/app/services/api_services/environment/config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-class UserDetail extends StatelessWidget {
+class UserDetail extends StatefulWidget {
   final String avatar;
   final String name;
   final String pickupTime;
+  final String profileImage;
 
   const UserDetail({
     super.key,
     required this.avatar,
     required this.name,
-    required this.pickupTime,
+    required this.pickupTime, required this.profileImage,
   });
 
   @override
+  State<UserDetail> createState() => _UserDetailState();
+}
+
+class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateMixin {
+  late AnimationController _shimmerController;
+
+  
+  @override
+  void initState() {
+    super.initState();
+    _shimmerController = AnimationController.unbounded(vsync: this)
+      ..repeat(min: -0.5, max: 1.5, period: const Duration(milliseconds: 1000));
+  }
+
+  @override
+  void dispose() {
+    _shimmerController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Row(
       children: [
         Container(
@@ -56,7 +83,17 @@ class UserDetail extends StatelessWidget {
               ),
             ],
           ),
-          child: Center(
+          
+          child:(widget.profileImage.isNotEmpty&&widget.profileImage!=null)?
+          ClipRRect( borderRadius: BorderRadius.circular(20.dp),
+          child: Image.network('${ApiUrls.stagingUrl}/${widget.profileImage}'))
+          // child: CachedNetworkImage(imageUrl:'${ApiUrls.stagingUrl}/${widget.profileImage}'),
+          
+      
+          // )
+          
+      :
+           Center(
             child: ShaderMask(
               shaderCallback: (bounds) => const LinearGradient(
                 begin: Alignment.topCenter,
@@ -67,7 +104,7 @@ class UserDetail extends StatelessWidget {
                 ],
               ).createShader(bounds),
               child: Text(
-                avatar,
+                widget.avatar,
                 style: AppTypography.sfProRoundedSemiBold.copyWith(
                   color: AppColors.white,
                   fontSize: 20,
@@ -81,14 +118,14 @@ class UserDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              name,
+              widget.name,
               style: AppTypography.sfProRoundedSemiBold.copyWith(
                 color: AppColors.neutral900,
                 fontSize: 16,
               ),
             ),
              Text(
-              'Next pickup at $pickupTime',
+              'Next pickup at ${widget.pickupTime}',
                style: AppTypography.sfProRoundedRegular.copyWith(
                     color: AppColors.textGrey,
                     fontSize: 12.sp,
@@ -99,5 +136,16 @@ class UserDetail extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class SlidingGradientTransform extends GradientTransform {
+  const SlidingGradientTransform(this.slidePercent);
+
+  final double slidePercent;
+
+  @override
+  Matrix4? transform(Rect bounds, {TextDirection? textDirection}) {
+    return Matrix4.translationValues(bounds.width * slidePercent, 0.0, 0.0);
   }
 }

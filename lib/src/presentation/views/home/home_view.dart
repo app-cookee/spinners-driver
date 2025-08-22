@@ -116,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                       ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: 4,
                           shrinkWrap: true,
                           padding: EdgeInsets.only(
@@ -130,7 +130,7 @@ class _HomeViewState extends State<HomeView> {
                               status: 'In Progress',
                               isDropoff: false,
                               isQuickOrder: true,
-                              isService: false, service: [],
+                              isService: false, 
                               // notes: 'Deliver to reception.',
                             );
                           }),
