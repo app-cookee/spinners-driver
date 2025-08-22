@@ -21,7 +21,7 @@ class OrderCard extends StatelessWidget {
   final bool isQuickOrder;
   final bool isService;
   // final String notes;
-  final List service;
+  // final List service;
   const OrderCard({
     super.key,
     required this.orderId,
@@ -32,7 +32,7 @@ class OrderCard extends StatelessWidget {
     required this.isQuickOrder,
     required this.isService,
     // required this.notes,
-     required this.service,
+    //  required this.service,
   });
 
   Color getColor(String status) {

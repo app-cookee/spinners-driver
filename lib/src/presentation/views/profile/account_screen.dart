@@ -11,9 +11,10 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/home/placeholders/userdetail_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/profile_user_detail.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
+
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dialogue_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 
@@ -27,25 +28,25 @@ class AccountScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.blue1,
       body: BlocListener<AuthBloc, AuthState>(
-    listener: (context, state) {
-        if (state.logOutStatus is StatusSuccess) {
-          Navigator.of(context).pop(true);
-          context.router.pushAndPopUntil(
-            SplashRoute(),
-            predicate: (route) => true,
-          );
-          LocalStorage.remove(StorageKey.accessToken);
-          LocalStorage.remove(StorageKey.refreshToken);
-        }
-        if (state.logOutStatus is StatusFailure) {
-          TheToast.show(
-              message: state.logOutStatus.errorMessage,
-              context: context,
-              isError: true);
-        }
-      },
-      listenWhen: (previous, current) =>
-          previous.logOutStatus != current.logOutStatus,
+        listener: (context, state) {
+          if (state.logOutStatus is StatusSuccess) {
+            Navigator.of(context).pop(true);
+            context.router.pushAndPopUntil(
+              const SplashRoute(),
+              predicate: (route) => true,
+            );
+            LocalStorage.remove(StorageKey.accessToken);
+            LocalStorage.remove(StorageKey.refreshToken);
+          }
+          if (state.logOutStatus is StatusFailure) {
+            TheToast.show(
+                message: state.logOutStatus.errorMessage,
+                context: context,
+                isError: true);
+          }
+        },
+        listenWhen: (previous, current) =>
+            previous.logOutStatus != current.logOutStatus,
         child: Stack(children: [
           Positioned(
             top: 0,
@@ -81,10 +82,25 @@ class AccountScreen extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsetsGeometry.only(left: 16.dp),
-                    child: const ProfileUserDetail(
-                      avatar: 'A',
-                      name: 'Ahmed',
-                      phone: '+968 9123 4567',
+                    child: BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, state) {
+                           if (state.profileAuthStatus is StatusLoading) {
+                          return UserDetailPlaceholder();
+                        }
+                        return  ProfileUserDetail(
+                          avatar:       (state.appUser?.firstName?.isNotEmpty ?? false)
+                                  ? state.appUser!.firstName![0]
+                                  : "D",  
+                               
+                          name: (state.appUser?.firstName?.isNotEmpty ?? false)
+                              ? state.appUser!.firstName!
+                              : "Driver",
+                          phone:
+                              (state.appUser?.phoneNumber?.isNotEmpty ?? false)
+                                  ? state.appUser!.phoneNumber!
+                                  : "",
+                        );
+                      },
                     ),
                   ),
                   Gap(21.dp),

@@ -118,7 +118,7 @@ class _HomeViewState extends State<HomeView> {
                                     status: 'In Progress',
                                     isDropoff: false,
                                     isQuickOrder: true,
-                                    isService: false, service: [],
+                                    isService: false, 
                                     // notes: 'Deliver to reception.',
                                   );
                                 }),

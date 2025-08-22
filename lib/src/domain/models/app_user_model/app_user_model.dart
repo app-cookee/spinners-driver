@@ -21,9 +21,9 @@ abstract class AppUser with _$AppUser {
 
     // New fields from schema
     @JsonKey(name: 'referralCode') @Default('') String referralCode,
-    @JsonKey(name: 'photo') Map<String, dynamic>? photo,
-    @JsonKey(name: 'storeName') Map<String, dynamic>? storeName,
-    @JsonKey(name: 'storeAddress') Map<String, dynamic>? storeAddress,
+    @JsonKey(name: 'photo') String? photo,
+    @JsonKey(name: 'storeName') String? storeName,
+    @JsonKey(name: 'storeAddress') String? storeAddress,
     @JsonKey(name: 'active') @Default(false) bool active,
   }) = _AppUser;
 
