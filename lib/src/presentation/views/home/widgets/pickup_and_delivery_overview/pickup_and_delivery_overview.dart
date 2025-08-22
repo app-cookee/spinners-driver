@@ -5,8 +5,11 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 class PickupAndDeliveryOverview extends StatelessWidget {
-  const PickupAndDeliveryOverview({super.key});
-
+const PickupAndDeliveryOverview({super.key, required this.remainingPickups, required this.remainingDeliveries, required this.completedPickups, required this.completedDeliveries,});
+ final int remainingPickups;
+ final int remainingDeliveries;
+ final int completedPickups;
+ final int completedDeliveries;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +40,7 @@ class PickupAndDeliveryOverview extends StatelessWidget {
         backgroundImage: AppImages.pickupRemainingCard,
         icon: AppImages.remainingPickupIcon,
         label: 'Pickup Remaining',
-        value: '03',
+        value: remainingPickups,
       ),
       _CardConfig(
         bottomPadding: 12.h,
@@ -45,7 +48,7 @@ class PickupAndDeliveryOverview extends StatelessWidget {
         backgroundImage: AppImages.deliveriesLeftCard,
         icon: AppImages.deliveriesLeftIcon,
         label: 'My Deliveries Left',
-        value: '02',
+        value:remainingDeliveries,
       ),
       _CardConfig(
         bottomPadding: 5.h,
@@ -53,7 +56,7 @@ class PickupAndDeliveryOverview extends StatelessWidget {
         backgroundImage: AppImages.completedPickupCard,
         icon: AppImages.checkIcon,
         label: 'Completed Pickups',
-        value: '10',
+        value: completedPickups,
       ),
       _CardConfig(
         bottomPadding: 0.h,
@@ -61,7 +64,7 @@ class PickupAndDeliveryOverview extends StatelessWidget {
         backgroundImage: AppImages.completedDeliveryCard,
         icon: AppImages.completedDeliveriesIcon,
         label: 'Completed Deliveries',
-        value: '08',
+        value:completedDeliveries,
       ),
     ];
   }
@@ -89,7 +92,7 @@ class PickupAndDeliveryOverview extends StatelessWidget {
   Widget _buildCardContent({
     required String icon,
     required String label,
-    required String value,
+    required int value,
   }) {
     return Row(
       children: [
@@ -110,7 +113,7 @@ class PickupAndDeliveryOverview extends StatelessWidget {
           ),
         ),
         Text(
-          value,
+          value.toString().padLeft(2, '0'),
           style: AppTypography.sfProRoundedBold.copyWith(
             fontSize: 20.sp,
             color: AppColors.white,
@@ -127,7 +130,7 @@ class _CardConfig {
   final String backgroundImage;
   final String icon;
   final String label;
-  final String value;
+  final int value;
 
   const _CardConfig({
     required this.bottomPadding,
