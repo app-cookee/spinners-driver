@@ -126,7 +126,7 @@ abstract class User with _$User {
 @freezed
 abstract class OrderedItem with _$OrderedItem {
   const factory OrderedItem({
-    @JsonKey(name: 'id') @Default("") String id,
+    @JsonKey(name: 'orderServiceId') @Default("") String id,
     @JsonKey(name: 'quantity') @Default(0) int quantity,
     @JsonKey(name: 'soldPrice') @Default("") String soldPrice,
     @JsonKey(name: 'listedPrice') @Default("") String listedPrice,

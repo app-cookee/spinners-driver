@@ -29,7 +29,7 @@ class TodaysCollectedCOD extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            '₹220',
+            'AED 220',
             style: AppTypography.sfProRoundedBold.copyWith(fontSize: 32.sp, color: AppColors.neutral900),
           )
         ],

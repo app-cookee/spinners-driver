@@ -32,7 +32,7 @@ class _ToggleButtonState extends State<ToggleButton> {
                 width: 48.dp,
                 height: 24.dp,
                 duration: const Duration(milliseconds: 500),
-                decoration: BoxDecoration(color: widget.isToggled.value == 1 ? AppColors.greenColor : AppColors.greenColor.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(16.dp)),
+                decoration: BoxDecoration(color: widget.isToggled.value == 1 ? AppColors.greenColor : AppColors.toggleDisabled, borderRadius: BorderRadius.circular(16.dp)),
                 child: Stack(
                   children: [
                     AnimatedAlign(

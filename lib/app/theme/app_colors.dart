@@ -34,6 +34,7 @@ static const Color shadowColor = Color(0xFFE2E2E2);
         static const Color dialogeBgColor = Color(0xFFE3FFFF);
   static const Color dialogeContentColor = Color(0xFF5D6866);
     static const Color dividerColor = Color(0xFFE8E9E4);
+    static const Color toggleDisabled = Color(0xFFD0D0D0);
 
 
 
