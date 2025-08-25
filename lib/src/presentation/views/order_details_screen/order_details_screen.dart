@@ -48,6 +48,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
               child: BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
+                //    if (state.getOrderDetailStatus is StatusLoading ||
+                //     state.getOrderDetailStatus is StatusInitial) {
+                //   return QuickOrderDetailShimmer(orderId: widget.orderId);
+                // }
                   return CustomScrollView(
                     slivers: [
                       SliverToBoxAdapter(
