@@ -3870,7 +3870,7 @@ class __$UserCopyWithImpl<$Res> implements _$UserCopyWith<$Res> {
 
 /// @nodoc
 mixin _$OrderedItem {
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'orderServiceId')
   String get id;
   @JsonKey(name: 'quantity')
   int get quantity;
@@ -3927,7 +3927,7 @@ abstract mixin class $OrderedItemCopyWith<$Res> {
       _$OrderedItemCopyWithImpl;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String id,
+      {@JsonKey(name: 'orderServiceId') String id,
       @JsonKey(name: 'quantity') int quantity,
       @JsonKey(name: 'soldPrice') String soldPrice,
       @JsonKey(name: 'listedPrice') String listedPrice,
@@ -4108,7 +4108,7 @@ extension OrderedItemPatterns on OrderedItem {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'orderServiceId') String id,
             @JsonKey(name: 'quantity') int quantity,
             @JsonKey(name: 'soldPrice') String soldPrice,
             @JsonKey(name: 'listedPrice') String listedPrice,
@@ -4143,7 +4143,7 @@ extension OrderedItemPatterns on OrderedItem {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'orderServiceId') String id,
             @JsonKey(name: 'quantity') int quantity,
             @JsonKey(name: 'soldPrice') String soldPrice,
             @JsonKey(name: 'listedPrice') String listedPrice,
@@ -4176,7 +4176,7 @@ extension OrderedItemPatterns on OrderedItem {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'orderServiceId') String id,
             @JsonKey(name: 'quantity') int quantity,
             @JsonKey(name: 'soldPrice') String soldPrice,
             @JsonKey(name: 'listedPrice') String listedPrice,
@@ -4199,7 +4199,7 @@ extension OrderedItemPatterns on OrderedItem {
 @JsonSerializable()
 class _OrderedItem implements OrderedItem {
   const _OrderedItem(
-      {@JsonKey(name: 'id') this.id = "",
+      {@JsonKey(name: 'orderServiceId') this.id = "",
       @JsonKey(name: 'quantity') this.quantity = 0,
       @JsonKey(name: 'soldPrice') this.soldPrice = "",
       @JsonKey(name: 'listedPrice') this.listedPrice = "",
@@ -4209,7 +4209,7 @@ class _OrderedItem implements OrderedItem {
       _$OrderedItemFromJson(json);
 
   @override
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'orderServiceId')
   final String id;
   @override
   @JsonKey(name: 'quantity')
@@ -4278,7 +4278,7 @@ abstract mixin class _$OrderedItemCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String id,
+      {@JsonKey(name: 'orderServiceId') String id,
       @JsonKey(name: 'quantity') int quantity,
       @JsonKey(name: 'soldPrice') String soldPrice,
       @JsonKey(name: 'listedPrice') String listedPrice,

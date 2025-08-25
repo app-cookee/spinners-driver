@@ -60,7 +60,8 @@ class _HomeViewState extends State<HomeView> {
             builder: (context, dashboardDataState) {
               return Stack(
                 children: [
-                  const HomeAppbar(),
+                   HomeAppbar(
+              nextPickuptime:       dashboardDataState.dashboardDataModel.nextActivityAt),
                   _scrollableContainer(),
                   Padding(
                       padding: EdgeInsets.only(top: 13.h),
@@ -75,7 +76,7 @@ class _HomeViewState extends State<HomeView> {
                               completedDeliveries: dashboardDataState.dashboardDataModel.completedDeliveries,
                             ),
                             Gap(16.dp),
-                            const TodaysCollectedCOD(),
+                             TodaysCollectedCOD(state: dashboardDataState,),
                             Padding(
                               padding: EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
                               child: const PickupFilterTabs(),

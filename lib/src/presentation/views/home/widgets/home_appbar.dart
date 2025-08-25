@@ -13,7 +13,8 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/user_details
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class HomeAppbar extends StatefulWidget {
-  const HomeAppbar({super.key});
+  const HomeAppbar({super.key, required this.nextPickuptime});
+  final String? nextPickuptime;
 
   @override
   State<HomeAppbar> createState() => _HomeAppbarState();
@@ -23,6 +24,7 @@ class _HomeAppbarState extends State<HomeAppbar> {
 
   @override
   Widget build(BuildContext context) {
+    // log(widget.nextPickuptime);
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, profileState) {
         AppUser? user = profileState.appUser;
@@ -97,7 +99,8 @@ class _HomeAppbarState extends State<HomeAppbar> {
               ? user!.firstName[0]
               : "D",
           name: 'Good Evening, ${user?.firstName ?? "Driver"} 👋',
-          pickupTime: '3:15 PM',
+          pickupTime:  
+          widget.nextPickuptime.toString()
         ),
       );
 }
