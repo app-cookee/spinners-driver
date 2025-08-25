@@ -1,6 +1,6 @@
 part of 'order_bloc.dart';
 
 @freezed
-class OrderEvent with _$OrderEvent {
-  const factory OrderEvent.started() = _Started;
+abstract class OrderEvent with _$OrderEvent {
+     const factory OrderEvent.getOrdersList({required int limit,required int skip,required String filter}) = _GetOrdersList;
 }

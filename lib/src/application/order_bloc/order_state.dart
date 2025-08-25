@@ -1,6 +1,21 @@
 part of 'order_bloc.dart';
 
 @freezed
-class OrderState with _$OrderState {
-  const factory OrderState.initial() = _Initial;
+abstract class OrderState with _$OrderState {
+  const factory OrderState({
+    required Status getOrderListStatus,
+    required List<OrderResponse> ordersList,
+    required int totalCount,
+    required bool hasMore,
+    required bool isLoadingMore,
+    required Status paginationStatus,
+  }) = _OrderState;
+  factory OrderState.initial() => OrderState(
+        getOrderListStatus: Status.initial(),
+        ordersList: [],
+        hasMore: true,
+        isLoadingMore: false,
+        paginationStatus: Status.initial(),
+        totalCount: 0,
+      );
 }

@@ -193,7 +193,7 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
     };
 
 _OrderedItem _$OrderedItemFromJson(Map<String, dynamic> json) => _OrderedItem(
-      id: json['id'] as String? ?? "",
+      id: json['orderServiceId'] as String? ?? "",
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       soldPrice: json['soldPrice'] as String? ?? "",
       listedPrice: json['listedPrice'] as String? ?? "",
@@ -207,7 +207,7 @@ _OrderedItem _$OrderedItemFromJson(Map<String, dynamic> json) => _OrderedItem(
 
 Map<String, dynamic> _$OrderedItemToJson(_OrderedItem instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'orderServiceId': instance.id,
       'quantity': instance.quantity,
       'soldPrice': instance.soldPrice,
       'listedPrice': instance.listedPrice,

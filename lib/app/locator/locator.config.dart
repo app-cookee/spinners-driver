@@ -15,20 +15,20 @@ import 'package:spinners_driver/app/services/api_services/api_service.dart'
     as _i551;
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart'
     as _i403;
-import 'package:spinners_driver/src/domain/respositories/auth_respository.dart'
-    as _i701;
-import 'package:spinners_driver/src/infrastructure/i_auth_repository.dart'
-    as _i1058;
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart'
     as _i766;
 import 'package:spinners_driver/src/domain/respositories/auth_respository.dart'
     as _i701;
 import 'package:spinners_driver/src/domain/respositories/dashboard_data_repository.dart'
     as _i823;
+import 'package:spinners_driver/src/domain/respositories/order_repository.dart'
+    as _i168;
 import 'package:spinners_driver/src/infrastructure/i_auth_repository.dart'
     as _i1058;
 import 'package:spinners_driver/src/infrastructure/i_dashboard_data_repository.dart'
     as _i813;
+import 'package:spinners_driver/src/infrastructure/i_order_repository.dart'
+    as _i1030;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -44,6 +44,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i551.Api>(() => _i551.Api());
     gh.lazySingleton<_i823.DashboardDataRepository>(() =>
         _i813.DashboardDataRepositoryImplementation(api: gh<_i551.Api>()));
+    gh.lazySingleton<_i168.OrderRepository>(
+        () => _i1030.OrderRepositoryImplementation(api: gh<_i551.Api>()));
     gh.factory<_i766.DashboardDataBloc>(
         () => _i766.DashboardDataBloc(gh<_i823.DashboardDataRepository>()));
     gh.lazySingleton<_i701.AuthRepository>(
