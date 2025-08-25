@@ -1,13 +1,19 @@
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class ToggleButton extends StatefulWidget {
-  const ToggleButton({super.key, required this.isToggled, required this.label});
+  const ToggleButton({super.key, required this.isToggled, required this.label, this.onLocationFetched,});
  final ValueNotifier isToggled;
  final String label;
+ final Function(double lat, double lng)? onLocationFetched;
+ 
   @override
   State<ToggleButton> createState() => _ToggleButtonState();
 }
@@ -19,11 +25,30 @@ class _ToggleButtonState extends State<ToggleButton> {
       valueListenable: widget.isToggled,
       builder: (context, value, child) {
         return GestureDetector(
-          onTap: () {
+          onTap: ()async{
+             // Toggle
             if (widget.isToggled.value == 0) {
-              widget.isToggled.value = 1;
+              // Turn ON → check location permission
+              try {
+                final position = await _handleLocationPermissionAndFetch();
+                if (position != null) {
+                  widget.isToggled.value = 1;
+                  log('Lat: ${position.latitude}, Lng: ${position.longitude}');
+                   // Pass location to parent widget via callback
+                  if (widget.onLocationFetched != null) {
+                    widget.onLocationFetched!(position.latitude, position.longitude);
+                  }
+                }
+              } catch (e) {
+                log('Location error: $e');
+                // Keep toggle OFF if permission not granted
+                widget.isToggled.value = 0;
+              }
             } else {
               widget.isToggled.value = 0;
+               if (widget.onLocationFetched != null) {
+                    widget.onLocationFetched!(0.0, 0.0);
+                  }
             }
           },
           child: Row(
@@ -56,4 +81,31 @@ class _ToggleButtonState extends State<ToggleButton> {
       },
     );
   }
+    Future<Position?> _handleLocationPermissionAndFetch() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permission denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied. Enable from settings.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+  }
+
 }

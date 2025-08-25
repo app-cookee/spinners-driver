@@ -9,6 +9,16 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/pickup_filte
 import 'package:spinners_driver/src/presentation/views/home/widgets/toggle_button.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
+enum OrderStatus {
+  pickupScheduled,
+  readyForDelivery,
+
+}
+
+String statusToString(OrderStatus status) => status.name;
+
+
+
 @RoutePage()
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -62,7 +72,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   style: AppTypography.sfProRoundedSemiBold
                       .copyWith(fontSize: 24.dp, color: AppColors.primary950)),
               Gap(16.dp),
-              const PickupFilterTabs(),
+               PickupFilterTabs(onTabChanged:(index){},),
               Gap(18.dp),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -87,17 +97,14 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                     primary: false,
                     itemBuilder: (context, index) {
-                      return const OrderCard(
+                      return const OrderCard(address: 'yhyh',
                         orderId: '12345',
-                        services: [
-                          'Clean & Press',
-                          'Bed & Bath'
-                        ],
+                    
                         time: 'Today, 4:00 PM – 6:00 PM',
                         status: 'In Progress',
                         isDropoff: false,
-                        isQuickOrder: true,
-                        isService: false,
+                        isQuickOrder: true, isExpressService: false,
+                        // isService: false,
                        
                       );
                     }),
