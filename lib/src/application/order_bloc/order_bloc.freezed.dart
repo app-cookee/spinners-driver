@@ -53,6 +53,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(_GetOrdersList value)? getOrdersList,
     TResult Function(_GetOrderDetails value)? getOrderDetails,
     TResult Function(_ConfirmPickup value)? confirmPickup,
+    TResult Function(_AddBag value)? addBag,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -63,6 +64,8 @@ extension OrderEventPatterns on OrderEvent {
         return getOrderDetails(_that);
       case _ConfirmPickup() when confirmPickup != null:
         return confirmPickup(_that);
+      case _AddBag() when addBag != null:
+        return addBag(_that);
       case _:
         return orElse();
     }
@@ -86,6 +89,7 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(_GetOrdersList value) getOrdersList,
     required TResult Function(_GetOrderDetails value) getOrderDetails,
     required TResult Function(_ConfirmPickup value) confirmPickup,
+    required TResult Function(_AddBag value) addBag,
   }) {
     final _that = this;
     switch (_that) {
@@ -95,6 +99,8 @@ extension OrderEventPatterns on OrderEvent {
         return getOrderDetails(_that);
       case _ConfirmPickup():
         return confirmPickup(_that);
+      case _AddBag():
+        return addBag(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -117,6 +123,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(_GetOrdersList value)? getOrdersList,
     TResult? Function(_GetOrderDetails value)? getOrderDetails,
     TResult? Function(_ConfirmPickup value)? confirmPickup,
+    TResult? Function(_AddBag value)? addBag,
   }) {
     final _that = this;
     switch (_that) {
@@ -126,6 +133,8 @@ extension OrderEventPatterns on OrderEvent {
         return getOrderDetails(_that);
       case _ConfirmPickup() when confirmPickup != null:
         return confirmPickup(_that);
+      case _AddBag() when addBag != null:
+        return addBag(_that);
       case _:
         return null;
     }
@@ -148,6 +157,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(int limit, int skip, String filter)? getOrdersList,
     TResult Function(String orderId)? getOrderDetails,
     TResult Function(String orderId, String driverNotes)? confirmPickup,
+    TResult Function(String orderItemId, String bagId)? addBag,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -158,6 +168,8 @@ extension OrderEventPatterns on OrderEvent {
         return getOrderDetails(_that.orderId);
       case _ConfirmPickup() when confirmPickup != null:
         return confirmPickup(_that.orderId, _that.driverNotes);
+      case _AddBag() when addBag != null:
+        return addBag(_that.orderItemId, _that.bagId);
       case _:
         return orElse();
     }
@@ -181,6 +193,7 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(int limit, int skip, String filter) getOrdersList,
     required TResult Function(String orderId) getOrderDetails,
     required TResult Function(String orderId, String driverNotes) confirmPickup,
+    required TResult Function(String orderItemId, String bagId) addBag,
   }) {
     final _that = this;
     switch (_that) {
@@ -190,6 +203,8 @@ extension OrderEventPatterns on OrderEvent {
         return getOrderDetails(_that.orderId);
       case _ConfirmPickup():
         return confirmPickup(_that.orderId, _that.driverNotes);
+      case _AddBag():
+        return addBag(_that.orderItemId, _that.bagId);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -212,6 +227,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(int limit, int skip, String filter)? getOrdersList,
     TResult? Function(String orderId)? getOrderDetails,
     TResult? Function(String orderId, String driverNotes)? confirmPickup,
+    TResult? Function(String orderItemId, String bagId)? addBag,
   }) {
     final _that = this;
     switch (_that) {
@@ -221,6 +237,8 @@ extension OrderEventPatterns on OrderEvent {
         return getOrderDetails(_that.orderId);
       case _ConfirmPickup() when confirmPickup != null:
         return confirmPickup(_that.orderId, _that.driverNotes);
+      case _AddBag() when addBag != null:
+        return addBag(_that.orderItemId, _that.bagId);
       case _:
         return null;
     }
@@ -443,6 +461,76 @@ class __$ConfirmPickupCopyWithImpl<$Res>
 }
 
 /// @nodoc
+
+class _AddBag implements OrderEvent {
+  const _AddBag({required this.orderItemId, required this.bagId});
+
+  final String orderItemId;
+  final String bagId;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AddBagCopyWith<_AddBag> get copyWith =>
+      __$AddBagCopyWithImpl<_AddBag>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _AddBag &&
+            (identical(other.orderItemId, orderItemId) ||
+                other.orderItemId == orderItemId) &&
+            (identical(other.bagId, bagId) || other.bagId == bagId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, orderItemId, bagId);
+
+  @override
+  String toString() {
+    return 'OrderEvent.addBag(orderItemId: $orderItemId, bagId: $bagId)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$AddBagCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$AddBagCopyWith(_AddBag value, $Res Function(_AddBag) _then) =
+      __$AddBagCopyWithImpl;
+  @useResult
+  $Res call({String orderItemId, String bagId});
+}
+
+/// @nodoc
+class __$AddBagCopyWithImpl<$Res> implements _$AddBagCopyWith<$Res> {
+  __$AddBagCopyWithImpl(this._self, this._then);
+
+  final _AddBag _self;
+  final $Res Function(_AddBag) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? orderItemId = null,
+    Object? bagId = null,
+  }) {
+    return _then(_AddBag(
+      orderItemId: null == orderItemId
+          ? _self.orderItemId
+          : orderItemId // ignore: cast_nullable_to_non_nullable
+              as String,
+      bagId: null == bagId
+          ? _self.bagId
+          : bagId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$OrderState {
   Status get getOrderListStatus;
   List<OrderResponse> get ordersList;
@@ -453,6 +541,7 @@ mixin _$OrderState {
   Status get getOrderDetailStatus;
   OrderDetailsResponseModel get orderDetails;
   Status get confirmPickupStatus;
+  Status get addBagStatus;
 
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -482,7 +571,9 @@ mixin _$OrderState {
             (identical(other.orderDetails, orderDetails) ||
                 other.orderDetails == orderDetails) &&
             (identical(other.confirmPickupStatus, confirmPickupStatus) ||
-                other.confirmPickupStatus == confirmPickupStatus));
+                other.confirmPickupStatus == confirmPickupStatus) &&
+            (identical(other.addBagStatus, addBagStatus) ||
+                other.addBagStatus == addBagStatus));
   }
 
   @override
@@ -496,11 +587,12 @@ mixin _$OrderState {
       paginationStatus,
       getOrderDetailStatus,
       orderDetails,
-      confirmPickupStatus);
+      confirmPickupStatus,
+      addBagStatus);
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus)';
   }
 }
 
@@ -519,13 +611,15 @@ abstract mixin class $OrderStateCopyWith<$Res> {
       Status paginationStatus,
       Status getOrderDetailStatus,
       OrderDetailsResponseModel orderDetails,
-      Status confirmPickupStatus});
+      Status confirmPickupStatus,
+      Status addBagStatus});
 
   $StatusCopyWith<$Res> get getOrderListStatus;
   $StatusCopyWith<$Res> get paginationStatus;
   $StatusCopyWith<$Res> get getOrderDetailStatus;
   $OrderDetailsResponseModelCopyWith<$Res> get orderDetails;
   $StatusCopyWith<$Res> get confirmPickupStatus;
+  $StatusCopyWith<$Res> get addBagStatus;
 }
 
 /// @nodoc
@@ -549,6 +643,7 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
     Object? getOrderDetailStatus = null,
     Object? orderDetails = null,
     Object? confirmPickupStatus = null,
+    Object? addBagStatus = null,
   }) {
     return _then(_self.copyWith(
       getOrderListStatus: null == getOrderListStatus
@@ -586,6 +681,10 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
       confirmPickupStatus: null == confirmPickupStatus
           ? _self.confirmPickupStatus
           : confirmPickupStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      addBagStatus: null == addBagStatus
+          ? _self.addBagStatus
+          : addBagStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -638,6 +737,16 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get confirmPickupStatus {
     return $StatusCopyWith<$Res>(_self.confirmPickupStatus, (value) {
       return _then(_self.copyWith(confirmPickupStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get addBagStatus {
+    return $StatusCopyWith<$Res>(_self.addBagStatus, (value) {
+      return _then(_self.copyWith(addBagStatus: value));
     });
   }
 }
@@ -744,7 +853,8 @@ extension OrderStatePatterns on OrderState {
             Status paginationStatus,
             Status getOrderDetailStatus,
             OrderDetailsResponseModel orderDetails,
-            Status confirmPickupStatus)?
+            Status confirmPickupStatus,
+            Status addBagStatus)?
         $default, {
     required TResult orElse(),
   }) {
@@ -760,7 +870,8 @@ extension OrderStatePatterns on OrderState {
             _that.paginationStatus,
             _that.getOrderDetailStatus,
             _that.orderDetails,
-            _that.confirmPickupStatus);
+            _that.confirmPickupStatus,
+            _that.addBagStatus);
       case _:
         return orElse();
     }
@@ -790,7 +901,8 @@ extension OrderStatePatterns on OrderState {
             Status paginationStatus,
             Status getOrderDetailStatus,
             OrderDetailsResponseModel orderDetails,
-            Status confirmPickupStatus)
+            Status confirmPickupStatus,
+            Status addBagStatus)
         $default,
   ) {
     final _that = this;
@@ -805,7 +917,8 @@ extension OrderStatePatterns on OrderState {
             _that.paginationStatus,
             _that.getOrderDetailStatus,
             _that.orderDetails,
-            _that.confirmPickupStatus);
+            _that.confirmPickupStatus,
+            _that.addBagStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -834,7 +947,8 @@ extension OrderStatePatterns on OrderState {
             Status paginationStatus,
             Status getOrderDetailStatus,
             OrderDetailsResponseModel orderDetails,
-            Status confirmPickupStatus)?
+            Status confirmPickupStatus,
+            Status addBagStatus)?
         $default,
   ) {
     final _that = this;
@@ -849,7 +963,8 @@ extension OrderStatePatterns on OrderState {
             _that.paginationStatus,
             _that.getOrderDetailStatus,
             _that.orderDetails,
-            _that.confirmPickupStatus);
+            _that.confirmPickupStatus,
+            _that.addBagStatus);
       case _:
         return null;
     }
@@ -868,7 +983,8 @@ class _OrderState implements OrderState {
       required this.paginationStatus,
       required this.getOrderDetailStatus,
       required this.orderDetails,
-      required this.confirmPickupStatus})
+      required this.confirmPickupStatus,
+      required this.addBagStatus})
       : _ordersList = ordersList;
 
   @override
@@ -895,6 +1011,8 @@ class _OrderState implements OrderState {
   final OrderDetailsResponseModel orderDetails;
   @override
   final Status confirmPickupStatus;
+  @override
+  final Status addBagStatus;
 
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -925,7 +1043,9 @@ class _OrderState implements OrderState {
             (identical(other.orderDetails, orderDetails) ||
                 other.orderDetails == orderDetails) &&
             (identical(other.confirmPickupStatus, confirmPickupStatus) ||
-                other.confirmPickupStatus == confirmPickupStatus));
+                other.confirmPickupStatus == confirmPickupStatus) &&
+            (identical(other.addBagStatus, addBagStatus) ||
+                other.addBagStatus == addBagStatus));
   }
 
   @override
@@ -939,11 +1059,12 @@ class _OrderState implements OrderState {
       paginationStatus,
       getOrderDetailStatus,
       orderDetails,
-      confirmPickupStatus);
+      confirmPickupStatus,
+      addBagStatus);
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus)';
   }
 }
 
@@ -964,7 +1085,8 @@ abstract mixin class _$OrderStateCopyWith<$Res>
       Status paginationStatus,
       Status getOrderDetailStatus,
       OrderDetailsResponseModel orderDetails,
-      Status confirmPickupStatus});
+      Status confirmPickupStatus,
+      Status addBagStatus});
 
   @override
   $StatusCopyWith<$Res> get getOrderListStatus;
@@ -976,6 +1098,8 @@ abstract mixin class _$OrderStateCopyWith<$Res>
   $OrderDetailsResponseModelCopyWith<$Res> get orderDetails;
   @override
   $StatusCopyWith<$Res> get confirmPickupStatus;
+  @override
+  $StatusCopyWith<$Res> get addBagStatus;
 }
 
 /// @nodoc
@@ -999,6 +1123,7 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
     Object? getOrderDetailStatus = null,
     Object? orderDetails = null,
     Object? confirmPickupStatus = null,
+    Object? addBagStatus = null,
   }) {
     return _then(_OrderState(
       getOrderListStatus: null == getOrderListStatus
@@ -1036,6 +1161,10 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
       confirmPickupStatus: null == confirmPickupStatus
           ? _self.confirmPickupStatus
           : confirmPickupStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      addBagStatus: null == addBagStatus
+          ? _self.addBagStatus
+          : addBagStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -1088,6 +1217,16 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get confirmPickupStatus {
     return $StatusCopyWith<$Res>(_self.confirmPickupStatus, (value) {
       return _then(_self.copyWith(confirmPickupStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get addBagStatus {
+    return $StatusCopyWith<$Res>(_self.addBagStatus, (value) {
+      return _then(_self.copyWith(addBagStatus: value));
     });
   }
 }

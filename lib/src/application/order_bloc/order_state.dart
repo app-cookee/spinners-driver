@@ -12,6 +12,7 @@ abstract class OrderState with _$OrderState {
     required Status getOrderDetailStatus,
     required OrderDetailsResponseModel orderDetails,
     required Status confirmPickupStatus,
+    required Status addBagStatus,
   }) = _OrderState;
   factory OrderState.initial() => OrderState(
         getOrderListStatus: Status.initial(),
@@ -23,5 +24,6 @@ abstract class OrderState with _$OrderState {
         getOrderDetailStatus: Status.initial(),
         orderDetails:const OrderDetailsResponseModel(),
         confirmPickupStatus: Status.initial(),
+        addBagStatus: Status.initial(),
       );
 }

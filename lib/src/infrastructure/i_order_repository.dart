@@ -52,4 +52,18 @@ class OrderRepositoryImplementation implements OrderRepository {
       rethrow;
     }
   }
+  
+  @override
+  Future<void> addBag(String orderItemId, String bagId) async {
+    try {
+      final Map<String, dynamic> data = {
+        "orderItemId": orderItemId,
+        "bagId": bagId,
+      }.clean();
+
+      await api.profile.post(ApiEndpoints().addBag, data: data);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

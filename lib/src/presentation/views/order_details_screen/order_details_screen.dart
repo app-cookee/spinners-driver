@@ -10,10 +10,12 @@ import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/additional_notes.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_detail_info.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_info_card.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/ordered_services.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen.dart';
@@ -38,7 +40,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   late ValueNotifier<bool> allItemsScanned;
   @override
   void initState() {
-    context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: '3ea0f455-1b80-48af-b6bd-41a84bc10311'));
+    context.read<OrderBloc>().add(const OrderEvent.getOrderDetails(orderId: /*'900dbeab-0ced-4974-834f-13db0f10a1ef'- quick ordr*/'3ea0f455-1b80-48af-b6bd-41a84bc10311'));
     allItemsScanned = ValueNotifier<bool>(false);
 
     // Listen to scanned items changes to update completion status
@@ -64,7 +66,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const String type = "Normal";
     ValueNotifier<int?> selectedIndex = ValueNotifier<int?>(null);
     final refId = context.read<OrderBloc>().state.orderDetails.refId;
     return ScrollConfiguration(
@@ -122,13 +123,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     ),
                                   ),
                                   Gap(6.dp),
-                                  type == "Normal"
+                                  state.orderDetails.type == "normalOrder"
                                       ? OrderedServices(
                                           selectedIndex: selectedIndex,
                                           scannedItems: scannedItems,
                                         )
                                       : const SizedBox.shrink(),
-                                  type == "Quick"
+                                  state.orderDetails.type != "normalOrder"
                                       ? InkWell(
                                           onTap: () {
                                             Navigator.push(context, (MaterialPageRoute(builder: (context) => const QRScannerScreen())));
@@ -144,7 +145,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                 fontSize: 14.sp,
                                                 color: AppColors.primaryColor,
                                               ),
-                                              onPressed: () {},
+                                              onPressed: () async {
+                                                //  Navigator.push(context, (MaterialPageRoute(builder: (context) => const QRScannerScreen())));
+                                                final result = await Navigator.push<String>(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => const QRScannerScreen()),
+                                                );
+
+                                                // Check if QR was successfully scanned
+                                                if (result != null && result.isNotEmpty) {
+                                                  // Update the shared scanned items set
+                                                  final newScannedSet = Set<int>.from(scannedItems.value);
+                                                  // ignore: use_build_context_synchronously
+                                                  CustomBottomSheetWidget(context: context, child: const ScanNewBagBottomsheet()).show();
+                                                }
+                                              },
                                               text: "Scan New Bag",
                                               leadingIcon: Image.asset(
                                                 height: 24.dp,
@@ -183,7 +198,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 },
               ),
             ),
-            Positioned(bottom: 0, left: 0, right: 0, child: _footerButton(type))
+            Positioned(bottom: 0, left: 0, right: 0, child: _footerButton(context.read<OrderBloc>().state.orderDetails.type))
           ],
         ),
       ),
@@ -206,11 +221,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 value: formatSingleDate(
                   state.orderDetails.pickupAt,
                 )),
-            Gap(4.dp),
-            OrderInfoCard(
-              label: "Payment Method",
-              value: (state.orderDetails.payment).map((payment) => payment.method.toString()).join().toUpperCase(),
-            ),
+            if (state.orderDetails.payment.isNotEmpty) ...[
+              Gap(4.dp),
+              OrderInfoCard(
+                label: "Payment Method",
+                value: (state.orderDetails.payment).map((payment) => payment.method.toString()).join().toUpperCase(),
+              ),
+            ]
           ],
         ),
       ),

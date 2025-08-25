@@ -36,143 +36,147 @@ class OrderedServices extends StatelessWidget {
                 // final isActive = selected == index;
                 final isScanned = scanned.contains(index);
 
-                return GestureDetector(
-                  onTap: () {
-                    selectedIndex.value = index;
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 8.dp),
-                    padding: EdgeInsets.all(16.dp),
-                    decoration: BoxDecoration(
-                      // Change color based on scanned status
-                      color: isScanned ? AppColors.blue1 : AppColors.neutral50,
-                      borderRadius: BorderRadius.circular(12.dp),
-                      gradient: isScanned
-                          ? const LinearGradient(
-                              colors: [AppColors.blue1, AppColors.blue1, AppColors.blue1, Color(0xffD8F1FC)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 0.33, 0.66, 1.0],
-                            )
-                          : null,
-                      border: Border.all(
-                        color: isScanned ? AppColors.primaryColor500 : AppColors.lightGrey,
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: isScanned ? AppColors.primaryColor500.withValues(alpha: 0.1) : AppColors.lightGrey.withValues(alpha: 0.1),
-                          spreadRadius: 1,
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(AppImages.dress, height: 32.dp, width: 32.dp),
-                        Gap(8.dp),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                state.orderDetails.orderedItems[index].service.name,
-                                style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                  fontSize: 16.sp,
-                                  color: AppColors.neutral950,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Gap(4.dp),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 20.dp,
-                                    width: 20.dp,
-                                    child: Image.asset(
-                                      AppImages.bag,
-                                      color: hexToColor(state.orderDetails.orderedItems[index].service.color),
-                                    ),
-                                  ),
-                                  Gap(4.dp),
-                                  Text(
-                                    'x${state.orderDetails.orderedItems[index].quantity}',
-                                    style: AppTypography.sfProRoundedBold.copyWith(
-                                      fontSize: 14.sp,
-                                      color: AppColors.primaryColor500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        InkWell(
-                          onTap: isScanned
-                              ? null
-                              : () async {
-                                  // Navigate and wait for result
-                                  final result = await Navigator.push<String>(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const QRScannerScreen()),
-                                  );
-
-                                  // Check if QR was successfully scanned
-                                  if (result != null && result.isNotEmpty) {
-                                    // Update the shared scanned items set
-                                    final newScannedSet = Set<int>.from(scannedItems.value);
-                                    newScannedSet.add(index);
-                                    scannedItems.value = newScannedSet;
-
-                                    // Update the selected index
-                                    selectedIndex.value = index;
-                                  }
-                                },
-                          child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 6.dp),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.black.withValues(alpha: .14),
-                                    spreadRadius: 0,
-                                    blurRadius: 2,
-                                    offset: const Offset(0, 0),
-                                  )
-                                ],
-                                border: Border.all(color: AppColors.scanblue),
-                                borderRadius: BorderRadius.circular(8.dp),
-                              ),
-                              child: Row(
-                                spacing: 4.dp,
-                                children: [
-                                  Image.asset(
-                                    height: 24.dp,
-                                    width: 24.dp,
-                                    AppImages.scanner,
-                                    //  color: Colors.blue,
-                                  ),
-                                  Text(
-                                    'Scan',
-                                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                      fontSize: 14.sp,
-                                      color: AppColors.primaryColor,
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                );
+                return _orderedServiceCard(index, isScanned, state, context);
               },
             );
           },
         ),
       );
     });
+  }
+
+  Widget _orderedServiceCard(int index, bool isScanned, OrderState state, BuildContext context) {
+    return GestureDetector(
+                onTap: () {
+                  selectedIndex.value = index;
+                },
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 8.dp),
+                  padding: EdgeInsets.all(16.dp),
+                  decoration: BoxDecoration(
+                    // Change color based on scanned status
+                    color: isScanned ? AppColors.blue1 : AppColors.neutral50,
+                    borderRadius: BorderRadius.circular(12.dp),
+                    gradient: isScanned
+                        ? const LinearGradient(
+                            colors: [AppColors.blue1, AppColors.blue1, AppColors.blue1, Color(0xffD8F1FC)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            stops: [0.0, 0.33, 0.66, 1.0],
+                          )
+                        : null,
+                    border: Border.all(
+                      color: isScanned ? AppColors.primaryColor500 : AppColors.lightGrey,
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isScanned ? AppColors.primaryColor500.withValues(alpha: 0.1) : AppColors.lightGrey.withValues(alpha: 0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Image.asset(AppImages.dress, height: 32.dp, width: 32.dp),
+                      Gap(8.dp),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              state.orderDetails.orderedItems[index].service.name,
+                              style: AppTypography.sfProRoundedSemiBold.copyWith(
+                                fontSize: 16.sp,
+                                color: AppColors.neutral950,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Gap(4.dp),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  height: 20.dp,
+                                  width: 20.dp,
+                                  child: Image.asset(
+                                    AppImages.bag,
+                                    color: hexToColor(state.orderDetails.orderedItems[index].service.color),
+                                  ),
+                                ),
+                                Gap(4.dp),
+                                Text(
+                                  'x${state.orderDetails.orderedItems[index].quantity}',
+                                  style: AppTypography.sfProRoundedBold.copyWith(
+                                    fontSize: 14.sp,
+                                    color: AppColors.primaryColor500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      InkWell(
+                        onTap: isScanned
+                            ? null
+                            : () async {
+                                // Navigate and wait for result
+                                final result = await Navigator.push<String>(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const QRScannerScreen()),
+                                );
+
+                                // Check if QR was successfully scanned
+                                if (result != null && result.isNotEmpty) {
+                                  // Update the shared scanned items set
+                                  final newScannedSet = Set<int>.from(scannedItems.value);
+                                  newScannedSet.add(index);
+                                  scannedItems.value = newScannedSet;
+
+                                  // Update the selected index
+                                  selectedIndex.value = index;
+                                }
+                              },
+                        child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 6.dp),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.black.withValues(alpha: .14),
+                                  spreadRadius: 0,
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 0),
+                                )
+                              ],
+                              border: Border.all(color: AppColors.scanblue),
+                              borderRadius: BorderRadius.circular(8.dp),
+                            ),
+                            child: Row(
+                              spacing: 4.dp,
+                              children: [
+                                Image.asset(
+                                  height: 24.dp,
+                                  width: 24.dp,
+                                  AppImages.scanner,
+                                  //  color: Colors.blue,
+                                ),
+                                Text(
+                                  'Scan',
+                                  style: AppTypography.sfProRoundedSemiBold.copyWith(
+                                    fontSize: 14.sp,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ],
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+              );
   }
 
   Color hexToColor(String hex) {
