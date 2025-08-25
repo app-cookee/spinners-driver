@@ -10,7 +10,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 class UserDetail extends StatefulWidget {
   final String avatar;
   final String name;
-  final String pickupTime;
+  final String? pickupTime;
   final String profileImage;
 
   const UserDetail({
@@ -124,13 +124,14 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                 fontSize: 16,
               ),
             ),
+            widget.pickupTime!=""?
              Text(
               'Next pickup at ${widget.pickupTime}',
                style: AppTypography.sfProRoundedRegular.copyWith(
                     color: AppColors.textGrey,
                     fontSize: 12.sp,
                   ),
-            ),
+            ):SizedBox.shrink()
           
           ],
         ),
