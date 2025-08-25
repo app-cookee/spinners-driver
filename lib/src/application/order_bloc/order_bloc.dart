@@ -4,25 +4,59 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
+import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/domain/respositories/order_repository.dart';
 
 part 'order_event.dart';
 part 'order_state.dart';
 part 'order_bloc.freezed.dart';
+
 @injectable
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
-   OrderRepository orderRepository;
-  OrderBloc(this.orderRepository,) : super(OrderState.initial()) {
- on<_GetOrdersList>(_onGetOrdersList);
+  OrderRepository orderRepository;
+  OrderBloc(
+    this.orderRepository,
+  ) : super(OrderState.initial()) {
+    on<_GetOrdersList>(_onGetOrdersList);
+    on<_GetOrderDetails>(_onGetOrderDetails);
+    on<_ConfirmPickup>(_onConfirmPickup);
   }
-    FutureOr<void> _onGetOrdersList(_GetOrdersList event, Emitter<OrderState> emit) async{
-        try {
-
-    } catch (e) {
-     
-         emit(state.copyWith(getOrderListStatus: Status.failure(e.toString(),),));
+  FutureOr<void> _onGetOrdersList(_GetOrdersList event, Emitter<OrderState> emit) async {
+    try {} catch (e) {
+      emit(state.copyWith(
+        getOrderListStatus: Status.failure(
+          e.toString(),
+        ),
+      ));
     }
   }
 
+  FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        getOrderDetailStatus: Status.loading(),
+      ));
+      var response = await orderRepository.getOrdersDetail(event.orderId);
+      emit(state.copyWith(getOrderDetailStatus: Status.success(), orderDetails: response));
+    } catch (e) {
+      emit(state.copyWith(getOrderDetailStatus: Status.failure(e.toString())));
+    }
+  }
+
+  FutureOr<void> _onConfirmPickup(_ConfirmPickup event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        confirmPickupStatus: Status.loading(),
+      ));
+      await orderRepository.pickupOrder(event.orderId, event.driverNotes);
+      emit(state.copyWith(
+        confirmPickupStatus: Status.success(),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        confirmPickupStatus: Status.failure(e.toString()),
+      ));
+    }
+  }
 }

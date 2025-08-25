@@ -6,8 +6,10 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class StatusHistory extends StatelessWidget {
-  const StatusHistory({super.key});
-
+  const StatusHistory({super.key, required this.title, required this.timeSlot, required this.address});
+  final String title;
+  final String timeSlot;
+  final String address;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,17 +22,20 @@ class StatusHistory extends StatelessWidget {
               children: [
                 Image.asset(AppImages.arrowup, height: 40.dp, width: 40.dp),
                 _buildStatusSection(
-                  title: "Pickup",
-                  expectedSlot: "Today, 2:00 PM – 4:00 PM",
+                  title: title,
+                  expectedSlot: timeSlot,
                 ),
               ],
             ),
             Gap(4.dp),
-            Text(
-              "Pickup Location: Flat 204, Al-Hail North, Muscat",
-              style: AppTypography.sfProRoundedRegular.copyWith(
-                fontSize: 12.sp,
-                color: AppColors.neutral500,
+            SizedBox(
+              width: 65.w,
+              child: Text(
+                "Pickup Location: $address",
+                style: AppTypography.sfProRoundedRegular.copyWith(
+                  fontSize: 12.sp,
+                  color: AppColors.neutral500,
+                ),
               ),
             ),
             Gap(4.dp),
@@ -57,16 +62,13 @@ class StatusHistory extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                       Gap(4.dp),
-                      Text("Navigate",
-                          style: AppTypography.sfProRoundedSemiBold.copyWith(
-                              fontSize: 14.sp, color: AppColors.primaryColor)),
+                      Text("Navigate", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 14.sp, color: AppColors.primaryColor)),
                     ],
                   ),
                 ),
                 Gap(4.dp),
                 Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
+                  padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.dp),
                     border: Border.all(color: AppColors.greyColor),
@@ -84,8 +86,7 @@ class StatusHistory extends StatelessWidget {
                 ),
                 Gap(4.dp),
                 Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
+                  padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.dp),
                     border: Border.all(color: AppColors.greyColor),

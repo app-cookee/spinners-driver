@@ -9,6 +9,9 @@ abstract class OrderState with _$OrderState {
     required bool hasMore,
     required bool isLoadingMore,
     required Status paginationStatus,
+    required Status getOrderDetailStatus,
+    required OrderDetailsResponseModel orderDetails,
+    required Status confirmPickupStatus,
   }) = _OrderState;
   factory OrderState.initial() => OrderState(
         getOrderListStatus: Status.initial(),
@@ -17,5 +20,8 @@ abstract class OrderState with _$OrderState {
         isLoadingMore: false,
         paginationStatus: Status.initial(),
         totalCount: 0,
+        getOrderDetailStatus: Status.initial(),
+        orderDetails:const OrderDetailsResponseModel(),
+        confirmPickupStatus: Status.initial(),
       );
 }

@@ -86,8 +86,8 @@ class CornerPainter extends CustomPainter {
     const double cornerLength = 30;
 
     // Top-left corner
-    canvas.drawLine(Offset(0, 0), Offset(cornerLength, 0), paint);
-    canvas.drawLine(Offset(0, 0), Offset(0, cornerLength), paint);
+    canvas.drawLine(const Offset(0, 0), const Offset(cornerLength, 0), paint);
+    canvas.drawLine(const Offset(0, 0), const Offset(0, cornerLength), paint);
 
     // Top-right corner
     canvas.drawLine(Offset(size.width, 0), Offset(size.width - cornerLength, 0), paint);
