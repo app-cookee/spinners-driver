@@ -232,8 +232,8 @@ class _HomeViewState extends State<HomeView> {
                                       return OrderCard(
                                         isExpressService: state.ordersList[index].expressService,
                                         address: state.ordersList[index].selectedAddress?.place ?? "",
+                                        refId: state.ordersList[index].refId.toString(),
                                         orderId: state.ordersList[index].id,
-                                        orderRefId: '#SPN${state.ordersList[index].refId}',
                                         time: state.ordersList[index].status == "pickupScheduled"
                                             ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
                                             // formatDeliverySlot({

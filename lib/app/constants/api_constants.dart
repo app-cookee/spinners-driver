@@ -21,4 +21,5 @@ class ApiEndpoints {
   final String getOrderDetail = '$_base/orders/detail';
     final String ordersList = '$_base/orders/list';
     final String serviceList = '$_base/service_names/list';
+  final String confirmDelivered = '$_base/orders/confirm_delivered';
 }

@@ -71,12 +71,15 @@ class DeliveryOrderDetailRoute
   DeliveryOrderDetailRoute({
     Key? key,
     required String orderId,
-    required String id,
+    required String refId,
     List<PageRouteInfo>? children,
   }) : super(
           DeliveryOrderDetailRoute.name,
-          args:
-              DeliveryOrderDetailRouteArgs(key: key, orderId: orderId, id: id),
+          args: DeliveryOrderDetailRouteArgs(
+            key: key,
+            orderId: orderId,
+            refId: refId,
+          ),
           initialChildren: children,
         );
 
@@ -89,7 +92,7 @@ class DeliveryOrderDetailRoute
       return DeliveryOrderDetailScreen(
         key: args.key,
         orderId: args.orderId,
-        id: args.id,
+        refId: args.refId,
       );
     },
   );
@@ -99,29 +102,29 @@ class DeliveryOrderDetailRouteArgs {
   const DeliveryOrderDetailRouteArgs({
     this.key,
     required this.orderId,
-    required this.id,
+    required this.refId,
   });
 
   final Key? key;
 
   final String orderId;
 
-  final String id;
+  final String refId;
 
   @override
   String toString() {
-    return 'DeliveryOrderDetailRouteArgs{key: $key, orderId: $orderId, id: $id}';
+    return 'DeliveryOrderDetailRouteArgs{key: $key, orderId: $orderId, refId: $refId}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! DeliveryOrderDetailRouteArgs) return false;
-    return key == other.key && orderId == other.orderId && id == other.id;
+    return key == other.key && orderId == other.orderId && refId == other.refId;
   }
 
   @override
-  int get hashCode => key.hashCode ^ orderId.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ orderId.hashCode ^ refId.hashCode;
 }
 
 /// generated route for
