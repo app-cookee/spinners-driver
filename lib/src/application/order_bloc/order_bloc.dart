@@ -93,7 +93,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       ));
     }
   }
-  }
+  
  FutureOr<void> _onGetOrdersList(
       _GetOrdersList event, Emitter<OrderState> emit) async {
     try {
@@ -115,3 +115,4 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
   }
 
+}
