@@ -7,9 +7,11 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/order_card.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/pickup_filter_tabs.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/toggle_button.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 enum OrderStatus { pickupScheduled, readyForDelivery, pickedUp, delivered }
@@ -38,29 +40,44 @@ class _OrderScreenState extends State<OrderScreen> {
     OrderStatus.readyForDelivery,
   ];
 
+
+  final _debouncer = Debouncer(milliseconds: 600);
+
   // late ScrollController _scrollController;
 
   final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> nearestLocationNotifier = ValueNotifier(0);
   ValueNotifier<int> expressOnlyNotifier = ValueNotifier(0);
+  final TextEditingController _searchController = TextEditingController();
 
   // Keep track of current filter
   List<OrderStatus> currentOrderFilter = [];
   // Store location coordinates using ValueNotifier
   ValueNotifier<double?> latitudeNotifier = ValueNotifier<double?>(null);
   ValueNotifier<double?> longitudeNotifier = ValueNotifier<double?>(null);
+  
 
   @override
   void initState() {
     currentOrderFilter = _allOrders;
     _fetchOrders(currentOrderFilter);
-    nearestLocationNotifier.addListener(_onToggleChanged);
-    expressOnlyNotifier.addListener(_onToggleChanged);
+      // Separate listeners for each toggle
+    nearestLocationNotifier.addListener(_onNearestLocationChanged);
+    expressOnlyNotifier.addListener(_onExpressOnlyChanged);
 
     super.initState();
   }
 
-  void _onToggleChanged() {
+  void _onSearchChanged(String query) {
+    _debouncer.run(() {
+      if (query.isNotEmpty) {
+         _fetchOrders(currentOrderFilter, searchQuery: query);
+        
+      }
+    });
+  }
+
+ void _onNearestLocationChanged() {
     bool isNearestLocationEnabled = nearestLocationNotifier.value == 1;
 
     if (!isNearestLocationEnabled) {
@@ -69,11 +86,14 @@ class _OrderScreenState extends State<OrderScreen> {
       longitudeNotifier.value = null;
       _fetchOrders(currentOrderFilter);
     }
+    // Note: When nearest location is turned ON, _onLocationFetched will handle the fetch
+  }
+  
 
-    // Express filter always applies immediately
-    if (expressOnlyNotifier.value == 1) {
-      _fetchOrders(currentOrderFilter);
-    }
+  void _onExpressOnlyChanged() {
+    // Express filter change - just refetch with current location state
+    // This should NOT trigger any location permission requests
+    _fetchOrders(currentOrderFilter);
   }
 
   void _onLocationFetched(double? lat, double? lng) {
@@ -86,31 +106,34 @@ class _OrderScreenState extends State<OrderScreen> {
     }
   }
 
-  void _fetchOrders(List<OrderStatus> statuses) {
+ void _fetchOrders(List<OrderStatus> statuses,{String? searchQuery}) {
     final statusStrings = statuses.map(statusToString).toList();
-    bool isNearestLocationEnabled = nearestLocationNotifier.value == 1;
     bool isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
-    // log(isExpressOnlyEnabled.toString());
 
     context.read<OrderBloc>().add(
-          OrderEvent.getOrdersList(
-              limit: 1000,
-              skip: 0,
-              filter: statusStrings.join(','),
-              expressOnly: isExpressOnlyEnabled,
-              latitude: latitudeNotifier.value,
-              longitude: longitudeNotifier.value),
-        );
+      OrderEvent.getOrdersList(
+        limit: 1000,
+        skip: 0,
+        filter: statusStrings.join(','),
+        expressOnly: isExpressOnlyEnabled,
+        latitude: latitudeNotifier.value, 
+        longitude: longitudeNotifier.value,
+        searchText: ''
+      ),
+    );
   }
-
   @override
   void dispose() {
-    // _scrollController.dispose();
-    
-    nearestLocationNotifier.removeListener(_onToggleChanged);
-    expressOnlyNotifier.removeListener(_onToggleChanged);
+  nearestLocationNotifier.removeListener(_onNearestLocationChanged);
+    expressOnlyNotifier.removeListener(_onExpressOnlyChanged);
     nearestLocationNotifier.dispose();
     expressOnlyNotifier.dispose();
+    latitudeNotifier.dispose();
+    longitudeNotifier.dispose();
+    selectedIndexNotifier.dispose();
+     _searchController.dispose();
+    _debouncer.dispose();
+    super.dispose();
     super.dispose();
   }
 
@@ -171,19 +194,27 @@ class _OrderScreenState extends State<OrderScreen> {
                                   }
                                 },
               ),
-              Gap(18.dp),
+              Gap(12.dp),
+                CommonTextField(
+                  controller: _searchController,
+                  hintText: "Search",
+                  prefixIcon:Image.asset(AppImages.searchIcon,height: 20.dp,width: 20.dp,),
+                  onChanged: _onSearchChanged,
+                ),
+                      Gap(18.dp),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ToggleButton(
                     isToggled: nearestLocationNotifier,
                     label: 'Nearest Location',
+                     onLocationFetched: _onLocationFetched
                   ),
                   Gap(12.dp),
                   ToggleButton(
                     isToggled: expressOnlyNotifier,
                     label: 'Express Only',
-                     onLocationFetched: _onLocationFetched
+                    
                   ),
                 ],
               ),
@@ -195,7 +226,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         itemCount: state.ordersList.length,
                         shrinkWrap: true,
                         padding: EdgeInsets.only(
-                            top: 9.dp, bottom: ((88 / 812) * 100).h),
+                            top: 9.dp, bottom: ((88 / 812) * 100.h)),
                         primary: false,
                         itemBuilder: (context, index) {
                           return OrderCard(isExpressService:  state.ordersList[index].expressService,

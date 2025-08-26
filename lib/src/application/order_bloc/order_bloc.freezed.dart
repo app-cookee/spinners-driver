@@ -20,6 +20,7 @@ mixin _$OrderEvent {
   bool get expressOnly;
   double? get latitude;
   double? get longitude;
+  String get searchText;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -41,16 +42,18 @@ mixin _$OrderEvent {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, limit, skip, filter, expressOnly, latitude, longitude);
+  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
+      latitude, longitude, searchText);
 
   @override
   String toString() {
-    return 'OrderEvent(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude)';
+    return 'OrderEvent(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
   }
 }
 
@@ -66,7 +69,8 @@ abstract mixin class $OrderEventCopyWith<$Res> {
       String filter,
       bool expressOnly,
       double? latitude,
-      double? longitude});
+      double? longitude,
+      String searchText});
 }
 
 /// @nodoc
@@ -87,6 +91,7 @@ class _$OrderEventCopyWithImpl<$Res> implements $OrderEventCopyWith<$Res> {
     Object? expressOnly = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
+    Object? searchText = null,
   }) {
     return _then(_self.copyWith(
       limit: null == limit
@@ -113,6 +118,10 @@ class _$OrderEventCopyWithImpl<$Res> implements $OrderEventCopyWith<$Res> {
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
+      searchText: null == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -211,15 +220,21 @@ extension OrderEventPatterns on OrderEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int limit, int skip, String filter, bool expressOnly,
-            double? latitude, double? longitude)?
+            double? latitude, double? longitude, String searchText)?
         getOrdersList,
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrdersList() when getOrdersList != null:
-        return getOrdersList(_that.limit, _that.skip, _that.filter,
-            _that.expressOnly, _that.latitude, _that.longitude);
+        return getOrdersList(
+            _that.limit,
+            _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
       case _:
         return orElse();
     }
@@ -240,15 +255,27 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int limit, int skip, String filter,
-            bool expressOnly, double? latitude, double? longitude)
+    required TResult Function(
+            int limit,
+            int skip,
+            String filter,
+            bool expressOnly,
+            double? latitude,
+            double? longitude,
+            String searchText)
         getOrdersList,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrdersList():
-        return getOrdersList(_that.limit, _that.skip, _that.filter,
-            _that.expressOnly, _that.latitude, _that.longitude);
+        return getOrdersList(
+            _that.limit,
+            _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -269,14 +296,20 @@ extension OrderEventPatterns on OrderEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int limit, int skip, String filter, bool expressOnly,
-            double? latitude, double? longitude)?
+            double? latitude, double? longitude, String searchText)?
         getOrdersList,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrdersList() when getOrdersList != null:
-        return getOrdersList(_that.limit, _that.skip, _that.filter,
-            _that.expressOnly, _that.latitude, _that.longitude);
+        return getOrdersList(
+            _that.limit,
+            _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
       case _:
         return null;
     }
@@ -292,7 +325,8 @@ class _GetOrdersList implements OrderEvent {
       required this.filter,
       required this.expressOnly,
       required this.latitude,
-      required this.longitude});
+      required this.longitude,
+      required this.searchText});
 
   @override
   final int limit;
@@ -306,6 +340,8 @@ class _GetOrdersList implements OrderEvent {
   final double? latitude;
   @override
   final double? longitude;
+  @override
+  final String searchText;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -328,16 +364,18 @@ class _GetOrdersList implements OrderEvent {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, limit, skip, filter, expressOnly, latitude, longitude);
+  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
+      latitude, longitude, searchText);
 
   @override
   String toString() {
-    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude)';
+    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
   }
 }
 
@@ -355,7 +393,8 @@ abstract mixin class _$GetOrdersListCopyWith<$Res>
       String filter,
       bool expressOnly,
       double? latitude,
-      double? longitude});
+      double? longitude,
+      String searchText});
 }
 
 /// @nodoc
@@ -377,6 +416,7 @@ class __$GetOrdersListCopyWithImpl<$Res>
     Object? expressOnly = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
+    Object? searchText = null,
   }) {
     return _then(_GetOrdersList(
       limit: null == limit
@@ -403,6 +443,10 @@ class __$GetOrdersListCopyWithImpl<$Res>
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
+      searchText: null == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
