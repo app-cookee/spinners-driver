@@ -65,6 +65,66 @@ class AppBottomNavigationRouteArgs {
 }
 
 /// generated route for
+/// [DeliveryOrderDetailScreen]
+class DeliveryOrderDetailRoute
+    extends PageRouteInfo<DeliveryOrderDetailRouteArgs> {
+  DeliveryOrderDetailRoute({
+    Key? key,
+    required String orderId,
+    required String id,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DeliveryOrderDetailRoute.name,
+          args:
+              DeliveryOrderDetailRouteArgs(key: key, orderId: orderId, id: id),
+          initialChildren: children,
+        );
+
+  static const String name = 'DeliveryOrderDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<DeliveryOrderDetailRouteArgs>();
+      return DeliveryOrderDetailScreen(
+        key: args.key,
+        orderId: args.orderId,
+        id: args.id,
+      );
+    },
+  );
+}
+
+class DeliveryOrderDetailRouteArgs {
+  const DeliveryOrderDetailRouteArgs({
+    this.key,
+    required this.orderId,
+    required this.id,
+  });
+
+  final Key? key;
+
+  final String orderId;
+
+  final String id;
+
+  @override
+  String toString() {
+    return 'DeliveryOrderDetailRouteArgs{key: $key, orderId: $orderId, id: $id}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! DeliveryOrderDetailRouteArgs) return false;
+    return key == other.key && orderId == other.orderId && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ orderId.hashCode ^ id.hashCode;
+}
+
+/// generated route for
 /// [LoginScreen]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})

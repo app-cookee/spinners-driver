@@ -18,5 +18,6 @@ class ApiEndpoints {
   final String pickupOrder = '$_base/orders/pickup_order';
   final String addBag = '$_base/orders/add_bag';
   final String createNewBag = '$_base/orders/create_new_bag';
+  final String getOrderDetail = '$_base/orders/detail';
     final String ordersList = '$_base/orders/list';
 }

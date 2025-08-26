@@ -84,5 +84,7 @@ static const String searchIcon = 'assets/images/search_Ic.png';
   static const String buttonGreyBg = 'assets/images/buttonGreyBg.png';
   static const String home = 'assets/images/home.png';
 
+  static const String orderStatus = 'assets/images/order_status.png';
+
 
 }
