@@ -86,12 +86,10 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                   ),
                                 ),
                               ),
-                              if (((double.tryParse(
-                                              state.orderDetails.totalAmount) ??
-                                          0) -
-                                      (double.tryParse(
-                                              state.orderDetails.paidAmount) ??
-                                          0)) >
+                              if (dState.orderDetails.payment
+                              .where((p) => p.status.toLowerCase() == "pending")
+                              .map((p) => double.tryParse(p.amount) ?? 0.0)
+                              .fold(0.0, (sum, amt) => sum + amt) >
                                   0)
                                 SliverPersistentHeader(
                                   pinned: true,
@@ -108,7 +106,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                             InfoCard(
                                               label: "COD",
                                               value:
-                                                  "AED ${((double.tryParse(state.orderDetails.totalAmount) ?? 0) - (double.tryParse(state.orderDetails.paidAmount) ?? 0)).toStringAsFixed(2)}",
+                                                  "AED ${dState.orderDetails.payment.where((p) => p.status.toLowerCase() == "pending").map((p) => double.tryParse(p.amount) ?? 0.0).fold(0.0, (sum, amt) => sum + amt).toStringAsFixed(2)}",
                                             ),
                                             Gap(4.dp),
                                           ],
@@ -287,15 +285,13 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                   child: dState.orderDetails.id.isEmpty
                       ? const SizedBox.shrink()
                       : _footerButton(
-                        orderId: dState.orderDetails.id,
+                          orderId: dState.orderDetails.id,
                           totalItemsCount:
                               dState.orderDetails.orderedItems.length,
-                          totalAmount: ((double.tryParse(
-                                      dState.orderDetails.totalAmount) ??
-                                  0) -
-                              (double.tryParse(
-                                      dState.orderDetails.paidAmount) ??
-                                  0)))),
+                          totalAmount: dState.orderDetails.payment
+                              .where((p) => p.status.toLowerCase() == "pending")
+                              .map((p) => double.tryParse(p.amount) ?? 0.0)
+                              .fold(0.0, (sum, amt) => sum + amt))),
             ],
           );
         },
@@ -330,7 +326,9 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
   }
 
   Widget _footerButton(
-      {required int totalItemsCount, required double totalAmount,required String orderId}) {
+      {required int totalItemsCount,
+      required double totalAmount,
+      required String orderId}) {
     return Container(
       padding:
           EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 24.dp),
@@ -366,57 +364,55 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
       ),
       child: Column(
         children: [
-          if(totalAmount>0)
-          PrimaryButtonWidget(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(24.dp)),
-                  ),
-                  builder: (context) => Padding(
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context)
-                          .viewInsets
-                          .bottom,
+          if (totalAmount > 0)
+            PrimaryButtonWidget(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(24.dp)),
                     ),
-                    child: DeliveryConfirmBottomsheet(
-                      orderId: orderId,
-                      totalCollected: totalAmount,
+                    builder: (context) => Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                      ),
+                      child: DeliveryConfirmBottomsheet(
+                        orderId: orderId,
+                        totalCollected: totalAmount,
+                      ),
                     ),
-                  ),
-                );
-              },
-              text: "Receive Amount",
-              leadingIcon: Row(
-                children: [
-                  Text(
-                    '$totalItemsCount item${totalItemsCount > 1 ? 's' : ''}',
-                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                      fontSize: 12.dp,
-                      color: AppColors.white,
+                  );
+                },
+                text: "Receive Amount",
+                leadingIcon: Row(
+                  children: [
+                    Text(
+                      '$totalItemsCount item${totalItemsCount > 1 ? 's' : ''}',
+                      style: AppTypography.sfProRoundedSemiBold.copyWith(
+                        fontSize: 12.dp,
+                        color: AppColors.white,
+                      ),
                     ),
-                  ),
-                  Gap(6.dp),
-                  Container(
-                    height: 16.dp,
-                    width: 1.dp,
-                    color: const Color(0xff80C7EA),
-                  ),
-                  Gap(6.dp),
-                  Text(
-                    'AED ${totalAmount.toStringAsFixed(0)}',
-                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                      fontSize: 12.dp,
-                      color: AppColors.white,
+                    Gap(6.dp),
+                    Container(
+                      height: 16.dp,
+                      width: 1.dp,
+                      color: const Color(0xff80C7EA),
                     ),
-                  ),
-                  Gap(4.dp),
-                  Gap(15.w)
-                ],
-              )),
+                    Gap(6.dp),
+                    Text(
+                      'AED ${totalAmount.toStringAsFixed(0)}',
+                      style: AppTypography.sfProRoundedSemiBold.copyWith(
+                        fontSize: 12.dp,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    Gap(4.dp),
+                    Gap(15.w)
+                  ],
+                )),
           Gap(8.dp),
           PrimaryButtonWidget(
             buttonBgImage: AppImages.buttonGreyBg,
