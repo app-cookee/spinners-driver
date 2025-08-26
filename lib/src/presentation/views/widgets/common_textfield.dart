@@ -43,7 +43,7 @@ class CommonTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Container(constraints: BoxConstraints(maxHeight:36.dp ),
       decoration: BoxDecoration(
         color: const Color(0xffD7E5EB),
         borderRadius: BorderRadius.circular(borderRadius??8.dp),

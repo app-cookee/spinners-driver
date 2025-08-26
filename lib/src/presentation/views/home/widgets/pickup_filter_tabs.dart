@@ -4,7 +4,9 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class PickupFilterTabs extends StatefulWidget {
-  const PickupFilterTabs({super.key});
+  const PickupFilterTabs({super.key, required this.onTabChanged});
+   final void Function(int) onTabChanged;
+
 
   @override
   State<PickupFilterTabs> createState() => _PickupFilterTabsState();
@@ -36,17 +38,23 @@ class _PickupFilterTabsState extends State<PickupFilterTabs> {
           _buildTabItem(
             label: 'All',
             index: 0,
-            onTap: () => selectedIndexNotifier.value = 0,
+            onTap: (){ selectedIndexNotifier.value = 0;
+            widget.onTabChanged(selectedIndexNotifier.value); 
+            }
           ),
           _buildTabItem(
             label: 'Pickup',
             index: 1,
-            onTap: () => selectedIndexNotifier.value = 1,
+            onTap: (){selectedIndexNotifier.value = 1;
+            widget.onTabChanged(selectedIndexNotifier.value); 
+            }
           ),
           _buildTabItem(
             label: 'Dropoff',
             index: 2,
-            onTap: () => selectedIndexNotifier.value = 2,
+            onTap: () {selectedIndexNotifier.value = 2;
+            widget.onTabChanged(selectedIndexNotifier.value); 
+            }
             // isDropoff: true,
           ),
         ],

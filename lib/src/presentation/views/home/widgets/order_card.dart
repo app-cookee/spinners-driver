@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
 import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
@@ -9,28 +12,29 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
+
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderCard extends StatelessWidget {
   final String orderId;
-  final List<String> services;
+  
   final String time;
   final String status;
   final bool isDropoff;
   final bool isQuickOrder;
-  final bool isService;
+  final bool isExpressService;
+   final String address;
   // final String notes;
   // final List service;
   const OrderCard({
     super.key,
     required this.orderId,
-    required this.services,
+  
     required this.time,
     required this.status,
     required this.isDropoff,
     required this.isQuickOrder,
-    required this.isService,
+    required this.isExpressService, required this.address,
     // required this.notes,
     //  required this.service,
   });
@@ -48,6 +52,7 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // log(isExpressService.toString());
     return InkWell(
       onTap: () {
         // if(trailingButton != null){
@@ -84,31 +89,31 @@ class OrderCard extends StatelessWidget {
 
             Gap(8.dp),
 
-            // Pickup Row
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.dp),
-              child: Row(
-                children: [
-                  Image.asset(isDropoff ? AppImages.box : AppImages.bike, height: 16.dp, width: 16.dp),
-                  const Spacer(),
-                  Text(status, style: AppTypography.sfProRoundedRegular.copyWith(fontSize: 12.dp, color: getColor(status)))
-                ],
-              ),
-            ),
-            Gap(2.dp),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.dp),
-              child: Row(
-                children: [
-                  Text(isDropoff ? 'Drop-off' : "Pickup", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.black)),
-                  const Spacer(),
-                  Text(time, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral900))
-                ],
-              ),
-            ),
+            // // Pickup Row
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 16.dp),
+            //   child: Row(
+            //     children: [
+            //       Image.asset(isDropoff ? AppImages.box : AppImages.bike, height: 16.dp, width: 16.dp),
+            //       const Spacer(),
+            //       Text(status, style: AppTypography.sfProRoundedRegular.copyWith(fontSize: 12.dp, color: getColor(status)))
+            //     ],
+            //   ),
+            // ),
+            // Gap(2.dp),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 16.dp),
+            //   child: Row(
+            //     children: [
+            //       Text(isDropoff ? 'Drop-off' : "Pickup", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.black)),
+            //       const Spacer(),
+            //       Text(time, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral900))
+            //     ],
+            //   ),
+            // ),
 
             // Dotted Divider
-            _divider(),
+            // _divider(),
              _orderedCardButtons(context)
            
           ],
@@ -124,10 +129,12 @@ class OrderCard extends StatelessWidget {
         children: [
           Text("Order ID", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.countrycodeColor)),
           Gap(6.dp),
-          Text("#$orderId", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
+          Text(orderId, style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
+          const Spacer(),
+          if(isExpressService)...[  
+            _expressLabel(),],
           if (isQuickOrder) ...[
-            const Spacer(),
-            _expressLabel(),
+          
             Gap(4.dp),
             const QuickOrderLabel(),
           ],
@@ -150,22 +157,38 @@ class OrderCard extends StatelessWidget {
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text( "Services", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 10.dp, color: AppColors.primaryColor500)),
-          Gap(6.dp),
-               Wrap(
-                  spacing: 8.dp,
-                  runSpacing: 6.dp,
-                  children: services.map((label) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(AppImages.bag, height: 16.dp, width: 16.dp),
-                        Gap(2.dp),
-                        Text(label, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950)),
-                      ],
-                    );
-                  }).toList(),
-                ),
+          Row(
+            children: [  Image.asset(isDropoff ? AppImages.box : AppImages.bike, height: 16.dp, width: 16.dp),Gap(4.dp),
+              Text(isDropoff ? 'Drop-off' : "Pickup", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.primaryColor500)),
+                                 Spacer(),
+                  Text(status, style: AppTypography.sfProRoundedRegular.copyWith(fontSize: 12.dp, color: getColor(status)))
+            ],
+          ),
+          Row(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            SizedBox
+            (
+              width: 100,
+              child: Text(address,style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.addressColor))),
+            const Spacer(),
+            Text(time, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral900))
+
+          ],)
+        
+              //  Wrap(
+              //     spacing: 8.dp,
+              //     runSpacing: 6.dp,
+              //     children: services.map((label) {
+              //       return Row(
+              //         mainAxisSize: MainAxisSize.min,
+              //         children: [
+              //           Image.asset(AppImages.bag, height: 16.dp, width: 16.dp),
+              //           Gap(2.dp),
+              //           Text(label, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950)),
+              //         ],
+              //       );
+              //     }).toList(),
+              //   ),
         ],
       ),
     );
@@ -234,7 +257,6 @@ Widget _orderedCardButtons(BuildContext context) {
   );
 }
 
- 
 
   Widget _expressLabel() {
     return Container(

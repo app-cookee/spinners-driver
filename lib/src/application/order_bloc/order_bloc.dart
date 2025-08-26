@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
@@ -24,15 +24,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_AddBag>(_onAddBag);
     on<_CreateNewBag>(_onCreateNewBag);
   }
-  FutureOr<void> _onGetOrdersList(_GetOrdersList event, Emitter<OrderState> emit) async {
-    try {} catch (e) {
-      emit(state.copyWith(
-        getOrderListStatus: Status.failure(
-          e.toString(),
-        ),
-      ));
-    }
-  }
+  // FutureOr<void> _onGetOrdersList(_GetOrdersList event, Emitter<OrderState> emit) async {
+  //   try {} catch (e) {
+  //     emit(state.copyWith(
+  //       getOrderListStatus: Status.failure(
+  //         e.toString(),
+  //       ),
+  //     ));
+  //   }
+  // }
 
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
     try {
@@ -93,4 +93,25 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       ));
     }
   }
-}
+  }
+ FutureOr<void> _onGetOrdersList(
+      _GetOrdersList event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        getOrderListStatus: Status.loading(),
+      ));
+         var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude);
+        final bool hasMoreItems = response.orderList.length == event.limit;
+        emit(state.copyWith(
+          getOrderListStatus: Status.success(), ordersList: response.orderList,   totalCount: response.totalCount,
+      hasMore: hasMoreItems, // Add this line!
+      isLoadingMore: false));
+    } catch (e) {
+      emit(state.copyWith(
+        getOrderListStatus: Status.failure(
+          e.toString(),
+        ),
+      ));
+    }
+  }
+

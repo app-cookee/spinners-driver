@@ -35,6 +35,7 @@ static const String scanner='assets/images/scan-barcode.png';
 static const String qrIcon='assets/images/ic_qr.png';
 static const String arrowDownIcon='assets/images/ic_arrow_down.png';
 static const String homeBg='assets/images/home_bg.png';
+static const String searchIcon = 'assets/images/search_Ic.png';
 
 
 
@@ -70,7 +71,7 @@ static const String homeBg='assets/images/home_bg.png';
   static const String wallet = 'assets/images/wallet.png';
   static const String arrowRight = 'assets/images/arrowRight.png';
   static const String share = 'assets/images/share.png';
-  static const String searchIcon = 'assets/images/search_Ic.png';
+
   static const String minusIcon = 'assets/images/ic_minus.png';
   static const String orderSuccess = 'assets/images/order_success.png';
   static const String successScreenBg = 'assets/images/success_screen.png';
