@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
+import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/home_appbar.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/order_card.dart';
@@ -15,14 +16,14 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/todays_colle
 import 'package:spinners_driver/src/presentation/views/home/widgets/toggle_button.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-enum OrderStatus {
+enum OrderFilter {
   pickupScheduled,
   readyForDelivery,
   pickedUp,
   delivered
 }
 
-String statusToString(OrderStatus status) => status.name;
+String statusToString(OrderFilter status) => status.name;
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -31,16 +32,16 @@ class HomeView extends StatefulWidget {
 }
 class _HomeViewState extends State<HomeView> {
   final _allOrders = [
-    OrderStatus.pickupScheduled,
-    OrderStatus.readyForDelivery,
-    OrderStatus.pickedUp,
-    OrderStatus.delivered,
+    OrderFilter.pickupScheduled,
+    OrderFilter.readyForDelivery,
+    OrderFilter.pickedUp,
+    OrderFilter.delivered,
   ];
   final _pickup = [
-    OrderStatus.pickupScheduled,
+    OrderFilter.pickupScheduled,
   ];
   final _dropOff = [
-    OrderStatus.readyForDelivery,
+    OrderFilter.readyForDelivery,
   ];
   
   late ScrollController _scrollController;
@@ -50,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
   ValueNotifier<int> expressOnlyNotifier = ValueNotifier(0);
 
   // Keep track of current filter
-  List<OrderStatus> currentOrderFilter = [];
+  List<OrderFilter> currentOrderFilter = [];
   // Store location coordinates using ValueNotifier
   ValueNotifier<double?> latitudeNotifier = ValueNotifier<double?>(null);
   ValueNotifier<double?> longitudeNotifier = ValueNotifier<double?>(null);
@@ -107,7 +108,7 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  void _fetchOrders(List<OrderStatus> statuses) {
+  void _fetchOrders(List<OrderFilter> statuses) {
     final statusStrings = statuses.map(statusToString).toList();
     bool isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
 
@@ -119,7 +120,7 @@ class _HomeViewState extends State<HomeView> {
         expressOnly: isExpressOnlyEnabled,
         latitude: latitudeNotifier.value, 
         longitude: longitudeNotifier.value,
-        searchText: ''
+        
       ),
     );
   }
@@ -234,18 +235,23 @@ class _HomeViewState extends State<HomeView> {
                                         refId: state.ordersList[index].refId.toString(),
                                         orderId: state.ordersList[index].id,
                                         time: state.ordersList[index].status == "pickupScheduled"
-                                            ? formatDeliverySlot({
-                                                "from": state.ordersList[index].pickupSlot?.from ?? "",
-                                                "to": state.ordersList[index].pickupSlot?.to ?? "",
-                                                "day": state.ordersList[index].pickupSlot?.day ?? ""
-                                              })
-                                            : formatDeliverySlot({
-                                                "from": state.ordersList[index].deliverySlot?.from ?? "",
-                                                "to": state.ordersList[index].deliverySlot?.to ?? "",
-                                                "day": state.ordersList[index].deliverySlot?.day ?? ""
-                                              }),
+                                            ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
+                                            // formatDeliverySlot({
+                                            //     "from": state.ordersList[index].pickupSlot?.from ?? "",
+                                            //     "to": state.ordersList[index].pickupSlot?.to ?? "",
+                                            //     "day": state.ordersList[index].pickupSlot?.day ?? ""
+                                            //   })
+                                            :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"readyForDelivery",state.ordersList[index].statusHistory)
+                                            //  formatDeliverySlot({
+                                              //   "from": state.ordersList[index].deliverySlot?.from ?? "",
+                                              //   "to": state.ordersList[index].deliverySlot?.to ?? "",
+                                              //   "day": state.ordersList[index].deliverySlot?.day ?? ""
+                                              // })
+                                              :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
+                                              "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
+                                              "delivered",state.ordersList[index].statusHistory),
                                         status: state.ordersList[index].status,
-                                        isDropoff: state.ordersList[index].status == "pickupScheduled" ? false : true,
+                                        isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
                                         isQuickOrder: state.ordersList[index].type == "oneTapOrder" ? true : false,
                                       );
                                     });
@@ -262,6 +268,70 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
+  String formatSingleDate(
+  String utcDate,
+  TimeSlot? slot,
+  String status,
+  List<OrderStatus> statusHistory,
+) {
+  DateTime? date;
+  DateTime? fromTime;
+  DateTime? toTime;
+  if (status.toLowerCase() == "delivered") {
+    // Find the delivered status from history
+    final deliveredStatus = statusHistory.firstWhere(
+      (s) => s.status.toLowerCase() == "delivered",
+      orElse: () => const OrderStatus(),
+    );
+    if (deliveredStatus.changedAt.isNotEmpty) {
+      date = DateTime.parse(deliveredStatus.changedAt).toLocal();
+    }
+  } else {
+    // Use deliveryAt date + slot time
+    date = DateTime.parse(utcDate).toLocal();
+    if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
+      fromTime = DateTime.parse(slot.from).toLocal();
+      toTime = DateTime.parse(slot.to).toLocal();
+    }
+  }
+  if (date == null) return "";
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final tomorrow = today.add(const Duration(days: 1));
+  final targetDate = DateTime(date.year, date.month, date.day);
+  final dateFormat = DateFormat('MMM d, y');
+  final timeFormat = DateFormat('h:mm a');
+  if (fromTime != null && toTime != null) {
+    // Case when slot is used (show range)
+    final timeText = "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
+    if (targetDate == today) {
+      return "Today, $timeText";
+    } else if (targetDate == tomorrow) {
+      return "Tomorrow, $timeText";
+    } else {
+      return "${dateFormat.format(date)}, $timeText";
+    }
+  } else {
+    // Case when exact datetime is used (delivered)
+    if (targetDate == today) {
+      return "Today, ${timeFormat.format(date)}";
+    } else if (targetDate == tomorrow) {
+      return "Tomorrow, ${timeFormat.format(date)}";
+    } else {
+      return "${dateFormat.format(date)} – ${timeFormat.format(date)}";
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
 
   String formatDeliverySlot(Map<String, dynamic> deliverySlot) {
     final from = DateTime.parse(deliverySlot['from']).toLocal();
