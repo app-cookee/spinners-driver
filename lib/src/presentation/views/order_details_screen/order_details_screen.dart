@@ -4,25 +4,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/additional_notes.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/footer_buttons.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_detail_info.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_info_card.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/ordered_services.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/quick_order_bags.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/secondary_button_widget.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/services_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 import 'package:intl/intl.dart';
 
@@ -117,95 +108,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         customer: _getCustomerName(state.orderDetails.customer),
                         amount: state.orderDetails.totalAmount,
                         title: "Pickup",
-                        timeSlot: _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
+                        timeSlot: state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
                         address: formatAddress(state.orderDetails.selectedAddress.place),
                       ),
                       SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            Gap(20.dp),
-                            Container(
-                              decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.grey, AppColors.white])),
-                              width: 100.w,
-
-                              // color: const Color.fromARGB(255, 226, 218, 218),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const DashedDivider(),
-                                  Gap(20.dp),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                    child: Text(
-                                      "Services",
-                                      style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                        fontSize: 12.dp,
-                                        color: AppColors.textGrey,
-                                      ),
-                                    ),
-                                  ),
-                                  Gap(6.dp),
-                                  state.orderDetails.type == "normalOrder"
-                                      ? OrderedServices(
-                                          selectedIndex: selectedIndex,
-                                          scannedItems: scannedItems,
-                                          orderId: widget.orderId,
-                                          scannedQRCodes: scannedQRCodes,
-                                        )
-                                      : const SizedBox.shrink(),
-                                  state.orderDetails.type != "normalOrder"
-                                      ? Column(
-                                          children: [
-                                            QuickOrderBags(
-                                              orderId: widget.orderId,
-                                              scannedBags: scannedQRCodes,
-                                            ),
-                                            Gap(8.dp),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                              child: SecondaryButtonWidget(
-                                                height: 48.dp,
-                                                bordercolor: AppColors.scanblue,
-                                                backgroundColor: AppColors.white,
-                                                textColor: AppColors.primaryColor,
-                                                style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                                  fontSize: 14.sp,
-                                                  color: AppColors.primaryColor,
-                                                ),
-                                                onPressed: () async {
-                                                  await _handleQuickOrderScan(context);
-                                                },
-                                                text: "Scan New Bag",
-                                                leadingIcon: Image.asset(
-                                                  height: 24.dp,
-                                                  width: 24.dp,
-                                                  AppImages.scanner,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : const SizedBox.shrink(),
-                                  Gap(8.dp),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                    child: Text(
-                                      "Additional Notes",
-                                      style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                        fontSize: 12.dp,
-                                        color: AppColors.textGrey,
-                                      ),
-                                    ),
-                                  ),
-                                  Gap(6.dp),
-                                  AdditionalNotes(
-                                    additionalNotesController: additionalNotesController,
-                                  ),
-                                  SizedBox(height: 17.h)
-                                ],
-                              ),
-                            )
-                          ],
+                        child: ServicesWidget(
+                          orderState: state,
+                          orderId: widget.orderId,
+                          selectedIndex: selectedIndex,
+                          scannedItems: scannedItems,
+                          scannedQRCodes: scannedQRCodes,
+                          additionalNotesController: additionalNotesController,
                         ),
                       )
                     ],
@@ -213,7 +126,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 },
               ),
             ),
-            Positioned(bottom: 0, left: 0, right: 0, child: _footerButton(context.read<OrderBloc>().state.orderDetails.type))
+            if (context.watch<OrderBloc>().state.orderDetails.status != 'pickedUp')
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: FooterButtons(
+                  orderId: widget.orderId,
+                  additionalNotesController: additionalNotesController,
+                  allItemsScannedNotifier: allItemsScanned,
+                ),
+              )
           ],
         ),
       ),
@@ -245,71 +168,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ]
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _footerButton(
-    String type,
-  ) {
-    final isLoading = context.watch<OrderBloc>().state.confirmPickupStatus is StatusLoading;
-    final isConfirmPickup = context.watch<OrderBloc>().state.confirmPickupStatus is StatusSuccess;
-    return Container(
-      padding: EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 21.dp),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        boxShadow: [
-          BoxShadow(offset: const Offset(0, -113), color: const Color(0xFF000000).withValues(alpha: 0), blurRadius: 32, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -72), color: const Color(0xFF000000).withValues(alpha: 0), blurRadius: 29, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -41), color: const Color(0xFF000000).withValues(alpha: 0.02), blurRadius: 24, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -18), color: const Color(0xFF000000).withValues(alpha: 0.03), blurRadius: 18, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -5), color: const Color(0xFF000000).withValues(alpha: 0.03), blurRadius: 10, spreadRadius: 0),
-        ],
-      ),
-      child: Column(
-        children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: allItemsScanned,
-            builder: (context, isAllScanned, child) {
-              return PrimaryButtonWidget(
-                onPressed: () {
-                  final orderType = context.read<OrderBloc>().state.orderDetails.type;
-
-                  if (isAllScanned) {
-                    context.read<OrderBloc>().add(OrderEvent.confirmPickup(
-                          orderId: widget.orderId,
-                          driverNotes: additionalNotesController.text,
-                        ));
-                  } else {
-                    final message = orderType == "normalOrder" ? "Please scan all required bags for each service" : "Please scan at least one bag";
-                    TheToast.show(
-                      isError: true,
-                      message: message,
-                      context: context,
-                    );
-                  }
-
-                  if (isConfirmPickup) {
-                    context.router.pop();
-                  }
-                },
-                isLoading: isLoading,
-                text: "Confirm Pickup",
-                height: 48.dp,
-                // You can add different styling for disabled state if your PrimaryButtonWidget supports it
-              );
-            },
-          ),
-          Gap(8.dp),
-          SecondaryButtonWidget(
-            onPressed: () {
-              context.router.pop();
-            },
-            text: "Cancel",
-            height: 48.dp,
-            backgroundColor: AppColors.textGrey,
-          ),
-        ],
       ),
     );
   }
@@ -396,7 +254,36 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       return "${slot.day} – ${slot.from} to ${slot.to}";
     }
   }
+  String _formatPickedupSlot(String time) {
+    if (time.isEmpty) return "Not specified";
+    try {
+      // Parse UTC datetime and convert to local
+      final from = DateTime.parse(time).toLocal();
+      final to = from.add(const Duration(hours: 1)); // Assuming 1-hour slot
+      final now = DateTime.now();
+      String dayLabel;
+      // Check if it's today
+      if (from.year == now.year && from.month == now.month && from.day == now.day) {
+        dayLabel = "Today";
+      }
+      // Check if it's tomorrow
+      else if (from.year == now.year && from.month == now.month && from.day == now.day + 1) {
+        dayLabel = "Tomorrow";
+      }
+      // For other dates, show month and day
+      else {
+        dayLabel = DateFormat('MMM d').format(from);
+      }
+      final timeFormat = DateFormat('h:mm a');
+      return "$dayLabel, ${timeFormat.format(from)} – ${timeFormat.format(to)}";
+    } catch (e) {
+      // Fallback if parsing fails
+      return time;
+    }
+  }
 
+    
+  }
   String formatAddress(String address) {
     return address
         .split('\n') // Split by newlines
@@ -416,38 +303,3 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return "Customer";
   }
 
-  // Add this method to the _OrderDetailScreenState class:
-  Future<void> _handleQuickOrderScan(BuildContext context) async {
-    final result = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => const QRScannerScreen()),
-    );
-
-    if (result != null && result.isNotEmpty) {
-      // // Check if this QR has already been scanned
-      // if (scannedQRCodes.value.contains(result)) {
-      //   TheToast.show(
-      //     isError: true,
-      //     message: "This QR code has already been scanned",
-      //     context: context,
-      //   );
-      //   return;
-      // }
-
-      // Add to scanned QR codes set
-      final newScannedQRCodes = Set<String>.from(scannedQRCodes.value);
-      newScannedQRCodes.add(result);
-      scannedQRCodes.value = newScannedQRCodes;
-
-      // Show bottomsheet with scanned data
-      CustomBottomSheetWidget(
-        context: context,
-        child: ScanNewBagBottomsheet(
-          bagId: result,
-          orderId: widget.orderId,
-          isQuickOrder: true,
-        ),
-      ).show();
-    }
-  }
-}

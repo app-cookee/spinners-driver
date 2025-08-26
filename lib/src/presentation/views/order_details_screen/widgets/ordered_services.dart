@@ -18,13 +18,14 @@ class OrderedServices extends StatelessWidget {
     required this.selectedIndex,
     required this.scannedItems,
     required this.orderId,
-    required this.scannedQRCodes,
+    required this.scannedQRCodes, required this.status,
   });
 
   final ValueNotifier<int?> selectedIndex;
   final ValueNotifier<Set<int>> scannedItems;
   final String orderId;
   final ValueNotifier<Set<String>> scannedQRCodes;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +134,8 @@ class OrderedServices extends StatelessWidget {
                   ),
                 ),
                 // Only show scan button if service is not fully scanned
-                if (!isFullyScanned)
+                // if (!isFullyScanned)
+                if(status!='pickedUp')
                   InkWell(
                     onTap: () async {
                       await _handleScanForNormalOrder(context, orderedItem, index);
