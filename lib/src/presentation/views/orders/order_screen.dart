@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
+import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/order_card.dart';
@@ -14,9 +15,9 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/toggle_butto
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-enum OrderStatus { pickupScheduled, readyForDelivery, pickedUp, delivered }
+enum OrderFilter { pickupScheduled, readyForDelivery, pickedUp, delivered }
 
-String statusToString(OrderStatus status) => status.name;
+String statusToString(OrderFilter status) => status.name;
 
 @RoutePage()
 class OrderScreen extends StatefulWidget {
@@ -28,16 +29,16 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final _allOrders = [
-    OrderStatus.pickupScheduled,
-    OrderStatus.readyForDelivery,
-    OrderStatus.pickedUp,
-    OrderStatus.delivered,
+    OrderFilter.pickupScheduled,
+    OrderFilter.readyForDelivery,
+    OrderFilter.pickedUp,
+    OrderFilter.delivered,
   ];
   final _pickup = [
-    OrderStatus.pickupScheduled,
+    OrderFilter.pickupScheduled,
   ];
   final _dropOff = [
-    OrderStatus.readyForDelivery,
+    OrderFilter.readyForDelivery,
   ];
 
 
@@ -51,7 +52,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   // Keep track of current filter
-  List<OrderStatus> currentOrderFilter = [];
+  List<OrderFilter> currentOrderFilter = [];
   // Store location coordinates using ValueNotifier
   ValueNotifier<double?> latitudeNotifier = ValueNotifier<double?>(null);
   ValueNotifier<double?> longitudeNotifier = ValueNotifier<double?>(null);
@@ -70,10 +71,10 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _onSearchChanged(String query) {
     _debouncer.run(() {
-      if (query.isNotEmpty) {
+      // if (query.isNotEmpty) {
          _fetchOrders(currentOrderFilter, searchQuery: query);
         
-      }
+      // }
     });
   }
 
@@ -106,7 +107,7 @@ class _OrderScreenState extends State<OrderScreen> {
     }
   }
 
- void _fetchOrders(List<OrderStatus> statuses,{String? searchQuery}) {
+ void _fetchOrders(List<OrderFilter> statuses,{String? searchQuery}) {
     final statusStrings = statuses.map(statusToString).toList();
     bool isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
 
@@ -118,7 +119,7 @@ class _OrderScreenState extends State<OrderScreen> {
         expressOnly: isExpressOnlyEnabled,
         latitude: latitudeNotifier.value, 
         longitude: longitudeNotifier.value,
-        searchText: ''
+        searchText: searchQuery
       ),
     );
   }
@@ -134,7 +135,7 @@ class _OrderScreenState extends State<OrderScreen> {
      _searchController.dispose();
     _debouncer.dispose();
     super.dispose();
-    super.dispose();
+  
   }
 
   @override
@@ -234,19 +235,17 @@ class _OrderScreenState extends State<OrderScreen> {
                                      
                                         orderId: '#SPN${state.ordersList[index].refId}',
                                     
-                                        time:state.ordersList[index].status=="pickupScheduled"?
-                                      formatDeliverySlot({
-    "from": state.ordersList[index].pickupSlot?.from??"",
-    "to": state.ordersList[index].pickupSlot?.to??"",
-    "day":state.ordersList[index].pickupSlot?.day??""
-  }):                                    formatDeliverySlot({
-    "from": state.ordersList[index].deliverySlot?.from??"",
-    "to": state.ordersList[index].deliverySlot?.to??"",
-    "day":state.ordersList[index].deliverySlot?.day??""
-  }),
+                                        time: state.ordersList[index].status == "pickupScheduled"
+                                            ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
+                                            
+                                            :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"readyForDelivery",state.ordersList[index].statusHistory)
+                                          
+                                              :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
+                                              "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
+                                              "delivered",state.ordersList[index].statusHistory),
                                         
                                         status: state.ordersList[index].status,
-                                        isDropoff: state.ordersList[index].status=="pickupScheduled"?false:true,
+                                        isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
                                         isQuickOrder:  state.ordersList[index].type=="oneTapOrder"?true:false,
                                        
                                         // notes: 'Deliver to reception.',
@@ -261,33 +260,62 @@ class _OrderScreenState extends State<OrderScreen> {
       ]),
     );
   }
-  String formatDeliverySlot(Map<String, dynamic> deliverySlot) {
-  final from = DateTime.parse(deliverySlot['from']).toLocal();
-  final to = DateTime.parse(deliverySlot['to']).toLocal();
 
-  final now = DateTime.now();
-  String dayLabel;
-
-  // Check if it's today or tomorrow
-  if (from.year == now.year &&
-      from.month == now.month &&
-      from.day == now.day) {
-    dayLabel = "Today";
-  } else if (from.year == now.year &&
-      from.month == now.month &&
-      from.day == now.day + 1) {
-    dayLabel = "Tomorrow";
+   String formatSingleDate(
+  String utcDate,
+  TimeSlot? slot,
+  String status,
+  List<OrderStatus> statusHistory,
+) {
+  DateTime? date;
+  DateTime? fromTime;
+  DateTime? toTime;
+  if (status.toLowerCase() == "delivered") {
+    // Find the delivered status from history
+    final deliveredStatus = statusHistory.firstWhere(
+      (s) => s.status.toLowerCase() == "delivered",
+      orElse: () => const OrderStatus(),
+    );
+    if (deliveredStatus.changedAt.isNotEmpty) {
+      date = DateTime.parse(deliveredStatus.changedAt).toLocal();
+    }
   } else {
-    // Fallback to weekday name
-    dayLabel = DateFormat('EEEE').format(from);
+    // Use deliveryAt date + slot time
+    date = DateTime.parse(utcDate).toLocal();
+    if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
+      fromTime = DateTime.parse(slot.from).toLocal();
+      toTime = DateTime.parse(slot.to).toLocal();
+    }
   }
-
-  // Format time range
+  if (date == null) return "";
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final tomorrow = today.add(const Duration(days: 1));
+  final targetDate = DateTime(date.year, date.month, date.day);
+  final dateFormat = DateFormat('MMM d, y');
   final timeFormat = DateFormat('h:mm a');
-  final fromTime = timeFormat.format(from);
-  final toTime = timeFormat.format(to);
-
-  return "$dayLabel, $fromTime – $toTime";
+  if (fromTime != null && toTime != null) {
+    // Case when slot is used (show range)
+    final timeText = "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
+    if (targetDate == today) {
+      return "Today, $timeText";
+    } else if (targetDate == tomorrow) {
+      return "Tomorrow, $timeText";
+    } else {
+      return "${dateFormat.format(date)}, $timeText";
+    }
+  } else {
+    // Case when exact datetime is used (delivered)
+    if (targetDate == today) {
+      return "Today, ${timeFormat.format(date)}";
+    } else if (targetDate == tomorrow) {
+      return "Tomorrow, ${timeFormat.format(date)}";
+    } else {
+      return "${dateFormat.format(date)} – ${timeFormat.format(date)}";
+    }
+  }
 }
+
+
 
 }

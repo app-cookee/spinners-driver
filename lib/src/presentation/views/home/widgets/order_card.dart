@@ -40,10 +40,15 @@ class OrderCard extends StatelessWidget {
 
   Color getColor(String status) {
     switch (status) {
-      case "Completed":
-        return AppColors.green;
-      case "In Progress":
-        return AppColors.yellow;
+
+      case "delivered":
+        return AppColors.deliveredColor;
+      case "pickedUp":
+        return AppColors.pickedUpColor;
+      case "readyForDelivery":
+        return AppColors.readyForDeliveryColor;
+      case "pickupScheduled":
+        return AppColors.pickupScheduledColor;
       default:
         return AppColors.primaryColor500;
     }
@@ -83,8 +88,8 @@ class OrderCard extends StatelessWidget {
             // Order ID Row
             _orderId(),
 
-            // Services
-            _services(),
+            // 
+            _details(),
 
             Gap(8.dp),
 
@@ -142,7 +147,7 @@ class OrderCard extends StatelessWidget {
     );
   }
 
-  Container _services() {
+  Container _details() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
       width: double.infinity,
@@ -160,14 +165,14 @@ class OrderCard extends StatelessWidget {
             children: [  Image.asset(isDropoff ? AppImages.box : AppImages.bike, height: 16.dp, width: 16.dp),Gap(4.dp),
               Text(isDropoff ? 'Drop-off' : "Pickup", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.primaryColor500)),
                                  Spacer(),
-                  Text(status, style: AppTypography.sfProRoundedRegular.copyWith(fontSize: 12.dp, color: getColor(status)))
+                  Text(status=="pickupScheduled"?"Pickup Scheduled":status=="pickedUp"?"Picked Up":status=="readyForDelivery"?"Ready For Delivery":"Delivered", style: AppTypography.sfProRoundedRegular.copyWith(fontSize: 12.dp, color: getColor(status)))
             ],
           ),
           Row(crossAxisAlignment: CrossAxisAlignment.start,
             children: [
             SizedBox
             (
-              width: 100,
+              // width: 100,
               child: Text(address,style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.addressColor))),
             const Spacer(),
             Text(time, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral900))
@@ -193,28 +198,7 @@ class OrderCard extends StatelessWidget {
     );
   }
 
-  Widget _divider() {
-    return Padding(
-      padding: EdgeInsetsGeometry.symmetric(vertical: 8.dp),
-      child: DottedBorder(
-        options: CustomPathDottedBorderOptions(
-          padding: EdgeInsets.zero,
-          customPath: (size) => Path()
-            ..moveTo(0, 0)
-            ..lineTo(size.width, 0),
-          dashPattern: [3, 2], // [dot size, space size]
-          color: AppColors.lightGrey,
-          strokeWidth: 1,
-        ),
 
-        // Horizontal line
-        child: const SizedBox(
-          height: 1,
-          width: double.infinity,
-        ),
-      ),
-    );
-  }
 Widget _orderedCardButtons(BuildContext context) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 12.dp),

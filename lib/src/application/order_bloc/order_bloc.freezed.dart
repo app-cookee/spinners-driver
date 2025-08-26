@@ -20,7 +20,7 @@ mixin _$OrderEvent {
   bool get expressOnly;
   double? get latitude;
   double? get longitude;
-  String get searchText;
+  String? get searchText;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -70,7 +70,7 @@ abstract mixin class $OrderEventCopyWith<$Res> {
       bool expressOnly,
       double? latitude,
       double? longitude,
-      String searchText});
+      String? searchText});
 }
 
 /// @nodoc
@@ -91,7 +91,7 @@ class _$OrderEventCopyWithImpl<$Res> implements $OrderEventCopyWith<$Res> {
     Object? expressOnly = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? searchText = null,
+    Object? searchText = freezed,
   }) {
     return _then(_self.copyWith(
       limit: null == limit
@@ -118,10 +118,10 @@ class _$OrderEventCopyWithImpl<$Res> implements $OrderEventCopyWith<$Res> {
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      searchText: null == searchText
+      searchText: freezed == searchText
           ? _self.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -220,7 +220,7 @@ extension OrderEventPatterns on OrderEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int limit, int skip, String filter, bool expressOnly,
-            double? latitude, double? longitude, String searchText)?
+            double? latitude, double? longitude, String? searchText)?
         getOrdersList,
     required TResult orElse(),
   }) {
@@ -262,7 +262,7 @@ extension OrderEventPatterns on OrderEvent {
             bool expressOnly,
             double? latitude,
             double? longitude,
-            String searchText)
+            String? searchText)
         getOrdersList,
   }) {
     final _that = this;
@@ -296,7 +296,7 @@ extension OrderEventPatterns on OrderEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int limit, int skip, String filter, bool expressOnly,
-            double? latitude, double? longitude, String searchText)?
+            double? latitude, double? longitude, String? searchText)?
         getOrdersList,
   }) {
     final _that = this;
@@ -324,9 +324,9 @@ class _GetOrdersList implements OrderEvent {
       required this.skip,
       required this.filter,
       required this.expressOnly,
-      required this.latitude,
-      required this.longitude,
-      required this.searchText});
+      this.latitude,
+      this.longitude,
+      this.searchText});
 
   @override
   final int limit;
@@ -341,7 +341,7 @@ class _GetOrdersList implements OrderEvent {
   @override
   final double? longitude;
   @override
-  final String searchText;
+  final String? searchText;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -394,7 +394,7 @@ abstract mixin class _$GetOrdersListCopyWith<$Res>
       bool expressOnly,
       double? latitude,
       double? longitude,
-      String searchText});
+      String? searchText});
 }
 
 /// @nodoc
@@ -416,7 +416,7 @@ class __$GetOrdersListCopyWithImpl<$Res>
     Object? expressOnly = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? searchText = null,
+    Object? searchText = freezed,
   }) {
     return _then(_GetOrdersList(
       limit: null == limit
@@ -443,10 +443,10 @@ class __$GetOrdersListCopyWithImpl<$Res>
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      searchText: null == searchText
+      searchText: freezed == searchText
           ? _self.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }

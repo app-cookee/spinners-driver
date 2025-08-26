@@ -25,7 +25,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(state.copyWith(
         getOrderListStatus: Status.loading(),
       ));
-         var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude);
+         var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText);
         final bool hasMoreItems = response.orderList.length == event.limit;
         emit(state.copyWith(
           getOrderListStatus: Status.success(), ordersList: response.orderList,   totalCount: response.totalCount,

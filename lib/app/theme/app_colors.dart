@@ -36,6 +36,10 @@ static const Color shadowColor = Color(0xFFE2E2E2);
     static const Color dividerColor = Color(0xFFE8E9E4);
     static const Color toggleDisabled = Color(0xFFD0D0D0);
 static const Color addressColor = Color(0xFF002533);
+static const Color pickupScheduledColor= Color(0xFF5C6BC0);
+static const Color pickedUpColor= Color(0xFFF9A825);
+static const Color readyForDeliveryColor= Color(0xFF2BB2C3);
+static const Color deliveredColor= Color(0xFF43A047);
 
 
 
