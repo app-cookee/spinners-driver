@@ -8,7 +8,8 @@ abstract class OrderRepository {
   Future<void> pickupOrder(String orderId, String driverNotes);
   Future<void> addBag(String orderItemId, String bagId);
   Future<String> createNewBag(String bagId, String orderId, String serviceId);
-  Future<OrderModel> getOrdersList(int limit,int skip,String filter,bool expressOnly,double? latitude,double? longitude);
   Future<List<ServiceListDatamodel>> getServices(int limit, int skip);
+  Future<OrderModel> getOrdersList(int limit,int skip,String filter,bool expressOnly,double? latitude,double? longitude,String? searchText);
+
 
 }
