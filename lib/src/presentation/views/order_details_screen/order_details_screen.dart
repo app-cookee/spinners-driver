@@ -45,7 +45,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   void initState() {
-    // context.read<OrderBloc>().add(const OrderEvent.getOrderDetails(orderId: /*'900dbeab-0ced-4974-834f-13db0f10a1ef'- quick ordr*/ '3ea0f455-1b80-48af-b6bd-41a84bc10311'));
     context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId));
     log('Fetching order details for order ID: ${widget.orderId}');
     allItemsScanned = ValueNotifier<bool>(false);
@@ -53,7 +52,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     // Listen to scanned items changes to update completion status
     scannedItems.addListener(_updateCompletionStatus);
 
-   
     super.initState();
   }
 
@@ -426,15 +424,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
 
     if (result != null && result.isNotEmpty) {
-      // Check if this QR has already been scanned
-      if (scannedQRCodes.value.contains(result)) {
-        TheToast.show(
-          isError: true,
-          message: "This QR code has already been scanned",
-          context: context,
-        );
-        return;
-      }
+      // // Check if this QR has already been scanned
+      // if (scannedQRCodes.value.contains(result)) {
+      //   TheToast.show(
+      //     isError: true,
+      //     message: "This QR code has already been scanned",
+      //     context: context,
+      //   );
+      //   return;
+      // }
 
       // Add to scanned QR codes set
       final newScannedQRCodes = Set<String>.from(scannedQRCodes.value);

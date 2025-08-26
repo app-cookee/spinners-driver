@@ -45,16 +45,24 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   @override
   void initState() {
     super.initState();
-     context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
+    log('ScanNewBagBottomsheet initialized');
+    log('Bag ID: ${widget.bagId}');
+    log('Service ID: ${widget.serviceId}');
+    log('Service Name: ${widget.serviceName}');
+    log('Is Quick Order: ${widget.isQuickOrder}');
+    
+    context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
     // Auto-fill bag ID if provided
     if (widget.bagId != null) {
       bagIdController.text = widget.bagId!;
+      log('Auto-filled bag ID: ${widget.bagId}');
     }
     
     // Auto-fill service if provided (for normal orders)
     if (widget.serviceId != null) {
       selectedServiceId = widget.serviceId;
       selectedServiceName = widget.serviceName;
+      log('Auto-filled service: ${widget.serviceName} (${widget.serviceId})');
     }
   }
 
@@ -103,6 +111,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               text: 'Cancel',
             ),
           ),
+          Gap(30.h)
         ],
       ),
     );
@@ -132,15 +141,19 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
         final services = state.servicesList;
+        final isLoading = state.getServicesListStatus is StatusLoading;
+        final hasError = state.getServicesListStatus is StatusFailure;
 
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.dp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text('Bag Color/Service', style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 16.sp, color: AppColors.textGrey)),
+              Gap(6.dp),
              
-              // Show selected service for normal orders (read-only)
-              if (!widget.isQuickOrder && selectedServiceName != null)
+              // Show loading state while services are being fetched
+              if (isLoading)
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 12.dp, vertical: 16.dp),
@@ -151,7 +164,79 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   ),
                   child: Row(
                     children: [
-                      Image.asset(AppImages.bag, height: 20.dp, width: 20.dp),
+                      SizedBox(
+                        height: 20.dp,
+                        width: 20.dp,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.dp,
+                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColor500),
+                        ),
+                      ),
+                      Gap(8.dp),
+                      Text(
+                        'Loading services...',
+                        style: AppTypography.sfProRoundedMedium.copyWith(
+                          fontSize: 16.sp,
+                          color: AppColors.neutral500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              // Show error state
+              else if (hasError)
+                GestureDetector(
+                  onTap: () {
+                    context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 12.dp, vertical: 16.dp),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.red),
+                      borderRadius: BorderRadius.circular(8.dp),
+                      color: AppColors.red.withValues(alpha: 0.1),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline, color: AppColors.red, size: 20.dp),
+                        Gap(8.dp),
+                        Expanded(
+                          child: Text(
+                            'Failed to load services. Tap to retry.',
+                            style: AppTypography.sfProRoundedMedium.copyWith(
+                              fontSize: 16.sp,
+                              color: AppColors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              // Show selected service for normal orders (read-only)
+              else if (!widget.isQuickOrder && selectedServiceName != null && services.isNotEmpty)
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12.dp, vertical: 16.dp),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.lightGrey),
+                    borderRadius: BorderRadius.circular(8.dp),
+                    color: AppColors.neutral50,
+                  ),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        AppImages.bag, 
+                        height: 20.dp, 
+                        width: 20.dp, 
+                        color: selectedServiceId != null 
+                          ? hexToColor(services.firstWhere(
+                              (element) => element.id == selectedServiceId,
+                              orElse: () => services.first
+                            ).color)
+                          : null,
+                      ),
                       Gap(8.dp),
                       Text(
                         selectedServiceName!,
@@ -164,7 +249,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   ),
                 )
               // Show dropdown for quick orders
-              else
+              else if (services.isNotEmpty)
                 CustomDropDownWidget(
                   onChanged: (selectedItem) {
                     final service = services.firstWhere((s) => s.name == selectedItem.label);
@@ -174,6 +259,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                     });
                   },
                   items: services
+                      .where((service) => service.color.isNotEmpty) // Filter out services without colors
                       .map((service) => CustomDropDownMenuItem(
                             label: service.name,
                             value: service.name,
@@ -181,8 +267,32 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                             imageColor: hexToColor(service.color),
                           ))
                       .toList(),
-                  text: 'Select Bag Color/Service',
+                  text: '',
                   hint: selectedServiceName ?? 'Choose a service',
+                )
+              // Show empty state
+              else
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12.dp, vertical: 16.dp),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.lightGrey),
+                    borderRadius: BorderRadius.circular(8.dp),
+                    color: AppColors.neutral50,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: AppColors.neutral500, size: 20.dp),
+                      Gap(8.dp),
+                      Text(
+                        'No services available',
+                        style: AppTypography.sfProRoundedMedium.copyWith(
+                          fontSize: 16.sp,
+                          color: AppColors.neutral500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ),
@@ -191,38 +301,60 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     );
   }
   Color hexToColor(String hex) {
-    hex = hex.replaceAll('#', '');
+    // Handle empty or invalid hex values
+    if (hex.isEmpty || hex.trim().isEmpty) {
+      return AppColors.neutral500; // Return a default color for empty values
+    }
+    
+    hex = hex.replaceAll('#', '').trim();
+    
+    // Validate hex format
+    if (!RegExp(r'^[0-9A-Fa-f]{3}$|^[0-9A-Fa-f]{6}$').hasMatch(hex)) {
+      return AppColors.neutral500; // Return default color for invalid format
+    }
+    
     if (hex.length == 3) {
       hex = hex.split('').map((char) => char * 2).join();
     }
     if (hex.length == 6) {
       hex = 'FF$hex';
     }
-    return Color(int.parse(hex, radix: 16));
+    
+    try {
+      return Color(int.parse(hex, radix: 16));
+    } catch (e) {
+      log('Error parsing hex color: $hex - $e');
+      return AppColors.neutral500; // Return default color on parsing error
+    }
   }
   Widget _addBagButton() {
     return BlocConsumer<OrderBloc, OrderState>(
-      listener: (context, state) {
-        // Handle success for both APIs
-        if (state.createNewBagStatus is StatusSuccess || state.addBagStatus is StatusSuccess) {
-          // Show success message
-          TheToast.show(
-            isError: false,
-            message: "Bag added successfully",
-            context: context,
-          );
-          
-          // Close bottomsheet and refresh data
-          if (mounted) {
-            context.router.pop();
-            // Refresh order details after a short delay
-            Future.delayed(const Duration(milliseconds: 200), () {
-              if (mounted) {
-                context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId!));
-              }
-            });
-          }
-        }
+             listener: (context, state) {
+         // Handle success for both APIs
+         if (state.createNewBagStatus is StatusSuccess || state.addBagStatus is StatusSuccess) {
+           // Close bottomsheet first
+           if (mounted) {
+             context.router.pop();
+             
+             // Show success message after a short delay
+             Future.delayed(const Duration(milliseconds: 300), () {
+               if (mounted) {
+                 TheToast.show(
+                   isError: false,
+                   message: "Bag added successfully",
+                   context: context,
+                 );
+                 
+                 // Refresh order details after another short delay
+                 Future.delayed(const Duration(milliseconds: 200), () {
+                   if (mounted) {
+                     context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId!));
+                   }
+                 });
+               }
+             });
+           }
+         }
         
         // Handle failures for both APIs
         if (state.createNewBagStatus is StatusFailure) {
@@ -280,15 +412,15 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
       return;
     }
     
-    // Validate bag ID format - should not be a URL
-    if (bagId.startsWith('http://') || bagId.startsWith('https://') || bagId.contains('wa.me')) {
-      TheToast.show(
-        isError: true,
-        message: "Invalid Bag ID format. Please scan a valid QR code.",
-        context: context,
-      );
-      return;
-    }
+    // // Validate bag ID format - should not be a URL
+    // if (bagId.startsWith('http://') || bagId.startsWith('https://') || bagId.contains('wa.me')) {
+    //   TheToast.show(
+    //     isError: true,
+    //     message: "Invalid Bag ID format. Please scan a valid QR code.",
+    //     context: context,
+    //   );
+    //   return;
+    // }
 
     // Validate service selection
     if (selectedServiceId == null || selectedServiceId!.isEmpty) {
@@ -327,7 +459,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
         log('Adding bag to existing service: ${orderedItem.service.name} (${widget.isQuickOrder ? 'Quick Order' : 'Normal Order'})');
         log('Current scanned bags: ${orderedItem.scannedBags.length}');
         log('Original quantity: ${orderedItem.quantity}');
-        
+        log('order item id: ${orderedItem.id}');
         context.read<OrderBloc>().add(OrderEvent.addBag(
           orderItemId: orderedItem.id,
           bagId: bagId,

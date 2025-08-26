@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -120,6 +121,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         servicesList: response,
       ));
     } catch (e) {
+      log('Error getting services list: $e', name: "OrderBloc");
       emit(state.copyWith(
         getServicesListStatus: Status.failure(
           e.toString(),

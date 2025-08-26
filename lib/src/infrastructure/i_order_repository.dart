@@ -63,7 +63,7 @@ class OrderRepositoryImplementation implements OrderRepository {
   Future<void> addBag(String orderItemId, String bagId) async {
     try {
       final Map<String, dynamic> data = {
-        "orderItemId": orderItemId,
+        "orderServiceId": orderItemId,
         "bagId": bagId,
       }.clean();
 
@@ -96,16 +96,20 @@ class OrderRepositoryImplementation implements OrderRepository {
     try {
       final Map<String, dynamic> params = {"limit": limit, "skip": skip}.clean();
 
+      log('Fetching services with params: $params', name: "getServices");
       var response = await api.profile.get(ApiEndpoints().serviceList, queryParameters: params);
+      
       List<ServiceListDatamodel> services = [];
       if (response.data['data'] != null) {
-        services = (response.data['data'])
-            .map((item) => ServiceListDatamodel.fromJson(item))
+        final List<dynamic> dataList = response.data['data'] as List<dynamic>;
+        services = dataList
+            .map((item) => ServiceListDatamodel.fromJson(item as Map<String, dynamic>))
             .toList();
       }
-      log(services.toString(), name: "services");
+      log('Parsed services count: ${services.length}', name: "getServices");
       return services;
     } catch (e) {
+      log('Error fetching services: $e', name: "getServices");
       rethrow;
     }
   }

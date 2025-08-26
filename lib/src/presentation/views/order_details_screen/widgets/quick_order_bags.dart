@@ -28,22 +28,28 @@ class QuickOrderBags extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        // Get all scanned bags from all ordered items
-        final allScannedBags = <Map<String, dynamic>>[];
+        // Group scanned bags by service
+        final Map<String, Map<String, dynamic>> serviceGroups = {};
+        
         for (final item in state.orderDetails.orderedItems) {
-          for (final bag in item.scannedBags) {
-            allScannedBags.add({
-              'id': bag.id,
-              'bagId': bag.bagId,
-              'serviceName': item.service.name,
-              'serviceId': item.service.id,
-              'serviceColor': item.service.color,
-              'serviceIcon': item.service.icon,
-            });
+          if (item.scannedBags.isNotEmpty) {
+            final serviceId = item.service.id;
+            if (!serviceGroups.containsKey(serviceId)) {
+              serviceGroups[serviceId] = {
+                'serviceName': item.service.name,
+                'serviceId': item.service.id,
+                'serviceColor': item.service.color,
+                'serviceIcon': item.service.icon,
+                'scannedCount': item.scannedBags.length,
+                'orderItemId': item.id,
+              };
+            }
           }
         }
 
-        if (allScannedBags.isEmpty) {
+        final groupedServices = serviceGroups.values.toList();
+
+        if (groupedServices.isEmpty) {
           return const SizedBox.shrink();
         }
 
@@ -52,12 +58,12 @@ class QuickOrderBags extends StatelessWidget {
           children: [
             ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 16.dp),
-              itemCount: allScannedBags.length,
+              itemCount: groupedServices.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                final bag = allScannedBags[index];
-                return _bagCard(context, bag, index);
+                final service = groupedServices[index];
+                return _bagCard(context, service, index);
               },
             ),
           ],
@@ -125,7 +131,7 @@ class QuickOrderBags extends StatelessWidget {
                     ),
                     Gap(4.dp),
                     Text(
-                      'x ${bag['quantity']}',
+                      'x ${bag['scannedCount']}',
                       style: AppTypography.sfProRoundedBold.copyWith(
                         fontSize: 14.sp,
                         color: AppColors.primaryColor500,
