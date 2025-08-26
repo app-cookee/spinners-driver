@@ -231,8 +231,8 @@ class _OrderScreenState extends State<OrderScreen> {
                         itemBuilder: (context, index) {
                           return OrderCard(isExpressService:  state.ordersList[index].expressService,
                                       address:  state.ordersList[index].selectedAddress?.place??"",
-                                     
-                                        orderId: '#SPN${state.ordersList[index].refId}',
+                                     refId: state.ordersList[index].refId.toString(),
+                                        orderId: state.ordersList[index].id,
                                     
                                         time:state.ordersList[index].status=="pickupScheduled"?
                                       formatDeliverySlot({

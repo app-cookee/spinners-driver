@@ -6,8 +6,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 // Import your other dependencies here
 
 class OrderDetailShimmer extends StatelessWidget {
-  const OrderDetailShimmer({super.key, required this.orderId});
-  final String orderId;
+  const OrderDetailShimmer({super.key});
   
 
   @override

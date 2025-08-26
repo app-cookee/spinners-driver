@@ -16,6 +16,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderCard extends StatelessWidget {
   final String orderId;
+  final String refId;
   
   final String time;
   final String status;
@@ -28,7 +29,7 @@ class OrderCard extends StatelessWidget {
   const OrderCard({
     super.key,
     required this.orderId,
-  
+  required this.refId,
     required this.time,
     required this.status,
     required this.isDropoff,
@@ -54,14 +55,11 @@ class OrderCard extends StatelessWidget {
     // log(isExpressService.toString());
     return InkWell(
       onTap: () {
-        // if(trailingButton != null){
-        //   context.router.push(QuickOrderDetailRoute(orderId: orderId));
-        // } else{
-         if(!isDropoff){
+         if(isDropoff){
+          context.router.push(DeliveryOrderDetailRoute(orderId: orderId,refId: refId));
+         } else {
           context.router.push(OrderDetailRoute(orderId: orderId));
-         }
-        // }
-        
+         }      
       },
       child: Container(
         padding: EdgeInsets.only(top: 9.dp, bottom: 12.dp),
@@ -128,7 +126,7 @@ class OrderCard extends StatelessWidget {
         children: [
           Text("Order ID", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.countrycodeColor)),
           Gap(6.dp),
-          Text(orderId, style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
+          Text("#SPN$refId", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
           const Spacer(),
           if(isExpressService)...[  
             _expressLabel(),],

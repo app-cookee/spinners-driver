@@ -18,12 +18,14 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class DeliveryOrderDetailScreen extends StatefulWidget {
-  const DeliveryOrderDetailScreen({super.key, required this.orderId, required this.id});
+  const DeliveryOrderDetailScreen(
+      {super.key, required this.orderId, required this.refId});
   final String orderId;
-  final String id;
+  final String refId;
 
   @override
-  State<DeliveryOrderDetailScreen> createState() => _DeliveryOrderDetailScreenState();
+  State<DeliveryOrderDetailScreen> createState() =>
+      _DeliveryOrderDetailScreenState();
 }
 
 class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
@@ -31,7 +33,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
   void initState() {
     context
         .read<DeliveryBloc>()
-        .add(DeliveryEvent.getOrderDetails(orderId: widget.id));
+        .add(DeliveryEvent.getOrderDetails(orderId: widget.orderId));
     super.initState();
   }
 
@@ -49,7 +51,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
               builder: (context, state) {
                 if (state.getOrderDetailStatus is StatusLoading ||
                     state.getOrderDetailStatus is StatusInitial) {
-                  return OrderDetailShimmer(orderId: widget.orderId);
+                  return const OrderDetailShimmer();
                 }
                 return state.orderDetails.id.isEmpty
                     ? SizedBox.shrink()
@@ -69,140 +71,53 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                           : "Quick Order⚡"),
                                   Gap(4.dp),
                                   InfoCard(
-                                      label: "Placed on",
+                                      label: "Delivery Time",
                                       value: formatSingleDate(
-                                          state.orderDetails.createdAt)
-                                      // "Jun 29, 2025 – 1:35 PM"
-                                      ),
+                                          state.orderDetails.deliveryAt,
+                                          state.orderDetails.deliverySlot,
+                                          state.orderDetails.status,
+                                          state.orderDetails.statusHistory)),
                                 ],
                               ),
                             ),
                           ),
-                          SliverPersistentHeader(
-                            pinned: true,
-                            delegate: StickyHeaderDelegate(
-                              child: Container(
-                                color: AppColors.white,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16.dp, vertical: 0),
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    children: [
-                                      Gap(4.dp),
-                                      InfoCard(
-                                        gradient: LinearGradient(
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
-                                            stops: [
-                                              0,
-                                              0.33,
-                                              0.66,
-                                              1
-                                            ],
-                                            colors: [
-                                              Color(0xFFFFFDED),
-                                              Color(0xFFFFFDED),
-                                              Color(0xFFFFFDED),
-
-                                              // AppColors.gradientBrown.withValues(alpha: 0),
-                                              Color(0xFFF7F4DD)
-                                            ]),
-                                        label: "Status",
-                                        value:
-                                            (state.orderDetails.status=="processing"?"Processing":
-                                            state.orderDetails.status=="accepted"?"Accepted":
-                                            state.orderDetails.status=="pickupScheduled"?"Pickup Scheduled":
-                                           state.orderDetails.status=="pickedUp"?"Picked Up":   
-                                       state.orderDetails.status=="recieved"?"Recieved":    
-                                         state.orderDetails.status=="readyForDelivery"?"Out for Delivery": 
-                                               state.orderDetails.status=="delivered"?"Delivered":
-                                               state.orderDetails.status=="cancelled"?"cancelled":state.orderDetails.status),
-                                        valueColor: AppColors.yellow,
-                                      ),
-                                      Gap(4.dp),
-                                    ],
+                          if (((double.tryParse(
+                                          state.orderDetails.totalAmount) ??
+                                      0) -
+                                  (double.tryParse(
+                                          state.orderDetails.paidAmount) ??
+                                      0)) >
+                              0)
+                            SliverPersistentHeader(
+                              pinned: true,
+                              delegate: StickyHeaderDelegate(
+                                child: Container(
+                                  color: AppColors.white,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16.dp, vertical: 0),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      children: [
+                                        Gap(4.dp),
+                                        InfoCard(
+                                          label: "COD",
+                                          value:
+                                              "AED ${((double.tryParse(state.orderDetails.totalAmount) ?? 0) - (double.tryParse(state.orderDetails.paidAmount) ?? 0)).toStringAsFixed(2)}",
+                                        ),
+                                        Gap(4.dp),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
                           SliverToBoxAdapter(
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16.dp),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  //..............DAMAGE NOTIFICATION COMMENETD FOR NOW....................................
-
-                                  // Container(
-                                  //   width: 100.w,
-                                  //   decoration: BoxDecoration(
-                                  //       color: AppColors.lightPink,
-                                  //       borderRadius: BorderRadius.circular(8.dp)),
-                                  //   padding: EdgeInsets.all(12.dp),
-                                  //   child: Column(
-                                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                                  //     children: [
-                                  //       Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.spaceBetween,
-                                  //         children: [
-                                  //           Row(
-                                  //             mainAxisSize: MainAxisSize.min,
-                                  //             children: [
-                                  //               Image.asset(
-                                  //                 AppImages.damage,
-                                  //                 height: 12.dp,
-                                  //                 width: 12.dp,
-                                  //               ),
-                                  //               Text(
-                                  //                 " Damage Notifications",
-                                  //                 style: AppTypography
-                                  //                     .sfProRoundedMedium
-                                  //                     .copyWith(
-                                  //                   fontSize: 12.dp,
-                                  //                   color: AppColors.textGrey,
-                                  //                 ),
-                                  //               ),
-                                  //             ],
-                                  //           ),
-                                  //           Text(
-                                  //             "2 Issues Detected",
-                                  //             style: AppTypography
-                                  //                 .sfProRoundedSemiBold
-                                  //                 .copyWith(
-                                  //               fontSize: 12.dp,
-                                  //               color: AppColors.red,
-                                  //             ),
-                                  //           ),
-                                  //         ],
-                                  //       ),
-                                  //       Gap(8.dp),
-                                  //       //empty
-                                  //       // Row(
-                                  //       //   mainAxisSize: MainAxisSize.min,
-                                  //       //   children: [
-                                  //       //     Text(
-                                  //       //       "No damage reported for this order ",
-                                  //       //       style: AppTypography.sfProRoundedMedium
-                                  //       //           .copyWith(
-                                  //       //         fontSize: 12.dp,
-                                  //       //         color: AppColors.neutral950,
-                                  //       //       ),
-                                  //       //     ),
-                                  //       //     Image.asset(
-                                  //       //       AppImages.tick,
-                                  //       //       height: 12.dp,
-                                  //       //       width: 12.dp,
-                                  //       //     ),
-                                  //       //   ],
-                                  //       // ),
-                                  //       DressListWidget(),
-                                  //     ],
-                                  //   ),
-                                  // ),
-                                  // Gap(4.dp),
                                   state.orderDetails.customerNote.isNotEmpty
                                       ? Container(
                                           width: 100.w,
@@ -224,7 +139,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                                     width: 12.dp,
                                                   ),
                                                   Text(
-                                                    " Special Instructions",
+                                                    " Special Notes",
                                                     style: AppTypography
                                                         .sfProRoundedMedium
                                                         .copyWith(
@@ -249,40 +164,38 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                         )
                                       : SizedBox.shrink(),
                                   Gap(20.dp),
-                                  //..................DRIVER INFO COMMENTED FOR NOW.................
-
-                                  // Row(
-                                  //   spacing: 12.dp,
-                                  //   children: [
-                                  //     Image.asset(
-                                  //       AppImages.person,
-                                  //       height: 40.dp,
-                                  //       width: 40.dp,
-                                  //     ),
-                                  //     Column(
-                                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                                  //       children: [
-                                  //         Text(
-                                  //           "Driver Info",
-                                  //           style: AppTypography.sfProRoundedMedium
-                                  //               .copyWith(
-                                  //             fontSize: 12.dp,
-                                  //             color: AppColors.textGrey,
-                                  //           ),
-                                  //         ),
-                                  //         Text(
-                                  //           "Ahmed Al Harthy",
-                                  //           style: AppTypography.sfProRoundedSemiBold
-                                  //               .copyWith(
-                                  //             fontSize: 16.dp,
-                                  //             color: AppColors.neutral950,
-                                  //           ),
-                                  //         )
-                                  //       ],
-                                  //     )
-                                  //   ],
-                                  // ),
-                                  // Gap(10.dp),
+                                  Row(
+                                    spacing: 12.dp,
+                                    children: [
+                                      Image.asset(
+                                        AppImages.person,
+                                        height: 40.dp,
+                                        width: 40.dp,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Customer",
+                                            style: AppTypography.sfProRoundedMedium
+                                                .copyWith(
+                                              fontSize: 12.dp,
+                                              color: AppColors.textGrey,
+                                            ),
+                                          ),
+                                          Text(
+                                            state.orderDetails.customer?.user?.firstName ?? '',
+                                            style: AppTypography.sfProRoundedSemiBold
+                                                .copyWith(
+                                              fontSize: 16.dp,
+                                              color: AppColors.neutral950,
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Gap(10.dp),
                                   Row(
                                     spacing: 12.dp,
                                     children: [
@@ -322,7 +235,6 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                   ),
                                   Gap(10.dp),
                                   _buildStatusTrackingUI(state)
-                                  
                                 ],
                               ),
                             ),
@@ -371,7 +283,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
           ),
           Gap(6.dp),
           Text(
-            "Order ID: #SPN${widget.orderId}",
+            "Order ID: #SPN${widget.refId}",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
               fontSize: 16.dp,
               color: AppColors.neutral950,
@@ -419,290 +331,346 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
       child: PrimaryButtonWidget(onPressed: () {}, text: "Call Driver"),
     );
   }
+
   Widget _buildStatusTrackingUI(DeliveryState state) {
-  // Get completed statuses from status history
-  final Set<String> completedStatuses =
-      state.orderDetails.statusHistory.map((status) => status.status).toSet();
-  // Helper function to check if a status is completed
-  bool isStatusCompleted(String status) {
-    return completedStatuses.contains(status);
-  }
-  // Helper function to determine if status should show as completed (cascading logic)
-  bool shouldShowAsCompleted(String status) {
-    switch (status) {
-      case 'pickedUp':
-        return isStatusCompleted('pickedUp') ||
-            isStatusCompleted('processing') ||
-            isStatusCompleted('readyForDelivery') ||isStatusCompleted('recieved')||
-            isStatusCompleted('delivered');
-      case 'processing':
-        return isStatusCompleted('processing') ||
-            isStatusCompleted('readyForDelivery') ||
-            isStatusCompleted('delivered');
-      case 'readyForDelivery':
-        return isStatusCompleted('readyForDelivery') ||
-            isStatusCompleted('delivered');
-      case 'delivered':
-        return isStatusCompleted('delivered');
-      default:
-        return false;
+    // Get completed statuses from status history
+    final Set<String> completedStatuses =
+        state.orderDetails.statusHistory.map((status) => status.status).toSet();
+    // Helper function to check if a status is completed
+    bool isStatusCompleted(String status) {
+      return completedStatuses.contains(status);
     }
-  }
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Pickup Section
-      Row(
-        spacing: 8,
-        children: [
-          shouldShowAsCompleted('pickedUp')
-              ? Image.asset(AppImages.orderStatus, height: 40.dp, width: 40.dp)
-              : Image.asset(AppImages.arrowup, height: 40.dp, width: 40.dp),
-          _buildStatusSection(
-            title: shouldShowAsCompleted('pickedUp') ? "Picked up" : "Pickup",
-            isCompleted: shouldShowAsCompleted('pickedUp'),
-            isActuallyCompleted: isStatusCompleted('pickedUp'),
-            statusHistory: state.orderDetails.statusHistory,
-            statusKey: 'pickedUp',
-            expectedSlot: shouldShowAsCompleted('pickedUp')
-                ? null
-                : _formatDeliverySlot(state.orderDetails.pickupSlot),
-          ),
-        ],
-      ),
-      // Line 1
-      Container(
-        margin: EdgeInsets.only(left: 20.dp, right: 20.dp),
-        height: 34.dp,
-        width: 1,
-        color: shouldShowAsCompleted('processing')
-            ? AppColors.green
-            : AppColors.lightGrey,
-      ),
-      // Processing Section
-      Row(
-        spacing: 8,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 13.5.dp, right: 13.5.dp),
-            child: CircleAvatar(
-              radius: 6.5,
-              backgroundColor: shouldShowAsCompleted('processing')
-                  ? AppColors.green
-                  : AppColors.lightGrey,
+
+    // Helper function to determine if status should show as completed (cascading logic)
+    bool shouldShowAsCompleted(String status) {
+      switch (status) {
+        case 'pickedUp':
+          return isStatusCompleted('pickedUp') ||
+              isStatusCompleted('processing') ||
+              isStatusCompleted('readyForDelivery') ||
+              isStatusCompleted('recieved') ||
+              isStatusCompleted('delivered');
+        case 'processing':
+          return isStatusCompleted('processing') ||
+              isStatusCompleted('readyForDelivery') ||
+              isStatusCompleted('delivered');
+        case 'readyForDelivery':
+          return isStatusCompleted('readyForDelivery') ||
+              isStatusCompleted('delivered');
+        case 'delivered':
+          return isStatusCompleted('delivered');
+        default:
+          return false;
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Pickup Section
+        Row(
+          spacing: 8,
+          children: [
+            shouldShowAsCompleted('pickedUp')
+                ? Image.asset(AppImages.orderStatus,
+                    height: 40.dp, width: 40.dp)
+                : Image.asset(AppImages.arrowup, height: 40.dp, width: 40.dp),
+            _buildStatusSection(
+              title: shouldShowAsCompleted('pickedUp') ? "Picked up" : "Pickup",
+              isCompleted: shouldShowAsCompleted('pickedUp'),
+              isActuallyCompleted: isStatusCompleted('pickedUp'),
+              statusHistory: state.orderDetails.statusHistory,
+              statusKey: 'pickedUp',
+              expectedSlot: shouldShowAsCompleted('pickedUp')
+                  ? null
+                  : _formatDeliverySlot(state.orderDetails.pickupSlot),
             ),
-          ),
-          _buildStatusSection(
-            title: "Processing",
-            isCompleted: shouldShowAsCompleted('processing'),
-            isActuallyCompleted: isStatusCompleted('processing'),
-            statusHistory: state.orderDetails.statusHistory,
-            statusKey: 'processing',
-          ),
-        ],
-      ),
-      // Line 2
-      Container(
-        margin: EdgeInsets.only(left: 20.dp, right: 20.dp),
-        height: 34.dp,
-        width: 1,
-        color: shouldShowAsCompleted('readyForDelivery')
-            ? AppColors.green
-            : AppColors.lightGrey,
-      ),
-      // Out For Delivery Section
-      Row(
-        spacing: 8,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 13.5.dp, right: 13.5.dp),
-            child: CircleAvatar(
-              radius: 6.5,
-              backgroundColor: shouldShowAsCompleted('readyForDelivery')
-                  ? AppColors.green
-                  : AppColors.lightGrey,
-            ),
-          ),
-          _buildStatusSection(
-            title: "Out For Delivery",
-            isCompleted: shouldShowAsCompleted('readyForDelivery'),
-            isActuallyCompleted: isStatusCompleted('readyForDelivery'),
-            statusHistory: state.orderDetails.statusHistory,
-            statusKey: 'readyForDelivery',
-          ),
-        ],
-      ),
-      // Line 3
-      Container(
-        margin: EdgeInsets.only(left: 20.dp, right: 20.dp),
-        height: 34.dp,
-        width: 1,
-        color: shouldShowAsCompleted('delivered')
-            ? AppColors.green
-            : AppColors.lightGrey,
-      ),
-      // Delivery Section
-      Row(
-        spacing: 8,
-        children: [
-          shouldShowAsCompleted('delivered')
-              ? Transform.rotate(
-                  angle: 3.14159, // 180 degrees for upside down arrow
-                  child: Image.asset(AppImages.orderStatus, height: 40.dp, width: 40.dp),
-                )
-              : Image.asset(AppImages.arrowdown, height: 40.dp, width: 40.dp),
-          _buildStatusSection(
-            title: shouldShowAsCompleted('delivered') ? "Delivered" : "Delivery",
-            isCompleted: shouldShowAsCompleted('delivered'),
-            isActuallyCompleted: isStatusCompleted('delivered'),
-            statusHistory: state.orderDetails.statusHistory,
-            statusKey: 'delivered',
-            expectedSlot: shouldShowAsCompleted('delivered')
-                ? null
-                : _formatDeliverySlot(state.orderDetails.deliverySlot),
-          ),
-        ],
-      ),
-    ],
-  );
-}
-Widget _buildStatusSection({
-  required String title,
-  required bool isCompleted,
-  required bool isActuallyCompleted,
-  required List<OrderStatus> statusHistory,
-  required String statusKey,
-  String? expectedSlot,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        title,
-        style: AppTypography.sfProRoundedSemiBold.copyWith(
-          fontSize: 16.dp,
-          color: AppColors.neutral950,
+          ],
         ),
-      ),
-      if (!isCompleted && expectedSlot != null) ...[
-        Gap(4.dp),
-        Text(
-          "Expected: $expectedSlot",
-          style: AppTypography.sfProRoundedRegular.copyWith(
-            fontSize: 12.dp,
-            color: AppColors.neutral500,
-          ),
+        // Line 1
+        Container(
+          margin: EdgeInsets.only(left: 20.dp, right: 20.dp),
+          height: 34.dp,
+          width: 1,
+          color: shouldShowAsCompleted('processing')
+              ? AppColors.green
+              : AppColors.lightGrey,
+        ),
+        // Processing Section
+        Row(
+          spacing: 8,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 13.5.dp, right: 13.5.dp),
+              child: CircleAvatar(
+                radius: 6.5,
+                backgroundColor: shouldShowAsCompleted('processing')
+                    ? AppColors.green
+                    : AppColors.lightGrey,
+              ),
+            ),
+            _buildStatusSection(
+              title: "Processing",
+              isCompleted: shouldShowAsCompleted('processing'),
+              isActuallyCompleted: isStatusCompleted('processing'),
+              statusHistory: state.orderDetails.statusHistory,
+              statusKey: 'processing',
+            ),
+          ],
+        ),
+        // Line 2
+        Container(
+          margin: EdgeInsets.only(left: 20.dp, right: 20.dp),
+          height: 34.dp,
+          width: 1,
+          color: shouldShowAsCompleted('readyForDelivery')
+              ? AppColors.green
+              : AppColors.lightGrey,
+        ),
+        // Out For Delivery Section
+        Row(
+          spacing: 8,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 13.5.dp, right: 13.5.dp),
+              child: CircleAvatar(
+                radius: 6.5,
+                backgroundColor: shouldShowAsCompleted('readyForDelivery')
+                    ? AppColors.green
+                    : AppColors.lightGrey,
+              ),
+            ),
+            _buildStatusSection(
+              title: "Out For Delivery",
+              isCompleted: shouldShowAsCompleted('readyForDelivery'),
+              isActuallyCompleted: isStatusCompleted('readyForDelivery'),
+              statusHistory: state.orderDetails.statusHistory,
+              statusKey: 'readyForDelivery',
+            ),
+          ],
+        ),
+        // Line 3
+        Container(
+          margin: EdgeInsets.only(left: 20.dp, right: 20.dp),
+          height: 34.dp,
+          width: 1,
+          color: shouldShowAsCompleted('delivered')
+              ? AppColors.green
+              : AppColors.lightGrey,
+        ),
+        // Delivery Section
+        Row(
+          spacing: 8,
+          children: [
+            shouldShowAsCompleted('delivered')
+                ? Transform.rotate(
+                    angle: 3.14159, // 180 degrees for upside down arrow
+                    child: Image.asset(AppImages.orderStatus,
+                        height: 40.dp, width: 40.dp),
+                  )
+                : Image.asset(AppImages.arrowdown, height: 40.dp, width: 40.dp),
+            _buildStatusSection(
+              title:
+                  shouldShowAsCompleted('delivered') ? "Delivered" : "Delivery",
+              isCompleted: shouldShowAsCompleted('delivered'),
+              isActuallyCompleted: isStatusCompleted('delivered'),
+              statusHistory: state.orderDetails.statusHistory,
+              statusKey: 'delivered',
+              expectedSlot: shouldShowAsCompleted('delivered')
+                  ? null
+                  : _formatDeliverySlot(state.orderDetails.deliverySlot),
+            ),
+          ],
         ),
       ],
-      SizedBox(
-        child: isActuallyCompleted
-            ? Padding(
-                padding: EdgeInsets.only(top: 2.dp),
-                child: Text(
-                  _getCompletionTime(statusKey, statusHistory),
-                  style: AppTypography.sfProRoundedRegular.copyWith(
-                    fontSize: 10.dp,
-                    color: AppColors.green,
-                  ),
-                ),
-              )
-            : const SizedBox.shrink(),
-      ),
-    ],
-  );
-}
-// Helper method to get completion time for a status
-String _getCompletionTime(String statusKey, List<OrderStatus> statusHistory) {
-  try {
-    final status = statusHistory.firstWhere(
-      (s) => s.status == statusKey,
     );
-    return status.changedAt.isNotEmpty ? formatUtcToLocal(status.changedAt) : "";
-  } catch (e) {
-    return "";
   }
-}
+
+  Widget _buildStatusSection({
+    required String title,
+    required bool isCompleted,
+    required bool isActuallyCompleted,
+    required List<OrderStatus> statusHistory,
+    required String statusKey,
+    String? expectedSlot,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppTypography.sfProRoundedSemiBold.copyWith(
+            fontSize: 16.dp,
+            color: AppColors.neutral950,
+          ),
+        ),
+        if (!isCompleted && expectedSlot != null) ...[
+          Gap(4.dp),
+          Text(
+            "Expected: $expectedSlot",
+            style: AppTypography.sfProRoundedRegular.copyWith(
+              fontSize: 12.dp,
+              color: AppColors.neutral500,
+            ),
+          ),
+        ],
+        SizedBox(
+          child: isActuallyCompleted
+              ? Padding(
+                  padding: EdgeInsets.only(top: 2.dp),
+                  child: Text(
+                    _getCompletionTime(statusKey, statusHistory),
+                    style: AppTypography.sfProRoundedRegular.copyWith(
+                      fontSize: 10.dp,
+                      color: AppColors.green,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
+
+// Helper method to get completion time for a status
+  String _getCompletionTime(String statusKey, List<OrderStatus> statusHistory) {
+    try {
+      final status = statusHistory.firstWhere(
+        (s) => s.status == statusKey,
+      );
+      return status.changedAt.isNotEmpty
+          ? formatUtcToLocal(status.changedAt)
+          : "";
+    } catch (e) {
+      return "";
+    }
+  }
+
 // Helper method to format delivery slot
-String? _formatDeliverySlot(TimeSlot? slot) {
-  if (slot == null || slot.from.isEmpty || slot.to.isEmpty) return null;
-  try {
-    // Parse UTC datetime and convert to local
-    final from = DateTime.parse(slot.from).toLocal();
-    final to = DateTime.parse(slot.to).toLocal();
-    final now = DateTime.now();
-    String dayLabel;
-    // Check if it's today
-    if (from.year == now.year &&
-        from.month == now.month &&
-        from.day == now.day) {
-      dayLabel = "Today";
+  String? _formatDeliverySlot(TimeSlot? slot) {
+    if (slot == null || slot.from.isEmpty || slot.to.isEmpty) return null;
+    try {
+      // Parse UTC datetime and convert to local
+      final from = DateTime.parse(slot.from).toLocal();
+      final to = DateTime.parse(slot.to).toLocal();
+      final now = DateTime.now();
+      String dayLabel;
+      // Check if it's today
+      if (from.year == now.year &&
+          from.month == now.month &&
+          from.day == now.day) {
+        dayLabel = "Today";
+      }
+      // Check if it's tomorrow
+      else if (from.year == now.year &&
+          from.month == now.month &&
+          from.day == now.day + 1) {
+        dayLabel = "Tomorrow";
+      }
+      // For other dates, show month and day
+      else {
+        dayLabel = DateFormat('MMM d').format(from);
+      }
+      final timeFormat = DateFormat('h:mm a');
+      return "$dayLabel, ${timeFormat.format(from)} – ${timeFormat.format(to)}";
+    } catch (e) {
+      // Fallback if parsing fails
+      return "${slot.day} – ${slot.from} to ${slot.to}";
     }
-    // Check if it's tomorrow
-    else if (from.year == now.year &&
-        from.month == now.month &&
-        from.day == now.day + 1) {
-      dayLabel = "Tomorrow";
-    }
-    // For other dates, show month and day
-    else {
-      dayLabel = DateFormat('MMM d').format(from);
-    }
-    final timeFormat = DateFormat('h:mm a');
-    return "$dayLabel, ${timeFormat.format(from)} – ${timeFormat.format(to)}";
-  } catch (e) {
-    // Fallback if parsing fails
-    return "${slot.day} – ${slot.from} to ${slot.to}";
   }
-}
+
 // Helper method to format changedAt timestamp for status history
-String formatUtcToLocal(String utcString) {
-  if (utcString.isEmpty) return "";
-  try {
-    // Parse UTC datetime and convert to local
-    DateTime utcDateTime = DateTime.parse(utcString);
-    DateTime localDateTime = utcDateTime.toLocal();
+  String formatUtcToLocal(String utcString) {
+    if (utcString.isEmpty) return "";
+    try {
+      // Parse UTC datetime and convert to local
+      DateTime utcDateTime = DateTime.parse(utcString);
+      DateTime localDateTime = utcDateTime.toLocal();
+      final now = DateTime.now();
+      // Check if it's today
+      if (localDateTime.year == now.year &&
+          localDateTime.month == now.month &&
+          localDateTime.day == now.day) {
+        return "Today, ${DateFormat('h:mm a').format(localDateTime)}";
+      }
+      // Check if it's tomorrow
+      else if (localDateTime.year == now.year &&
+          localDateTime.month == now.month &&
+          localDateTime.day == now.day + 1) {
+        return "Tomorrow, ${DateFormat('h:mm a').format(localDateTime)}";
+      }
+      // For other dates
+      else {
+        return DateFormat("MMM d, h:mm a").format(localDateTime);
+      }
+    } catch (e) {
+      return utcString;
+    }
+  }
+
+  String formatSingleDate(
+    String utcDate,
+    TimeSlot? slot,
+    String status,
+    List<OrderStatus> statusHistory,
+  ) {
+    DateTime? date;
+    DateTime? fromTime;
+    DateTime? toTime;
+
+    if (status.toLowerCase() == "delivered") {
+      // Find the delivered status from history
+      final deliveredStatus = statusHistory.firstWhere(
+        (s) => s.status.toLowerCase() == "delivered",
+        orElse: () => const OrderStatus(),
+      );
+
+      if (deliveredStatus.changedAt.isNotEmpty) {
+        date = DateTime.parse(deliveredStatus.changedAt).toLocal();
+      }
+    } else {
+      // Use deliveryAt date + slot time
+      date = DateTime.parse(utcDate).toLocal();
+
+      if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
+        fromTime = DateTime.parse(slot.from).toLocal();
+        toTime = DateTime.parse(slot.to).toLocal();
+      }
+    }
+
+    if (date == null) return "";
+
     final now = DateTime.now();
-    // Check if it's today
-    if (localDateTime.year == now.year &&
-        localDateTime.month == now.month &&
-        localDateTime.day == now.day) {
-      return "Today, ${DateFormat('h:mm a').format(localDateTime)}";
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
+    final targetDate = DateTime(date.year, date.month, date.day);
+
+    final dateFormat = DateFormat('MMM d, y');
+    final timeFormat = DateFormat('h:mm a');
+
+    if (fromTime != null && toTime != null) {
+      // Case when slot is used (show range)
+      final timeText =
+          "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
+
+      if (targetDate == today) {
+        return "Today, $timeText";
+      } else if (targetDate == tomorrow) {
+        return "Tomorrow, $timeText";
+      } else {
+        return "${dateFormat.format(date)}, $timeText";
+      }
+    } else {
+      // Case when exact datetime is used (delivered)
+      if (targetDate == today) {
+        return "Today, ${timeFormat.format(date)}";
+      } else if (targetDate == tomorrow) {
+        return "Tomorrow, ${timeFormat.format(date)}";
+      } else {
+        return "${dateFormat.format(date)} – ${timeFormat.format(date)}";
+      }
     }
-    // Check if it's tomorrow
-    else if (localDateTime.year == now.year &&
-        localDateTime.month == now.month &&
-        localDateTime.day == now.day + 1) {
-      return "Tomorrow, ${DateFormat('h:mm a').format(localDateTime)}";
-    }
-    // For other dates
-    else {
-      return DateFormat("MMM d, h:mm a").format(localDateTime);
-    }
-  } catch (e) {
-    return utcString;
   }
-}
-
-
-    String formatSingleDate(String utcDate) {
-  final date = DateTime.parse(utcDate).toLocal();
-  final now = DateTime.now();
-
-  final today = DateTime(now.year, now.month, now.day);
-  final tomorrow = today.add(Duration(days: 1));
-  final targetDate = DateTime(date.year, date.month, date.day);
-
-  final timeFormat = DateFormat('h:mm a');
-
-  if (targetDate == today) {
-    return "Today, ${timeFormat.format(date)}";
-  } else if (targetDate == tomorrow) {
-    return "Tomorrow, ${timeFormat.format(date)}";
-  } else {
-    return DateFormat('MMM d, y – h:mm a').format(date);
-  }
-}
-
 
   String formatDeliverySlot(Map<String, dynamic> deliverySlot) {
     final from = DateTime.parse(deliverySlot['from']).toLocal();
@@ -732,5 +700,4 @@ String formatUtcToLocal(String utcString) {
 
     return "$dayLabel, $fromTime – $toTime";
   }
-
 }
