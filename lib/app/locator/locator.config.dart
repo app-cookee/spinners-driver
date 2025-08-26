@@ -19,6 +19,8 @@ import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_da
     as _i766;
 import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart'
     as _i9;
+import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart'
+    as _i277;
 import 'package:spinners_driver/src/domain/respositories/auth_respository.dart'
     as _i701;
 import 'package:spinners_driver/src/domain/respositories/dashboard_data_repository.dart'
@@ -62,6 +64,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1058.AuthRepositoryImplementation(api: gh<_i551.Api>()));
     gh.factory<_i403.AuthBloc>(
         () => _i403.AuthBloc(gh<_i701.AuthRepository>()));
+    gh.factory<_i277.OrderBloc>(
+        () => _i277.OrderBloc(gh<_i168.OrderRepository>()));
     return this;
   }
 }

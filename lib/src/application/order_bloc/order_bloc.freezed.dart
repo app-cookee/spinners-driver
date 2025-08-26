@@ -17,6 +17,10 @@ mixin _$OrderEvent {
   int get limit;
   int get skip;
   String get filter;
+  bool get expressOnly;
+  double? get latitude;
+  double? get longitude;
+  String get searchText;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -32,15 +36,24 @@ mixin _$OrderEvent {
             other is OrderEvent &&
             (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.skip, skip) || other.skip == skip) &&
-            (identical(other.filter, filter) || other.filter == filter));
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.expressOnly, expressOnly) ||
+                other.expressOnly == expressOnly) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, limit, skip, filter);
+  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
+      latitude, longitude, searchText);
 
   @override
   String toString() {
-    return 'OrderEvent(limit: $limit, skip: $skip, filter: $filter)';
+    return 'OrderEvent(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
   }
 }
 
@@ -50,7 +63,14 @@ abstract mixin class $OrderEventCopyWith<$Res> {
           OrderEvent value, $Res Function(OrderEvent) _then) =
       _$OrderEventCopyWithImpl;
   @useResult
-  $Res call({int limit, int skip, String filter});
+  $Res call(
+      {int limit,
+      int skip,
+      String filter,
+      bool expressOnly,
+      double? latitude,
+      double? longitude,
+      String searchText});
 }
 
 /// @nodoc
@@ -68,6 +88,10 @@ class _$OrderEventCopyWithImpl<$Res> implements $OrderEventCopyWith<$Res> {
     Object? limit = null,
     Object? skip = null,
     Object? filter = null,
+    Object? expressOnly = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? searchText = null,
   }) {
     return _then(_self.copyWith(
       limit: null == limit
@@ -81,6 +105,22 @@ class _$OrderEventCopyWithImpl<$Res> implements $OrderEventCopyWith<$Res> {
       filter: null == filter
           ? _self.filter
           : filter // ignore: cast_nullable_to_non_nullable
+              as String,
+      expressOnly: null == expressOnly
+          ? _self.expressOnly
+          : expressOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      latitude: freezed == latitude
+          ? _self.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _self.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      searchText: null == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -179,13 +219,22 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int limit, int skip, String filter)? getOrdersList,
+    TResult Function(int limit, int skip, String filter, bool expressOnly,
+            double? latitude, double? longitude, String searchText)?
+        getOrdersList,
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrdersList() when getOrdersList != null:
-        return getOrdersList(_that.limit, _that.skip, _that.filter);
+        return getOrdersList(
+            _that.limit,
+            _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
       case _:
         return orElse();
     }
@@ -206,12 +255,27 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int limit, int skip, String filter) getOrdersList,
+    required TResult Function(
+            int limit,
+            int skip,
+            String filter,
+            bool expressOnly,
+            double? latitude,
+            double? longitude,
+            String searchText)
+        getOrdersList,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrdersList():
-        return getOrdersList(_that.limit, _that.skip, _that.filter);
+        return getOrdersList(
+            _that.limit,
+            _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -231,12 +295,21 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int limit, int skip, String filter)? getOrdersList,
+    TResult? Function(int limit, int skip, String filter, bool expressOnly,
+            double? latitude, double? longitude, String searchText)?
+        getOrdersList,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrdersList() when getOrdersList != null:
-        return getOrdersList(_that.limit, _that.skip, _that.filter);
+        return getOrdersList(
+            _that.limit,
+            _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
       case _:
         return null;
     }
@@ -247,7 +320,13 @@ extension OrderEventPatterns on OrderEvent {
 
 class _GetOrdersList implements OrderEvent {
   const _GetOrdersList(
-      {required this.limit, required this.skip, required this.filter});
+      {required this.limit,
+      required this.skip,
+      required this.filter,
+      required this.expressOnly,
+      required this.latitude,
+      required this.longitude,
+      required this.searchText});
 
   @override
   final int limit;
@@ -255,6 +334,14 @@ class _GetOrdersList implements OrderEvent {
   final int skip;
   @override
   final String filter;
+  @override
+  final bool expressOnly;
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
+  @override
+  final String searchText;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -271,15 +358,24 @@ class _GetOrdersList implements OrderEvent {
             other is _GetOrdersList &&
             (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.skip, skip) || other.skip == skip) &&
-            (identical(other.filter, filter) || other.filter == filter));
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.expressOnly, expressOnly) ||
+                other.expressOnly == expressOnly) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, limit, skip, filter);
+  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
+      latitude, longitude, searchText);
 
   @override
   String toString() {
-    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter)';
+    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
   }
 }
 
@@ -291,7 +387,14 @@ abstract mixin class _$GetOrdersListCopyWith<$Res>
       __$GetOrdersListCopyWithImpl;
   @override
   @useResult
-  $Res call({int limit, int skip, String filter});
+  $Res call(
+      {int limit,
+      int skip,
+      String filter,
+      bool expressOnly,
+      double? latitude,
+      double? longitude,
+      String searchText});
 }
 
 /// @nodoc
@@ -310,6 +413,10 @@ class __$GetOrdersListCopyWithImpl<$Res>
     Object? limit = null,
     Object? skip = null,
     Object? filter = null,
+    Object? expressOnly = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? searchText = null,
   }) {
     return _then(_GetOrdersList(
       limit: null == limit
@@ -323,6 +430,22 @@ class __$GetOrdersListCopyWithImpl<$Res>
       filter: null == filter
           ? _self.filter
           : filter // ignore: cast_nullable_to_non_nullable
+              as String,
+      expressOnly: null == expressOnly
+          ? _self.expressOnly
+          : expressOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      latitude: freezed == latitude
+          ? _self.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _self.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      searchText: null == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
