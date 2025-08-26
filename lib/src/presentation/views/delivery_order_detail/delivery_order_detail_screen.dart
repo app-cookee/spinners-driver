@@ -566,6 +566,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
     ],
   );
 }
+
 Widget _buildStatusSection({
   required String title,
   required bool isCompleted,
@@ -733,4 +734,30 @@ String formatUtcToLocal(String utcString) {
     return "$dayLabel, $fromTime – $toTime";
   }
 
+}
+class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+
+  StickyHeaderDelegate({required this.child});
+
+  @override
+  double get minExtent => 47.dp; // Fixed height instead of 70.dp
+
+  @override
+  double get maxExtent => 47.dp; // Same as minExtent
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Material(
+      elevation: overlapsContent ? 2.0 : 0.0,
+      child: Container(
+        color: Colors.white,
+        height: maxExtent,
+        child: child,
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
 }
