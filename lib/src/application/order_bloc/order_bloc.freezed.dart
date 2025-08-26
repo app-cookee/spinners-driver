@@ -55,6 +55,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(_AddBag value)? addBag,
     TResult Function(_CreateNewBag value)? createNewBag,
     TResult Function(_GetOrdersList value)? getOrdersList,
+    TResult Function(_GetServicesList value)? getServicesList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -69,6 +70,8 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetOrdersList() when getOrdersList != null:
         return getOrdersList(_that);
+      case _GetServicesList() when getServicesList != null:
+        return getServicesList(_that);
       case _:
         return orElse();
     }
@@ -94,6 +97,7 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(_AddBag value) addBag,
     required TResult Function(_CreateNewBag value) createNewBag,
     required TResult Function(_GetOrdersList value) getOrdersList,
+    required TResult Function(_GetServicesList value) getServicesList,
   }) {
     final _that = this;
     switch (_that) {
@@ -107,6 +111,8 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetOrdersList():
         return getOrdersList(_that);
+      case _GetServicesList():
+        return getServicesList(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -131,6 +137,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(_AddBag value)? addBag,
     TResult? Function(_CreateNewBag value)? createNewBag,
     TResult? Function(_GetOrdersList value)? getOrdersList,
+    TResult? Function(_GetServicesList value)? getServicesList,
   }) {
     final _that = this;
     switch (_that) {
@@ -144,6 +151,8 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetOrdersList() when getOrdersList != null:
         return getOrdersList(_that);
+      case _GetServicesList() when getServicesList != null:
+        return getServicesList(_that);
       case _:
         return null;
     }
@@ -171,6 +180,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(int limit, int skip, String filter, bool expressOnly,
             double? latitude, double? longitude, String searchText)?
         getOrdersList,
+    TResult Function(int limit, int skip)? getServicesList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -192,6 +202,8 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText);
+      case _GetServicesList() when getServicesList != null:
+        return getServicesList(_that.limit, _that.skip);
       case _:
         return orElse();
     }
@@ -226,6 +238,7 @@ extension OrderEventPatterns on OrderEvent {
             double? longitude,
             String searchText)
         getOrdersList,
+    required TResult Function(int limit, int skip) getServicesList,
   }) {
     final _that = this;
     switch (_that) {
@@ -246,6 +259,8 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText);
+      case _GetServicesList():
+        return getServicesList(_that.limit, _that.skip);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -273,6 +288,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(int limit, int skip, String filter, bool expressOnly,
             double? latitude, double? longitude, String searchText)?
         getOrdersList,
+    TResult? Function(int limit, int skip)? getServicesList,
   }) {
     final _that = this;
     switch (_that) {
@@ -293,6 +309,8 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText);
+      case _GetServicesList() when getServicesList != null:
+        return getServicesList(_that.limit, _that.skip);
       case _:
         return null;
     }
@@ -711,6 +729,77 @@ class __$GetOrdersListCopyWithImpl<$Res>
 }
 
 /// @nodoc
+
+class _GetServicesList implements OrderEvent {
+  const _GetServicesList({required this.limit, required this.skip});
+
+  final int limit;
+  final int skip;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$GetServicesListCopyWith<_GetServicesList> get copyWith =>
+      __$GetServicesListCopyWithImpl<_GetServicesList>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _GetServicesList &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.skip, skip) || other.skip == skip));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, limit, skip);
+
+  @override
+  String toString() {
+    return 'OrderEvent.getServicesList(limit: $limit, skip: $skip)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$GetServicesListCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$GetServicesListCopyWith(
+          _GetServicesList value, $Res Function(_GetServicesList) _then) =
+      __$GetServicesListCopyWithImpl;
+  @useResult
+  $Res call({int limit, int skip});
+}
+
+/// @nodoc
+class __$GetServicesListCopyWithImpl<$Res>
+    implements _$GetServicesListCopyWith<$Res> {
+  __$GetServicesListCopyWithImpl(this._self, this._then);
+
+  final _GetServicesList _self;
+  final $Res Function(_GetServicesList) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? limit = null,
+    Object? skip = null,
+  }) {
+    return _then(_GetServicesList(
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$OrderState {
   Status get getOrderListStatus;
   List<OrderResponse> get ordersList;
@@ -723,6 +812,8 @@ mixin _$OrderState {
   Status get confirmPickupStatus;
   Status get addBagStatus;
   Status get createNewBagStatus;
+  Status get getServicesListStatus;
+  List<ServiceListDatamodel> get servicesList;
 
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -756,7 +847,11 @@ mixin _$OrderState {
             (identical(other.addBagStatus, addBagStatus) ||
                 other.addBagStatus == addBagStatus) &&
             (identical(other.createNewBagStatus, createNewBagStatus) ||
-                other.createNewBagStatus == createNewBagStatus));
+                other.createNewBagStatus == createNewBagStatus) &&
+            (identical(other.getServicesListStatus, getServicesListStatus) ||
+                other.getServicesListStatus == getServicesListStatus) &&
+            const DeepCollectionEquality()
+                .equals(other.servicesList, servicesList));
   }
 
   @override
@@ -772,11 +867,13 @@ mixin _$OrderState {
       orderDetails,
       confirmPickupStatus,
       addBagStatus,
-      createNewBagStatus);
+      createNewBagStatus,
+      getServicesListStatus,
+      const DeepCollectionEquality().hash(servicesList));
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, servicesList: $servicesList)';
   }
 }
 
@@ -797,7 +894,9 @@ abstract mixin class $OrderStateCopyWith<$Res> {
       OrderDetailsResponseModel orderDetails,
       Status confirmPickupStatus,
       Status addBagStatus,
-      Status createNewBagStatus});
+      Status createNewBagStatus,
+      Status getServicesListStatus,
+      List<ServiceListDatamodel> servicesList});
 
   $StatusCopyWith<$Res> get getOrderListStatus;
   $StatusCopyWith<$Res> get paginationStatus;
@@ -806,6 +905,7 @@ abstract mixin class $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get confirmPickupStatus;
   $StatusCopyWith<$Res> get addBagStatus;
   $StatusCopyWith<$Res> get createNewBagStatus;
+  $StatusCopyWith<$Res> get getServicesListStatus;
 }
 
 /// @nodoc
@@ -831,6 +931,8 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
     Object? confirmPickupStatus = null,
     Object? addBagStatus = null,
     Object? createNewBagStatus = null,
+    Object? getServicesListStatus = null,
+    Object? servicesList = null,
   }) {
     return _then(_self.copyWith(
       getOrderListStatus: null == getOrderListStatus
@@ -877,6 +979,14 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
           ? _self.createNewBagStatus
           : createNewBagStatus // ignore: cast_nullable_to_non_nullable
               as Status,
+      getServicesListStatus: null == getServicesListStatus
+          ? _self.getServicesListStatus
+          : getServicesListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      servicesList: null == servicesList
+          ? _self.servicesList
+          : servicesList // ignore: cast_nullable_to_non_nullable
+              as List<ServiceListDatamodel>,
     ));
   }
 
@@ -948,6 +1058,16 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get createNewBagStatus {
     return $StatusCopyWith<$Res>(_self.createNewBagStatus, (value) {
       return _then(_self.copyWith(createNewBagStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get getServicesListStatus {
+    return $StatusCopyWith<$Res>(_self.getServicesListStatus, (value) {
+      return _then(_self.copyWith(getServicesListStatus: value));
     });
   }
 }
@@ -1056,7 +1176,9 @@ extension OrderStatePatterns on OrderState {
             OrderDetailsResponseModel orderDetails,
             Status confirmPickupStatus,
             Status addBagStatus,
-            Status createNewBagStatus)?
+            Status createNewBagStatus,
+            Status getServicesListStatus,
+            List<ServiceListDatamodel> servicesList)?
         $default, {
     required TResult orElse(),
   }) {
@@ -1074,7 +1196,9 @@ extension OrderStatePatterns on OrderState {
             _that.orderDetails,
             _that.confirmPickupStatus,
             _that.addBagStatus,
-            _that.createNewBagStatus);
+            _that.createNewBagStatus,
+            _that.getServicesListStatus,
+            _that.servicesList);
       case _:
         return orElse();
     }
@@ -1106,7 +1230,9 @@ extension OrderStatePatterns on OrderState {
             OrderDetailsResponseModel orderDetails,
             Status confirmPickupStatus,
             Status addBagStatus,
-            Status createNewBagStatus)
+            Status createNewBagStatus,
+            Status getServicesListStatus,
+            List<ServiceListDatamodel> servicesList)
         $default,
   ) {
     final _that = this;
@@ -1123,7 +1249,9 @@ extension OrderStatePatterns on OrderState {
             _that.orderDetails,
             _that.confirmPickupStatus,
             _that.addBagStatus,
-            _that.createNewBagStatus);
+            _that.createNewBagStatus,
+            _that.getServicesListStatus,
+            _that.servicesList);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -1154,7 +1282,9 @@ extension OrderStatePatterns on OrderState {
             OrderDetailsResponseModel orderDetails,
             Status confirmPickupStatus,
             Status addBagStatus,
-            Status createNewBagStatus)?
+            Status createNewBagStatus,
+            Status getServicesListStatus,
+            List<ServiceListDatamodel> servicesList)?
         $default,
   ) {
     final _that = this;
@@ -1171,7 +1301,9 @@ extension OrderStatePatterns on OrderState {
             _that.orderDetails,
             _that.confirmPickupStatus,
             _that.addBagStatus,
-            _that.createNewBagStatus);
+            _that.createNewBagStatus,
+            _that.getServicesListStatus,
+            _that.servicesList);
       case _:
         return null;
     }
@@ -1192,8 +1324,11 @@ class _OrderState implements OrderState {
       required this.orderDetails,
       required this.confirmPickupStatus,
       required this.addBagStatus,
-      required this.createNewBagStatus})
-      : _ordersList = ordersList;
+      required this.createNewBagStatus,
+      required this.getServicesListStatus,
+      required final List<ServiceListDatamodel> servicesList})
+      : _ordersList = ordersList,
+        _servicesList = servicesList;
 
   @override
   final Status getOrderListStatus;
@@ -1223,6 +1358,15 @@ class _OrderState implements OrderState {
   final Status addBagStatus;
   @override
   final Status createNewBagStatus;
+  @override
+  final Status getServicesListStatus;
+  final List<ServiceListDatamodel> _servicesList;
+  @override
+  List<ServiceListDatamodel> get servicesList {
+    if (_servicesList is EqualUnmodifiableListView) return _servicesList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_servicesList);
+  }
 
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -1257,7 +1401,11 @@ class _OrderState implements OrderState {
             (identical(other.addBagStatus, addBagStatus) ||
                 other.addBagStatus == addBagStatus) &&
             (identical(other.createNewBagStatus, createNewBagStatus) ||
-                other.createNewBagStatus == createNewBagStatus));
+                other.createNewBagStatus == createNewBagStatus) &&
+            (identical(other.getServicesListStatus, getServicesListStatus) ||
+                other.getServicesListStatus == getServicesListStatus) &&
+            const DeepCollectionEquality()
+                .equals(other._servicesList, _servicesList));
   }
 
   @override
@@ -1273,11 +1421,13 @@ class _OrderState implements OrderState {
       orderDetails,
       confirmPickupStatus,
       addBagStatus,
-      createNewBagStatus);
+      createNewBagStatus,
+      getServicesListStatus,
+      const DeepCollectionEquality().hash(_servicesList));
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, servicesList: $servicesList)';
   }
 }
 
@@ -1300,7 +1450,9 @@ abstract mixin class _$OrderStateCopyWith<$Res>
       OrderDetailsResponseModel orderDetails,
       Status confirmPickupStatus,
       Status addBagStatus,
-      Status createNewBagStatus});
+      Status createNewBagStatus,
+      Status getServicesListStatus,
+      List<ServiceListDatamodel> servicesList});
 
   @override
   $StatusCopyWith<$Res> get getOrderListStatus;
@@ -1316,6 +1468,8 @@ abstract mixin class _$OrderStateCopyWith<$Res>
   $StatusCopyWith<$Res> get addBagStatus;
   @override
   $StatusCopyWith<$Res> get createNewBagStatus;
+  @override
+  $StatusCopyWith<$Res> get getServicesListStatus;
 }
 
 /// @nodoc
@@ -1341,6 +1495,8 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
     Object? confirmPickupStatus = null,
     Object? addBagStatus = null,
     Object? createNewBagStatus = null,
+    Object? getServicesListStatus = null,
+    Object? servicesList = null,
   }) {
     return _then(_OrderState(
       getOrderListStatus: null == getOrderListStatus
@@ -1387,6 +1543,14 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
           ? _self.createNewBagStatus
           : createNewBagStatus // ignore: cast_nullable_to_non_nullable
               as Status,
+      getServicesListStatus: null == getServicesListStatus
+          ? _self.getServicesListStatus
+          : getServicesListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      servicesList: null == servicesList
+          ? _self._servicesList
+          : servicesList // ignore: cast_nullable_to_non_nullable
+              as List<ServiceListDatamodel>,
     ));
   }
 
@@ -1458,6 +1622,16 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get createNewBagStatus {
     return $StatusCopyWith<$Res>(_self.createNewBagStatus, (value) {
       return _then(_self.copyWith(createNewBagStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get getServicesListStatus {
+    return $StatusCopyWith<$Res>(_self.getServicesListStatus, (value) {
+      return _then(_self.copyWith(getServicesListStatus: value));
     });
   }
 }

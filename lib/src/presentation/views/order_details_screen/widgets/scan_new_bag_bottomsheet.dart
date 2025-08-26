@@ -45,7 +45,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   @override
   void initState() {
     super.initState();
-    
+     context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
     // Auto-fill bag ID if provided
     if (widget.bagId != null) {
       bagIdController.text = widget.bagId!;
@@ -121,7 +121,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
             controller: bagIdController,
             hintText: 'Enter Bag ID',
             textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
-            // readOnly: widget.bagId != null, // Make read-only if scanned from QR
+            readOnly: widget.bagId != null,
           ),
         ],
       ),
@@ -131,7 +131,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   Widget _serviceDropdown() {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        final services = state.orderDetails.orderedItems.map((item) => item.service).toList();
+        final services = state.servicesList;
 
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.dp),

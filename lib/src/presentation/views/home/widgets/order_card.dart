@@ -17,7 +17,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderCard extends StatelessWidget {
   final String orderId;
-  
+    final String orderRefId;
   final String time;
   final String status;
   final bool isDropoff;
@@ -29,7 +29,7 @@ class OrderCard extends StatelessWidget {
   const OrderCard({
     super.key,
     required this.orderId,
-  
+    required this.orderRefId,
     required this.time,
     required this.status,
     required this.isDropoff,
@@ -129,7 +129,7 @@ class OrderCard extends StatelessWidget {
         children: [
           Text("Order ID", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.countrycodeColor)),
           Gap(6.dp),
-          Text(orderId, style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
+          Text(orderRefId, style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
           const Spacer(),
           if(isExpressService)...[  
             _expressLabel(),],

@@ -6,6 +6,7 @@ import 'package:spinners_driver/app/extensions/map_extension.dart';
 import 'package:spinners_driver/app/services/api_services/api_service.dart';
 import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
+import 'package:spinners_driver/src/domain/models/service_list_datamodel/service_list_datamodel.dart';
 import 'package:spinners_driver/src/domain/respositories/order_repository.dart';
 
 @LazySingleton(as: OrderRepository)
@@ -15,23 +16,17 @@ class OrderRepositoryImplementation implements OrderRepository {
   OrderRepositoryImplementation({required this.api});
 
   @override
-  Future<OrderModel> getOrdersList(int limit, int skip, String filter,bool expressOnly,double? latitude,double? longitude) async{
+  Future<OrderModel> getOrdersList(int limit, int skip, String filter, bool expressOnly, double? latitude, double? longitude) async {
+    try {
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "status": filter, "expressOnly": expressOnly, "latitude": latitude, "longitude": longitude}.clean();
 
-    try{
-final Map<String, dynamic> params =
-          {"limit": limit, "skip": skip, "status": filter,"expressOnly":expressOnly,"latitude":latitude,"longitude":longitude}.clean();
-
-      log(params.toString(),name: "params");
-      var response = await api.profile
-          .get(ApiEndpoints().ordersList, queryParameters: params);
-     OrderModel orders = OrderModel.fromJson(response.data);
-         return orders;
+      log(params.toString(), name: "params");
+      var response = await api.profile.get(ApiEndpoints().ordersList, queryParameters: params);
+      OrderModel orders = OrderModel.fromJson(response.data);
+      return orders;
+    } catch (e) {
+      rethrow;
     }
-    catch(e){
-       rethrow;
-
-    }
-   
   }
 
   @override
@@ -63,7 +58,7 @@ final Map<String, dynamic> params =
       rethrow;
     }
   }
-  
+
   @override
   Future<void> addBag(String orderItemId, String bagId) async {
     try {
@@ -91,6 +86,25 @@ final Map<String, dynamic> params =
 
       var response = await api.profile.post(ApiEndpoints().createNewBag, data: data);
       return response.data['id'] as String;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ServiceListDatamodel>> getServices(int limit, int skip) async {
+    try {
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip}.clean();
+
+      var response = await api.profile.get(ApiEndpoints().serviceList, queryParameters: params);
+      List<ServiceListDatamodel> services = [];
+      if (response.data['data'] != null) {
+        services = (response.data['data'])
+            .map((item) => ServiceListDatamodel.fromJson(item))
+            .toList();
+      }
+      log(services.toString(), name: "services");
+      return services;
     } catch (e) {
       rethrow;
     }

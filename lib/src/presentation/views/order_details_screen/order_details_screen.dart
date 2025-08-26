@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,12 +45,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   void initState() {
-    context.read<OrderBloc>().add(const OrderEvent.getOrderDetails(orderId: /*'900dbeab-0ced-4974-834f-13db0f10a1ef'- quick ordr*/ '3ea0f455-1b80-48af-b6bd-41a84bc10311'));
-    // context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: '900dbeab-0ced-4974-834f-13db0f10a1ef'));
+    // context.read<OrderBloc>().add(const OrderEvent.getOrderDetails(orderId: /*'900dbeab-0ced-4974-834f-13db0f10a1ef'- quick ordr*/ '3ea0f455-1b80-48af-b6bd-41a84bc10311'));
+    context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId));
+    log('Fetching order details for order ID: ${widget.orderId}');
     allItemsScanned = ValueNotifier<bool>(false);
 
     // Listen to scanned items changes to update completion status
     scannedItems.addListener(_updateCompletionStatus);
+
+   
     super.initState();
   }
 

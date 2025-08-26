@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
+import 'package:spinners_driver/src/domain/models/service_list_datamodel/service_list_datamodel.dart';
 import 'package:spinners_driver/src/domain/respositories/order_repository.dart';
 
 part 'order_event.dart';
@@ -23,17 +24,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_ConfirmPickup>(_onConfirmPickup);
     on<_AddBag>(_onAddBag);
     on<_CreateNewBag>(_onCreateNewBag);
+    on<_GetServicesList>(_onGetServicesList);
   }
-  // FutureOr<void> _onGetOrdersList(_GetOrdersList event, Emitter<OrderState> emit) async {
-  //   try {} catch (e) {
-  //     emit(state.copyWith(
-  //       getOrderListStatus: Status.failure(
-  //         e.toString(),
-  //       ),
-  //     ));
-  //   }
-  // }
-
+  
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
     try {
       emit(state.copyWith(
@@ -115,4 +108,23 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
   }
 
+
+  FutureOr<void> _onGetServicesList(_GetServicesList event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        getServicesListStatus: Status.loading(),
+      ));
+      var response = await orderRepository.getServices(event.limit, event.skip);
+      emit(state.copyWith(
+        getServicesListStatus: Status.success(),
+        servicesList: response,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        getServicesListStatus: Status.failure(
+          e.toString(),
+        ),
+      ));
+    }
+  }
 }
