@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
@@ -10,11 +9,12 @@ import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
-import 'package:spinners_driver/src/presentation/views/home/widgets/scan_new_bag_bottomsheet.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/additional_notes.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_detail_info.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_info_card.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/ordered_services.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/quick_order_bags.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
@@ -35,12 +35,16 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final TextEditingController additionalNotesController = TextEditingController();
-// Track scanned items and completion status
+  // Track scanned items and completion status for normal orders
   final ValueNotifier<Set<int>> scannedItems = ValueNotifier<Set<int>>({});
+  // Track scanned QR codes to prevent duplicates
+  final ValueNotifier<Set<String>> scannedQRCodes = ValueNotifier<Set<String>>({});
   late ValueNotifier<bool> allItemsScanned;
+
   @override
   void initState() {
-    context.read<OrderBloc>().add(const OrderEvent.getOrderDetails(orderId: /*'900dbeab-0ced-4974-834f-13db0f10a1ef'- quick ordr*/'3ea0f455-1b80-48af-b6bd-41a84bc10311'));
+    context.read<OrderBloc>().add(const OrderEvent.getOrderDetails(orderId: /*'900dbeab-0ced-4974-834f-13db0f10a1ef'- quick ordr*/ '3ea0f455-1b80-48af-b6bd-41a84bc10311'));
+    // context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: '900dbeab-0ced-4974-834f-13db0f10a1ef'));
     allItemsScanned = ValueNotifier<bool>(false);
 
     // Listen to scanned items changes to update completion status
@@ -50,9 +54,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   void _updateCompletionStatus() {
     final state = context.read<OrderBloc>().state;
-    final totalItems = state.orderDetails.orderedItems.length;
-    final scannedCount = scannedItems.value.length;
-    allItemsScanned.value = scannedCount == totalItems && totalItems > 0;
+    final orderType = state.orderDetails.type;
+
+    if (orderType == "normalOrder") {
+      // For normal orders, check if all items have their required quantity of bags scanned
+      bool allComplete = true;
+      for (final item in state.orderDetails.orderedItems) {
+        if (item.scannedBags.length < item.quantity) {
+          allComplete = false;
+          break;
+        }
+      }
+      allItemsScanned.value = allComplete && state.orderDetails.orderedItems.isNotEmpty;
+    } else {
+      // For quick orders, check if at least one bag has been scanned
+      final totalScannedBags = state.orderDetails.orderedItems.fold<int>(0, (sum, item) => sum + item.scannedBags.length);
+      allItemsScanned.value = totalScannedBags > 0;
+    }
   }
 
   @override
@@ -60,6 +78,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     additionalNotesController.dispose();
     scannedItems.removeListener(_updateCompletionStatus);
     scannedItems.dispose();
+    scannedQRCodes.dispose();
     allItemsScanned.dispose();
     super.dispose();
   }
@@ -92,7 +111,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       _orderInfo(state),
                       OrderDetailnfo(
                         notes: state.orderDetails.driverNotes,
-                        customer: "${state.orderDetails.customer.user!.firstName} ${state.orderDetails.customer.user!.lastName}",
+                        customer: _getCustomerName(state.orderDetails.customer),
                         amount: state.orderDetails.totalAmount,
                         title: "Pickup",
                         timeSlot: _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
@@ -127,48 +146,41 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       ? OrderedServices(
                                           selectedIndex: selectedIndex,
                                           scannedItems: scannedItems,
+                                          orderId: widget.orderId,
+                                          scannedQRCodes: scannedQRCodes,
                                         )
                                       : const SizedBox.shrink(),
                                   state.orderDetails.type != "normalOrder"
-                                      ? InkWell(
-                                          onTap: () {
-                                            Navigator.push(context, (MaterialPageRoute(builder: (context) => const QRScannerScreen())));
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                            child: SecondaryButtonWidget(
-                                              height: 48.dp,
-                                              bordercolor: AppColors.scanblue,
-                                              backgroundColor: AppColors.white,
-                                              textColor: AppColors.primaryColor,
-                                              style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                                fontSize: 14.sp,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                              onPressed: () async {
-                                                //  Navigator.push(context, (MaterialPageRoute(builder: (context) => const QRScannerScreen())));
-                                                final result = await Navigator.push<String>(
-                                                  context,
-                                                  MaterialPageRoute(builder: (context) => const QRScannerScreen()),
-                                                );
-
-                                                // Check if QR was successfully scanned
-                                                if (result != null && result.isNotEmpty) {
-                                                  // Update the shared scanned items set
-                                                  final newScannedSet = Set<int>.from(scannedItems.value);
-                                                  // ignore: use_build_context_synchronously
-                                                  CustomBottomSheetWidget(context: context, child: const ScanNewBagBottomsheet()).show();
-                                                }
-                                              },
-                                              text: "Scan New Bag",
-                                              leadingIcon: Image.asset(
-                                                height: 24.dp,
-                                                width: 24.dp,
-                                                AppImages.scanner,
-                                                //  color: Colors.blue,
+                                      ? Column(
+                                          children: [
+                                            QuickOrderBags(
+                                              orderId: widget.orderId,
+                                              scannedBags: scannedQRCodes,
+                                            ),
+                                            Gap(8.dp),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                                              child: SecondaryButtonWidget(
+                                                height: 48.dp,
+                                                bordercolor: AppColors.scanblue,
+                                                backgroundColor: AppColors.white,
+                                                textColor: AppColors.primaryColor,
+                                                style: AppTypography.sfProRoundedSemiBold.copyWith(
+                                                  fontSize: 14.sp,
+                                                  color: AppColors.primaryColor,
+                                                ),
+                                                onPressed: () async {
+                                                  await _handleQuickOrderScan(context);
+                                                },
+                                                text: "Scan New Bag",
+                                                leadingIcon: Image.asset(
+                                                  height: 24.dp,
+                                                  width: 24.dp,
+                                                  AppImages.scanner,
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         )
                                       : const SizedBox.shrink(),
                                   Gap(8.dp),
@@ -258,16 +270,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             builder: (context, isAllScanned, child) {
               return PrimaryButtonWidget(
                 onPressed: () {
-                  isAllScanned
-                      ? context.read<OrderBloc>().add(OrderEvent.confirmPickup(
-                            orderId: /*widget.orderId*/ '3ea0f455-1b80-48af-b6bd-41a84bc10311',
-                            driverNotes: additionalNotesController.text,
-                          ))
-                      : TheToast.show(
-                          isError: true,
-                          message: "Please scan all items first",
-                          context: context,
-                        );
+                  final orderType = context.read<OrderBloc>().state.orderDetails.type;
+
+                  if (isAllScanned) {
+                    context.read<OrderBloc>().add(OrderEvent.confirmPickup(
+                          orderId: widget.orderId,
+                          driverNotes: additionalNotesController.text,
+                        ));
+                  } else {
+                    final message = orderType == "normalOrder" ? "Please scan all required bags for each service" : "Please scan at least one bag";
+                    TheToast.show(
+                      isError: true,
+                      message: message,
+                      context: context,
+                    );
+                  }
+
                   if (isConfirmPickup) {
                     context.router.pop();
                   }
@@ -319,21 +337,31 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   String formatSingleDate(String utcDate) {
-    final date = DateTime.parse(utcDate).toLocal();
-    final now = DateTime.now();
+    try {
+      // Handle empty or null date strings
+      if (utcDate.isEmpty) {
+        return "Not specified";
+      }
 
-    final today = DateTime(now.year, now.month, now.day);
-    final tomorrow = today.add(const Duration(days: 1));
-    final targetDate = DateTime(date.year, date.month, date.day);
+      final date = DateTime.parse(utcDate).toLocal();
+      final now = DateTime.now();
 
-    final timeFormat = DateFormat('h:mm a');
+      final today = DateTime(now.year, now.month, now.day);
+      final tomorrow = today.add(const Duration(days: 1));
+      final targetDate = DateTime(date.year, date.month, date.day);
 
-    if (targetDate == today) {
-      return "Today, ${timeFormat.format(date)}";
-    } else if (targetDate == tomorrow) {
-      return "Tomorrow, ${timeFormat.format(date)}";
-    } else {
-      return DateFormat('MMM d, y – h:mm a').format(date);
+      final timeFormat = DateFormat('h:mm a');
+
+      if (targetDate == today) {
+        return "Today, ${timeFormat.format(date)}";
+      } else if (targetDate == tomorrow) {
+        return "Tomorrow, ${timeFormat.format(date)}";
+      } else {
+        return DateFormat('MMM d, y – h:mm a').format(date);
+      }
+    } catch (e) {
+      // Return a fallback value if date parsing fails
+      return "Invalid date format";
     }
   }
 
@@ -372,5 +400,51 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         .where((line) => line.trim().isNotEmpty) // Remove empty lines
         .map((line) => line.trim()) // Trim whitespace from each line
         .join(', '); // Join with commas
+  }
+
+  String _getCustomerName(Customer customer) {
+    if (customer.user != null) {
+      final firstName = customer.user!.firstName.isNotEmpty ? customer.user!.firstName : '';
+      final lastName = customer.user!.lastName.isNotEmpty ? customer.user!.lastName : '';
+      if (firstName.isNotEmpty || lastName.isNotEmpty) {
+        return "$firstName $lastName".trim();
+      }
+    }
+    return "Customer";
+  }
+
+  // Add this method to the _OrderDetailScreenState class:
+  Future<void> _handleQuickOrderScan(BuildContext context) async {
+    final result = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const QRScannerScreen()),
+    );
+
+    if (result != null && result.isNotEmpty) {
+      // Check if this QR has already been scanned
+      if (scannedQRCodes.value.contains(result)) {
+        TheToast.show(
+          isError: true,
+          message: "This QR code has already been scanned",
+          context: context,
+        );
+        return;
+      }
+
+      // Add to scanned QR codes set
+      final newScannedQRCodes = Set<String>.from(scannedQRCodes.value);
+      newScannedQRCodes.add(result);
+      scannedQRCodes.value = newScannedQRCodes;
+
+      // Show bottomsheet with scanned data
+      CustomBottomSheetWidget(
+        context: context,
+        child: ScanNewBagBottomsheet(
+          bagId: result,
+          orderId: widget.orderId,
+          isQuickOrder: true,
+        ),
+      ).show();
+    }
   }
 }

@@ -9,10 +9,12 @@ class CustomDropDownMenuItem {
   final String value;
   final String label;
   final String? useImg;
+  final Color?imageColor;
   CustomDropDownMenuItem({
     required this.value,
     required this.label,
     this.useImg,
+    this.imageColor
   });
 }
 
@@ -135,6 +137,7 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
                                           item.useImg!,
                                           height: 20.dp,
                                           width: 20.dp,
+                                          color: item.imageColor,
                                         )
                                       : const SizedBox.shrink(),
                                   onTap: () {
@@ -222,6 +225,7 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
                                     dropValue.value!.useImg!,
                                     height: 20.dp,
                                     width: 20.dp,
+                                    color: dropValue.value?.imageColor,
                                   ),
                                 ),
                               Text(

@@ -6,4 +6,5 @@ abstract class OrderEvent with _$OrderEvent {
   const factory OrderEvent.getOrderDetails({required String orderId}) = _GetOrderDetails;
   const factory OrderEvent.confirmPickup({required String orderId, required String driverNotes}) = _ConfirmPickup;
   const factory OrderEvent.addBag({required String orderItemId, required String bagId}) = _AddBag;
+  const factory OrderEvent.createNewBag({required String bagId, required String orderId, required String serviceId}) = _CreateNewBag;
 }

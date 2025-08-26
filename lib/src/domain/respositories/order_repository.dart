@@ -6,6 +6,5 @@ abstract class OrderRepository {
   Future<OrderDetailsResponseModel> getOrdersDetail(String orderId);
   Future<void> pickupOrder(String orderId, String driverNotes);
   Future<void> addBag(String orderItemId, String bagId);
-  // Future<void> createNewBag(String orderId);
-
+  Future<String> createNewBag(String bagId, String orderId, String serviceId);
 }

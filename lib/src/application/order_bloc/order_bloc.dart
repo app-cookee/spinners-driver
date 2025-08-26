@@ -22,6 +22,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_GetOrderDetails>(_onGetOrderDetails);
     on<_ConfirmPickup>(_onConfirmPickup);
     on<_AddBag>(_onAddBag);
+    on<_CreateNewBag>(_onCreateNewBag);
   }
   FutureOr<void> _onGetOrdersList(_GetOrdersList event, Emitter<OrderState> emit) async {
     try {} catch (e) {
@@ -73,6 +74,22 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     } catch (e) {
       emit(state.copyWith(
         addBagStatus: Status.failure(e.toString()),
+      ));
+    }
+  }
+
+  FutureOr<void> _onCreateNewBag(_CreateNewBag event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        createNewBagStatus: Status.loading(),
+      ));
+      await orderRepository.createNewBag(event.bagId, event.orderId, event.serviceId);
+      emit(state.copyWith(
+        createNewBagStatus: Status.success(),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        createNewBagStatus: Status.failure(e.toString()),
       ));
     }
   }
