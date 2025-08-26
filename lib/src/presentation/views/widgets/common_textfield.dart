@@ -20,6 +20,7 @@ class CommonTextField extends StatelessWidget {
   final double? borderRadius;
   final TextStyle? hintStyle;
   final TextStyle? textStyle;
+  final String? initialValue;
 
   const CommonTextField({
     super.key,
@@ -38,12 +39,12 @@ class CommonTextField extends StatelessWidget {
     this.borderColor,
     this.borderRadius,
     this.hintStyle,
-    this.textStyle,
+    this.textStyle, this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(constraints: BoxConstraints(maxHeight:36.dp ),
+    return Container(constraints: BoxConstraints(maxHeight:48.dp ),
       decoration: BoxDecoration(
         color: const Color(0xffD7E5EB),
         borderRadius: BorderRadius.circular(borderRadius??8.dp),
@@ -62,6 +63,7 @@ class CommonTextField extends StatelessWidget {
             ],
           ),
           child: TextFormField(
+            initialValue: initialValue,
             controller: controller,
             onChanged: onChanged,
             onFieldSubmitted: onSubmitted,

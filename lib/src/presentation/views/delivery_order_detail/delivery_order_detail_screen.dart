@@ -10,6 +10,7 @@ import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/placeholder/order_detail_shimmer.dart';
+import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/delivery_confirm_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/info_card.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/delivery_order_invoice_detail.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/order_details_screen.dart';
@@ -284,14 +285,17 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                   left: 0,
                   right: 0,
                   child: dState.orderDetails.id.isEmpty
-                        ? const SizedBox.shrink()
-                        : _footerButton(
-                      totalItemsCount: dState.orderDetails.orderedItems.length,
-                      totalAmount: ((double.tryParse(
-                                  dState.orderDetails.totalAmount) ??
-                              0) -
-                          (double.tryParse(dState.orderDetails.paidAmount) ??
-                              0)))),
+                      ? const SizedBox.shrink()
+                      : _footerButton(
+                        orderId: dState.orderDetails.id,
+                          totalItemsCount:
+                              dState.orderDetails.orderedItems.length,
+                          totalAmount: ((double.tryParse(
+                                      dState.orderDetails.totalAmount) ??
+                                  0) -
+                              (double.tryParse(
+                                      dState.orderDetails.paidAmount) ??
+                                  0)))),
             ],
           );
         },
@@ -326,7 +330,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
   }
 
   Widget _footerButton(
-      {required int totalItemsCount, required double totalAmount}) {
+      {required int totalItemsCount, required double totalAmount,required String orderId}) {
     return Container(
       padding:
           EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 24.dp),
@@ -362,8 +366,29 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
       ),
       child: Column(
         children: [
+          if(totalAmount>0)
           PrimaryButtonWidget(
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(24.dp)),
+                  ),
+                  builder: (context) => Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context)
+                          .viewInsets
+                          .bottom,
+                    ),
+                    child: DeliveryConfirmBottomsheet(
+                      orderId: orderId,
+                      totalCollected: totalAmount,
+                    ),
+                  ),
+                );
+              },
               text: "Receive Amount",
               leadingIcon: Row(
                 children: [

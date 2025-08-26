@@ -14,64 +14,24 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$DeliveryEvent {
-  String get orderId;
-
-  /// Create a copy of DeliveryEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $DeliveryEventCopyWith<DeliveryEvent> get copyWith =>
-      _$DeliveryEventCopyWithImpl<DeliveryEvent>(
-          this as DeliveryEvent, _$identity);
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is DeliveryEvent &&
-            (identical(other.orderId, orderId) || other.orderId == orderId));
+        (other.runtimeType == runtimeType && other is DeliveryEvent);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, orderId);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
-    return 'DeliveryEvent(orderId: $orderId)';
+    return 'DeliveryEvent()';
   }
 }
 
 /// @nodoc
-abstract mixin class $DeliveryEventCopyWith<$Res> {
-  factory $DeliveryEventCopyWith(
-          DeliveryEvent value, $Res Function(DeliveryEvent) _then) =
-      _$DeliveryEventCopyWithImpl;
-  @useResult
-  $Res call({String orderId});
-}
-
-/// @nodoc
-class _$DeliveryEventCopyWithImpl<$Res>
-    implements $DeliveryEventCopyWith<$Res> {
-  _$DeliveryEventCopyWithImpl(this._self, this._then);
-
-  final DeliveryEvent _self;
-  final $Res Function(DeliveryEvent) _then;
-
-  /// Create a copy of DeliveryEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? orderId = null,
-  }) {
-    return _then(_self.copyWith(
-      orderId: null == orderId
-          ? _self.orderId
-          : orderId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+class $DeliveryEventCopyWith<$Res> {
+  $DeliveryEventCopyWith(DeliveryEvent _, $Res Function(DeliveryEvent) __);
 }
 
 /// Adds pattern-matching-related methods to [DeliveryEvent].
@@ -91,12 +51,15 @@ extension DeliveryEventPatterns on DeliveryEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_GetOrderDetails value)? getOrderDetails,
+    TResult Function(_ConfirmDelivery value)? confirmDelivery,
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that);
+      case _ConfirmDelivery() when confirmDelivery != null:
+        return confirmDelivery(_that);
       case _:
         return orElse();
     }
@@ -118,11 +81,14 @@ extension DeliveryEventPatterns on DeliveryEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetOrderDetails value) getOrderDetails,
+    required TResult Function(_ConfirmDelivery value) confirmDelivery,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrderDetails():
         return getOrderDetails(_that);
+      case _ConfirmDelivery():
+        return confirmDelivery(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -143,11 +109,14 @@ extension DeliveryEventPatterns on DeliveryEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_GetOrderDetails value)? getOrderDetails,
+    TResult? Function(_ConfirmDelivery value)? confirmDelivery,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that);
+      case _ConfirmDelivery() when confirmDelivery != null:
+        return confirmDelivery(_that);
       case _:
         return null;
     }
@@ -168,12 +137,17 @@ extension DeliveryEventPatterns on DeliveryEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String orderId)? getOrderDetails,
+    TResult Function(String id, String paymentMethod, double receivedAmount)?
+        confirmDelivery,
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that.orderId);
+      case _ConfirmDelivery() when confirmDelivery != null:
+        return confirmDelivery(
+            _that.id, _that.paymentMethod, _that.receivedAmount);
       case _:
         return orElse();
     }
@@ -195,11 +169,17 @@ extension DeliveryEventPatterns on DeliveryEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String orderId) getOrderDetails,
+    required TResult Function(
+            String id, String paymentMethod, double receivedAmount)
+        confirmDelivery,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrderDetails():
         return getOrderDetails(_that.orderId);
+      case _ConfirmDelivery():
+        return confirmDelivery(
+            _that.id, _that.paymentMethod, _that.receivedAmount);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -220,11 +200,16 @@ extension DeliveryEventPatterns on DeliveryEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String orderId)? getOrderDetails,
+    TResult? Function(String id, String paymentMethod, double receivedAmount)?
+        confirmDelivery,
   }) {
     final _that = this;
     switch (_that) {
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that.orderId);
+      case _ConfirmDelivery() when confirmDelivery != null:
+        return confirmDelivery(
+            _that.id, _that.paymentMethod, _that.receivedAmount);
       case _:
         return null;
     }
@@ -236,12 +221,10 @@ extension DeliveryEventPatterns on DeliveryEvent {
 class _GetOrderDetails implements DeliveryEvent {
   const _GetOrderDetails({required this.orderId});
 
-  @override
   final String orderId;
 
   /// Create a copy of DeliveryEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   _$GetOrderDetailsCopyWith<_GetOrderDetails> get copyWith =>
@@ -270,7 +253,6 @@ abstract mixin class _$GetOrderDetailsCopyWith<$Res>
   factory _$GetOrderDetailsCopyWith(
           _GetOrderDetails value, $Res Function(_GetOrderDetails) _then) =
       __$GetOrderDetailsCopyWithImpl;
-  @override
   @useResult
   $Res call({String orderId});
 }
@@ -285,7 +267,6 @@ class __$GetOrderDetailsCopyWithImpl<$Res>
 
   /// Create a copy of DeliveryEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @pragma('vm:prefer-inline')
   $Res call({
     Object? orderId = null,
@@ -300,9 +281,94 @@ class __$GetOrderDetailsCopyWithImpl<$Res>
 }
 
 /// @nodoc
+
+class _ConfirmDelivery implements DeliveryEvent {
+  const _ConfirmDelivery(
+      {required this.id,
+      required this.paymentMethod,
+      required this.receivedAmount});
+
+  final String id;
+  final String paymentMethod;
+  final double receivedAmount;
+
+  /// Create a copy of DeliveryEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ConfirmDeliveryCopyWith<_ConfirmDelivery> get copyWith =>
+      __$ConfirmDeliveryCopyWithImpl<_ConfirmDelivery>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ConfirmDelivery &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.paymentMethod, paymentMethod) ||
+                other.paymentMethod == paymentMethod) &&
+            (identical(other.receivedAmount, receivedAmount) ||
+                other.receivedAmount == receivedAmount));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, id, paymentMethod, receivedAmount);
+
+  @override
+  String toString() {
+    return 'DeliveryEvent.confirmDelivery(id: $id, paymentMethod: $paymentMethod, receivedAmount: $receivedAmount)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ConfirmDeliveryCopyWith<$Res>
+    implements $DeliveryEventCopyWith<$Res> {
+  factory _$ConfirmDeliveryCopyWith(
+          _ConfirmDelivery value, $Res Function(_ConfirmDelivery) _then) =
+      __$ConfirmDeliveryCopyWithImpl;
+  @useResult
+  $Res call({String id, String paymentMethod, double receivedAmount});
+}
+
+/// @nodoc
+class __$ConfirmDeliveryCopyWithImpl<$Res>
+    implements _$ConfirmDeliveryCopyWith<$Res> {
+  __$ConfirmDeliveryCopyWithImpl(this._self, this._then);
+
+  final _ConfirmDelivery _self;
+  final $Res Function(_ConfirmDelivery) _then;
+
+  /// Create a copy of DeliveryEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? paymentMethod = null,
+    Object? receivedAmount = null,
+  }) {
+    return _then(_ConfirmDelivery(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      paymentMethod: null == paymentMethod
+          ? _self.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as String,
+      receivedAmount: null == receivedAmount
+          ? _self.receivedAmount
+          : receivedAmount // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$DeliveryState {
   Status get getOrderDetailStatus;
   OrderResponse get orderDetails;
+  Status get confirmDeliveryStatus;
 
   /// Create a copy of DeliveryState
   /// with the given fields replaced by the non-null parameter values.
@@ -320,16 +386,18 @@ mixin _$DeliveryState {
             (identical(other.getOrderDetailStatus, getOrderDetailStatus) ||
                 other.getOrderDetailStatus == getOrderDetailStatus) &&
             (identical(other.orderDetails, orderDetails) ||
-                other.orderDetails == orderDetails));
+                other.orderDetails == orderDetails) &&
+            (identical(other.confirmDeliveryStatus, confirmDeliveryStatus) ||
+                other.confirmDeliveryStatus == confirmDeliveryStatus));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, getOrderDetailStatus, orderDetails);
+  int get hashCode => Object.hash(
+      runtimeType, getOrderDetailStatus, orderDetails, confirmDeliveryStatus);
 
   @override
   String toString() {
-    return 'DeliveryState(getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails)';
+    return 'DeliveryState(getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmDeliveryStatus: $confirmDeliveryStatus)';
   }
 }
 
@@ -339,10 +407,14 @@ abstract mixin class $DeliveryStateCopyWith<$Res> {
           DeliveryState value, $Res Function(DeliveryState) _then) =
       _$DeliveryStateCopyWithImpl;
   @useResult
-  $Res call({Status getOrderDetailStatus, OrderResponse orderDetails});
+  $Res call(
+      {Status getOrderDetailStatus,
+      OrderResponse orderDetails,
+      Status confirmDeliveryStatus});
 
   $StatusCopyWith<$Res> get getOrderDetailStatus;
   $OrderResponseCopyWith<$Res> get orderDetails;
+  $StatusCopyWith<$Res> get confirmDeliveryStatus;
 }
 
 /// @nodoc
@@ -360,6 +432,7 @@ class _$DeliveryStateCopyWithImpl<$Res>
   $Res call({
     Object? getOrderDetailStatus = null,
     Object? orderDetails = null,
+    Object? confirmDeliveryStatus = null,
   }) {
     return _then(_self.copyWith(
       getOrderDetailStatus: null == getOrderDetailStatus
@@ -370,6 +443,10 @@ class _$DeliveryStateCopyWithImpl<$Res>
           ? _self.orderDetails
           : orderDetails // ignore: cast_nullable_to_non_nullable
               as OrderResponse,
+      confirmDeliveryStatus: null == confirmDeliveryStatus
+          ? _self.confirmDeliveryStatus
+          : confirmDeliveryStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
     ));
   }
 
@@ -390,6 +467,16 @@ class _$DeliveryStateCopyWithImpl<$Res>
   $OrderResponseCopyWith<$Res> get orderDetails {
     return $OrderResponseCopyWith<$Res>(_self.orderDetails, (value) {
       return _then(_self.copyWith(orderDetails: value));
+    });
+  }
+
+  /// Create a copy of DeliveryState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get confirmDeliveryStatus {
+    return $StatusCopyWith<$Res>(_self.confirmDeliveryStatus, (value) {
+      return _then(_self.copyWith(confirmDeliveryStatus: value));
     });
   }
 }
@@ -487,14 +574,16 @@ extension DeliveryStatePatterns on DeliveryState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Status getOrderDetailStatus, OrderResponse orderDetails)?
+    TResult Function(Status getOrderDetailStatus, OrderResponse orderDetails,
+            Status confirmDeliveryStatus)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _DeliveryState() when $default != null:
-        return $default(_that.getOrderDetailStatus, _that.orderDetails);
+        return $default(_that.getOrderDetailStatus, _that.orderDetails,
+            _that.confirmDeliveryStatus);
       case _:
         return orElse();
     }
@@ -515,13 +604,15 @@ extension DeliveryStatePatterns on DeliveryState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Status getOrderDetailStatus, OrderResponse orderDetails)
+    TResult Function(Status getOrderDetailStatus, OrderResponse orderDetails,
+            Status confirmDeliveryStatus)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _DeliveryState():
-        return $default(_that.getOrderDetailStatus, _that.orderDetails);
+        return $default(_that.getOrderDetailStatus, _that.orderDetails,
+            _that.confirmDeliveryStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -541,13 +632,15 @@ extension DeliveryStatePatterns on DeliveryState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Status getOrderDetailStatus, OrderResponse orderDetails)?
+    TResult? Function(Status getOrderDetailStatus, OrderResponse orderDetails,
+            Status confirmDeliveryStatus)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _DeliveryState() when $default != null:
-        return $default(_that.getOrderDetailStatus, _that.orderDetails);
+        return $default(_that.getOrderDetailStatus, _that.orderDetails,
+            _that.confirmDeliveryStatus);
       case _:
         return null;
     }
@@ -558,12 +651,16 @@ extension DeliveryStatePatterns on DeliveryState {
 
 class _DeliveryState implements DeliveryState {
   _DeliveryState(
-      {required this.getOrderDetailStatus, required this.orderDetails});
+      {required this.getOrderDetailStatus,
+      required this.orderDetails,
+      required this.confirmDeliveryStatus});
 
   @override
   final Status getOrderDetailStatus;
   @override
   final OrderResponse orderDetails;
+  @override
+  final Status confirmDeliveryStatus;
 
   /// Create a copy of DeliveryState
   /// with the given fields replaced by the non-null parameter values.
@@ -581,16 +678,18 @@ class _DeliveryState implements DeliveryState {
             (identical(other.getOrderDetailStatus, getOrderDetailStatus) ||
                 other.getOrderDetailStatus == getOrderDetailStatus) &&
             (identical(other.orderDetails, orderDetails) ||
-                other.orderDetails == orderDetails));
+                other.orderDetails == orderDetails) &&
+            (identical(other.confirmDeliveryStatus, confirmDeliveryStatus) ||
+                other.confirmDeliveryStatus == confirmDeliveryStatus));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, getOrderDetailStatus, orderDetails);
+  int get hashCode => Object.hash(
+      runtimeType, getOrderDetailStatus, orderDetails, confirmDeliveryStatus);
 
   @override
   String toString() {
-    return 'DeliveryState(getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails)';
+    return 'DeliveryState(getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmDeliveryStatus: $confirmDeliveryStatus)';
   }
 }
 
@@ -602,12 +701,17 @@ abstract mixin class _$DeliveryStateCopyWith<$Res>
       __$DeliveryStateCopyWithImpl;
   @override
   @useResult
-  $Res call({Status getOrderDetailStatus, OrderResponse orderDetails});
+  $Res call(
+      {Status getOrderDetailStatus,
+      OrderResponse orderDetails,
+      Status confirmDeliveryStatus});
 
   @override
   $StatusCopyWith<$Res> get getOrderDetailStatus;
   @override
   $OrderResponseCopyWith<$Res> get orderDetails;
+  @override
+  $StatusCopyWith<$Res> get confirmDeliveryStatus;
 }
 
 /// @nodoc
@@ -625,6 +729,7 @@ class __$DeliveryStateCopyWithImpl<$Res>
   $Res call({
     Object? getOrderDetailStatus = null,
     Object? orderDetails = null,
+    Object? confirmDeliveryStatus = null,
   }) {
     return _then(_DeliveryState(
       getOrderDetailStatus: null == getOrderDetailStatus
@@ -635,6 +740,10 @@ class __$DeliveryStateCopyWithImpl<$Res>
           ? _self.orderDetails
           : orderDetails // ignore: cast_nullable_to_non_nullable
               as OrderResponse,
+      confirmDeliveryStatus: null == confirmDeliveryStatus
+          ? _self.confirmDeliveryStatus
+          : confirmDeliveryStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
     ));
   }
 
@@ -655,6 +764,16 @@ class __$DeliveryStateCopyWithImpl<$Res>
   $OrderResponseCopyWith<$Res> get orderDetails {
     return $OrderResponseCopyWith<$Res>(_self.orderDetails, (value) {
       return _then(_self.copyWith(orderDetails: value));
+    });
+  }
+
+  /// Create a copy of DeliveryState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get confirmDeliveryStatus {
+    return $StatusCopyWith<$Res>(_self.confirmDeliveryStatus, (value) {
+      return _then(_self.copyWith(confirmDeliveryStatus: value));
     });
   }
 }
