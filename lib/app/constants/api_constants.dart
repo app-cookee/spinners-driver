@@ -14,4 +14,5 @@ class ApiEndpoints {
   final String logout = '$_base/auth/logout';
   final String profile = '$_base/auth/profile';
   final String dashboardData = '$_base/orders/dashboard';
+  final String getOrderDetail = '$_base/orders/detail';
 }

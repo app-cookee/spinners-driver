@@ -1,0 +1,263 @@
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart';
+import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/invoice_button.dart';
+import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/invoice_item_row.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
+import 'package:the_responsive_builder/the_responsive_builder.dart';
+
+class OrderInvoiceDetails extends StatelessWidget {
+  const OrderInvoiceDetails({
+    super.key, required this.state,
+  });
+  final DeliveryState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final codAmount = (
+  (double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0) -
+  (double.tryParse(state.orderDetails.paidAmount ?? "0") ?? 0)
+);
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [AppColors.neutral50, AppColors.white])),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DashedDivider(),
+          Padding(
+            padding: EdgeInsetsGeometry.symmetric(
+                horizontal: 16.dp),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Gap(20.dp),
+                Row(
+                  spacing: 2.dp,
+                  children: [
+                    Image.asset(
+                      AppImages.basket,
+                      height: 17.dp,
+                      width: 13.dp,
+                    ),
+                    Text("Items in Your Order",
+                        style: AppTypography
+                            .sfProRoundedSemiBold
+                            .copyWith(
+                          fontSize: 12.dp,
+                          color: AppColors.textGrey,
+                        )),
+                  ],
+                ),
+                Gap(12.dp),
+           
+    ...((state.orderDetails.orderedItems).map((orderedItem) {
+      // Format name: "2 Shirts"
+      final itemName =
+          "${orderedItem.quantity} ${orderedItem.item?.name ?? ''}";
+
+      // Format price: "AED 24"
+      final price =
+          "AED ${orderedItem.soldPrice?? '0'}";
+
+      return Column(
+        children: [
+          InvoiceItemRow(
+            itemName: itemName,
+            price: price,
+          ),
+          Gap(8.dp),
+          DashedDivider(),
+          Gap(8.dp),
+        ],
+      );
+    }
+    )),
+
+              
+               if(state.orderDetails.promoUsages.isNotEmpty)...[Gap(8.dp),
+               Row(
+                  children: [
+                    Text(
+                      "Promo Applied",
+                      style: AppTypography.sfProRoundedRegular
+                          .copyWith(
+                        fontSize: 14.dp,
+                        color: AppColors.neutral900,
+                      ),
+                    ),
+                    Gap(6.dp),
+                    Container(
+                      height: 3.dp,
+                      width: 3.dp,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        // borderRadius: BorderRadius.circular(1.dp),
+                        color: AppColors.neutral900,
+                      ),
+                    ),
+                    Gap(6.dp),
+                    Text(
+                    state.orderDetails.promoUsages.first.promoCode?.name??"",
+                      style: AppTypography.sfProRoundedRegular
+                          .copyWith(
+                        fontSize: 14.dp,
+                        color: AppColors.neutral900,
+                      ),
+                    ),
+                    Spacer(),
+                    Text("AED ${state.orderDetails.promoUsages.first.amount                                                 }",
+                        style: AppTypography
+                            .sfProRoundedRegular
+                            .copyWith(
+                          fontSize: 14.dp,
+                          color: AppColors.green,
+                        ))
+                  ],
+                ),
+               ],
+               
+                 if(state.orderDetails.additionalCharges.isNotEmpty)...[
+                Gap(6.dp),
+                Row(
+                  children: [
+                    Text(
+                      "Express Surcharge",
+                      style: AppTypography.sfProRoundedRegular
+                          .copyWith(
+                        fontSize: 14.dp,
+                        color: AppColors.neutral900,
+                      ),
+                    ),
+                    Spacer(),
+                   Text(
+  "+${(
+    (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0) /
+    ((double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0)- (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0)) * 100
+  ).toStringAsFixed(2)}%",
+  style: AppTypography.sfProRoundedRegular.copyWith(
+    fontSize: 14.dp,
+    color: AppColors.secondary600,
+  ),
+),
+
+                    Gap(8.dp),
+                    Text(state.orderDetails.additionalCharges.first.amount,
+                        style: AppTypography
+                            .sfProRoundedRegular
+                            .copyWith(
+                          fontSize: 14.dp,
+                          color: AppColors.neutral950,
+                        ))
+                  ],
+                ),
+                 
+             ],  Gap(12.dp),
+              DashedDivider(
+                  dashPattern: [6, 6],
+                ),
+                Gap(8.dp),
+                // Gap(6.dp),
+                // Row(
+                //   mainAxisAlignment:
+                //       MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       "Tip for Driver",
+                //       style: AppTypography.sfProRoundedRegular
+                //           .copyWith(
+                //         fontSize: 14.dp,
+                //         color: AppColors.neutral900,
+                //       ),
+                //     ),
+                //     // Spacer(),
+                //     Text("AED 5",
+                //         style: AppTypography
+                //             .sfProRoundedRegular
+                //             .copyWith(
+                //           fontSize: 14.dp,
+                //           color: AppColors.neutral950,
+                //         ))
+                //   ],
+                // ),
+               
+                Row(
+                  children: [
+                    Text(
+                      "Total",
+                      style: AppTypography
+                          .sfProRoundedSemiBold
+                          .copyWith(
+                        fontSize: 20.dp,
+                        color: AppColors.neutral950,
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      "AED ${state.orderDetails.totalAmount}",
+                      style: AppTypography
+                          .sfProRoundedSemiBold
+                          .copyWith(
+                        fontSize: 20.dp,
+                        color: AppColors.neutral950,
+                      ),
+                    ),
+                  ],
+                ),
+                Gap(8.dp),
+             if (codAmount > 0)
+  Row(
+    children: [
+      Text(
+        "Cash on Delivery",
+        style: AppTypography.sfProRoundedMedium.copyWith(
+          fontSize: 14.dp,
+          color: AppColors.neutral900,
+        ),
+      ),
+      const Spacer(),
+      Text(
+        "AED ${codAmount.toStringAsFixed(2)}",
+        style: AppTypography.sfProRoundedRegular.copyWith(
+          fontSize: 14.dp,
+          color: AppColors.neutral950,
+        ),
+      ),
+    ],
+  ),
+                Gap(16.dp),
+                InvoiceButton(
+                    imagePath: AppImages.pin,
+                    text: "Download Invoice (PDF)"),
+                // Gap(6.dp),
+                // InvoiceButton(
+                //     imagePath: AppImages.refresh,
+                //     text: "Reorder"),
+                Gap(6.dp),
+                InvoiceButton(
+                    imagePath: AppImages.message,
+                    text: "Chat with Support"),
+                SizedBox(
+                  height: 11.h + 18.dp,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
