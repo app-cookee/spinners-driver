@@ -284,42 +284,52 @@ void _loadMoreItems() {
                                       child: const Center(child: EmptyPlaceholder()),
                                     );
                                   }
-                    return ListView.builder(
-                       controller: _scrollController,
-                        itemCount: state.ordersList.length + (state.isLoadingMore ? 1 : 0),
-                        // shrinkWrap: true,
-                        padding: EdgeInsets.only(
-                            top: 9.dp, bottom: ((88 / 812) * 100.h)),
-                        // primary: false,
-                        itemBuilder: (context, index) {
-                                     if (index == state.ordersList.length) {
-                              return const SpinKitCircle(
-                                      color: AppColors.primaryColor,
-                                    );
-                            }
-                          return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"",lon: 
-                          state.ordersList[index].selectedAddress?.longitude??"" ,
-                            isExpressService:  state.ordersList[index].expressService,
-                                      address:  state.ordersList[index].selectedAddress?.place??"",
-                                     refId: state.ordersList[index].refId.toString(),
-                                        orderId: state.ordersList[index].id,
-                                    
-                                        time: state.ordersList[index].status == "pickupScheduled"
-                                            ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
-                                            
-                                            :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"readyForDelivery",state.ordersList[index].statusHistory)
-                                          
-                                              :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
-                                              "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
-                                              "delivered",state.ordersList[index].statusHistory),
-                                        
-                                        status: state.ordersList[index].status,
-                                        isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
-                                        isQuickOrder:  state.ordersList[index].type=="oneTapOrder"?true:false,
-                                       
-                                        // notes: 'Deliver to reception.',
+                    return RefreshIndicator(onRefresh: ()async {
+                      _searchController.clear();
+                      
+_currentSearchQuery="";
+                          _fetchOrders(currentOrderFilter);
+                      
+
+                    },
+                      child: ListView.builder(
+                         controller: _scrollController,
+                         physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: state.ordersList.length + (state.isLoadingMore ? 1 : 0),
+                          // shrinkWrap: true,
+                          padding: EdgeInsets.only(
+                              top: 9.dp, bottom: ((88 / 812) * 100.h)),
+                          // primary: false,
+                          itemBuilder: (context, index) {
+                                       if (index == state.ordersList.length) {
+                                return const SpinKitCircle(
+                                        color: AppColors.primaryColor,
                                       );
-                        });
+                              }
+                            return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"",lon: 
+                            state.ordersList[index].selectedAddress?.longitude??"" ,
+                              isExpressService:  state.ordersList[index].expressService,
+                                        address:  state.ordersList[index].selectedAddress?.place??"",
+                                       refId: state.ordersList[index].refId.toString(),
+                                          orderId: state.ordersList[index].id,
+                                      
+                                          time: state.ordersList[index].status == "pickupScheduled"
+                                              ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
+                                              
+                                              :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"readyForDelivery",state.ordersList[index].statusHistory)
+                                            
+                                                :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
+                                                "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
+                                                "delivered",state.ordersList[index].statusHistory),
+                                          
+                                          status: state.ordersList[index].status,
+                                          isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
+                                          isQuickOrder:  state.ordersList[index].type=="oneTapOrder"?true:false,
+                                         
+                                          // notes: 'Deliver to reception.',
+                                        );
+                          }),
+                    );
                   },
                 ),
               ),
