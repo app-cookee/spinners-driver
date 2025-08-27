@@ -1,7 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
@@ -55,6 +60,12 @@ class OrderedServices extends StatelessWidget {
     final orderedItem = state.orderDetails.orderedItems[index];
     final scannedBagsCount = orderedItem.scannedBags.length;
     final isFullyScanned = scannedBagsCount >= orderedItem.quantity;
+    // The color should change when all items are scanned
+    // The scannedBags array is only updated after successful API calls
+    // If the API fails, the scannedBags won't be updated, so the color won't change
+    // Additionally, we don't show completed color during loading operations
+    final isOperationInProgress = (state.addBagStatus is StatusLoading || state.createNewBagStatus is StatusLoading);
+    final shouldShowCompletedColor = isFullyScanned && !isOperationInProgress;
 
     return GestureDetector(
       onTap: () {
@@ -64,9 +75,9 @@ class OrderedServices extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 8.dp),
         padding: EdgeInsets.all(16.dp),
         decoration: BoxDecoration(
-          color: isFullyScanned ? AppColors.blue1 : AppColors.neutral50,
+          color: shouldShowCompletedColor ? AppColors.blue1 : AppColors.neutral50,
           borderRadius: BorderRadius.circular(12.dp),
-          gradient: isFullyScanned
+          gradient: shouldShowCompletedColor
               ? const LinearGradient(
                   colors: [AppColors.blue1, AppColors.blue1, AppColors.blue1, Color(0xffD8F1FC)],
                   begin: Alignment.topLeft,
@@ -75,12 +86,12 @@ class OrderedServices extends StatelessWidget {
                 )
               : null,
           border: Border.all(
-            color: isFullyScanned ? AppColors.primaryColor500 : AppColors.lightGrey,
+            color: shouldShowCompletedColor ? AppColors.primaryColor500 : AppColors.lightGrey,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: isFullyScanned ? AppColors.primaryColor500.withValues(alpha: 0.1) : AppColors.lightGrey.withValues(alpha: 0.1),
+              color: shouldShowCompletedColor ? AppColors.primaryColor500.withValues(alpha: 0.1) : AppColors.lightGrey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -188,9 +199,9 @@ class OrderedServices extends StatelessWidget {
   }
 
   Future<void> _handleScanForNormalOrder(BuildContext context, dynamic orderedItem, int index) async {
-    print('Scan button tapped for service: ${orderedItem.service.name}');
-    print('Current scanned bags: ${orderedItem.scannedBags.length}');
-    print('Required quantity: ${orderedItem.quantity}');
+    log('Scan button tapped for service: ${orderedItem.service.name}');
+    log('Current scanned bags: ${orderedItem.scannedBags.length}');
+    log('Required quantity: ${orderedItem.quantity}');
     
     // Navigate and wait for QR scan result
     final result = await Navigator.push<String>(
@@ -198,12 +209,12 @@ class OrderedServices extends StatelessWidget {
       MaterialPageRoute(builder: (context) => const QRScannerScreen()),
     );
 
-    print('QR scan result: $result');
+    log('QR scan result: $result');
 
     if (result != null && result.isNotEmpty) {
       // Check if this QR has already been scanned across all services
       if (scannedQRCodes.value.contains(result)) {
-        print('QR code already scanned: $result');
+        log('QR code already scanned: $result');
         TheToast.show(
           isError: true,
           message: "This QR code has already been scanned",
@@ -212,9 +223,9 @@ class OrderedServices extends StatelessWidget {
         return;
       }
 
-      print('Showing bottomsheet for bag: $result');
-      print('Service ID: ${orderedItem.service.id}');
-      print('Service Name: ${orderedItem.service.name}');
+      log('Showing bottomsheet for bag: $result');
+      log('Service ID: ${orderedItem.service.id}');
+      log('Service Name: ${orderedItem.service.name}');
 
       // Add to scanned QR codes set to prevent duplicates
       final newScannedQRCodes = Set<String>.from(scannedQRCodes.value);
@@ -233,7 +244,7 @@ class OrderedServices extends StatelessWidget {
         ),
       ).show();
     } else {
-      print('No QR result received');
+      log('No QR result received');
     }
   }
 
