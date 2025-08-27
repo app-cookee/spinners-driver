@@ -11,8 +11,8 @@ class OrderListPlaceholder extends StatelessWidget {
     return ListView.builder(shrinkWrap: true,
       itemCount: 5,
       physics: const NeverScrollableScrollPhysics(),
-      padding:
-          EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 16.h),
+      padding:EdgeInsets.all(0),
+      //     EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 16.dp),
       itemBuilder: (context, index) => Container(
         padding: EdgeInsets.only(top: 9.dp, bottom: 12.dp),
         margin: EdgeInsets.only(bottom: 12.dp),
@@ -97,9 +97,9 @@ class OrderListPlaceholder extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _shimmerBox(width: 201.dp, height: 36.dp, radius: 8.dp),
-                    _shimmerBox(width: 70.dp, height: 36.dp, radius: 8.dp),
-                    _shimmerBox(width: 36.dp, height: 36.dp, radius: 8.dp),
+                    _shimmerBox(width:  (201 / 376)*100.w, height: 36.dp, radius: 8.dp),
+                    _shimmerBox(width: (70/376)*100.w, height: 36.dp, radius: 8.dp),
+                    _shimmerBox(width: (36/376)*100.w, height: 36.dp, radius: 8.dp),
                   ],
                 ),
               ),

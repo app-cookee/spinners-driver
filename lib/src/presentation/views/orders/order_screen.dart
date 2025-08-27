@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
+import 'package:spinners_driver/src/presentation/views/home/placeholders/order_list_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/order_card.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/pickup_filter_tabs.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/toggle_button.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/empty_placeholder.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 enum OrderFilter { pickupScheduled, readyForDelivery, pickedUp, delivered }
@@ -222,6 +225,16 @@ class _OrderScreenState extends State<OrderScreen> {
               Gap(9.dp),
               BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
+                               if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
+                                  return const OrderListPlaceholder();
+                                }
+                                if(state.ordersList.isEmpty){
+                                  return
+                                   Padding(
+                                    padding: EdgeInsetsGeometry.only(top: 6.h),
+                                    child: const Center(child: EmptyPlaceholder()),
+                                  );
+                                }
                   return Expanded(
                     child: ListView.builder(
                         itemCount: state.ordersList.length,
@@ -230,7 +243,9 @@ class _OrderScreenState extends State<OrderScreen> {
                             top: 9.dp, bottom: ((88 / 812) * 100.h)),
                         primary: false,
                         itemBuilder: (context, index) {
-                          return OrderCard(isExpressService:  state.ordersList[index].expressService,
+                          return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"",lon: 
+                          state.ordersList[index].selectedAddress?.longitude??"" ,
+                            isExpressService:  state.ordersList[index].expressService,
                                       address:  state.ordersList[index].selectedAddress?.place??"",
                                      
                                         orderId: '#SPN${state.ordersList[index].refId}',
@@ -261,7 +276,12 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-   String formatSingleDate(
+ DateTime _toUaeTime(DateTime utcTime) {
+  // UAE is UTC+4 with no daylight savings
+  return utcTime.toUtc().add(const Duration(hours: 4));
+}
+
+String formatSingleDate(
   String utcDate,
   TimeSlot? slot,
   String status,
@@ -270,33 +290,36 @@ class _OrderScreenState extends State<OrderScreen> {
   DateTime? date;
   DateTime? fromTime;
   DateTime? toTime;
+
   if (status.toLowerCase() == "delivered") {
-    // Find the delivered status from history
     final deliveredStatus = statusHistory.firstWhere(
       (s) => s.status.toLowerCase() == "delivered",
       orElse: () => const OrderStatus(),
     );
     if (deliveredStatus.changedAt.isNotEmpty) {
-      date = DateTime.parse(deliveredStatus.changedAt).toLocal();
+      date = _toUaeTime(DateTime.parse(deliveredStatus.changedAt));
     }
   } else {
-    // Use deliveryAt date + slot time
-    date = DateTime.parse(utcDate).toLocal();
+    date = _toUaeTime(DateTime.parse(utcDate));
     if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
-      fromTime = DateTime.parse(slot.from).toLocal();
-      toTime = DateTime.parse(slot.to).toLocal();
+      fromTime = _toUaeTime(DateTime.parse(slot.from));
+      toTime = _toUaeTime(DateTime.parse(slot.to));
     }
   }
+
   if (date == null) return "";
-  final now = DateTime.now();
+
+  final now = _toUaeTime(DateTime.now().toUtc());
   final today = DateTime(now.year, now.month, now.day);
   final tomorrow = today.add(const Duration(days: 1));
   final targetDate = DateTime(date.year, date.month, date.day);
+
   final dateFormat = DateFormat('MMM d, y');
   final timeFormat = DateFormat('h:mm a');
+
   if (fromTime != null && toTime != null) {
-    // Case when slot is used (show range)
-    final timeText = "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
+    final timeText =
+        "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
     if (targetDate == today) {
       return "Today, $timeText";
     } else if (targetDate == tomorrow) {
@@ -305,7 +328,6 @@ class _OrderScreenState extends State<OrderScreen> {
       return "${dateFormat.format(date)}, $timeText";
     }
   } else {
-    // Case when exact datetime is used (delivered)
     if (targetDate == today) {
       return "Today, ${timeFormat.format(date)}";
     } else if (targetDate == tomorrow) {

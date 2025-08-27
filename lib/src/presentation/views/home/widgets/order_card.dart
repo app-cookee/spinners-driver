@@ -1,18 +1,21 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
+import 'package:the_responsive_builder/the_responsive_builder.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
-
-import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderCard extends StatelessWidget {
   final String orderId;
@@ -23,20 +26,22 @@ class OrderCard extends StatelessWidget {
   final bool isQuickOrder;
   final bool isExpressService;
    final String address;
+   final String lat;
+   final String lon;
   // final String notes;
   // final List service;
   const OrderCard({
-    super.key,
+    Key? key,
     required this.orderId,
-  
     required this.time,
     required this.status,
     required this.isDropoff,
     required this.isQuickOrder,
-    required this.isExpressService, required this.address,
-    // required this.notes,
-    //  required this.service,
-  });
+    required this.isExpressService,
+    required this.address,
+    required this.lat,
+    required this.lon,
+  }) : super(key: key);
 
   Color getColor(String status) {
     switch (status) {
@@ -172,7 +177,7 @@ class OrderCard extends StatelessWidget {
             children: [
             SizedBox
             (
-              // width: 100,
+              width: 100,
               child: Text(address,style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.addressColor))),
             const Spacer(),
             Text(time, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral900))
@@ -212,7 +217,13 @@ Widget _orderedCardButtons(BuildContext context) {
           borderColor: AppColors.primaryColor,
           backgroundColor: AppColors.blue1,
           textColor: AppColors.primaryColor,
-          onTap: () {
+          onTap: () {(lat==null||lon==null||lat==""||lon=="")?
+          TheToast.show(message: "This location is not available", context: context):
+          
+      MapNavigationHelper.openNavigation(  double.tryParse(lat), double.tryParse(lon),
+      context
+      
+        );
           
           },
         ),
@@ -232,13 +243,14 @@ Widget _orderedCardButtons(BuildContext context) {
           borderColor: AppColors.greyColor,
           textColor: AppColors.grey1Color,
           onTap: () {
-          
+   
           },
         ),
       ],
     ),
   );
 }
+
 
 
   Widget _expressLabel() {

@@ -227,10 +227,18 @@ class _HomeViewState extends State<HomeView> {
                             BlocBuilder<OrderBloc, OrderState>(
                               builder: (context, state) {
                                 if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
-                                  return const OrderListPlaceholder();
+                                  return Padding(
+                                  padding:
+          EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 16.dp),
+                                    child: const OrderListPlaceholder(),
+                                  );
                                 }
                                 if(state.ordersList.isEmpty){
-                                  return const EmptyPlaceholder();
+                                  return
+                                   Padding(
+                                    padding: EdgeInsetsGeometry.only(top: 6.h),
+                                    child: const EmptyPlaceholder(),
+                                  );
                                 }
                                 return ListView.builder(
                                     physics:
@@ -244,7 +252,7 @@ class _HomeViewState extends State<HomeView> {
                                         bottom: 16.h),
                                     primary: false,
                                     itemBuilder: (context, index) {
-                                      return OrderCard(
+                                      return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"" ,lon:state.ordersList[index].selectedAddress?.longitude??"" ,
                                         isExpressService: state.ordersList[index].expressService,
                                         address: state.ordersList[index].selectedAddress?.place ?? "",
                                         orderId: '#SPN${state.ordersList[index].refId}',
@@ -350,34 +358,7 @@ String formatSingleDate(
 
 
 
-  String formatDeliverySlot(Map<String, dynamic> deliverySlot) {
-    final from = DateTime.parse(deliverySlot['from']).toLocal();
-    final to = DateTime.parse(deliverySlot['to']).toLocal();
 
-    final now = DateTime.now();
-    String dayLabel;
-
-    // Check if it's today or tomorrow
-    if (from.year == now.year &&
-        from.month == now.month &&
-        from.day == now.day) {
-      dayLabel = "Today";
-    } else if (from.year == now.year &&
-        from.month == now.month &&
-        from.day == now.day + 1) {
-      dayLabel = "Tomorrow";
-    } else {
-      // Fallback to weekday name
-      dayLabel = DateFormat('EEEE').format(from);
-    }
-
-    // Format time range
-    final timeFormat = DateFormat('h:mm a');
-    final fromTime = timeFormat.format(from);
-    final toTime = timeFormat.format(to);
-
-    return "$dayLabel, $fromTime – $toTime";
-  }
 
   Widget _scrollableContainer() {
     return ValueListenableBuilder<bool>(

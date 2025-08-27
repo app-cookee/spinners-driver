@@ -15,7 +15,8 @@ class TodaysCollectedCOD extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 20.5.dp, bottom: 16.dp),
-      child: Skeletonizer(enabled:
+      child: Skeletonizer(containersColor: Colors.grey.shade300,
+        enabled:
       (state.getDashboardDataStatus is StatusInitial||state.getDashboardDataStatus is StatusLoading) ,
         child:state.dashboardDataModel.totalCollectedCash>0?
          Row(
