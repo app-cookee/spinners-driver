@@ -1,10 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
-import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
@@ -98,9 +95,31 @@ class _HomeAppbarState extends State<HomeAppbar> {
           avatar: (user?.firstName.isNotEmpty ?? false)
               ? user!.firstName[0]
               : "D",
-          name: 'Good Evening, ${user?.firstName ?? "Driver"} 👋',
+          name: '${getUaeGreeting()}, ${user?.firstName ?? "Driver"} 👋',
           pickupTime:  
           widget.nextPickuptime.toString()
         ),
       );
+
+
+
+
+String getUaeGreeting() {
+  // UAE timezone is always UTC+4
+  final nowUtc = DateTime.now().toUtc();
+  final uaeTime = nowUtc.add(const Duration(hours: 4));
+
+  final hour = uaeTime.hour;
+
+  if (hour >= 1 && hour < 12) {
+    return "Good Morning";
+  } else if (hour >= 12 && hour < 17) {
+    return "Good Afternoon";
+  } else if (hour >= 17 && hour < 21) {
+    return "Good Evening";
+  } else {
+    return "Good Night";
+  }
+}
+
 }

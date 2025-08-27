@@ -1,6 +1,9 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -49,6 +52,7 @@ class _HomeViewState extends State<HomeView> {
     OrderFilter.readyForDelivery,
   ];
   
+  final int _itemsPerPage = 5;
   late ScrollController _scrollController;
   ValueNotifier<bool> isScrolling = ValueNotifier(false);
   final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
@@ -73,6 +77,13 @@ class _HomeViewState extends State<HomeView> {
 
     // Add scroll listener to track scrolling state
     _scrollController.addListener(() {
+        // log("Scroll listener fired - pixels: ${_scrollController.position.pixels}");
+      
+        if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+            log("scrolled");
+        _loadMoreItems();
+      }
       if (_scrollController.offset > 0 && !isScrolling.value) {
         isScrolling.value = true;
       } else if (_scrollController.offset <= 0 && isScrolling.value) {
@@ -84,6 +95,37 @@ class _HomeViewState extends State<HomeView> {
     nearestLocationNotifier.addListener(_onNearestLocationChanged);
     expressOnlyNotifier.addListener(_onExpressOnlyChanged);
   }
+
+void _loadMoreItems() {
+  log("load more itrms");
+  final orderState = context.read<OrderBloc>().state;
+
+  // Prevent duplicate calls
+  if (orderState.isLoadingMore || !orderState.hasMore) return;
+
+  // Convert filters to string
+  final statusStrings = currentOrderFilter.map(statusToString).toList();
+  final statusString = statusStrings.join(',');
+
+  // Current toggles
+  final isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
+  final lat = latitudeNotifier.value;
+  final lng = longitudeNotifier.value;
+
+  // Trigger pagination with filters
+  context.read<OrderBloc>().add(
+    OrderEvent.paginateOrdersList(
+      skip: orderState.ordersList.length,
+      limit: _itemsPerPage,
+      filter: statusString,
+      expressOnly: isExpressOnlyEnabled,
+      latitude: lat,
+      longitude: lng,
+    ),
+  );
+}
+
+
 
   void _onNearestLocationChanged() {
     bool isNearestLocationEnabled = nearestLocationNotifier.value == 1;
@@ -119,7 +161,7 @@ class _HomeViewState extends State<HomeView> {
 
     context.read<OrderBloc>().add(
       OrderEvent.getOrdersList(
-        limit: 1000,
+        limit: _itemsPerPage,
         skip: 0,
         filter: statusStrings.join(','),
         expressOnly: isExpressOnlyEnabled,
@@ -163,124 +205,139 @@ class _HomeViewState extends State<HomeView> {
                   _scrollableContainer(),
                   Padding(
                       padding: EdgeInsets.only(top: 13.h),
-                      child: SingleChildScrollView(
-                        controller: _scrollController,
-                        child: Column(
-                          children: [
-                            (dashboardDataState.getDashboardDataStatus is StatusInitial||dashboardDataState.getDashboardDataStatus is StatusLoading)?
-                                const PickupDeliveryOverviewPlaceholder():
-                            
-                            PickupAndDeliveryOverview(
-                              remainingPickups: dashboardDataState
-                                  .dashboardDataModel.remainingPickups,
-                              remainingDeliveries: dashboardDataState
-                                  .dashboardDataModel.remainingDeliveries,
-                              completedPickups: dashboardDataState
-                                  .dashboardDataModel.completedPickups,
-                              completedDeliveries: dashboardDataState
-                                  .dashboardDataModel.completedDeliveries,
-                            ),
-                            Gap(16.dp),
-                            TodaysCollectedCOD(
-                              state: dashboardDataState,
-                            ),
-                            Padding(
-                              padding: EdgeInsetsGeometry.symmetric(
-                                  horizontal: 16.dp),
-                              child: PickupFilterTabs(
-                                onTabChanged: (index) {
-                                  // Update current filter and fetch orders
-                                  if (index == 0) {
-                                    currentOrderFilter = _allOrders;
-                                    _fetchOrders(_allOrders);
-                                  } else if (index == 1) {
-                                    currentOrderFilter = _pickup;
-                                    _fetchOrders(_pickup);
-                                  } else {
-                                    currentOrderFilter = _dropOff;
-                                    _fetchOrders(_dropOff);
+                      child: RefreshIndicator(onRefresh: ()async {
+                              _fetchOrders(currentOrderFilter);
+    
+      context
+          .read<DashboardDataBloc>()
+          .add(const DashboardDataEvent.getDashboardData());
+                        
+                      },
+                        child: SingleChildScrollView(physics: const AlwaysScrollableScrollPhysics(),
+                          controller: _scrollController,
+                          child: Column(
+                            children: [
+                              (dashboardDataState.getDashboardDataStatus is StatusInitial||dashboardDataState.getDashboardDataStatus is StatusLoading)?
+                                  const PickupDeliveryOverviewPlaceholder():
+                              
+                              PickupAndDeliveryOverview(
+                                remainingPickups: dashboardDataState
+                                    .dashboardDataModel.remainingPickups,
+                                remainingDeliveries: dashboardDataState
+                                    .dashboardDataModel.remainingDeliveries,
+                                completedPickups: dashboardDataState
+                                    .dashboardDataModel.completedPickups,
+                                completedDeliveries: dashboardDataState
+                                    .dashboardDataModel.completedDeliveries,
+                              ),
+                              Gap(16.dp),
+                              TodaysCollectedCOD(
+                                state: dashboardDataState,
+                              ),
+                              Padding(
+                                padding: EdgeInsetsGeometry.symmetric(
+                                    horizontal: 16.dp),
+                                child: PickupFilterTabs(
+                                  onTabChanged: (index) {
+                                    // Update current filter and fetch orders
+                                    if (index == 0) {
+                                      currentOrderFilter = _allOrders;
+                                      _fetchOrders(_allOrders);
+                                    } else if (index == 1) {
+                                      currentOrderFilter = _pickup;
+                                      _fetchOrders(_pickup);
+                                    } else {
+                                      currentOrderFilter = _dropOff;
+                                      _fetchOrders(_dropOff);
+                                    }
+                                  },
+                                ),
+                              ),
+                              Gap(16.dp),
+                              Padding(
+                                padding: EdgeInsetsGeometry.symmetric(
+                                    horizontal: 16.dp),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    ToggleButton(
+                                      isToggled: nearestLocationNotifier,
+                                      label: 'Nearest Location',
+                                      onLocationFetched: _onLocationFetched // Only this toggle has location callback
+                                    ),
+                                    Gap(12.dp),
+                                    ToggleButton(
+                                      isToggled: expressOnlyNotifier,
+                                      label: 'Express Only',
+                                      // No onLocationFetched callback for Express Only
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              BlocBuilder<OrderBloc, OrderState>(
+                                builder: (context, state) {
+                                  if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
+                                    return Padding(
+                                    padding:
+                                  EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 16.dp),
+                                      child: const OrderListPlaceholder(),
+                                    );
                                   }
+                                  if(state.ordersList.isEmpty){
+                                    return
+                                     Padding(
+                                      padding: EdgeInsetsGeometry.only(top: 6.h),
+                                      child: const EmptyPlaceholder(),
+                                    );
+                                  }
+                                  return ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: state.ordersList.length + (state.isLoadingMore ? 1 : 0),
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.only(
+                                          top: 12.dp,
+                                          left: 16.dp,
+                                          right: 16.dp,
+                                          bottom: 16.h),
+                                      primary: false,
+                                      itemBuilder: (context, index) {
+                                         if (index == state.ordersList.length) {
+                                return const SpinKitCircle(
+                                        color: AppColors.primaryColor,
+                                      );
+                              }
+                                        return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"" ,lon:state.ordersList[index].selectedAddress?.longitude??"" ,
+                                          isExpressService: state.ordersList[index].expressService,
+                                          address: state.ordersList[index].selectedAddress?.place ?? "",
+                                          refId: state.ordersList[index].refId.toString(),
+                                          orderId: state.ordersList[index].id,
+                                          time: getOrderDisplayDate(state.ordersList[index]),
+                                        //   state.ordersList[index].status == "pickupScheduled"
+                                        //       ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
+                                        //       // formatDeliverySlot({
+                                        //       //     "from": state.ordersList[index].pickupSlot?.from ?? "",
+                                        //       //     "to": state.ordersList[index].pickupSlot?.to ?? "",
+                                        //       //     "day": state.ordersList[index].pickupSlot?.day ?? ""
+                                        //       //   })
+                                        //       :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].deliveryAt,state.ordersList[index].deliverySlot,"readyForDelivery",state.ordersList[index].statusHistory)
+                                        //       //  formatDeliverySlot({
+                                        //         //   "from": state.ordersList[index].deliverySlot?.from ?? "",
+                                        //         //   "to": state.ordersList[index].deliverySlot?.to ?? "",
+                                        //         //   "day": state.ordersList[index].deliverySlot?.day ?? ""
+                                        //         // })
+                                        //         :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupA,state.ordersList[index].pickupSlot,
+                                        //         "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
+                                        //         "delivered",state.ordersList[index].statusHistory),
+                                          status: state.ordersList[index].status,
+                                          isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
+                                          isQuickOrder: state.ordersList[index].type == "oneTapOrder" ? true : false,
+                                        );
+                                      });
                                 },
                               ),
-                            ),
-                            Gap(16.dp),
-                            Padding(
-                              padding: EdgeInsetsGeometry.symmetric(
-                                  horizontal: 16.dp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ToggleButton(
-                                    isToggled: nearestLocationNotifier,
-                                    label: 'Nearest Location',
-                                    onLocationFetched: _onLocationFetched // Only this toggle has location callback
-                                  ),
-                                  Gap(12.dp),
-                                  ToggleButton(
-                                    isToggled: expressOnlyNotifier,
-                                    label: 'Express Only',
-                                    // No onLocationFetched callback for Express Only
-                                  ),
-                                ],
-                              ),
-                            ),
-                            BlocBuilder<OrderBloc, OrderState>(
-                              builder: (context, state) {
-                                if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
-                                  return Padding(
-                                  padding:
-          EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 16.dp),
-                                    child: const OrderListPlaceholder(),
-                                  );
-                                }
-                                if(state.ordersList.isEmpty){
-                                  return
-                                   Padding(
-                                    padding: EdgeInsetsGeometry.only(top: 6.h),
-                                    child: const EmptyPlaceholder(),
-                                  );
-                                }
-                                return ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: state.ordersList.length,
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.only(
-                                        top: 12.dp,
-                                        left: 16.dp,
-                                        right: 16.dp,
-                                        bottom: 16.h),
-                                    primary: false,
-                                    itemBuilder: (context, index) {
-                                      return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"" ,lon:state.ordersList[index].selectedAddress?.longitude??"" ,
-                                        isExpressService: state.ordersList[index].expressService,
-                                        address: state.ordersList[index].selectedAddress?.place ?? "",
-                                        refId: state.ordersList[index].refId.toString(),
-                                        orderId: state.ordersList[index].id,
-                                        time: state.ordersList[index].status == "pickupScheduled"
-                                            ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
-                                            // formatDeliverySlot({
-                                            //     "from": state.ordersList[index].pickupSlot?.from ?? "",
-                                            //     "to": state.ordersList[index].pickupSlot?.to ?? "",
-                                            //     "day": state.ordersList[index].pickupSlot?.day ?? ""
-                                            //   })
-                                            :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"readyForDelivery",state.ordersList[index].statusHistory)
-                                            //  formatDeliverySlot({
-                                              //   "from": state.ordersList[index].deliverySlot?.from ?? "",
-                                              //   "to": state.ordersList[index].deliverySlot?.to ?? "",
-                                              //   "day": state.ordersList[index].deliverySlot?.day ?? ""
-                                              // })
-                                              :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
-                                              "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
-                                              "delivered",state.ordersList[index].statusHistory),
-                                        status: state.ordersList[index].status,
-                                        isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
-                                        isQuickOrder: state.ordersList[index].type == "oneTapOrder" ? true : false,
-                                      );
-                                    });
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       )),
                 ],
@@ -291,68 +348,77 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
+  String getOrderDisplayDate(OrderResponse order) {
+  final status = order.status.toLowerCase();
+
+  if (status == "pickupscheduled") {
+    return formatScheduledOrReady(order.pickupAt, order.pickupSlot);
+  } else if (status == "readyfordelivery") {
+    return formatScheduledOrReady(order.deliveryAt, order.deliverySlot);
+  } else if (status == "pickedup" || status == "delivered") {
+    return formatPickedOrDelivered(order.status, order.statusHistory);
+  }
+  return "";
+}
+
+
+  /// Converts UTC to UAE time
 DateTime _toUaeTime(DateTime utcTime) {
-  // UAE is UTC+4 with no daylight savings
   return utcTime.toUtc().add(const Duration(hours: 4));
 }
 
-String formatSingleDate(
-  String utcDate,
-  TimeSlot? slot,
-  String status,
-  List<OrderStatus> statusHistory,
-) {
-  DateTime? date;
-  DateTime? fromTime;
-  DateTime? toTime;
-
-  if (status.toLowerCase() == "delivered") {
-    final deliveredStatus = statusHistory.firstWhere(
-      (s) => s.status.toLowerCase() == "delivered",
-      orElse: () => const OrderStatus(),
-    );
-    if (deliveredStatus.changedAt.isNotEmpty) {
-      date = _toUaeTime(DateTime.parse(deliveredStatus.changedAt));
-    }
-  } else {
-    date = _toUaeTime(DateTime.parse(utcDate));
-    if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
-      fromTime = _toUaeTime(DateTime.parse(slot.from));
-      toTime = _toUaeTime(DateTime.parse(slot.to));
-    }
-  }
-
-  if (date == null) return "";
-
+/// Common date + slot formatter
+String _formatDateWithSlot(DateTime baseDate, TimeSlot? slot) {
   final now = _toUaeTime(DateTime.now().toUtc());
   final today = DateTime(now.year, now.month, now.day);
   final tomorrow = today.add(const Duration(days: 1));
-  final targetDate = DateTime(date.year, date.month, date.day);
+  final targetDate = DateTime(baseDate.year, baseDate.month, baseDate.day);
 
   final dateFormat = DateFormat('MMM d, y');
   final timeFormat = DateFormat('h:mm a');
 
-  if (fromTime != null && toTime != null) {
-    final timeText =
-        "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
-    if (targetDate == today) {
-      return "Today, $timeText";
-    } else if (targetDate == tomorrow) {
-      return "Tomorrow, $timeText";
-    } else {
-      return "${dateFormat.format(date)}, $timeText";
-    }
-  } else {
-    if (targetDate == today) {
-      return "Today, ${timeFormat.format(date)}";
-    } else if (targetDate == tomorrow) {
-      return "Tomorrow, ${timeFormat.format(date)}";
-    } else {
-      return "${dateFormat.format(date)} – ${timeFormat.format(date)}";
-    }
+  // If slot provided
+  if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
+    final fromTime = _toUaeTime(DateTime.parse(slot.from));
+    final toTime = _toUaeTime(DateTime.parse(slot.to));
+    final timeText = "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
+
+    if (targetDate == today) return "Today, $timeText";
+    if (targetDate == tomorrow) return "Tomorrow, $timeText";
+    return "${dateFormat.format(baseDate)}, $timeText";
   }
+
+  // Without slot
+  if (targetDate == today) return "Today, ${timeFormat.format(baseDate)}";
+  if (targetDate == tomorrow) return "Tomorrow, ${timeFormat.format(baseDate)}";
+  return "${dateFormat.format(baseDate)} – ${timeFormat.format(baseDate)}";
 }
 
+/// For pickupScheduled or readyForDelivery
+String formatScheduledOrReady(
+  String utcDate,
+  TimeSlot? slot,
+) {
+  final date = _toUaeTime(DateTime.parse(utcDate));
+  return _formatDateWithSlot(date, slot);
+}
+
+/// For pickedUp or delivered
+String formatPickedOrDelivered(
+  String status, // "pickedUp" or "delivered"
+  List<OrderStatus> statusHistory,
+) {
+  final statusLower = status.toLowerCase();
+  final statusEntry = statusHistory.firstWhere(
+    (s) => s.status.toLowerCase() == statusLower,
+    orElse: () => const OrderStatus(),
+  );
+
+  if (statusEntry.changedAt.isEmpty) return "";
+
+  final date = _toUaeTime(DateTime.parse(statusEntry.changedAt));
+  return _formatDateWithSlot(date, null); // no slot, just changedAt
+}
 
 
 
