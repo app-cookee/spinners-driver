@@ -10,6 +10,7 @@ import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
+import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/placeholder/order_detail_shimmer.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/delivery_confirm_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/info_card.dart';
@@ -17,6 +18,7 @@ import 'package:spinners_driver/src/presentation/views/delivery_order_detail/wid
 import 'package:spinners_driver/src/presentation/views/order_details_screen/order_details_screen.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -477,6 +479,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                   )
                 : Image.asset(AppImages.arrowdown, height: 40.dp, width: 40.dp),
             _buildStatusSection(
+              lat: state.orderDetails.selectedAddress?.latitude ?? '',
+              lon: state.orderDetails.selectedAddress?.longitude ?? '',
               mobileNumber:
                   state.orderDetails.customer?.user?.phoneNumber ?? '',
               dateString: formatSingleDate(
@@ -505,6 +509,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
     required bool isActuallyCompleted,
     required List<OrderStatus> statusHistory,
     required String statusKey,
+    required String lat,
+    required String lon,
     String? deliveryLocation,
     required String mobileNumber,
   }) {
@@ -545,7 +551,14 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                 borderColor: AppColors.primaryColor,
                 backgroundColor: AppColors.blue1,
                 textColor: AppColors.primaryColor,
-                onTap: () {},
+                onTap: () {
+                  (lat == null || lon == null || lat == "" || lon == "")
+                      ? TheToast.show(
+                          message: "This location is not available",
+                          context: context)
+                      : MapNavigationHelper.openNavigation(
+                          double.tryParse(lat), double.tryParse(lon), context);
+                },
               ),
               Gap(4.dp),
               OrderCardButton(
