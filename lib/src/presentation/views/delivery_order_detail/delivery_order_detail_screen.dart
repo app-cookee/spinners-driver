@@ -9,6 +9,8 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
+import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/placeholder/order_detail_shimmer.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/delivery_confirm_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/info_card.dart';
@@ -16,6 +18,7 @@ import 'package:spinners_driver/src/presentation/views/delivery_order_detail/wid
 import 'package:spinners_driver/src/presentation/views/order_details_screen/order_details_screen.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -87,9 +90,11 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                 ),
                               ),
                               if (dState.orderDetails.payment
-                              .where((p) => p.status.toLowerCase() == "pending")
-                              .map((p) => double.tryParse(p.amount) ?? 0.0)
-                              .fold(0.0, (sum, amt) => sum + amt) >
+                                      .where((p) =>
+                                          p.status.toLowerCase() == "pending")
+                                      .map((p) =>
+                                          double.tryParse(p.amount) ?? 0.0)
+                                      .fold(0.0, (sum, amt) => sum + amt) >
                                   0)
                                 SliverPersistentHeader(
                                   pinned: true,
@@ -474,6 +479,10 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                   )
                 : Image.asset(AppImages.arrowdown, height: 40.dp, width: 40.dp),
             _buildStatusSection(
+              lat: state.orderDetails.selectedAddress?.latitude ?? '',
+              lon: state.orderDetails.selectedAddress?.longitude ?? '',
+              mobileNumber:
+                  state.orderDetails.customer?.user?.phoneNumber ?? '',
               dateString: formatSingleDate(
                   state.orderDetails.deliveryAt,
                   state.orderDetails.deliverySlot,
@@ -500,7 +509,10 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
     required bool isActuallyCompleted,
     required List<OrderStatus> statusHistory,
     required String statusKey,
+    required String lat,
+    required String lon,
     String? deliveryLocation,
+    required String mobileNumber,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -528,126 +540,77 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
               color: AppColors.neutral500,
             ),
           ),
-        ],
-        SizedBox(
-          child: isActuallyCompleted
-              ? Padding(
-                  padding: EdgeInsets.only(top: 2.dp),
-                  child: Text(
-                    _getCompletionTime(statusKey, statusHistory),
-                    style: AppTypography.sfProRoundedRegular.copyWith(
-                      fontSize: 10.dp,
-                      color: AppColors.green,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-        Gap(6.dp),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            OrderCardButton(
-              widthFactor: 201 / 376,
-              icon: AppImages.mapIcon,
-              text: "Navigate",
-              borderColor: AppColors.primaryColor,
-              backgroundColor: AppColors.blue1,
-              textColor: AppColors.primaryColor,
-              onTap: () {},
-            ),
-            Gap(4.dp),
-            OrderCardButton(
-              widthFactor: 40 / 376,
-              icon: AppImages.phoneIcon,
-              borderColor: AppColors.greyColor,
-              textColor: AppColors.grey1Color,
-              onTap: () {},
-            ),
-            Gap(4.dp),
-            OrderCardButton(
-              widthFactor: 40 / 376,
-              icon: AppImages.whatsapp,
-              borderColor: AppColors.greyColor,
-              textColor: AppColors.grey1Color,
-              onTap: () {},
-            ),
-          ],
-        )
+          Gap(6.dp),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              OrderCardButton(
+                widthFactor: 201 / 376,
+                icon: AppImages.mapIcon,
+                text: "Navigate",
+                borderColor: AppColors.primaryColor,
+                backgroundColor: AppColors.blue1,
+                textColor: AppColors.primaryColor,
+                onTap: () {
+                  (lat == null || lon == null || lat == "" || lon == "")
+                      ? TheToast.show(
+                          message: "This location is not available",
+                          context: context)
+                      : MapNavigationHelper.openNavigation(
+                          double.tryParse(lat), double.tryParse(lon), context);
+                },
+              ),
+              Gap(4.dp),
+              OrderCardButton(
+                widthFactor: 40 / 376,
+                icon: AppImages.phoneIcon,
+                borderColor: AppColors.greyColor,
+                textColor: AppColors.grey1Color,
+                onTap: () {
+                  LauncherUtils.launchPhoneDialer(mobileNumber,context: context);
+                },
+              ),
+              Gap(4.dp),
+              OrderCardButton(
+                widthFactor: 40 / 376,
+                icon: AppImages.whatsapp,
+                borderColor: AppColors.greyColor,
+                textColor: AppColors.grey1Color,
+                onTap: () {
+                  LauncherUtils.launchWhatsApp(mobileNumber, 'Hi',context: context);
+                },
+              ),
+            ],
+          )
+        ]
       ],
     );
   }
 
-// Helper method to get completion time for a status
-  String _getCompletionTime(String statusKey, List<OrderStatus> statusHistory) {
-    try {
-      final status = statusHistory.firstWhere(
-        (s) => s.status == statusKey,
-      );
-      return status.changedAt.isNotEmpty
-          ? formatUtcToLocal(status.changedAt)
-          : "";
-    } catch (e) {
-      return "";
-    }
-  }
-
-// Helper method to format delivery slot
-  String? _formatDeliverySlot(TimeSlot? slot) {
-    if (slot == null || slot.from.isEmpty || slot.to.isEmpty) return null;
-    try {
-      // Parse UTC datetime and convert to local
-      final from = DateTime.parse(slot.from).toLocal();
-      final to = DateTime.parse(slot.to).toLocal();
-      final now = DateTime.now();
-      String dayLabel;
-      // Check if it's today
-      if (from.year == now.year &&
-          from.month == now.month &&
-          from.day == now.day) {
-        dayLabel = "Today";
-      }
-      // Check if it's tomorrow
-      else if (from.year == now.year &&
-          from.month == now.month &&
-          from.day == now.day + 1) {
-        dayLabel = "Tomorrow";
-      }
-      // For other dates, show month and day
-      else {
-        dayLabel = DateFormat('MMM d').format(from);
-      }
-      final timeFormat = DateFormat('h:mm a');
-      return "$dayLabel, ${timeFormat.format(from)} – ${timeFormat.format(to)}";
-    } catch (e) {
-      // Fallback if parsing fails
-      return "${slot.day} – ${slot.from} to ${slot.to}";
-    }
-  }
-
 // Helper method to format changedAt timestamp for status history
-  String formatUtcToLocal(String utcString) {
+  String formatUtcToUae(String utcString) {
     if (utcString.isEmpty) return "";
     try {
-      // Parse UTC datetime and convert to local
-      DateTime utcDateTime = DateTime.parse(utcString);
-      DateTime localDateTime = utcDateTime.toLocal();
-      final now = DateTime.now();
-      // Check if it's today
-      if (localDateTime.year == now.year &&
-          localDateTime.month == now.month &&
-          localDateTime.day == now.day) {
-        return "Today, ${DateFormat('h:mm a').format(localDateTime)}";
+      // Convert UTC to UAE time (UTC+4)
+      DateTime uaeDateTime = convertUtcToUaeTime(utcString);
+      DateTime nowInUae =
+          convertUtcToUaeTime(DateTime.now().toUtc().toIso8601String());
+
+      // Check if it's today in UAE
+      if (uaeDateTime.year == nowInUae.year &&
+          uaeDateTime.month == nowInUae.month &&
+          uaeDateTime.day == nowInUae.day) {
+        return "Today, ${DateFormat('h:mm a').format(uaeDateTime)}";
       }
-      // Check if it's tomorrow
-      else if (localDateTime.year == now.year &&
-          localDateTime.month == now.month &&
-          localDateTime.day == now.day + 1) {
-        return "Tomorrow, ${DateFormat('h:mm a').format(localDateTime)}";
+      // Check if it's tomorrow in UAE
+      else if (uaeDateTime.year == nowInUae.year &&
+          uaeDateTime.month == nowInUae.month &&
+          uaeDateTime.day == nowInUae.day + 1) {
+        return "Tomorrow, ${DateFormat('h:mm a').format(uaeDateTime)}";
       }
       // For other dates
       else {
-        return DateFormat("MMM d, h:mm a").format(localDateTime);
+        return DateFormat("MMM d, h:mm a").format(uaeDateTime);
       }
     } catch (e) {
       return utcString;
@@ -672,15 +635,15 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
       );
 
       if (deliveredStatus.changedAt.isNotEmpty) {
-        date = DateTime.parse(deliveredStatus.changedAt).toLocal();
+        date = convertUtcToUaeTime(deliveredStatus.changedAt);
       }
     } else {
       // Use deliveryAt date + slot time
-      date = DateTime.parse(utcDate).toLocal();
+      date = convertUtcToUaeTime(utcDate);
 
       if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
-        fromTime = DateTime.parse(slot.from).toLocal();
-        toTime = DateTime.parse(slot.to).toLocal();
+        fromTime = convertUtcToUaeTime(slot.from);
+        toTime = convertUtcToUaeTime(slot.to);
       }
     }
 
@@ -717,34 +680,16 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
       }
     }
   }
+}
 
-  String formatDeliverySlot(Map<String, dynamic> deliverySlot) {
-    final from = DateTime.parse(deliverySlot['from']).toLocal();
-    final to = DateTime.parse(deliverySlot['to']).toLocal();
-
-    final now = DateTime.now();
-    String dayLabel;
-
-    // Check if it's today or tomorrow
-    if (from.year == now.year &&
-        from.month == now.month &&
-        from.day == now.day) {
-      dayLabel = "Today";
-    } else if (from.year == now.year &&
-        from.month == now.month &&
-        from.day == now.day + 1) {
-      dayLabel = "Tomorrow";
-    } else {
-      // Fallback to weekday name
-      dayLabel = DateFormat('EEEE').format(from);
-    }
-
-    // Format time range
-    final timeFormat = DateFormat('h:mm a');
-    final fromTime = timeFormat.format(from);
-    final toTime = timeFormat.format(to);
-
-    return "$dayLabel, $fromTime – $toTime";
+DateTime convertUtcToUaeTime(String utcString) {
+  if (utcString.isEmpty) return DateTime.now();
+  try {
+    DateTime utcDateTime = DateTime.parse(utcString);
+    // UAE is UTC+4
+    return utcDateTime.add(const Duration(hours: 4));
+  } catch (e) {
+    return DateTime.now();
   }
 }
 class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {

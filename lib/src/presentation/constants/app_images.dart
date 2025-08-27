@@ -36,6 +36,7 @@ static const String qrIcon='assets/images/ic_qr.png';
 static const String arrowDownIcon='assets/images/ic_arrow_down.png';
 static const String homeBg='assets/images/home_bg.png';
 static const String searchIcon = 'assets/images/search_Ic.png';
+static const String emptyPlaceholderImage = 'assets/images/emptyPlaceholderImage.png';
 
 
 
