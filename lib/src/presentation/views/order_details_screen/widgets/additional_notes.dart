@@ -4,8 +4,9 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class AdditionalNotes extends StatelessWidget {
-  const AdditionalNotes({super.key, required this.additionalNotesController});
+  const AdditionalNotes({super.key, required this.additionalNotesController, required this.readOnly});
 final TextEditingController additionalNotesController;
+final bool readOnly;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,6 +28,7 @@ final TextEditingController additionalNotesController;
                   controller: additionalNotesController,
                   minLines: 6,
                   maxLines: 6,
+                  readOnly: readOnly,
                   style: AppTypography.sfProRoundedMedium.copyWith(
                     fontSize: 12.sp,
                     color: AppColors.neutral500,

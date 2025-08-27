@@ -104,6 +104,7 @@ class ServicesWidget extends StatelessWidget {
               Gap(6.dp),
               AdditionalNotes(
                 additionalNotesController: additionalNotesController,
+                readOnly: orderState.orderDetails.status == "pickedUp",
               ),
               SizedBox(height: 17.h)
             ],

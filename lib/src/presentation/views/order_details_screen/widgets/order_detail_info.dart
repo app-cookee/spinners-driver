@@ -15,6 +15,7 @@ class OrderDetailnfo extends StatelessWidget {
     required this.title,
     required this.timeSlot,
     required this.address,
+    required this.status,
   });
   final String notes;
   final String customer;
@@ -22,6 +23,7 @@ class OrderDetailnfo extends StatelessWidget {
   final String title;
   final String timeSlot;
   final String address;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +109,7 @@ class OrderDetailnfo extends StatelessWidget {
               title: title,
               timeSlot: timeSlot,
               address: address,
+              status: status,
             )
           ],
         ),

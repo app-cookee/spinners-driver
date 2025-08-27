@@ -4,12 +4,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/placeholder/pickup_order_detail_screen_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/footer_buttons.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_detail_info.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_info_card.dart';
@@ -21,7 +23,7 @@ import 'package:intl/intl.dart';
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({super.key, required this.orderId});
   final String orderId;
-  
+
   @override
   State<OrderDetailScreen> createState() => _OrderDetailScreenState();
 }
@@ -92,10 +94,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
               child: BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
-                  //    if (state.getOrderDetailStatus is StatusLoading ||
-                  //     state.getOrderDetailStatus is StatusInitial) {
-                  //   return QuickOrderDetailShimmer(orderId: widget.orderId);
-                  // }
+                  if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
+                    return const PickupOrderDetailScreenPlaceholder();
+                  }
                   // Update completion status when state changes
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _updateCompletionStatus();
@@ -107,9 +108,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         notes: state.orderDetails.driverNotes,
                         customer: _getCustomerName(state.orderDetails.customer),
                         amount: state.orderDetails.totalAmount,
-                        title: "Pickup",
-                        timeSlot: state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
+                        title:state.orderDetails.status=='pickedUp' ? "Pickedup" : "Pickup",
+                        timeSlot:
+                            state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
                         address: formatAddress(state.orderDetails.selectedAddress.place),
+                        status: state.orderDetails.status,
                       ),
                       SliverToBoxAdapter(
                         child: ServicesWidget(
@@ -126,17 +129,27 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 },
               ),
             ),
-            if (context.watch<OrderBloc>().state.orderDetails.status != 'pickedUp')
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: FooterButtons(
-                  orderId: widget.orderId,
-                  additionalNotesController: additionalNotesController,
-                  allItemsScannedNotifier: allItemsScanned,
-                ),
-              )
+            // if (context.watch<OrderBloc>().state.orderDetails.status != 'pickedUp')
+            BlocBuilder<OrderBloc, OrderState>(
+              builder: (context, state) {
+                  // Hide footer button when loading, initial state, or order is picked up
+                if (state.getOrderDetailStatus is StatusLoading ||
+                    state.getOrderDetailStatus is StatusInitial ||
+                    state.orderDetails.status == 'pickedUp') {
+                  return const SizedBox.shrink();
+                }
+                return Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: FooterButtons(
+                    orderId: widget.orderId,
+                    additionalNotesController: additionalNotesController,
+                    allItemsScannedNotifier: allItemsScanned,
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),
@@ -254,6 +267,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       return "${slot.day} – ${slot.from} to ${slot.to}";
     }
   }
+
   String _formatPickedupSlot(String time) {
     if (time.isEmpty) return "Not specified";
     try {
@@ -281,25 +295,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       return time;
     }
   }
+}
 
-    
-  }
-  String formatAddress(String address) {
-    return address
-        .split('\n') // Split by newlines
-        .where((line) => line.trim().isNotEmpty) // Remove empty lines
-        .map((line) => line.trim()) // Trim whitespace from each line
-        .join(', '); // Join with commas
-  }
+String formatAddress(String address) {
+  return address
+      .split('\n') // Split by newlines
+      .where((line) => line.trim().isNotEmpty) // Remove empty lines
+      .map((line) => line.trim()) // Trim whitespace from each line
+      .join(', '); // Join with commas
+}
 
-  String _getCustomerName(Customer customer) {
-    if (customer.user != null) {
-      final firstName = customer.user!.firstName.isNotEmpty ? customer.user!.firstName : '';
-      final lastName = customer.user!.lastName.isNotEmpty ? customer.user!.lastName : '';
-      if (firstName.isNotEmpty || lastName.isNotEmpty) {
-        return "$firstName $lastName".trim();
-      }
+String _getCustomerName(Customer customer) {
+  if (customer.user != null) {
+    final firstName = customer.user!.firstName.isNotEmpty ? customer.user!.firstName : '';
+    final lastName = customer.user!.lastName.isNotEmpty ? customer.user!.lastName : '';
+    if (firstName.isNotEmpty || lastName.isNotEmpty) {
+      return "$firstName $lastName".trim();
     }
-    return "Customer";
   }
-
+  return "Customer";
+}

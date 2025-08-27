@@ -6,10 +6,11 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class StatusHistory extends StatelessWidget {
-  const StatusHistory({super.key, required this.title, required this.timeSlot, required this.address});
+  const StatusHistory({super.key, required this.title, required this.timeSlot, required this.address, required this.status});
   final String title;
   final String timeSlot;
   final String address;
+  final String status;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,18 +21,22 @@ class StatusHistory extends StatelessWidget {
             Row(
               spacing: 8,
               children: [
-                Image.asset(AppImages.arrowup, height: 40.dp, width: 40.dp),
+                Image.asset(
+                  status == "pickedUp" ?
+                  AppImages.orderStatus
+                  :AppImages.arrowup, height: 40.dp, width: 40.dp,),
                 _buildStatusSection(
                   title: title,
                   expectedSlot: timeSlot,
                 ),
               ],
             ),
-            Gap(4.dp),
-            SizedBox(
-              width: 65.w,
-              child: Text(
-                "Pickup Location: $address",
+            if (status != "pickedUp") ... [
+              Gap(4.dp),
+              SizedBox(
+                width: 65.w,
+                child: Text(
+                  "Pickup Location: $address",
                 style: AppTypography.sfProRoundedRegular.copyWith(
                   fontSize: 12.sp,
                   color: AppColors.neutral500,
@@ -103,7 +108,7 @@ class StatusHistory extends StatelessWidget {
                   ),
                 )
               ],
-            )
+            )]
           ],
         ),
       ],
