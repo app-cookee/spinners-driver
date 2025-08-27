@@ -108,9 +108,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         notes: state.orderDetails.driverNotes,
                         customer: _getCustomerName(state.orderDetails.customer),
                         amount: state.orderDetails.totalAmount,
-                        title:state.orderDetails.status=='pickedUp' ? "Pickedup" : "Pickup",
-                        timeSlot:
-                            state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
+                        title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
+                        timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
+                        // state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
                         address: formatAddress(state.orderDetails.selectedAddress.place),
                         status: state.orderDetails.status,
                       ),
@@ -132,10 +132,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             // if (context.watch<OrderBloc>().state.orderDetails.status != 'pickedUp')
             BlocBuilder<OrderBloc, OrderState>(
               builder: (context, state) {
-                  // Hide footer button when loading, initial state, or order is picked up
-                if (state.getOrderDetailStatus is StatusLoading ||
-                    state.getOrderDetailStatus is StatusInitial ||
-                    state.orderDetails.status == 'pickedUp') {
+                // Hide footer button when loading, initial state, or order is picked up
+                if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial || state.orderDetails.status == 'pickedUp') {
                   return const SizedBox.shrink();
                 }
                 return Positioned(
@@ -167,11 +165,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               value: state.orderDetails.type == "normalOrder" ? "Normal" : "Quick Order⚡",
             ),
             Gap(4.dp),
-            OrderInfoCard(
-                label: "Pickup Time",
-                value: formatSingleDate(
-                  state.orderDetails.pickupAt,
-                )),
+            OrderInfoCard(label: "Pickup Time", value: _calculatePickupTime(state)),
             if (state.orderDetails.payment.isNotEmpty) ...[
               Gap(4.dp),
               OrderInfoCard(
@@ -239,60 +233,93 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
   }
 
-  // Helper method to format pickup slot
-  String? _formatPickupSlot(TimeSlot? slot) {
-    if (slot == null || slot.from.isEmpty || slot.to.isEmpty) return null;
+  String _calculatePickupTime(OrderState state) {
+    final orderDetails = state.orderDetails;
+    final status = orderDetails.status.toLowerCase();
+
+    // If status is 'pickedup', show time from changedAt in status history
+    if (status == 'pickedup') {
+      // Find the pickedup status from history
+      final pickedupStatus = orderDetails.statusHistory.firstWhere(
+        (s) => s.status.toLowerCase() == 'pickedup',
+        orElse: () => const OrderStatus(),
+      );
+
+      if (pickedupStatus.changedAt.isNotEmpty) {
+        return _formatToUAETime(pickedupStatus.changedAt);
+      }
+      return "Not specified";
+    }
+
+    // If status is not pickedup, take day from pickupAt and time from pickup time slot
+    if (orderDetails.pickupAt.isNotEmpty && orderDetails.pickupSlot.from.isNotEmpty) {
+      return _formatPickupTimeWithSlot(orderDetails.pickupAt, orderDetails.pickupSlot);
+    }
+
+    return "Not specified";
+  }
+
+  String _formatToUAETime(String utcString) {
+    if (utcString.isEmpty) return "Not specified";
     try {
-      // Parse UTC datetime and convert to local
-      final from = DateTime.parse(slot.from).toLocal();
-      final to = DateTime.parse(slot.to).toLocal();
+      // Parse UTC datetime and convert to UAE timezone (UTC+4)
+      final utcDateTime = DateTime.parse(utcString);
+      final uaeDateTime = utcDateTime.add(const Duration(hours: 4)); // UAE is UTC+4
       final now = DateTime.now();
+
       String dayLabel;
       // Check if it's today
-      if (from.year == now.year && from.month == now.month && from.day == now.day) {
+      if (uaeDateTime.year == now.year && uaeDateTime.month == now.month && uaeDateTime.day == now.day) {
         dayLabel = "Today";
       }
       // Check if it's tomorrow
-      else if (from.year == now.year && from.month == now.month && from.day == now.day + 1) {
+      else if (uaeDateTime.year == now.year && uaeDateTime.month == now.month && uaeDateTime.day == now.day + 1) {
         dayLabel = "Tomorrow";
       }
       // For other dates, show month and day
       else {
-        dayLabel = DateFormat('MMM d').format(from);
+        dayLabel = DateFormat('MMM d').format(uaeDateTime);
       }
+
       final timeFormat = DateFormat('h:mm a');
-      return "$dayLabel, ${timeFormat.format(from)} – ${timeFormat.format(to)}";
+      return "$dayLabel, ${timeFormat.format(uaeDateTime)}";
     } catch (e) {
-      // Fallback if parsing fails
-      return "${slot.day} – ${slot.from} to ${slot.to}";
+      return "Invalid date format";
     }
   }
 
-  String _formatPickedupSlot(String time) {
-    if (time.isEmpty) return "Not specified";
+  String _formatPickupTimeWithSlot(String pickupAt, TimeSlot pickupSlot) {
     try {
-      // Parse UTC datetime and convert to local
-      final from = DateTime.parse(time).toLocal();
-      final to = from.add(const Duration(hours: 1)); // Assuming 1-hour slot
+      // Parse pickupAt date and pickup slot times
+      final pickupDate = DateTime.parse(pickupAt);
+      final fromTime = DateTime.parse(pickupSlot.from);
+      final toTime = DateTime.parse(pickupSlot.to);
+
+      // Convert to UAE timezone (UTC+4)
+      final uaePickupDate = pickupDate.add(const Duration(hours: 4));
+      final uaeFromTime = fromTime.add(const Duration(hours: 4));
+      final uaeToTime = toTime.add(const Duration(hours: 4));
+
       final now = DateTime.now();
       String dayLabel;
+
       // Check if it's today
-      if (from.year == now.year && from.month == now.month && from.day == now.day) {
+      if (uaePickupDate.year == now.year && uaePickupDate.month == now.month && uaePickupDate.day == now.day) {
         dayLabel = "Today";
       }
       // Check if it's tomorrow
-      else if (from.year == now.year && from.month == now.month && from.day == now.day + 1) {
+      else if (uaePickupDate.year == now.year && uaePickupDate.month == now.month && uaePickupDate.day == now.day + 1) {
         dayLabel = "Tomorrow";
       }
       // For other dates, show month and day
       else {
-        dayLabel = DateFormat('MMM d').format(from);
+        dayLabel = DateFormat('MMM d').format(uaePickupDate);
       }
+
       final timeFormat = DateFormat('h:mm a');
-      return "$dayLabel, ${timeFormat.format(from)} – ${timeFormat.format(to)}";
+      return "$dayLabel, ${timeFormat.format(uaeFromTime)} – ${timeFormat.format(uaeToTime)}";
     } catch (e) {
-      // Fallback if parsing fails
-      return time;
+      return "Invalid date format";
     }
   }
 }
