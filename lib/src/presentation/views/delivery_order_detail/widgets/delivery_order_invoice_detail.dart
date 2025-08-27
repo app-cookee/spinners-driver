@@ -17,10 +17,10 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final codAmount = (
-  (double.tryParse(state.orderDetails.totalAmount) ?? 0) -
-  (double.tryParse(state.orderDetails.paidAmount) ?? 0)
-);
+    final codAmount = state.orderDetails.payment
+                              .where((p) => p.status.toLowerCase() == "pending")
+                              .map((p) => double.tryParse(p.amount) ?? 0.0)
+                              .fold(0.0, (sum, amt) => sum + amt);
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
