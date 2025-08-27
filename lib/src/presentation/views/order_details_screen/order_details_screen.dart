@@ -10,12 +10,15 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
+import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/placeholder/pickup_order_detail_screen_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/footer_buttons.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_detail_info.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_info_card.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/services_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 import 'package:intl/intl.dart';
 
@@ -113,6 +116,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         // state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
                         address: formatAddress(state.orderDetails.selectedAddress.place),
                         status: state.orderDetails.status,
+                        onNavigateTap: () {
+                          final lat = state.orderDetails.selectedAddress.latitude;
+                          final lon = state.orderDetails.selectedAddress.longitude;
+                          (lat == "" || lon == "")
+                              ? TheToast.show(message: "This location is not available", context: context)
+                              : MapNavigationHelper.openNavigation(double.tryParse(lat), double.tryParse(lon), context);
+                        },
+                        onCallTap: () {
+                          LauncherUtils.launchPhoneDialer(state.orderDetails.customer.user?.phoneNumber ?? '', context: context);
+                        },
+                        onWhatsAppTap: () {
+                          LauncherUtils.launchWhatsApp(state.orderDetails.customer.user?.phoneNumber ?? '', 'Hi', context: context);
+                        },
                       ),
                       SliverToBoxAdapter(
                         child: ServicesWidget(

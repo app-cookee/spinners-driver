@@ -15,7 +15,7 @@ class OrderDetailnfo extends StatelessWidget {
     required this.title,
     required this.timeSlot,
     required this.address,
-    required this.status,
+    required this.status, required this.onNavigateTap, required this.onCallTap, required this.onWhatsAppTap,
   });
   final String notes;
   final String customer;
@@ -24,7 +24,9 @@ class OrderDetailnfo extends StatelessWidget {
   final String timeSlot;
   final String address;
   final String status;
-
+ final VoidCallback onNavigateTap;
+  final VoidCallback onCallTap;
+  final VoidCallback onWhatsAppTap;
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -109,7 +111,7 @@ class OrderDetailnfo extends StatelessWidget {
               title: title,
               timeSlot: timeSlot,
               address: address,
-              status: status,
+              status: status, onNavigateTap: () { onNavigateTap(); }, onCallTap: () { onCallTap(); }, onWhatsAppTap: () { onWhatsAppTap(); },
             )
           ],
         ),
