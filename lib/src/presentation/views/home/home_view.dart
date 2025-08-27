@@ -1,6 +1,9 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -49,6 +52,7 @@ class _HomeViewState extends State<HomeView> {
     OrderFilter.readyForDelivery,
   ];
   
+  final int _itemsPerPage = 5;
   late ScrollController _scrollController;
   ValueNotifier<bool> isScrolling = ValueNotifier(false);
   final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
@@ -73,6 +77,13 @@ class _HomeViewState extends State<HomeView> {
 
     // Add scroll listener to track scrolling state
     _scrollController.addListener(() {
+        // log("Scroll listener fired - pixels: ${_scrollController.position.pixels}");
+      
+        if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+            log("scrolled");
+        _loadMoreItems();
+      }
       if (_scrollController.offset > 0 && !isScrolling.value) {
         isScrolling.value = true;
       } else if (_scrollController.offset <= 0 && isScrolling.value) {
@@ -84,6 +95,37 @@ class _HomeViewState extends State<HomeView> {
     nearestLocationNotifier.addListener(_onNearestLocationChanged);
     expressOnlyNotifier.addListener(_onExpressOnlyChanged);
   }
+
+void _loadMoreItems() {
+  log("load more itrms");
+  final orderState = context.read<OrderBloc>().state;
+
+  // Prevent duplicate calls
+  if (orderState.isLoadingMore || !orderState.hasMore) return;
+
+  // Convert filters to string
+  final statusStrings = currentOrderFilter.map(statusToString).toList();
+  final statusString = statusStrings.join(',');
+
+  // Current toggles
+  final isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
+  final lat = latitudeNotifier.value;
+  final lng = longitudeNotifier.value;
+
+  // Trigger pagination with filters
+  context.read<OrderBloc>().add(
+    OrderEvent.paginateOrdersList(
+      skip: orderState.ordersList.length,
+      limit: _itemsPerPage,
+      filter: statusString,
+      expressOnly: isExpressOnlyEnabled,
+      latitude: lat,
+      longitude: lng,
+    ),
+  );
+}
+
+
 
   void _onNearestLocationChanged() {
     bool isNearestLocationEnabled = nearestLocationNotifier.value == 1;
@@ -119,7 +161,7 @@ class _HomeViewState extends State<HomeView> {
 
     context.read<OrderBloc>().add(
       OrderEvent.getOrdersList(
-        limit: 1000,
+        limit: _itemsPerPage,
         skip: 0,
         filter: statusStrings.join(','),
         expressOnly: isExpressOnlyEnabled,
@@ -243,7 +285,7 @@ class _HomeViewState extends State<HomeView> {
                                 return ListView.builder(
                                     physics:
                                         const NeverScrollableScrollPhysics(),
-                                    itemCount: state.ordersList.length,
+                                    itemCount: state.ordersList.length + (state.isLoadingMore ? 1 : 0),
                                     shrinkWrap: true,
                                     padding: EdgeInsets.only(
                                         top: 12.dp,
@@ -252,6 +294,11 @@ class _HomeViewState extends State<HomeView> {
                                         bottom: 16.h),
                                     primary: false,
                                     itemBuilder: (context, index) {
+                                       if (index == state.ordersList.length) {
+                              return const SpinKitCircle(
+                                      color: AppColors.primaryColor,
+                                    );
+                            }
                                       return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"" ,lon:state.ordersList[index].selectedAddress?.longitude??"" ,
                                         isExpressService: state.ordersList[index].expressService,
                                         address: state.ordersList[index].selectedAddress?.place ?? "",

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,6 +19,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     this.orderRepository,
   ) : super(OrderState.initial()) {
     on<_GetOrdersList>(_onGetOrdersList);
+    on<_PaginateOrdersList>(_onPaginateOrdersList);
   }
   FutureOr<void> _onGetOrdersList(
       _GetOrdersList event, Emitter<OrderState> emit) async {
@@ -36,6 +38,33 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         getOrderListStatus: Status.failure(
           e.toString(),
         ),
+      ));
+    }
+  }
+
+
+
+  FutureOr<void> _onPaginateOrdersList(_PaginateOrdersList event, Emitter<OrderState> emit) async{
+    try{
+      log("paginating");
+              emit(state.copyWith(
+      isLoadingMore: true
+    ));
+      var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText);
+       final newList = [...state.ordersList, ...response.orderList];
+           final bool hasMoreItems = response.orderList.length >= event.limit;
+              emit(state.copyWith(
+       ordersList : newList,
+        totalCount: response.totalCount,
+        
+        hasMore: hasMoreItems,
+        isLoadingMore: false,
+      ));
+    }
+    catch (e) {
+      log("notpaginating");
+      emit(state.copyWith(
+       isLoadingMore: false
       ));
     }
   }

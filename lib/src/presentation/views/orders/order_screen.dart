@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
@@ -46,9 +49,10 @@ class _OrderScreenState extends State<OrderScreen> {
 
 
   final _debouncer = Debouncer(milliseconds: 600);
+    String _currentSearchQuery = "";
 
-  // late ScrollController _scrollController;
-
+  final int _itemsPerPage = 5;
+  late ScrollController _scrollController;
   final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> nearestLocationNotifier = ValueNotifier(0);
   ValueNotifier<int> expressOnlyNotifier = ValueNotifier(0);
@@ -66,13 +70,56 @@ class _OrderScreenState extends State<OrderScreen> {
     currentOrderFilter = _allOrders;
     _fetchOrders(currentOrderFilter);
       // Separate listeners for each toggle
+      _scrollController = ScrollController();
+
+    // Add scroll listener to track scrolling state
+    _scrollController.addListener(() {
+        // log("Scroll listener fired - pixels: ${_scrollController.position.pixels}");
+      
+        if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+            // log("scrolled");
+        _loadMoreItems();
+      }
+      
+    });
+
     nearestLocationNotifier.addListener(_onNearestLocationChanged);
     expressOnlyNotifier.addListener(_onExpressOnlyChanged);
 
     super.initState();
   }
+void _loadMoreItems() {
+  // log("load more itrms");
+  final orderState = context.read<OrderBloc>().state;
 
+  // Prevent duplicate calls
+  if (orderState.isLoadingMore || !orderState.hasMore) return;
+
+  // Convert filters to string
+  final statusStrings = currentOrderFilter.map(statusToString).toList();
+  final statusString = statusStrings.join(',');
+
+  // Current toggles
+  final isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
+  final lat = latitudeNotifier.value;
+  final lng = longitudeNotifier.value;
+
+  // Trigger pagination with filters
+  context.read<OrderBloc>().add(
+    OrderEvent.paginateOrdersList(
+      skip: orderState.ordersList.length,
+      limit: _itemsPerPage,
+      filter: statusString,
+      expressOnly: isExpressOnlyEnabled,
+      latitude: lat,
+      longitude: lng,
+      searchText: _currentSearchQuery.isEmpty ? null : _currentSearchQuery
+    ),
+  );
+}
   void _onSearchChanged(String query) {
+    _currentSearchQuery = query; // Store the current search query
     _debouncer.run(() {
       // if (query.isNotEmpty) {
          _fetchOrders(currentOrderFilter, searchQuery: query);
@@ -116,7 +163,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
     context.read<OrderBloc>().add(
       OrderEvent.getOrdersList(
-        limit: 1000,
+        limit: _itemsPerPage,
         skip: 0,
         filter: statusStrings.join(','),
         expressOnly: isExpressOnlyEnabled,
@@ -128,6 +175,7 @@ class _OrderScreenState extends State<OrderScreen> {
   }
   @override
   void dispose() {
+      _scrollController.dispose();
   nearestLocationNotifier.removeListener(_onNearestLocationChanged);
     expressOnlyNotifier.removeListener(_onExpressOnlyChanged);
     nearestLocationNotifier.dispose();
@@ -223,26 +271,32 @@ class _OrderScreenState extends State<OrderScreen> {
                 ],
               ),
               Gap(9.dp),
-              BlocBuilder<OrderBloc, OrderState>(
-                builder: (context, state) {
-                               if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
-                                  return const OrderListPlaceholder();
-                                }
-                                if(state.ordersList.isEmpty){
-                                  return
-                                   Padding(
-                                    padding: EdgeInsetsGeometry.only(top: 6.h),
-                                    child: const Center(child: EmptyPlaceholder()),
-                                  );
-                                }
-                  return Expanded(
-                    child: ListView.builder(
-                        itemCount: state.ordersList.length,
-                        shrinkWrap: true,
+              Expanded(
+                child: BlocBuilder<OrderBloc, OrderState>(
+                  builder: (context, state) {
+                                 if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
+                                    return const OrderListPlaceholder();
+                                  }
+                                  if(state.ordersList.isEmpty){
+                                    return
+                                     Padding(
+                                      padding: EdgeInsetsGeometry.only(top: 6.h),
+                                      child: const Center(child: EmptyPlaceholder()),
+                                    );
+                                  }
+                    return ListView.builder(
+                       controller: _scrollController,
+                        itemCount: state.ordersList.length + (state.isLoadingMore ? 1 : 0),
+                        // shrinkWrap: true,
                         padding: EdgeInsets.only(
                             top: 9.dp, bottom: ((88 / 812) * 100.h)),
-                        primary: false,
+                        // primary: false,
                         itemBuilder: (context, index) {
+                                     if (index == state.ordersList.length) {
+                              return const SpinKitCircle(
+                                      color: AppColors.primaryColor,
+                                    );
+                            }
                           return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"",lon: 
                           state.ordersList[index].selectedAddress?.longitude??"" ,
                             isExpressService:  state.ordersList[index].expressService,
@@ -265,9 +319,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                        
                                         // notes: 'Deliver to reception.',
                                       );
-                        }),
-                  );
-                },
+                        });
+                  },
+                ),
               ),
             ],
           ),
