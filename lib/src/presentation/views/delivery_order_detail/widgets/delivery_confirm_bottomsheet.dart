@@ -60,7 +60,7 @@ class _DeliveryConfirmBottomsheetState
                 });
               },
               items: [
-                CustomDropDownMenuItem(label: 'Bank', value: 'bank'),
+                CustomDropDownMenuItem(label: 'Bank', value: 'swipeCard'),
                 CustomDropDownMenuItem(label: 'Cash', value: 'cod'),
               ],
               text: 'Payment Method',
@@ -74,10 +74,12 @@ class _DeliveryConfirmBottomsheetState
             listener: (context, state) {
               if (state.confirmDeliveryStatus is StatusSuccess) {
                 context.router.pop();
+                context.read<DeliveryBloc>().add(
+                    DeliveryEvent.getOrderDetails(orderId: widget.orderId));
                 TheToast.show(
                     message: 'Delivery confirmed successfully',
                     context: context,
-                    isError: true);
+                    isError: false);
               }
               if (state.confirmDeliveryStatus is StatusFailure) {
                 TheToast.show(
