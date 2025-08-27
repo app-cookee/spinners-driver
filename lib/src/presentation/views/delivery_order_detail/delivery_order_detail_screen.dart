@@ -290,6 +290,10 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                   child: dState.orderDetails.id.isEmpty
                       ? const SizedBox.shrink()
                       : _footerButton(
+                          isCompleted: dState.orderDetails.statusHistory
+                              .map((status) => status.status)
+                              .toSet()
+                              .contains('delivered'),
                           orderId: dState.orderDetails.id,
                           totalItemsCount:
                               dState.orderDetails.orderedItems.length,
@@ -333,6 +337,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
   Widget _footerButton(
       {required int totalItemsCount,
       required double totalAmount,
+      required bool isCompleted,
       required String orderId}) {
     return Container(
       padding:
@@ -369,7 +374,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
       ),
       child: Column(
         children: [
-          if (totalAmount > 0)
+          if (totalAmount > 0 && isCompleted == false)
             PrimaryButtonWidget(
                 onPressed: () {
                   showModalBottomSheet(
@@ -418,6 +423,42 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                     Gap(15.w)
                   ],
                 )),
+          if (!(totalAmount > 0) && isCompleted == false)
+            BlocListener<DeliveryBloc, DeliveryState>(
+              listener: (context, state) {
+              if (state.confirmDeliveryStatus is StatusSuccess) {
+                context.read<DeliveryBloc>().add(
+                    DeliveryEvent.getOrderDetails(orderId: widget.orderId));
+                TheToast.show(
+                    message: 'Delivery confirmed successfully',
+                    context: context,
+                    isError: false);
+              }
+              if (state.confirmDeliveryStatus is StatusFailure) {
+                TheToast.show(
+                    message: state.confirmDeliveryStatus.errorMessage,
+                    context: context,
+                    isError: true);
+              }
+            },
+            listenWhen: (previous, current) =>
+                previous.confirmDeliveryStatus != current.confirmDeliveryStatus,
+              child: BlocBuilder<DeliveryBloc, DeliveryState>(
+                builder: (context, state) {
+                  return PrimaryButtonWidget(
+                    isLoading: state.confirmDeliveryStatus is StatusLoading,
+                    onPressed: () {
+                      context.read<DeliveryBloc>().add(
+                          DeliveryEvent.confirmDelivery(
+                              id: orderId,
+                              paymentMethod: 'cod',
+                              receivedAmount: 0));
+                    },
+                    text: "Confirm Delivery",
+                  );
+                },
+              ),
+            ),
           Gap(8.dp),
           PrimaryButtonWidget(
             buttonBgImage: AppImages.buttonGreyBg,
@@ -567,7 +608,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                 borderColor: AppColors.greyColor,
                 textColor: AppColors.grey1Color,
                 onTap: () {
-                  LauncherUtils.launchPhoneDialer(mobileNumber,context: context);
+                  LauncherUtils.launchPhoneDialer(mobileNumber,
+                      context: context);
                 },
               ),
               Gap(4.dp),
@@ -577,7 +619,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                 borderColor: AppColors.greyColor,
                 textColor: AppColors.grey1Color,
                 onTap: () {
-                  LauncherUtils.launchWhatsApp(mobileNumber, 'Hi',context: context);
+                  LauncherUtils.launchWhatsApp(mobileNumber, 'Hi',
+                      context: context);
                 },
               ),
             ],
@@ -691,4 +734,33 @@ DateTime convertUtcToUaeTime(String utcString) {
   } catch (e) {
     return DateTime.now();
   }
+}
+
+class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+
+  StickyHeaderDelegate({required this.child});
+
+  @override
+  double get minExtent => 47.dp; // Fixed height instead of 70.dp
+
+  @override
+  double get maxExtent => 47.dp; // Same as minExtent
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Material(
+      elevation: overlapsContent ? 2.0 : 0.0,
+      child: Container(
+        color: Colors.white,
+        height: maxExtent,
+        child: child,
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }

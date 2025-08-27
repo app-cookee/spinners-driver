@@ -20,6 +20,7 @@ class CommonTextField extends StatelessWidget {
   final double? borderRadius;
   final TextStyle? hintStyle;
   final TextStyle? textStyle;
+ final bool? readOnly;
   final String? initialValue;
 
   const CommonTextField({
@@ -39,7 +40,9 @@ class CommonTextField extends StatelessWidget {
     this.borderColor,
     this.borderRadius,
     this.hintStyle,
-    this.textStyle, this.initialValue,
+    this.textStyle,
+    this.readOnly,
+    this.initialValue,
   });
 
   @override
@@ -71,6 +74,7 @@ class CommonTextField extends StatelessWidget {
             obscureText: obscureText,
             enabled: enabled,
             maxLines: maxLines,
+            readOnly: readOnly ?? false,
             spellCheckConfiguration: const SpellCheckConfiguration.disabled(), 
             style: textStyle ?? AppTypography.sfProRoundedMedium.copyWith(
                 fontSize: 12.sp,

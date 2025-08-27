@@ -1,20 +1,26 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
+import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
+import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/utils/no_glow_scroll_behaviour.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/placeholder/pickup_order_detail_screen_placeholder.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/footer_buttons.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_detail_info.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_info_card.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/ordered_services.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/secondary_button_widget.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/services_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
+import 'package:intl/intl.dart';
 
 @RoutePage()
 class OrderDetailScreen extends StatefulWidget {
@@ -27,218 +33,111 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final TextEditingController additionalNotesController = TextEditingController();
+  // Track scanned items and completion status for normal orders
+  final ValueNotifier<Set<int>> scannedItems = ValueNotifier<Set<int>>({});
+  // Track scanned QR codes to prevent duplicates
+  final ValueNotifier<Set<String>> scannedQRCodes = ValueNotifier<Set<String>>({});
+  late ValueNotifier<bool> allItemsScanned;
+
+  @override
+  void initState() {
+    context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId));
+    log('Fetching order details for order ID: ${widget.orderId}');
+    allItemsScanned = ValueNotifier<bool>(false);
+
+    // Listen to scanned items changes to update completion status
+    scannedItems.addListener(_updateCompletionStatus);
+
+    super.initState();
+  }
+
+  void _updateCompletionStatus() {
+    final state = context.read<OrderBloc>().state;
+    final orderType = state.orderDetails.type;
+
+    if (orderType == "normalOrder") {
+      // For normal orders, check if all items have their required quantity of bags scanned
+      bool allComplete = true;
+      for (final item in state.orderDetails.orderedItems) {
+        if (item.scannedBags.length < item.quantity) {
+          allComplete = false;
+          break;
+        }
+      }
+      allItemsScanned.value = allComplete && state.orderDetails.orderedItems.isNotEmpty;
+    } else {
+      // For quick orders, check if at least one bag has been scanned
+      final totalScannedBags = state.orderDetails.orderedItems.fold<int>(0, (sum, item) => sum + item.scannedBags.length);
+      allItemsScanned.value = totalScannedBags > 0;
+    }
+  }
+
   @override
   void dispose() {
     additionalNotesController.dispose();
+    scannedItems.removeListener(_updateCompletionStatus);
+    scannedItems.dispose();
+    scannedQRCodes.dispose();
+    allItemsScanned.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    const String type = "Normal";
     ValueNotifier<int?> selectedIndex = ValueNotifier<int?>(null);
+    final refId = context.read<OrderBloc>().state.orderDetails.refId;
     return ScrollConfiguration(
       behavior: NoGlowScrollBehavior(),
       child: Scaffold(
         backgroundColor: AppColors.white,
         body: Stack(
           children: [
-            GestureDetector(onTap: () => Navigator.pop(context), child: _header(context)),
+            GestureDetector(onTap: () => Navigator.pop(context), child: _header(context, refId)),
             Padding(
               padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
               child: BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
+                  if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
+                    return const PickupOrderDetailScreenPlaceholder();
+                  }
+                  // Update completion status when state changes
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _updateCompletionStatus();
+                  });
                   return CustomScrollView(
                     slivers: [
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 8.dp),
-                          child: Column(
-                            children: [
-                              const OrderInfoCard(
-                                  label: "Order Type",
-                                  value:
-                                      // state.orderDetails.type ==
-                                      //         "normalOrder"
-                                      //     ? "Normal"
-                                      //     :
-                                      type == "Quick" ? "Quick Order⚡" : "Normal"),
-                              Gap(4.dp),
-                              const OrderInfoCard(
-                                  label: "Pickup Time",
-                                  value:
-                                      // formatSingleDate(
-                                      //     state.orderDetails.createdAt)
-                                      "3:15 PM (in 25 min)"),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: StickyHeaderDelegate(
-                          child: Container(
-                            color: AppColors.white,
-                            padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 0),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                children: [
-                                  Gap(4.dp),
-                                  const OrderInfoCard(
-                                    label: "Delivery Method",
-                                    value: "Doorstep",
-                                  ),
-                                  Gap(4.dp),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const OrderDetailnfo(
-                        notes: "Customer requested pickup after prayer time.",
-                        customer: "Ahmed Al Harthy",
-                        amount: "45",
+                      _orderInfo(state),
+                      OrderDetailnfo(
+                        notes: state.orderDetails.driverNotes,
+                        customer: _getCustomerName(state.orderDetails.customer),
+                        amount: state.orderDetails.totalAmount,
+                        title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
+                        timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
+                        // state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
+                        address: formatAddress(state.orderDetails.selectedAddress.place),
+                        status: state.orderDetails.status,
+                        onNavigateTap: () {
+                          final lat = state.orderDetails.selectedAddress.latitude;
+                          final lon = state.orderDetails.selectedAddress.longitude;
+                          (lat == "" || lon == "")
+                              ? TheToast.show(message: "This location is not available", context: context)
+                              : MapNavigationHelper.openNavigation(double.tryParse(lat), double.tryParse(lon), context);
+                        },
+                        onCallTap: () {
+                          LauncherUtils.launchPhoneDialer(state.orderDetails.customer.user?.phoneNumber ?? '', context: context);
+                        },
+                        onWhatsAppTap: () {
+                          LauncherUtils.launchWhatsApp(state.orderDetails.customer.user?.phoneNumber ?? '', 'Hi', context: context);
+                        },
                       ),
                       SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            Gap(20.dp),
-                            Container(
-                              decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.grey, AppColors.white])),
-                              width: 100.w,
-
-                              // color: const Color.fromARGB(255, 226, 218, 218),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const DashedDivider(),
-                                  Gap(20.dp),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                    child: Text(
-                                      "Services",
-                                      style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                        fontSize: 12.dp,
-                                        color: AppColors.textGrey,
-                                      ),
-                                    ),
-                                  ),
-                                  Gap(6.dp),
-                                  type == "Normal" ? OrderedServices(selectedIndex: selectedIndex) : const SizedBox.shrink(),
-                                  type == "Quick"
-                                      ? InkWell(
-                                          onTap: () {
-                                            Navigator.push(context, (MaterialPageRoute(builder: (context) => const QRScannerScreen())));
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                            child: SecondaryButtonWidget(
-                                              height: 48.dp,
-                                              bordercolor: AppColors.scanblue,
-                                              backgroundColor: AppColors.white,
-                                              textColor: AppColors.primaryColor,
-                                              style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                                fontSize: 14.sp,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                              onPressed: () {},
-                                              text: "Scan New Bag",
-                                              leadingIcon: Image.asset(
-                                                height: 24.dp,
-                                                width: 24.dp,
-                                                AppImages.scanner,
-                                                //  color: Colors.blue,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
-                                  Gap(8.dp),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                    child: Text(
-                                      "Additional Notes",
-                                      style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                        fontSize: 12.dp,
-                                        color: AppColors.textGrey,
-                                      ),
-                                    ),
-                                  ),
-                                  Gap(6.dp),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xffD7E5EB),
-                                        borderRadius: BorderRadius.circular(12.dp),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(bottom: 1.dp, right: 1.dp),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(12.dp),
-                                          ),
-                                          child: TextField(
-                                            controller: additionalNotesController,
-                                            minLines: 6,
-                                            maxLines: 6,
-                                            style: AppTypography.sfProRoundedMedium.copyWith(
-                                              fontSize: 12.sp,
-                                              color: AppColors.neutral500,
-                                            ),
-                                            decoration: InputDecoration(
-                                              hintText: '',
-                                              hintStyle: AppTypography.sfProRoundedMedium.copyWith(
-                                                fontSize: 12.sp,
-                                                color: AppColors.neutral500,
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.white,
-                                              contentPadding: EdgeInsets.symmetric(
-                                                horizontal: 12.dp,
-                                                vertical: 8.dp,
-                                              ),
-                                              border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(12.dp),
-                                                borderSide: const BorderSide(
-                                                  color: AppColors.loginFieldBorderColor,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(12.dp),
-                                                borderSide: const BorderSide(
-                                                  color: AppColors.loginFieldBorderColor,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(12.dp),
-                                                borderSide: const BorderSide(
-                                                  color: Colors.blue,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              disabledBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(12.dp),
-                                                borderSide: BorderSide(
-                                                  color: AppColors.loginFieldBorderColor,
-                                                  width: 1.dp,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 17.h)
-                                ],
-                              ),
-                            )
-                          ],
+                        child: ServicesWidget(
+                          orderState: state,
+                          orderId: widget.orderId,
+                          selectedIndex: selectedIndex,
+                          scannedItems: scannedItems,
+                          scannedQRCodes: scannedQRCodes,
+                          additionalNotesController: additionalNotesController,
                         ),
                       )
                     ],
@@ -246,46 +145,57 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 },
               ),
             ),
-            Positioned(bottom: 0, left: 0, right: 0, child: _footerButton(type))
+            // if (context.watch<OrderBloc>().state.orderDetails.status != 'pickedUp')
+            BlocBuilder<OrderBloc, OrderState>(
+              builder: (context, state) {
+                // Hide footer button when loading, initial state, or order is picked up
+                if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial || state.orderDetails.status == 'pickedUp') {
+                  return const SizedBox.shrink();
+                }
+                return Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: FooterButtons(
+                    orderId: widget.orderId,
+                    additionalNotesController: additionalNotesController,
+                    allItemsScannedNotifier: allItemsScanned,
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _footerButton(String type) {
-    return Container(
-      padding: EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 21.dp),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        boxShadow: [
-          BoxShadow(offset: const Offset(0, -113), color: const Color(0xFF000000).withValues(alpha: 0), blurRadius: 32, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -72), color: const Color(0xFF000000).withValues(alpha: 0), blurRadius: 29, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -41), color: const Color(0xFF000000).withValues(alpha: 0.02), blurRadius: 24, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -18), color: const Color(0xFF000000).withValues(alpha: 0.03), blurRadius: 18, spreadRadius: 0),
-          BoxShadow(offset: const Offset(0, -5), color: const Color(0xFF000000).withValues(alpha: 0.03), blurRadius: 10, spreadRadius: 0),
-        ],
-      ),
-      child: Column(
-        children: [
-          PrimaryButtonWidget(
-            onPressed: () {},
-            text: "Confirm Pickup",
-            height: 48.dp,
-          ),
-          Gap(8.dp),
-          SecondaryButtonWidget(
-            onPressed: () {},
-            text: type == "Quick" ? "Cancel / Report Issue" : "Cancel",
-            height: 48.dp,
-            backgroundColor: AppColors.textGrey,
-          ),
-        ],
+  Widget _orderInfo(OrderState state) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 8.dp),
+        child: Column(
+          children: [
+            OrderInfoCard(
+              label: "Order Type",
+              value: state.orderDetails.type == "normalOrder" ? "Normal" : "Quick Order⚡",
+            ),
+            Gap(4.dp),
+            OrderInfoCard(label: "Pickup Time", value: _calculatePickupTime(state)),
+            if (state.orderDetails.payment.isNotEmpty) ...[
+              Gap(4.dp),
+              OrderInfoCard(
+                label: "Payment Method",
+                value: (state.orderDetails.payment).map((payment) => payment.method.toString()).join().toUpperCase(),
+              ),
+            ]
+          ],
+        ),
       ),
     );
   }
 
-  Container _header(BuildContext context) {
+  Widget _header(BuildContext context, int orderRefId) {
     return Container(
       padding: EdgeInsets.only(top: 7.h, left: 16.dp, right: 16.dp, bottom: 8.dp),
       width: 100.w,
@@ -299,7 +209,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
           Gap(6.dp),
           Text(
-            "Order ID: #SPN${widget.orderId}",
+            "Order ID: #SPN$orderRefId",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
               fontSize: 16.dp,
               color: AppColors.neutral950,
@@ -309,31 +219,142 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
-}
 
-class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
+  String formatSingleDate(String utcDate) {
+    try {
+      // Handle empty or null date strings
+      if (utcDate.isEmpty) {
+        return "Not specified";
+      }
 
-  StickyHeaderDelegate({required this.child});
+      final date = DateTime.parse(utcDate).toLocal();
+      final now = DateTime.now();
 
-  @override
-  double get minExtent => 47.dp; // Fixed height instead of 70.dp
+      final today = DateTime(now.year, now.month, now.day);
+      final tomorrow = today.add(const Duration(days: 1));
+      final targetDate = DateTime(date.year, date.month, date.day);
 
-  @override
-  double get maxExtent => 47.dp; // Same as minExtent
+      final timeFormat = DateFormat('h:mm a');
 
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Material(
-      elevation: overlapsContent ? 2.0 : 0.0,
-      child: Container(
-        color: Colors.white,
-        height: maxExtent,
-        child: child,
-      ),
-    );
+      if (targetDate == today) {
+        return "Today, ${timeFormat.format(date)}";
+      } else if (targetDate == tomorrow) {
+        return "Tomorrow, ${timeFormat.format(date)}";
+      } else {
+        return DateFormat('MMM d, y – h:mm a').format(date);
+      }
+    } catch (e) {
+      // Return a fallback value if date parsing fails
+      return "Invalid date format";
+    }
   }
 
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
+  String _calculatePickupTime(OrderState state) {
+    final orderDetails = state.orderDetails;
+    final status = orderDetails.status.toLowerCase();
+
+    // If status is 'pickedup', show time from changedAt in status history
+    if (status == 'pickedup') {
+      // Find the pickedup status from history
+      final pickedupStatus = orderDetails.statusHistory.firstWhere(
+        (s) => s.status.toLowerCase() == 'pickedup',
+        orElse: () => const OrderStatus(),
+      );
+
+      if (pickedupStatus.changedAt.isNotEmpty) {
+        return _formatToUAETime(pickedupStatus.changedAt);
+      }
+      return "Not specified";
+    }
+
+    // If status is not pickedup, take day from pickupAt and time from pickup time slot
+    if (orderDetails.pickupAt.isNotEmpty && orderDetails.pickupSlot.from.isNotEmpty) {
+      return _formatPickupTimeWithSlot(orderDetails.pickupAt, orderDetails.pickupSlot);
+    }
+
+    return "Not specified";
+  }
+
+  String _formatToUAETime(String utcString) {
+    if (utcString.isEmpty) return "Not specified";
+    try {
+      // Parse UTC datetime and convert to UAE timezone (UTC+4)
+      final utcDateTime = DateTime.parse(utcString);
+      final uaeDateTime = utcDateTime.add(const Duration(hours: 4)); // UAE is UTC+4
+      final now = DateTime.now();
+
+      String dayLabel;
+      // Check if it's today
+      if (uaeDateTime.year == now.year && uaeDateTime.month == now.month && uaeDateTime.day == now.day) {
+        dayLabel = "Today";
+      }
+      // Check if it's tomorrow
+      else if (uaeDateTime.year == now.year && uaeDateTime.month == now.month && uaeDateTime.day == now.day + 1) {
+        dayLabel = "Tomorrow";
+      }
+      // For other dates, show month and day
+      else {
+        dayLabel = DateFormat('MMM d').format(uaeDateTime);
+      }
+
+      final timeFormat = DateFormat('h:mm a');
+      return "$dayLabel, ${timeFormat.format(uaeDateTime)}";
+    } catch (e) {
+      return "Invalid date format";
+    }
+  }
+
+  String _formatPickupTimeWithSlot(String pickupAt, TimeSlot pickupSlot) {
+    try {
+      // Parse pickupAt date and pickup slot times
+      final pickupDate = DateTime.parse(pickupAt);
+      final fromTime = DateTime.parse(pickupSlot.from);
+      final toTime = DateTime.parse(pickupSlot.to);
+
+      // Convert to UAE timezone (UTC+4)
+      final uaePickupDate = pickupDate.add(const Duration(hours: 4));
+      final uaeFromTime = fromTime.add(const Duration(hours: 4));
+      final uaeToTime = toTime.add(const Duration(hours: 4));
+
+      final now = DateTime.now();
+      String dayLabel;
+
+      // Check if it's today
+      if (uaePickupDate.year == now.year && uaePickupDate.month == now.month && uaePickupDate.day == now.day) {
+        dayLabel = "Today";
+      }
+      // Check if it's tomorrow
+      else if (uaePickupDate.year == now.year && uaePickupDate.month == now.month && uaePickupDate.day == now.day + 1) {
+        dayLabel = "Tomorrow";
+      }
+      // For other dates, show month and day
+      else {
+        dayLabel = DateFormat('MMM d').format(uaePickupDate);
+      }
+
+      final timeFormat = DateFormat('h:mm a');
+      return "$dayLabel, ${timeFormat.format(uaeFromTime)} – ${timeFormat.format(uaeToTime)}";
+    } catch (e) {
+      return "Invalid date format";
+    }
+  }
+}
+
+String formatAddress(String address) {
+  return address
+      .split('\n') // Split by newlines
+      .where((line) => line.trim().isNotEmpty) // Remove empty lines
+      .map((line) => line.trim()) // Trim whitespace from each line
+      .join(', '); // Join with commas
+}
+
+String _getCustomerName(Customer customer) {
+  if (customer.user != null) {
+    final firstName = customer.user!.firstName.isNotEmpty ? customer.user!.firstName : '';
+    final lastName = customer.user!.lastName.isNotEmpty ? customer.user!.lastName : '';
+    if (firstName.isNotEmpty || lastName.isNotEmpty) {
+      return "$firstName $lastName".trim();
+    }
+  }
+  return "Customer";
 }

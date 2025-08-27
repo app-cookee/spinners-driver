@@ -37,10 +37,10 @@ class PickupDeliveryOverviewPlaceholder extends StatelessWidget {
 
   List<_CardConfig> _getCardConfigurations() {
     return [
-      _CardConfig(bottomPadding: 19.h, height: 62.dp),
-      _CardConfig(bottomPadding: 12.h, height: 62.dp),
-      _CardConfig(bottomPadding: 5.h, height: 62.dp),
-      _CardConfig(bottomPadding: 0.h, height: 48.dp),
+      _CardConfig(bottomPadding: 19.h, height: 7.h),
+      _CardConfig(bottomPadding: 12.h, height: 6.5.h),
+      _CardConfig(bottomPadding: 5.h, height: 6.5.h),
+      _CardConfig(bottomPadding: 0.h, height: 4.5.h),
     ];
   }
 
@@ -49,7 +49,6 @@ class PickupDeliveryOverviewPlaceholder extends StatelessWidget {
       width: 100.w,
       height: config.height,
       alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: 16.dp),
       child: Shimmer.fromColors(
         baseColor: Colors.grey.shade300,
         highlightColor: Colors.grey.shade100,
@@ -58,7 +57,7 @@ class PickupDeliveryOverviewPlaceholder extends StatelessWidget {
           height: 55.dp,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(4.dp),
+            borderRadius: BorderRadius.circular(8.dp),
           ),
         ),
       ),

@@ -15,6 +15,7 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
 
 class OrderCard extends StatelessWidget {

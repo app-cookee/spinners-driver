@@ -26,6 +26,7 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
     try {
       emit(state.copyWith(
         getOrderDetailStatus: Status.loading(),
+        orderDetails: const OrderResponse(),
       ));
       var response = await deliveryRepository.getOrdersDetail(event.orderId);
       emit(state.copyWith(

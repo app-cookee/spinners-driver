@@ -14,7 +14,12 @@ class ApiEndpoints {
   final String logout = '$_base/auth/logout';
   final String profile = '$_base/auth/profile';
   final String dashboardData = '$_base/orders/dashboard';
+  final String getOrderDetails = '$_base/orders/detail';
+  final String pickupOrder = '$_base/orders/pickup_order';
+  final String addBag = '$_base/orders/add_bag';
+  final String createNewBag = '$_base/orders/create_new_bag';
   final String getOrderDetail = '$_base/orders/detail';
     final String ordersList = '$_base/orders/list';
+    final String serviceList = '$_base/service_names/list';
   final String confirmDelivered = '$_base/orders/confirm_delivered';
 }

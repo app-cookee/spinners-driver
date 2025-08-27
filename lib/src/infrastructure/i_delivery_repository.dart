@@ -37,7 +37,7 @@ class DeliveryRepositoryImplementation implements DeliveryRepository {
         "id": id,
         "paymentMethod": paymentMethod,
         "receivedAmount": receivedAmount,
-      }.clean();
+      };
       var response = await api.profile
           .post(ApiEndpoints().confirmDelivered, data: data);
       return '';
