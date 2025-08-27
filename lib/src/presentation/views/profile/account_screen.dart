@@ -87,7 +87,7 @@ class AccountScreen extends StatelessWidget {
                            if (state.profileAuthStatus is StatusLoading) {
                           return UserDetailPlaceholder();
                         }
-                        return  ProfileUserDetail(
+                        return  ProfileUserDetail(profileImage: state.appUser?.photo??"",
                           avatar:       (state.appUser?.firstName?.isNotEmpty ?? false)
                                   ? state.appUser!.firstName![0]
                                   : "D",  
