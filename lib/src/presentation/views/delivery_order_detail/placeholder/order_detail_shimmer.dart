@@ -6,8 +6,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 // Import your other dependencies here
 
 class OrderDetailShimmer extends StatelessWidget {
-  const OrderDetailShimmer({super.key, required this.orderId});
-  final String orderId;
+  const OrderDetailShimmer({super.key});
   
 
   @override
@@ -147,11 +146,9 @@ Widget _buildStatusTrackingShimmer() {
         spacing: 3.dp,
         children: [
           shimmerCircle(size: 40.dp),
-          Container(height: 34.dp, width: 1, color: base),
-          shimmerCircle(size: 13.dp),
-          Container(height: 34.dp, width: 1, color: base),
-          shimmerCircle(size: 13.dp),
-          Container(height: 34.dp, width: 1, color: base),
+          Gap(4.dp),
+          shimmerCircle(size: 40.dp),
+          Gap(4.dp),
           shimmerCircle(size: 40.dp),
         ],
       ),
@@ -163,11 +160,11 @@ Widget _buildStatusTrackingShimmer() {
           shimmerBox(height: 16.dp, width: 100.dp), // Pickup
           Gap(4.dp),
           shimmerBox(height: 12.dp, width: 160.dp), // Expected
-          Gap(36.dp),
+          Gap(30.dp),
           shimmerBox(height: 16.dp, width: 100.dp), // Processing
           Gap(32.dp),
           shimmerBox(height: 16.dp, width: 140.dp), // Out For Delivery
-          Gap(32.dp),
+          Gap(4.dp),
           shimmerBox(height: 16.dp, width: 100.dp), // Delivery
           Gap(4.dp),
           shimmerBox(height: 12.dp, width: 160.dp), // Expected

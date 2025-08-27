@@ -29,4 +29,21 @@ class DeliveryRepositoryImplementation implements DeliveryRepository {
       rethrow;
     }
   }
+  
+  @override
+  Future<String> confirmDelivery(String id, String paymentMethod, double receivedAmount) async {
+    try {
+      final Map<String, dynamic> data = {
+        "id": id,
+        "paymentMethod": paymentMethod,
+        "receivedAmount": receivedAmount,
+      }.clean();
+      var response = await api.profile
+          .post(ApiEndpoints().confirmDelivered, data: data);
+      return '';
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

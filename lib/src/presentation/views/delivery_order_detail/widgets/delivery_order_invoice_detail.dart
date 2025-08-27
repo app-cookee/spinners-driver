@@ -9,20 +9,20 @@ import 'package:spinners_driver/src/presentation/views/delivery_order_detail/wid
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-class OrderInvoiceDetails extends StatelessWidget {
-  const OrderInvoiceDetails({
+class DeliveryOrderInvoiceDetails extends StatelessWidget {
+  const DeliveryOrderInvoiceDetails({
     super.key, required this.state,
   });
   final DeliveryState state;
 
   @override
   Widget build(BuildContext context) {
-    final codAmount = (
-  (double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0) -
-  (double.tryParse(state.orderDetails.paidAmount ?? "0") ?? 0)
-);
+    final codAmount = state.orderDetails.payment
+                              .where((p) => p.status.toLowerCase() == "pending")
+                              .map((p) => double.tryParse(p.amount) ?? 0.0)
+                              .fold(0.0, (sum, amt) => sum + amt);
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -30,7 +30,7 @@ class OrderInvoiceDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DashedDivider(),
+          const DashedDivider(),
           Padding(
             padding: EdgeInsetsGeometry.symmetric(
                 horizontal: 16.dp),
@@ -46,7 +46,7 @@ class OrderInvoiceDetails extends StatelessWidget {
                       height: 17.dp,
                       width: 13.dp,
                     ),
-                    Text("Items in Your Order",
+                    Text("Invoice Details",
                         style: AppTypography
                             .sfProRoundedSemiBold
                             .copyWith(
@@ -64,7 +64,7 @@ class OrderInvoiceDetails extends StatelessWidget {
 
       // Format price: "AED 24"
       final price =
-          "AED ${orderedItem.soldPrice?? '0'}";
+          "AED ${orderedItem.soldPrice}";
 
       return Column(
         children: [
@@ -73,7 +73,7 @@ class OrderInvoiceDetails extends StatelessWidget {
             price: price,
           ),
           Gap(8.dp),
-          DashedDivider(),
+          const DashedDivider(),
           Gap(8.dp),
         ],
       );
@@ -232,19 +232,11 @@ class OrderInvoiceDetails extends StatelessWidget {
     ],
   ),
                 Gap(16.dp),
-                InvoiceButton(
+                const InvoiceButton(
                     imagePath: AppImages.pin,
                     text: "Download Invoice (PDF)"),
-                // Gap(6.dp),
-                // InvoiceButton(
-                //     imagePath: AppImages.refresh,
-                //     text: "Reorder"),
-                Gap(6.dp),
-                InvoiceButton(
-                    imagePath: AppImages.message,
-                    text: "Chat with Support"),
                 SizedBox(
-                  height: 11.h + 18.dp,
+                  height: 20.h + 18.dp,
                 )
               ],
             ),

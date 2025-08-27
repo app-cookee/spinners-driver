@@ -18,10 +18,12 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
     this.deliveryRepository,
   ) : super(DeliveryState.initial()) {
     on<_GetOrderDetails>(_onGetOrderDetails);
+    on<_ConfirmDelivery>(_onConfirmDelivery);
   }
 
-  FutureOr<void> _onGetOrderDetails(_GetOrderDetails event, Emitter<DeliveryState> emit) async{
-         try {
+  FutureOr<void> _onGetOrderDetails(
+      _GetOrderDetails event, Emitter<DeliveryState> emit) async {
+    try {
       emit(state.copyWith(
         getOrderDetailStatus: Status.loading(),
       ));
@@ -30,5 +32,20 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
           getOrderDetailStatus: Status.success(), orderDetails: response));
     } catch (e) {
       emit(state.copyWith(getOrderDetailStatus: Status.failure(e.toString())));
-    }}
+    }
+  }
+
+  FutureOr<void> _onConfirmDelivery(
+      _ConfirmDelivery event, Emitter<DeliveryState> emit) async {
+    try {
+      emit(state.copyWith(
+        confirmDeliveryStatus: Status.loading(),
+      ));
+      var response = await deliveryRepository.confirmDelivery(event.id,event.paymentMethod,event.receivedAmount);
+      emit(state.copyWith(
+          confirmDeliveryStatus: Status.success()));
+    } catch (e) {
+      emit(state.copyWith(confirmDeliveryStatus: Status.failure(e.toString())));
+    }
+  }
 }
