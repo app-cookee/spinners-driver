@@ -233,9 +233,13 @@ Widget _orderedCardButtons(BuildContext context) {
           text: "View",
           borderColor: AppColors.greyColor,
           textColor: AppColors.grey1Color,
-          onTap: () {
-            
-          },
+           onTap: () {
+         if(isDropoff){
+          context.router.push(DeliveryOrderDetailRoute(orderId: orderId,refId: refId));
+         } else {
+          context.router.push(OrderDetailRoute(orderId: orderId));
+         }      
+      },
         ),
         OrderCardButton(
           widthFactor: 36 / 376,
