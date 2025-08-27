@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -194,6 +195,7 @@ class QuickOrderBags extends StatelessWidget {
     );
 
     if (result != null && result.isNotEmpty) {
+      
       // Check if this QR has already been scanned
       if (scannedBags.value.contains(result)) {
         TheToast.show(
@@ -210,16 +212,37 @@ class QuickOrderBags extends StatelessWidget {
       scannedBags.value = newScannedSet;
 
       // Show bottomsheet with scanned data and pre-selected service
-      CustomBottomSheetWidget(
-        context: context,
-        child: ScanNewBagBottomsheet(
-          bagId: result,
-          orderId: orderId,
-          serviceId: serviceData['serviceId'] as String,
-          serviceName: serviceData['serviceName'] as String,
-          isQuickOrder: true,
-        ),
-      ).show();
+      if (context.mounted) {
+        try {
+          await CustomBottomSheetWidget(
+            context: context,
+            child: ScanNewBagBottomsheet(
+              bagId: result,
+              orderId: orderId,
+              serviceId: serviceData['serviceId'] as String,
+              serviceName: serviceData['serviceName'] as String,
+              isQuickOrder: false,
+            ),
+          ).show();
+        } catch (e) {
+          // Fallback to simple bottom sheet
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => Container(
+              height: 200,
+              color: Colors.white,
+              child: Center(
+                child: Text('Error showing bottom sheet: $e'),
+              ),
+            ),
+          );
+        }
+      } else {
+        log('Context is not mounted');
+      }
+    } else {
+      log('No QR result received');
     }
   }
 

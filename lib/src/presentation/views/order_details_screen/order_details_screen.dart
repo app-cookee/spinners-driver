@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
@@ -113,7 +114,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         amount: state.orderDetails.totalAmount,
                         title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
                         timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
-                        // state.orderDetails.status == '"pickedUp' ? _formatPickedupSlot(state.orderDetails.statusHistory[0].changedAt) : _formatPickupSlot(state.orderDetails.pickupSlot) ?? '',
                         address: formatAddress(state.orderDetails.selectedAddress.place),
                         status: state.orderDetails.status,
                         onNavigateTap: () {
@@ -145,7 +145,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 },
               ),
             ),
-            // if (context.watch<OrderBloc>().state.orderDetails.status != 'pickedUp')
             BlocBuilder<OrderBloc, OrderState>(
               builder: (context, state) {
                 // Hide footer button when loading, initial state, or order is picked up
@@ -196,6 +195,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Widget _header(BuildContext context, int orderRefId) {
+    final loading=context.read<OrderBloc>().state.getOrderDetailStatus is StatusLoading||context.read<OrderBloc>().state.getOrderDetailStatus is StatusInitial;
     return Container(
       padding: EdgeInsets.only(top: 7.h, left: 16.dp, right: 16.dp, bottom: 8.dp),
       width: 100.w,
@@ -208,6 +208,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             width: 20.dp,
           ),
           Gap(6.dp),
+          if(loading)
+          _shimmerContainer(),
           Text(
             "Order ID: #SPN$orderRefId",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
@@ -216,6 +218,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _shimmerContainer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: 20.dp,
+        width: 20.w,
+        decoration: BoxDecoration(
+          color: AppColors.neutral50,
+          borderRadius: BorderRadius.circular(2.dp),
+        ),
       ),
     );
   }
