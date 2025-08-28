@@ -6,11 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
+import 'package:spinners_driver/app/services/api_services/environment/config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
+import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/already_scanned_warning_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
@@ -44,7 +48,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   @override
   void initState() {
     super.initState();
-  
+
     context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
     // Auto-fill bag ID if provided
     if (widget.bagId != null) {
@@ -66,10 +70,10 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     super.dispose();
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     log('Building ScanNewBagBottomsheet');
-    
+
     return Container(
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.8,
@@ -332,26 +336,26 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
           // Update scanned bags list locally first
           final bagId = bagIdController.text.trim();
           final selectedServiceId = this.selectedServiceId;
-          
+
           if (widget.isQuickOrder == false && selectedServiceId != null) {
             // For normal orders, find the ordered item and update locally
             final orderedItem = state.orderDetails.orderedItems.firstWhere(
               (item) => item.service.id == selectedServiceId,
               orElse: () => state.orderDetails.orderedItems.first,
             );
-            
+
             context.read<OrderBloc>().add(OrderEvent.updateScannedBagsLocally(
-              orderItemId: orderedItem.id,
-              bagId: bagId,
-            ));
+                  orderItemId: orderedItem.id,
+                  bagId: bagId,
+                ));
           } else if (widget.isQuickOrder == true && selectedServiceId != null) {
             // For quick orders, update by service ID
             context.read<OrderBloc>().add(OrderEvent.updateScannedBagsForNewBag(
-              serviceId: selectedServiceId,
-              bagId: bagId,
-            ));
+                  serviceId: selectedServiceId,
+                  bagId: bagId,
+                ));
           }
-          
+
           // Close bottomsheet first
           if (mounted) {
             Navigator.of(context).pop();
@@ -420,6 +424,49 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                 return;
               }
 
+              // Check if bag ID already exists in any service
+              bool bagAlreadyExists = false;
+              String? existingServiceName;
+              String? existingServiceImage;
+              Color? existingServiceColor;
+              String? existingOrderServiceId;
+
+              for (final item in state.orderDetails.orderedItems) {
+                final existingBag = item.scannedBags.firstWhere(
+                  (bag) => bag.bagId == bagId,
+                  orElse: () => const ScannedBags(),
+                );
+
+                if (existingBag.bagId.isNotEmpty) {
+                  bagAlreadyExists = true;
+                  existingServiceName = item.service.name;
+                  existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
+                  existingServiceColor = hexToColor(item.service.color);
+                  existingOrderServiceId = item.id;
+                  break;
+                }
+              }
+
+              if (bagAlreadyExists) {
+                // Show warning bottomsheet
+                Navigator.of(context).pop(); // Close current bottomsheet
+
+                CustomBottomSheetWidget(
+                  context: context,
+                  child: AlreadyScannedWarningBottomsheet(
+                    bagId: bagId,
+                    serviceName: existingServiceName!,
+                    serviceImage: existingServiceImage!,
+                    serviceColor: existingServiceColor!,
+                    orderServiceId: existingOrderServiceId!,
+                    onBagRemoved: () {
+                      // This will be called after successful removal
+                    },
+                  ),
+                ).show();
+                return;
+              }
+
               // Find the ordered item for this service
               final orderedItem = state.orderDetails.orderedItems.firstWhere(
                 (item) => item.service.id == selectedServiceId,
@@ -427,17 +474,17 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               );
 
               // Check if bags already exist for this service
-              if (widget.isQuickOrder==false) {
+              if (widget.isQuickOrder == false) {
                 context.read<OrderBloc>().add(OrderEvent.addBag(
-                  orderItemId: orderedItem.id,
-                  bagId: bagId,
-                ));
+                      orderItemId: orderedItem.id,
+                      bagId: bagId,
+                    ));
               } else {
                 context.read<OrderBloc>().add(OrderEvent.createNewBag(
-                  bagId: bagId,
-                  orderId: widget.orderId!,
-                  serviceId: selectedServiceId!,
-                ));
+                      bagId: bagId,
+                      orderId: widget.orderId!,
+                      serviceId: selectedServiceId!,
+                    ));
               }
             },
             text: 'Add Bag',
@@ -447,6 +494,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
       },
     );
   }
+
   Widget _header() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

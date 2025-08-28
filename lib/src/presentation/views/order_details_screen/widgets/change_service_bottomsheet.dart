@@ -62,7 +62,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
           _serviceDropdown(),
           Gap(24.dp),
           Padding(
-            padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
+            padding: EdgeInsets.only(left: 16.dp, right: 16.dp,),
             child: PrimaryButtonWidget(
               onPressed: () {},
               text: 'Change Service',

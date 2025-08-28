@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/app/services/api_services/environment/config.dart';
+import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class AlreadyScannedWarningBottomsheet extends StatefulWidget {
-  const AlreadyScannedWarningBottomsheet({super.key, this.bagId, required this.serviceName, required this.serviceImage, required this.serviceColor});
+  const AlreadyScannedWarningBottomsheet({
+    super.key, 
+    this.bagId, 
+    required this.serviceName, 
+    required this.serviceImage, 
+    required this.serviceColor,
+    required this.orderServiceId,
+    required this.onBagRemoved,
+  });
+  
   final String? bagId;
   final String serviceName;
   final String serviceImage;
   final Color serviceColor;
+  final String orderServiceId;
+  final VoidCallback onBagRemoved;
+
   @override
   State<AlreadyScannedWarningBottomsheet> createState() => _AlreadyScannedWarningBottomsheetState();
 }
@@ -21,58 +38,117 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
   final TextEditingController bagIdController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.bagId != null) {
+      bagIdController.text = widget.bagId!;
+    }
+  }
+
+  @override
+  void dispose() {
+    bagIdController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24.dp),
-          topRight: Radius.circular(24.dp),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Gap(12.dp),
-          _header(),
-          Gap(11.dp),
-          Divider(
-            thickness: 1.dp,
-            color: AppColors.lightGrey,
-          ),
-          Gap(15.dp),
-          _bagID(),
-          Gap(10.dp),
-          alreadyAssignedWidget(
-            serviceImage: widget.serviceImage,
-            serviceName: widget.serviceName,
-            serviceColor: widget.serviceColor,
-          ),
-          Gap(24.dp),
-          Padding(
-            padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
-            child: PrimaryButtonWidget(
-              buttonBgImage: AppImages.redButtonBg,
-              backgroundColor: const Color(0xFFD90F0F),
-              onPressed: () {},
-              text: 'Remove This Bag',
+    return BlocConsumer<OrderBloc, OrderState>(
+      listener: (context, state) {
+        if (state.removeBagStatus is StatusSuccess) {
+          // Remove bag locally to update UI
+          context.read<OrderBloc>().add(OrderEvent.removeBagLocally(
+            orderServiceId: widget.orderServiceId,
+            bagId: bagIdController.text.trim(),
+          ));
+          
+          // Close the bottomsheet
+          Navigator.of(context).pop();
+          
+          // Call the callback to notify parent
+          widget.onBagRemoved();
+          
+          // Show success message
+          TheToast.show(
+            isError: false,
+            message: "Bag removed successfully",
+            context: context,
+          );
+        }
+
+        if (state.removeBagStatus is StatusFailure) {
+          final errorMessage = (state.removeBagStatus as StatusFailure).toString();
+          TheToast.show(
+            isError: true,
+            message: errorMessage,
+            context: context,
+          );
+        }
+      },
+      listenWhen: (previous, current) => previous.removeBagStatus != current.removeBagStatus,
+      builder: (context, state) {
+        final isLoading = state.removeBagStatus is StatusLoading;
+
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24.dp),
+              topRight: Radius.circular(24.dp),
             ),
           ),
-          Gap(8.dp),
-          Padding(
-            padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
-            child: PrimaryButtonWidget(
-              buttonBgImage: AppImages.buttonGreyBg,
-              backgroundColor: AppColors.grey1Color,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              text: 'Cancel',
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Gap(12.dp),
+              _header(),
+              Gap(11.dp),
+              Divider(
+                thickness: 1.dp,
+                color: AppColors.lightGrey,
+              ),
+              Gap(15.dp),
+              _bagID(),
+              Gap(10.dp),
+              alreadyAssignedWidget(
+                serviceImage: widget.serviceImage,
+                serviceName: widget.serviceName,
+                serviceColor: widget.serviceColor,
+              ),
+              Gap(24.dp),
+              Padding(
+                padding: EdgeInsets.only(left: 16.dp, right: 16.dp,),
+                child: PrimaryButtonWidget(
+                  buttonBgImage: AppImages.redButtonBg,
+
+                  backgroundColor: const Color(0xFFD90F0F),
+                  onPressed: () {
+                    context.read<OrderBloc>().add(OrderEvent.removeBag(
+                      orderServiceId: widget.orderServiceId,
+                      bagId: bagIdController.text.trim(),
+                    )); 
+                  },
+                  text: 'Remove This Bag',
+                  isLoading: isLoading,
+                ),
+              ),
+              Gap(8.dp),
+              Padding(
+                padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
+                child: PrimaryButtonWidget(
+                  buttonBgImage: AppImages.buttonGreyBg,
+                  backgroundColor: AppColors.grey1Color,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  text: 'Cancel',
+                ),
+              ),
+              Gap(16.dp),
+            ],
           ),
-          Gap(16.dp),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -137,7 +213,7 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
             ),
             child: Row(
               children: [
-                Image.network(serviceImage, width: 24.dp, height: 24.dp),
+                Image.network('${ApiUrls.stagingUrl}/$serviceImage', width: 24.dp, height: 24.dp),
                 Gap(8.dp),
                 Text(
                   serviceName,
