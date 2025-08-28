@@ -206,7 +206,7 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
           Container(
             padding: EdgeInsets.all(8.dp),
             decoration: BoxDecoration(
-              color: const Color(0xFFE0E0E0),
+              color: AppColors.white,
               borderRadius: BorderRadius.circular(8.dp),
             ),
             child: Row(
