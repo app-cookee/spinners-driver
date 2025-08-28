@@ -177,7 +177,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
         Image.asset(AppImages.qrIcon, width: 24.dp, height: 24.dp),
         Gap(4.dp),
                  Text(
-           'Bag Already Exists',
+           'Change Service',
            style: AppTypography.sfProRoundedSemiBold.copyWith(
              fontSize: 16.sp,
              color: AppColors.textGrey,
