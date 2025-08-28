@@ -90,6 +90,8 @@ static const String emptyPlaceholderImage = 'assets/images/emptyPlaceholderImage
   static const String storeIcon = 'assets/images/storeIcon.png';
   static const String personIcon = 'assets/images/personIcon.png';
   static const String editIcon = 'assets/images/editIcon.png';
-
+static const String calendarIcon = 'assets/images/calendarIcon.png';
+static const String customerIcon = 'assets/images/customerIcon.png';
+static const String locationIcon = 'assets/images/locationIcon.png';
 
 }

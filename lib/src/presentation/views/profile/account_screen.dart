@@ -212,7 +212,10 @@ class AccountScreen extends StatelessWidget {
                                 text: "Personal Details");
                           },
                         ),
-                        const AccountSettings(
+                        AccountSettings(
+                          onTap: () {
+                            context.router.push(const PickUpDropoffHistoryRoute());
+                          },
                             imagePath: AppImages.arrowRight,
                             text: "Pickup & Dropoff History"),
                         const AccountSettings(

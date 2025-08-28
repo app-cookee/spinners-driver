@@ -115,4 +115,7 @@ static const Color deliveredColor= Color(0xFF43A047);
   static const Color activeStrokeGreen = Color(0xFFA1F9B2);
   static const Color activeTextGreen = Color(0xFF31B64B);
   static const Color grey13=Color(0xFFD7DCCA);
+  static const Color filterBgColor=Color(0xFFF5FAFF);
+  static const Color dateColor=Color(0xFF959595);
+  static const Color violet=Color(0xFF2E008A);
 }
