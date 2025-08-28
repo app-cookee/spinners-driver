@@ -1,23 +1,48 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/app/services/api_services/environment/config.dart';
+
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/user_details.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-
-class ProfileUserDetail extends StatelessWidget {
-  final String avatar;
+class ProfileUserDetail extends StatefulWidget {
   final String name;
   final String phone;
   final bool active;
+  final String profileImage;
 
   const ProfileUserDetail({
     super.key,
-    required this.avatar,
     required this.name,
-    required this.phone, required this.active,
+    required this.phone, required this.active, required this.profileImage,
   });
 
+  @override
+  State<ProfileUserDetail> createState() => _ProfileUserDetailState();
+}
+
+class _ProfileUserDetailState extends State<ProfileUserDetail> with SingleTickerProviderStateMixin {
+    late AnimationController _shimmerController;
+
+  
+  @override
+  void initState() {
+    super.initState();
+    _shimmerController = AnimationController.unbounded(vsync: this)
+      ..repeat(min: -0.5, max: 1.5, period: const Duration(milliseconds: 1000));
+  }
+
+  @override
+  void dispose() {
+    _shimmerController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -59,7 +84,59 @@ class ProfileUserDetail extends StatelessWidget {
               ),
             ],
           ),
-          child: Center(
+          child:
+      (widget.profileImage.isNotEmpty&&widget.profileImage!=null)?
+          ClipRRect( borderRadius: BorderRadius.circular(20.dp),
+          child:
+
+            CachedNetworkImage(
+                                          imageUrl: (widget.profileImage !=
+                                                      '' )
+                                              ? '${ApiUrls.stagingUrl}/${widget.profileImage}'
+                                              : '',
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              AnimatedBuilder(
+                                            animation: _shimmerController,
+                                            builder: (context, child) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: const [
+                                                      Color(0xFFEBEBF4),
+                                                      Color(0xFFF4F4F4),
+                                                      Color(0xFFEBEBF4),
+                                                    ],
+                                                    stops: const [
+                                                      0.0,
+                                                      0.5,
+                                                      1.0
+                                                    ],
+                                                    begin: Alignment.centerLeft,
+                                                    end: Alignment.centerRight,
+                                                    transform:
+                                                        SlidingGradientTransform(
+                                                            _shimmerController
+                                                                .value),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(
+                                            Icons.person,
+                                            color: AppColors.greyColor,
+                                          ),
+                                        ),
+          
+      
+          ):
+          
+          
+           Center(
             child: ShaderMask(
               shaderCallback: (bounds) => const LinearGradient(
                 begin: Alignment.topCenter,
@@ -71,7 +148,7 @@ class ProfileUserDetail extends StatelessWidget {
               ).createShader(bounds),
               child: Text(
                 // avatar,
-                avatar.isNotEmpty ? avatar[0].toUpperCase() : 'D',
+                widget.name.isNotEmpty ? widget.name[0].toUpperCase() : 'D',
                 style: AppTypography.sfProRoundedSemiBold.copyWith(
                   color: AppColors.white,
                   fontSize: 20,
@@ -85,14 +162,14 @@ class ProfileUserDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              name,
+              widget.name,
               style: AppTypography.sfProRoundedSemiBold.copyWith(
                 color: AppColors.primary950,
                 fontSize: 16,
               ),
             ),
             Text(
-              phone,
+              widget.phone,
               style: AppTypography.sfProRoundedSemiBold.copyWith(
                 color: AppColors.textGrey,
                 fontSize: 12,
@@ -101,7 +178,7 @@ class ProfileUserDetail extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        if(active)
+        if(widget.active)
         Container(
           height: 20.dp,
           width: 62.dp,

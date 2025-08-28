@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
@@ -46,9 +49,10 @@ class _OrderScreenState extends State<OrderScreen> {
 
 
   final _debouncer = Debouncer(milliseconds: 600);
+    String _currentSearchQuery = "";
 
-  // late ScrollController _scrollController;
-
+  final int _itemsPerPage = 5;
+  late ScrollController _scrollController;
   final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> nearestLocationNotifier = ValueNotifier(0);
   ValueNotifier<int> expressOnlyNotifier = ValueNotifier(0);
@@ -66,13 +70,56 @@ class _OrderScreenState extends State<OrderScreen> {
     currentOrderFilter = _allOrders;
     _fetchOrders(currentOrderFilter);
       // Separate listeners for each toggle
+      _scrollController = ScrollController();
+
+    // Add scroll listener to track scrolling state
+    _scrollController.addListener(() {
+        // log("Scroll listener fired - pixels: ${_scrollController.position.pixels}");
+      
+        if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+            // log("scrolled");
+        _loadMoreItems();
+      }
+      
+    });
+
     nearestLocationNotifier.addListener(_onNearestLocationChanged);
     expressOnlyNotifier.addListener(_onExpressOnlyChanged);
 
     super.initState();
   }
+void _loadMoreItems() {
+  // log("load more itrms");
+  final orderState = context.read<OrderBloc>().state;
 
+  // Prevent duplicate calls
+  if (orderState.isLoadingMore || !orderState.hasMore) return;
+
+  // Convert filters to string
+  final statusStrings = currentOrderFilter.map(statusToString).toList();
+  final statusString = statusStrings.join(',');
+
+  // Current toggles
+  final isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
+  final lat = latitudeNotifier.value;
+  final lng = longitudeNotifier.value;
+
+  // Trigger pagination with filters
+  context.read<OrderBloc>().add(
+    OrderEvent.paginateOrdersList(
+      skip: orderState.ordersList.length,
+      limit: _itemsPerPage,
+      filter: statusString,
+      expressOnly: isExpressOnlyEnabled,
+      latitude: lat,
+      longitude: lng,
+      searchText: _currentSearchQuery.isEmpty ? null : _currentSearchQuery
+    ),
+  );
+}
   void _onSearchChanged(String query) {
+    _currentSearchQuery = query; // Store the current search query
     _debouncer.run(() {
       // if (query.isNotEmpty) {
          _fetchOrders(currentOrderFilter, searchQuery: query);
@@ -116,7 +163,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
     context.read<OrderBloc>().add(
       OrderEvent.getOrdersList(
-        limit: 1000,
+        limit: _itemsPerPage,
         skip: 0,
         filter: statusStrings.join(','),
         expressOnly: isExpressOnlyEnabled,
@@ -128,6 +175,7 @@ class _OrderScreenState extends State<OrderScreen> {
   }
   @override
   void dispose() {
+      _scrollController.dispose();
   nearestLocationNotifier.removeListener(_onNearestLocationChanged);
     expressOnlyNotifier.removeListener(_onExpressOnlyChanged);
     nearestLocationNotifier.dispose();
@@ -223,51 +271,60 @@ class _OrderScreenState extends State<OrderScreen> {
                 ],
               ),
               Gap(9.dp),
-              BlocBuilder<OrderBloc, OrderState>(
-                builder: (context, state) {
-                               if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
-                                  return const OrderListPlaceholder();
-                                }
-                                if(state.ordersList.isEmpty){
-                                  return
-                                   Padding(
-                                    padding: EdgeInsetsGeometry.only(top: 6.h),
-                                    child: const Center(child: EmptyPlaceholder()),
-                                  );
-                                }
-                  return Expanded(
-                    child: ListView.builder(
-                        itemCount: state.ordersList.length,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.only(
-                            top: 9.dp, bottom: ((88 / 812) * 100.h)),
-                        primary: false,
-                        itemBuilder: (context, index) {
-                          return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"",lon: 
-                          state.ordersList[index].selectedAddress?.longitude??"" ,
-                            isExpressService:  state.ordersList[index].expressService,
-                                      address:  state.ordersList[index].selectedAddress?.place??"",
-                                     refId: state.ordersList[index].refId.toString(),
-                                        orderId: state.ordersList[index].id,
-                                    
-                                        time: state.ordersList[index].status == "pickupScheduled"
-                                            ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
-                                            
-                                            :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"readyForDelivery",state.ordersList[index].statusHistory)
-                                          
-                                              :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
-                                              "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
-                                              "delivered",state.ordersList[index].statusHistory),
-                                        
-                                        status: state.ordersList[index].status,
-                                        isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
-                                        isQuickOrder:  state.ordersList[index].type=="oneTapOrder"?true:false,
-                                       
-                                        // notes: 'Deliver to reception.',
+              Expanded(
+                child: BlocBuilder<OrderBloc, OrderState>(
+                  builder: (context, state) {
+                                 if(state.getOrderListStatus is StatusLoading||state.getOrderListStatus is StatusInitial){
+                                    return const OrderListPlaceholder();
+                                  }
+                                  if(state.ordersList.isEmpty){
+                                    return
+                                     Padding(
+                                      padding: EdgeInsetsGeometry.only(top: 6.h),
+                                      child: const Center(child: EmptyPlaceholder()),
+                                    );
+                                  }
+                    return RefreshIndicator(onRefresh: ()async {
+                      _searchController.clear();
+                      
+_currentSearchQuery="";
+                          _fetchOrders(currentOrderFilter);
+                      
+
+                    },
+                      child: ListView.builder(
+                         controller: _scrollController,
+                         physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: state.ordersList.length + (state.isLoadingMore ? 1 : 0),
+                          // shrinkWrap: true,
+                          padding: EdgeInsets.only(
+                              top: 9.dp, bottom: ((88 / 812) * 100.h)),
+                          // primary: false,
+                          itemBuilder: (context, index) {
+                                       if (index == state.ordersList.length) {
+                                return const SpinKitCircle(
+                                        color: AppColors.primaryColor,
                                       );
-                        }),
-                  );
-                },
+                              }
+                            return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"",lon: 
+                            state.ordersList[index].selectedAddress?.longitude??"" ,
+                              isExpressService:  state.ordersList[index].expressService,
+                                        address:  state.ordersList[index].selectedAddress?.place??"",
+                                       refId: state.ordersList[index].refId.toString(),
+                                          orderId: state.ordersList[index].id,
+                                      
+                                          time: getOrderDisplayDate(state.ordersList[index]),
+                                          
+                                          status: state.ordersList[index].status,
+                                          isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
+                                          isQuickOrder:  state.ordersList[index].type=="oneTapOrder"?true:false,
+                                         
+                                          // notes: 'Deliver to reception.',
+                                        );
+                          }),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -276,67 +333,80 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
- DateTime _toUaeTime(DateTime utcTime) {
-  // UAE is UTC+4 with no daylight savings
+  String getOrderDisplayDate(OrderResponse order) {
+  final status = order.status.toLowerCase();
+
+  if (status == "pickupscheduled") {
+    return formatScheduledOrReady(order.pickupAt, order.pickupSlot);
+  } else if (status == "readyfordelivery") {
+    return formatScheduledOrReady(order.deliveryAt, order.deliverySlot);
+  } else if (status == "pickedup" || status == "delivered") {
+    return formatPickedOrDelivered(order.status, order.statusHistory);
+  }
+  return "";
+}
+
+
+  /// Converts UTC to UAE time
+DateTime _toUaeTime(DateTime utcTime) {
   return utcTime.toUtc().add(const Duration(hours: 4));
 }
 
-String formatSingleDate(
-  String utcDate,
-  TimeSlot? slot,
-  String status,
-  List<OrderStatus> statusHistory,
-) {
-  DateTime? date;
-  DateTime? fromTime;
-  DateTime? toTime;
-
-  if (status.toLowerCase() == "delivered") {
-    final deliveredStatus = statusHistory.firstWhere(
-      (s) => s.status.toLowerCase() == "delivered",
-      orElse: () => const OrderStatus(),
-    );
-    if (deliveredStatus.changedAt.isNotEmpty) {
-      date = _toUaeTime(DateTime.parse(deliveredStatus.changedAt));
-    }
-  } else {
-    date = _toUaeTime(DateTime.parse(utcDate));
-    if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
-      fromTime = _toUaeTime(DateTime.parse(slot.from));
-      toTime = _toUaeTime(DateTime.parse(slot.to));
-    }
-  }
-
-  if (date == null) return "";
-
+/// Common date + slot formatter
+String _formatDateWithSlot(DateTime baseDate, TimeSlot? slot) {
   final now = _toUaeTime(DateTime.now().toUtc());
   final today = DateTime(now.year, now.month, now.day);
   final tomorrow = today.add(const Duration(days: 1));
-  final targetDate = DateTime(date.year, date.month, date.day);
+  final targetDate = DateTime(baseDate.year, baseDate.month, baseDate.day);
 
   final dateFormat = DateFormat('MMM d, y');
   final timeFormat = DateFormat('h:mm a');
 
-  if (fromTime != null && toTime != null) {
-    final timeText =
-        "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
-    if (targetDate == today) {
-      return "Today, $timeText";
-    } else if (targetDate == tomorrow) {
-      return "Tomorrow, $timeText";
-    } else {
-      return "${dateFormat.format(date)}, $timeText";
-    }
-  } else {
-    if (targetDate == today) {
-      return "Today, ${timeFormat.format(date)}";
-    } else if (targetDate == tomorrow) {
-      return "Tomorrow, ${timeFormat.format(date)}";
-    } else {
-      return "${dateFormat.format(date)} – ${timeFormat.format(date)}";
-    }
+  // If slot provided
+  if (slot != null && slot.from.isNotEmpty && slot.to.isNotEmpty) {
+    final fromTime = _toUaeTime(DateTime.parse(slot.from));
+    final toTime = _toUaeTime(DateTime.parse(slot.to));
+    final timeText = "${timeFormat.format(fromTime)} - ${timeFormat.format(toTime)}";
+
+    if (targetDate == today) return "Today, $timeText";
+    if (targetDate == tomorrow) return "Tomorrow, $timeText";
+    return "${dateFormat.format(baseDate)}, $timeText";
   }
+
+  // Without slot
+  if (targetDate == today) return "Today, ${timeFormat.format(baseDate)}";
+  if (targetDate == tomorrow) return "Tomorrow, ${timeFormat.format(baseDate)}";
+  return "${dateFormat.format(baseDate)} – ${timeFormat.format(baseDate)}";
 }
+
+/// For pickupScheduled or readyForDelivery
+String formatScheduledOrReady(
+  String utcDate,
+  TimeSlot? slot,
+) {
+  final date = _toUaeTime(DateTime.parse(utcDate));
+  return _formatDateWithSlot(date, slot);
+}
+
+/// For pickedUp or delivered
+String formatPickedOrDelivered(
+  String status, // "pickedUp" or "delivered"
+  List<OrderStatus> statusHistory,
+) {
+  final statusLower = status.toLowerCase();
+  final statusEntry = statusHistory.firstWhere(
+    (s) => s.status.toLowerCase() == statusLower,
+    orElse: () => const OrderStatus(),
+  );
+
+  if (statusEntry.changedAt.isEmpty) return "";
+
+  final date = _toUaeTime(DateTime.parse(statusEntry.changedAt));
+  return _formatDateWithSlot(date, null); // no slot, just changedAt
+}
+
+
+
 
 
 

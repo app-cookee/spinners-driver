@@ -92,8 +92,8 @@ class AccountScreen extends StatelessWidget {
                           return const UserDetailPlaceholder();
                         }
                         return ProfileUserDetail(
+                          profileImage: state.appUser?.photo ?? '',
                           active: state.appUser?.active ?? false,
-                          avatar: state.appUser?.photo ?? '',
                           name: (state.appUser?.firstName.isNotEmpty ?? false)
                               ? state.appUser!.firstName
                               : "Driver",

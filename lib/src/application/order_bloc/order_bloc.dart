@@ -21,6 +21,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     this.orderRepository,
   ) : super(OrderState.initial()) {
     on<_GetOrdersList>(_onGetOrdersList);
+    on<_PaginateOrdersList>(_onPaginateOrdersList);
     on<_GetOrderDetails>(_onGetOrderDetails);
     on<_ConfirmPickup>(_onConfirmPickup);
     on<_AddBag>(_onAddBag);
@@ -110,6 +111,31 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   }
 
 
+
+  FutureOr<void> _onPaginateOrdersList(_PaginateOrdersList event, Emitter<OrderState> emit) async{
+    try{
+      log("paginating");
+              emit(state.copyWith(
+      isLoadingMore: true
+    ));
+      var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText);
+       final newList = [...state.ordersList, ...response.orderList];
+           final bool hasMoreItems = response.orderList.length >= event.limit;
+              emit(state.copyWith(
+       ordersList : newList,
+        totalCount: response.totalCount,
+        
+        hasMore: hasMoreItems,
+        isLoadingMore: false,
+      ));
+    }
+    catch (e) {
+      log("notpaginating");
+      emit(state.copyWith(
+       isLoadingMore: false
+      ));
+    }
+  }
   FutureOr<void> _onGetServicesList(_GetServicesList event, Emitter<OrderState> emit) async {
     try {
       emit(state.copyWith(
@@ -129,4 +155,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       ));
     }
   }
+
 }
+  

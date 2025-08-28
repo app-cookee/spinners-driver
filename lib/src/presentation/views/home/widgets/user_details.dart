@@ -43,7 +43,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-
+// log('${ApiUrls.stagingUrl}/${widget.profileImage}');
     return Row(
       children: [
         Container(
@@ -86,11 +86,53 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
           
           child:(widget.profileImage.isNotEmpty&&widget.profileImage!=null)?
           ClipRRect( borderRadius: BorderRadius.circular(20.dp),
-          child: Image.network('${ApiUrls.stagingUrl}/${widget.profileImage}'))
-          // child: CachedNetworkImage(imageUrl:'${ApiUrls.stagingUrl}/${widget.profileImage}'),
+          child:
+
+            CachedNetworkImage(
+                                          imageUrl: (widget.profileImage !=
+                                                      '' )
+                                              ? '${ApiUrls.stagingUrl}/${widget.profileImage}'
+                                              : '',
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              AnimatedBuilder(
+                                            animation: _shimmerController,
+                                            builder: (context, child) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: const [
+                                                      Color(0xFFEBEBF4),
+                                                      Color(0xFFF4F4F4),
+                                                      Color(0xFFEBEBF4),
+                                                    ],
+                                                    stops: const [
+                                                      0.0,
+                                                      0.5,
+                                                      1.0
+                                                    ],
+                                                    begin: Alignment.centerLeft,
+                                                    end: Alignment.centerRight,
+                                                    transform:
+                                                        SlidingGradientTransform(
+                                                            _shimmerController
+                                                                .value),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(
+                                            Icons.person,
+                                            color: AppColors.greyColor,
+                                          ),
+                                        ),
           
       
-          // )
+          )
           
       :
            Center(

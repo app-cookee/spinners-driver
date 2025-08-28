@@ -56,6 +56,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(_CreateNewBag value)? createNewBag,
     TResult Function(_GetServicesList value)? getServicesList,
     TResult Function(_GetOrdersList value)? getOrdersList,
+    TResult Function(_PaginateOrdersList value)? paginateOrdersList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -72,6 +73,8 @@ extension OrderEventPatterns on OrderEvent {
         return getServicesList(_that);
       case _GetOrdersList() when getOrdersList != null:
         return getOrdersList(_that);
+      case _PaginateOrdersList() when paginateOrdersList != null:
+        return paginateOrdersList(_that);
       case _:
         return orElse();
     }
@@ -98,6 +101,7 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(_CreateNewBag value) createNewBag,
     required TResult Function(_GetServicesList value) getServicesList,
     required TResult Function(_GetOrdersList value) getOrdersList,
+    required TResult Function(_PaginateOrdersList value) paginateOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -113,6 +117,8 @@ extension OrderEventPatterns on OrderEvent {
         return getServicesList(_that);
       case _GetOrdersList():
         return getOrdersList(_that);
+      case _PaginateOrdersList():
+        return paginateOrdersList(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -138,6 +144,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(_CreateNewBag value)? createNewBag,
     TResult? Function(_GetServicesList value)? getServicesList,
     TResult? Function(_GetOrdersList value)? getOrdersList,
+    TResult? Function(_PaginateOrdersList value)? paginateOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -153,6 +160,8 @@ extension OrderEventPatterns on OrderEvent {
         return getServicesList(_that);
       case _GetOrdersList() when getOrdersList != null:
         return getOrdersList(_that);
+      case _PaginateOrdersList() when paginateOrdersList != null:
+        return paginateOrdersList(_that);
       case _:
         return null;
     }
@@ -181,6 +190,9 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(int limit, int skip, String filter, bool expressOnly,
             double? latitude, double? longitude, String? searchText)?
         getOrdersList,
+    TResult Function(int skip, int limit, String filter, bool expressOnly,
+            double? latitude, double? longitude, String? searchText)?
+        paginateOrdersList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -199,6 +211,15 @@ extension OrderEventPatterns on OrderEvent {
         return getOrdersList(
             _that.limit,
             _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
+      case _PaginateOrdersList() when paginateOrdersList != null:
+        return paginateOrdersList(
+            _that.skip,
+            _that.limit,
             _that.filter,
             _that.expressOnly,
             _that.latitude,
@@ -239,6 +260,15 @@ extension OrderEventPatterns on OrderEvent {
             double? longitude,
             String? searchText)
         getOrdersList,
+    required TResult Function(
+            int skip,
+            int limit,
+            String filter,
+            bool expressOnly,
+            double? latitude,
+            double? longitude,
+            String? searchText)
+        paginateOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -256,6 +286,15 @@ extension OrderEventPatterns on OrderEvent {
         return getOrdersList(
             _that.limit,
             _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
+      case _PaginateOrdersList():
+        return paginateOrdersList(
+            _that.skip,
+            _that.limit,
             _that.filter,
             _that.expressOnly,
             _that.latitude,
@@ -289,6 +328,9 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(int limit, int skip, String filter, bool expressOnly,
             double? latitude, double? longitude, String? searchText)?
         getOrdersList,
+    TResult? Function(int skip, int limit, String filter, bool expressOnly,
+            double? latitude, double? longitude, String? searchText)?
+        paginateOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -306,6 +348,15 @@ extension OrderEventPatterns on OrderEvent {
         return getOrdersList(
             _that.limit,
             _that.skip,
+            _that.filter,
+            _that.expressOnly,
+            _that.latitude,
+            _that.longitude,
+            _that.searchText);
+      case _PaginateOrdersList() when paginateOrdersList != null:
+        return paginateOrdersList(
+            _that.skip,
+            _that.limit,
             _that.filter,
             _that.expressOnly,
             _that.latitude,
@@ -774,6 +825,141 @@ class __$GetOrdersListCopyWithImpl<$Res>
       skip: null == skip
           ? _self.skip
           : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      filter: null == filter
+          ? _self.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String,
+      expressOnly: null == expressOnly
+          ? _self.expressOnly
+          : expressOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      latitude: freezed == latitude
+          ? _self.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _self.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      searchText: freezed == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _PaginateOrdersList implements OrderEvent {
+  const _PaginateOrdersList(
+      {required this.skip,
+      required this.limit,
+      required this.filter,
+      required this.expressOnly,
+      this.latitude,
+      this.longitude,
+      this.searchText});
+
+  @override
+  final int skip;
+  @override
+  final int limit;
+  @override
+  final String filter;
+  @override
+  final bool expressOnly;
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
+  @override
+  final String? searchText;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$PaginateOrdersListCopyWith<_PaginateOrdersList> get copyWith =>
+      __$PaginateOrdersListCopyWithImpl<_PaginateOrdersList>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _PaginateOrdersList &&
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.expressOnly, expressOnly) ||
+                other.expressOnly == expressOnly) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, skip, limit, filter, expressOnly,
+      latitude, longitude, searchText);
+
+  @override
+  String toString() {
+    return 'OrderEvent.paginateOrdersList(skip: $skip, limit: $limit, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$PaginateOrdersListCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$PaginateOrdersListCopyWith(
+          _PaginateOrdersList value, $Res Function(_PaginateOrdersList) _then) =
+      __$PaginateOrdersListCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {int skip,
+      int limit,
+      String filter,
+      bool expressOnly,
+      double? latitude,
+      double? longitude,
+      String? searchText});
+}
+
+/// @nodoc
+class __$PaginateOrdersListCopyWithImpl<$Res>
+    implements _$PaginateOrdersListCopyWith<$Res> {
+  __$PaginateOrdersListCopyWithImpl(this._self, this._then);
+
+  final _PaginateOrdersList _self;
+  final $Res Function(_PaginateOrdersList) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? skip = null,
+    Object? limit = null,
+    Object? filter = null,
+    Object? expressOnly = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? searchText = freezed,
+  }) {
+    return _then(_PaginateOrdersList(
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
               as int,
       filter: null == filter
           ? _self.filter
