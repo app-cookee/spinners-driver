@@ -44,12 +44,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   @override
   void initState() {
     super.initState();
-    log('ScanNewBagBottomsheet initialized');
-    log('Bag ID: ${widget.bagId}');
-    log('Service ID: ${widget.serviceId}');
-    log('Service Name: ${widget.serviceName}');
-    log('Is Quick Order: ${widget.isQuickOrder}');
-
+  
     context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
     // Auto-fill bag ID if provided
     if (widget.bagId != null) {
@@ -74,7 +69,6 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     @override
   Widget build(BuildContext context) {
     log('Building ScanNewBagBottomsheet');
-    print('Building ScanNewBagBottomsheet');
     
     return Container(
       constraints: BoxConstraints(
@@ -335,9 +329,32 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
       listener: (context, state) {
         // Handle success for both APIs
         if (state.createNewBagStatus is StatusSuccess || state.addBagStatus is StatusSuccess) {
-                     // Close bottomsheet first
-           if (mounted) {
-             Navigator.of(context).pop();
+          // Update scanned bags list locally first
+          final bagId = bagIdController.text.trim();
+          final selectedServiceId = this.selectedServiceId;
+          
+          if (widget.isQuickOrder == false && selectedServiceId != null) {
+            // For normal orders, find the ordered item and update locally
+            final orderedItem = state.orderDetails.orderedItems.firstWhere(
+              (item) => item.service.id == selectedServiceId,
+              orElse: () => state.orderDetails.orderedItems.first,
+            );
+            
+            context.read<OrderBloc>().add(OrderEvent.updateScannedBagsLocally(
+              orderItemId: orderedItem.id,
+              bagId: bagId,
+            ));
+          } else if (widget.isQuickOrder == true && selectedServiceId != null) {
+            // For quick orders, update by service ID
+            context.read<OrderBloc>().add(OrderEvent.updateScannedBagsForNewBag(
+              serviceId: selectedServiceId,
+              bagId: bagId,
+            ));
+          }
+          
+          // Close bottomsheet first
+          if (mounted) {
+            Navigator.of(context).pop();
 
             // Show success message after a short delay
             Future.delayed(const Duration(milliseconds: 300), () {
@@ -347,13 +364,6 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   message: "Bag added successfully",
                   context: context,
                 );
-
-                // Refresh order details after another short delay
-                Future.delayed(const Duration(milliseconds: 200), () {
-                  if (mounted) {
-                    context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId!));
-                  }
-                });
               }
             });
           }

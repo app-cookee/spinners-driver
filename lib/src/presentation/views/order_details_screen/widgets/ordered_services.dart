@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -13,23 +11,17 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderedServices extends StatelessWidget {
   const OrderedServices({
     super.key,
-    required this.selectedIndex,
-    required this.scannedItems,
     required this.orderId,
-    required this.scannedQRCodes,
     required this.status,
   });
 
-  final ValueNotifier<int?> selectedIndex;
-  final ValueNotifier<Set<int>> scannedItems;
+  
   final String orderId;
-  final ValueNotifier<Set<String>> scannedQRCodes;
   final String status;
 
   @override
@@ -123,9 +115,7 @@ class OrderedServices extends StatelessWidget {
               if (status != 'pickedUp')
                 InkWell(
                   onTap: () async {
-                    log('Scan button tapped');
-    
-                    // await _handleScanForNormalOrder(context, orderedItem, index);
+                   
     
                     final result = await Navigator.push<String>(
                       context,
@@ -142,21 +132,9 @@ class OrderedServices extends StatelessWidget {
                       ),
                     ).show();
     
-                    // Check if this QR has already been scanned across all services
-                    if (scannedQRCodes.value.contains(result)) {
-                      log('QR code already scanned: $result');
-                      TheToast.show(
-                        isError: true,
-                        message: "This QR code has already been scanned",
-                        context: context,
-                      );
-                      return;
-                    }
+                  
     
-                    // Add to scanned QR codes set to prevent duplicates
-                    final newScannedQRCodes = Set<String>.from(scannedQRCodes.value);
-                    newScannedQRCodes.add(result!);
-                    scannedQRCodes.value = newScannedQRCodes;
+                  
                   },
                   child: _scanButton(),
                 ),

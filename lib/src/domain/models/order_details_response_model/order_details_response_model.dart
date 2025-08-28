@@ -32,7 +32,7 @@ abstract class OrderDetailsResponseModel with _$OrderDetailsResponseModel{
     @Default(TimeSlot()) TimeSlot pickupSlot,
         @Default(TimeSlot()) TimeSlot deliverySlot,
 
-     @Default([]) List<OrderedItem> orderedItems,
+     @Default([]) List<OrderedItems> orderedItems,
      @Default([]) List<PromoItem> promoUsages,
    @Default([]) List<Payment> payment,
     @Default([]) List<AdditionalCharges> additionalCharges,
@@ -41,8 +41,8 @@ abstract class OrderDetailsResponseModel with _$OrderDetailsResponseModel{
   factory OrderDetailsResponseModel.fromJson(Map<String, dynamic> json) => _$OrderDetailsResponseModelFromJson(json);
 }
 @freezed
-abstract class OrderedItem with _$OrderedItem {
-  const factory OrderedItem({
+abstract class OrderedItems with _$OrderedItems {
+  const factory OrderedItems({
    @Default("") String id,
     @Default(0) int quantity,
     @Default("") String soldPrice,
@@ -51,10 +51,10 @@ abstract class OrderedItem with _$OrderedItem {
     @Default(Item()) Item item,
     @Default([]) List<ScannedBags> scannedBags,
     @Default("") String driverNotes,
-  }) = _OrderedItem;
+  }) = _OrderedItems;
 
-  factory OrderedItem.fromJson(Map<String, dynamic> json) =>
-      _$OrderedItemFromJson(json);
+  factory OrderedItems.fromJson(Map<String, dynamic> json) =>
+      _$OrderedItemsFromJson(json);
 }
 @freezed
 abstract class ScannedBags with _$ScannedBags{

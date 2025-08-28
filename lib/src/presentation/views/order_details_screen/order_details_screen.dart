@@ -33,59 +33,22 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  final TextEditingController additionalNotesController = TextEditingController();
-  // Track scanned items and completion status for normal orders
-  final ValueNotifier<Set<int>> scannedItems = ValueNotifier<Set<int>>({});
-  // Track scanned QR codes to prevent duplicates
-  final ValueNotifier<Set<String>> scannedQRCodes = ValueNotifier<Set<String>>({});
-  late ValueNotifier<bool> allItemsScanned;
-
   @override
   void initState() {
     context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId));
     log('Fetching order details for order ID: ${widget.orderId}');
-    allItemsScanned = ValueNotifier<bool>(false);
-
-    // Listen to scanned items changes to update completion status
-    scannedItems.addListener(_updateCompletionStatus);
 
     super.initState();
   }
 
-  void _updateCompletionStatus() {
-    final state = context.read<OrderBloc>().state;
-    final orderType = state.orderDetails.type;
-
-    if (orderType == "normalOrder") {
-      // For normal orders, check if all items have their required quantity of bags scanned
-      bool allComplete = true;
-      for (final item in state.orderDetails.orderedItems) {
-        if (item.scannedBags.length < item.quantity) {
-          allComplete = false;
-          break;
-        }
-      }
-      allItemsScanned.value = allComplete && state.orderDetails.orderedItems.isNotEmpty;
-    } else {
-      // For quick orders, check if at least one bag has been scanned
-      final totalScannedBags = state.orderDetails.orderedItems.fold<int>(0, (sum, item) => sum + item.scannedBags.length);
-      allItemsScanned.value = totalScannedBags > 0;
-    }
-  }
-
   @override
   void dispose() {
-    additionalNotesController.dispose();
-    scannedItems.removeListener(_updateCompletionStatus);
-    scannedItems.dispose();
-    scannedQRCodes.dispose();
-    allItemsScanned.dispose();
     super.dispose();
   }
-
+  final TextEditingController additionalNotesController = TextEditingController();
+  final ValueNotifier<Set<String>> scannedQRCodes = ValueNotifier<Set<String>>({});
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<int?> selectedIndex = ValueNotifier<int?>(null);
     final refId = context.read<OrderBloc>().state.orderDetails.refId;
     return ScrollConfiguration(
       behavior: NoGlowScrollBehavior(),
@@ -101,10 +64,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
                     return const PickupOrderDetailScreenPlaceholder();
                   }
-                  // Update completion status when state changes
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _updateCompletionStatus();
-                  });
+                
                   return CustomScrollView(
                     slivers: [
                       _orderInfo(state),
@@ -134,8 +94,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         child: ServicesWidget(
                           orderState: state,
                           orderId: widget.orderId,
-                          selectedIndex: selectedIndex,
-                          scannedItems: scannedItems,
                           scannedQRCodes: scannedQRCodes,
                           additionalNotesController: additionalNotesController,
                         ),
@@ -157,8 +115,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   right: 0,
                   child: FooterButtons(
                     orderId: widget.orderId,
-                    additionalNotesController: additionalNotesController,
-                    allItemsScannedNotifier: allItemsScanned,
+                    // additionalNotesController: additionalNotesController,
+                   
                   ),
                 );
               },
@@ -195,7 +153,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Widget _header(BuildContext context, int orderRefId) {
-    final loading=context.read<OrderBloc>().state.getOrderDetailStatus is StatusLoading||context.read<OrderBloc>().state.getOrderDetailStatus is StatusInitial;
+    final loading = context.read<OrderBloc>().state.getOrderDetailStatus is StatusLoading || context.read<OrderBloc>().state.getOrderDetailStatus is StatusInitial;
     return Container(
       padding: EdgeInsets.only(top: 7.h, left: 16.dp, right: 16.dp, bottom: 8.dp),
       width: 100.w,
@@ -208,8 +166,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             width: 20.dp,
           ),
           Gap(6.dp),
-          if(loading)
-          _shimmerContainer(),
+          if (loading) _shimmerContainer(),
           Text(
             "Order ID: #SPN$orderRefId",
             style: AppTypography.sfProRoundedSemiBold.copyWith(

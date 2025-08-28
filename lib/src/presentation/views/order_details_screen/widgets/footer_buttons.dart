@@ -11,10 +11,11 @@ import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class FooterButtons extends StatefulWidget {
-  const FooterButtons({super.key, required this.orderId, required this.additionalNotesController, required this.allItemsScannedNotifier});
+  const FooterButtons({super.key, required this.orderId, 
+  // required this.additionalNotesController,
+  });
   final String orderId;
-  final TextEditingController additionalNotesController;
-  final ValueNotifier<bool> allItemsScannedNotifier;
+  // final TextEditingController additionalNotesController;
   @override
   State<FooterButtons> createState() => _FooterButtonsState();
 }
@@ -39,17 +40,15 @@ class _FooterButtonsState extends State<FooterButtons> {
       ),
       child: Column(
         children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: widget.allItemsScannedNotifier,
-            builder: (context, isAllScanned, child) {
-              return PrimaryButtonWidget(
+          
+               PrimaryButtonWidget(
                 onPressed: () {
                   final orderType = context.read<OrderBloc>().state.orderDetails.type;
-
-                  if (isAllScanned) {
+                  int k=1;
+                  if ( k==1) {
                     context.read<OrderBloc>().add(OrderEvent.confirmPickup(
                           orderId: widget.orderId,
-                          driverNotes: widget.additionalNotesController.text,
+                          driverNotes: 'widget.additionalNotesController.text',
                         ));
                   } else {
                     final message = orderType == "normalOrder" ? "Please scan all required bags for each service" : "Please scan at least one bag";
@@ -68,9 +67,8 @@ class _FooterButtonsState extends State<FooterButtons> {
                 text: "Confirm Pickup",
                 height: 48.dp,
                 // You can add different styling for disabled state if your PrimaryButtonWidget supports it
-              );
-            },
-          ),
+              ),
+           
           Gap(8.dp),
           SecondaryButtonWidget(
             onPressed: () {

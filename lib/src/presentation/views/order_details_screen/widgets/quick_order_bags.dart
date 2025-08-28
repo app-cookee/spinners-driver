@@ -144,7 +144,8 @@ class QuickOrderBags extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () => _handleScanForQuickOrder(context, bag),
+            onTap: () =>
+             _handleScanForQuickOrder(context, bag),
             child: _scanButton(),
           ),
         ],

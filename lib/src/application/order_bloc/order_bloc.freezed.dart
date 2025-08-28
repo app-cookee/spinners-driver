@@ -50,17 +50,24 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetOrdersList value)? getOrdersList,
+    TResult Function(_PaginateOrdersList value)? paginateOrdersList,
     TResult Function(_GetOrderDetails value)? getOrderDetails,
     TResult Function(_ConfirmPickup value)? confirmPickup,
     TResult Function(_AddBag value)? addBag,
     TResult Function(_CreateNewBag value)? createNewBag,
     TResult Function(_GetServicesList value)? getServicesList,
-    TResult Function(_GetOrdersList value)? getOrdersList,
-    TResult Function(_PaginateOrdersList value)? paginateOrdersList,
+    TResult Function(_UpdateScannedBagsLocally value)? updateScannedBagsLocally,
+    TResult Function(_UpdateScannedBagsForNewBag value)?
+        updateScannedBagsForNewBag,
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
+      case _GetOrdersList() when getOrdersList != null:
+        return getOrdersList(_that);
+      case _PaginateOrdersList() when paginateOrdersList != null:
+        return paginateOrdersList(_that);
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that);
       case _ConfirmPickup() when confirmPickup != null:
@@ -71,10 +78,11 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetServicesList() when getServicesList != null:
         return getServicesList(_that);
-      case _GetOrdersList() when getOrdersList != null:
-        return getOrdersList(_that);
-      case _PaginateOrdersList() when paginateOrdersList != null:
-        return paginateOrdersList(_that);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that);
       case _:
         return orElse();
     }
@@ -95,16 +103,24 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_GetOrdersList value) getOrdersList,
+    required TResult Function(_PaginateOrdersList value) paginateOrdersList,
     required TResult Function(_GetOrderDetails value) getOrderDetails,
     required TResult Function(_ConfirmPickup value) confirmPickup,
     required TResult Function(_AddBag value) addBag,
     required TResult Function(_CreateNewBag value) createNewBag,
     required TResult Function(_GetServicesList value) getServicesList,
-    required TResult Function(_GetOrdersList value) getOrdersList,
-    required TResult Function(_PaginateOrdersList value) paginateOrdersList,
+    required TResult Function(_UpdateScannedBagsLocally value)
+        updateScannedBagsLocally,
+    required TResult Function(_UpdateScannedBagsForNewBag value)
+        updateScannedBagsForNewBag,
   }) {
     final _that = this;
     switch (_that) {
+      case _GetOrdersList():
+        return getOrdersList(_that);
+      case _PaginateOrdersList():
+        return paginateOrdersList(_that);
       case _GetOrderDetails():
         return getOrderDetails(_that);
       case _ConfirmPickup():
@@ -115,10 +131,10 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetServicesList():
         return getServicesList(_that);
-      case _GetOrdersList():
-        return getOrdersList(_that);
-      case _PaginateOrdersList():
-        return paginateOrdersList(_that);
+      case _UpdateScannedBagsLocally():
+        return updateScannedBagsLocally(_that);
+      case _UpdateScannedBagsForNewBag():
+        return updateScannedBagsForNewBag(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -138,16 +154,24 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetOrdersList value)? getOrdersList,
+    TResult? Function(_PaginateOrdersList value)? paginateOrdersList,
     TResult? Function(_GetOrderDetails value)? getOrderDetails,
     TResult? Function(_ConfirmPickup value)? confirmPickup,
     TResult? Function(_AddBag value)? addBag,
     TResult? Function(_CreateNewBag value)? createNewBag,
     TResult? Function(_GetServicesList value)? getServicesList,
-    TResult? Function(_GetOrdersList value)? getOrdersList,
-    TResult? Function(_PaginateOrdersList value)? paginateOrdersList,
+    TResult? Function(_UpdateScannedBagsLocally value)?
+        updateScannedBagsLocally,
+    TResult? Function(_UpdateScannedBagsForNewBag value)?
+        updateScannedBagsForNewBag,
   }) {
     final _that = this;
     switch (_that) {
+      case _GetOrdersList() when getOrdersList != null:
+        return getOrdersList(_that);
+      case _PaginateOrdersList() when paginateOrdersList != null:
+        return paginateOrdersList(_that);
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that);
       case _ConfirmPickup() when confirmPickup != null:
@@ -158,10 +182,11 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetServicesList() when getServicesList != null:
         return getServicesList(_that);
-      case _GetOrdersList() when getOrdersList != null:
-        return getOrdersList(_that);
-      case _PaginateOrdersList() when paginateOrdersList != null:
-        return paginateOrdersList(_that);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that);
       case _:
         return null;
     }
@@ -181,32 +206,26 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String orderId)? getOrderDetails,
-    TResult Function(String orderId, String driverNotes)? confirmPickup,
-    TResult Function(String orderItemId, String bagId)? addBag,
-    TResult Function(String bagId, String orderId, String serviceId)?
-        createNewBag,
-    TResult Function(int limit, int skip)? getServicesList,
     TResult Function(int limit, int skip, String filter, bool expressOnly,
             double? latitude, double? longitude, String? searchText)?
         getOrdersList,
     TResult Function(int skip, int limit, String filter, bool expressOnly,
             double? latitude, double? longitude, String? searchText)?
         paginateOrdersList,
+    TResult Function(String orderId)? getOrderDetails,
+    TResult Function(String orderId, String driverNotes)? confirmPickup,
+    TResult Function(String orderItemId, String bagId)? addBag,
+    TResult Function(String bagId, String orderId, String serviceId)?
+        createNewBag,
+    TResult Function(int limit, int skip)? getServicesList,
+    TResult Function(String orderItemId, String bagId)?
+        updateScannedBagsLocally,
+    TResult Function(String serviceId, String bagId)?
+        updateScannedBagsForNewBag,
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _GetOrderDetails() when getOrderDetails != null:
-        return getOrderDetails(_that.orderId);
-      case _ConfirmPickup() when confirmPickup != null:
-        return confirmPickup(_that.orderId, _that.driverNotes);
-      case _AddBag() when addBag != null:
-        return addBag(_that.orderItemId, _that.bagId);
-      case _CreateNewBag() when createNewBag != null:
-        return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
-      case _GetServicesList() when getServicesList != null:
-        return getServicesList(_that.limit, _that.skip);
       case _GetOrdersList() when getOrdersList != null:
         return getOrdersList(
             _that.limit,
@@ -225,6 +244,21 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText);
+      case _GetOrderDetails() when getOrderDetails != null:
+        return getOrderDetails(_that.orderId);
+      case _ConfirmPickup() when confirmPickup != null:
+        return confirmPickup(_that.orderId, _that.driverNotes);
+      case _AddBag() when addBag != null:
+        return addBag(_that.orderItemId, _that.bagId);
+      case _CreateNewBag() when createNewBag != null:
+        return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
+      case _GetServicesList() when getServicesList != null:
+        return getServicesList(_that.limit, _that.skip);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
       case _:
         return orElse();
     }
@@ -245,12 +279,6 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String orderId) getOrderDetails,
-    required TResult Function(String orderId, String driverNotes) confirmPickup,
-    required TResult Function(String orderItemId, String bagId) addBag,
-    required TResult Function(String bagId, String orderId, String serviceId)
-        createNewBag,
-    required TResult Function(int limit, int skip) getServicesList,
     required TResult Function(
             int limit,
             int skip,
@@ -269,19 +297,19 @@ extension OrderEventPatterns on OrderEvent {
             double? longitude,
             String? searchText)
         paginateOrdersList,
+    required TResult Function(String orderId) getOrderDetails,
+    required TResult Function(String orderId, String driverNotes) confirmPickup,
+    required TResult Function(String orderItemId, String bagId) addBag,
+    required TResult Function(String bagId, String orderId, String serviceId)
+        createNewBag,
+    required TResult Function(int limit, int skip) getServicesList,
+    required TResult Function(String orderItemId, String bagId)
+        updateScannedBagsLocally,
+    required TResult Function(String serviceId, String bagId)
+        updateScannedBagsForNewBag,
   }) {
     final _that = this;
     switch (_that) {
-      case _GetOrderDetails():
-        return getOrderDetails(_that.orderId);
-      case _ConfirmPickup():
-        return confirmPickup(_that.orderId, _that.driverNotes);
-      case _AddBag():
-        return addBag(_that.orderItemId, _that.bagId);
-      case _CreateNewBag():
-        return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
-      case _GetServicesList():
-        return getServicesList(_that.limit, _that.skip);
       case _GetOrdersList():
         return getOrdersList(
             _that.limit,
@@ -300,6 +328,20 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText);
+      case _GetOrderDetails():
+        return getOrderDetails(_that.orderId);
+      case _ConfirmPickup():
+        return confirmPickup(_that.orderId, _that.driverNotes);
+      case _AddBag():
+        return addBag(_that.orderItemId, _that.bagId);
+      case _CreateNewBag():
+        return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
+      case _GetServicesList():
+        return getServicesList(_that.limit, _that.skip);
+      case _UpdateScannedBagsLocally():
+        return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
+      case _UpdateScannedBagsForNewBag():
+        return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -319,31 +361,25 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String orderId)? getOrderDetails,
-    TResult? Function(String orderId, String driverNotes)? confirmPickup,
-    TResult? Function(String orderItemId, String bagId)? addBag,
-    TResult? Function(String bagId, String orderId, String serviceId)?
-        createNewBag,
-    TResult? Function(int limit, int skip)? getServicesList,
     TResult? Function(int limit, int skip, String filter, bool expressOnly,
             double? latitude, double? longitude, String? searchText)?
         getOrdersList,
     TResult? Function(int skip, int limit, String filter, bool expressOnly,
             double? latitude, double? longitude, String? searchText)?
         paginateOrdersList,
+    TResult? Function(String orderId)? getOrderDetails,
+    TResult? Function(String orderId, String driverNotes)? confirmPickup,
+    TResult? Function(String orderItemId, String bagId)? addBag,
+    TResult? Function(String bagId, String orderId, String serviceId)?
+        createNewBag,
+    TResult? Function(int limit, int skip)? getServicesList,
+    TResult? Function(String orderItemId, String bagId)?
+        updateScannedBagsLocally,
+    TResult? Function(String serviceId, String bagId)?
+        updateScannedBagsForNewBag,
   }) {
     final _that = this;
     switch (_that) {
-      case _GetOrderDetails() when getOrderDetails != null:
-        return getOrderDetails(_that.orderId);
-      case _ConfirmPickup() when confirmPickup != null:
-        return confirmPickup(_that.orderId, _that.driverNotes);
-      case _AddBag() when addBag != null:
-        return addBag(_that.orderItemId, _that.bagId);
-      case _CreateNewBag() when createNewBag != null:
-        return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
-      case _GetServicesList() when getServicesList != null:
-        return getServicesList(_that.limit, _that.skip);
       case _GetOrdersList() when getOrdersList != null:
         return getOrdersList(
             _that.limit,
@@ -362,9 +398,274 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText);
+      case _GetOrderDetails() when getOrderDetails != null:
+        return getOrderDetails(_that.orderId);
+      case _ConfirmPickup() when confirmPickup != null:
+        return confirmPickup(_that.orderId, _that.driverNotes);
+      case _AddBag() when addBag != null:
+        return addBag(_that.orderItemId, _that.bagId);
+      case _CreateNewBag() when createNewBag != null:
+        return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
+      case _GetServicesList() when getServicesList != null:
+        return getServicesList(_that.limit, _that.skip);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
       case _:
         return null;
     }
+  }
+}
+
+/// @nodoc
+
+class _GetOrdersList implements OrderEvent {
+  const _GetOrdersList(
+      {required this.limit,
+      required this.skip,
+      required this.filter,
+      required this.expressOnly,
+      this.latitude,
+      this.longitude,
+      this.searchText});
+
+  final int limit;
+  final int skip;
+  final String filter;
+  final bool expressOnly;
+  final double? latitude;
+  final double? longitude;
+  final String? searchText;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$GetOrdersListCopyWith<_GetOrdersList> get copyWith =>
+      __$GetOrdersListCopyWithImpl<_GetOrdersList>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _GetOrdersList &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.expressOnly, expressOnly) ||
+                other.expressOnly == expressOnly) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
+      latitude, longitude, searchText);
+
+  @override
+  String toString() {
+    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$GetOrdersListCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$GetOrdersListCopyWith(
+          _GetOrdersList value, $Res Function(_GetOrdersList) _then) =
+      __$GetOrdersListCopyWithImpl;
+  @useResult
+  $Res call(
+      {int limit,
+      int skip,
+      String filter,
+      bool expressOnly,
+      double? latitude,
+      double? longitude,
+      String? searchText});
+}
+
+/// @nodoc
+class __$GetOrdersListCopyWithImpl<$Res>
+    implements _$GetOrdersListCopyWith<$Res> {
+  __$GetOrdersListCopyWithImpl(this._self, this._then);
+
+  final _GetOrdersList _self;
+  final $Res Function(_GetOrdersList) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? limit = null,
+    Object? skip = null,
+    Object? filter = null,
+    Object? expressOnly = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? searchText = freezed,
+  }) {
+    return _then(_GetOrdersList(
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      filter: null == filter
+          ? _self.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String,
+      expressOnly: null == expressOnly
+          ? _self.expressOnly
+          : expressOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      latitude: freezed == latitude
+          ? _self.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _self.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      searchText: freezed == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _PaginateOrdersList implements OrderEvent {
+  const _PaginateOrdersList(
+      {required this.skip,
+      required this.limit,
+      required this.filter,
+      required this.expressOnly,
+      this.latitude,
+      this.longitude,
+      this.searchText});
+
+  final int skip;
+  final int limit;
+  final String filter;
+  final bool expressOnly;
+  final double? latitude;
+  final double? longitude;
+  final String? searchText;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$PaginateOrdersListCopyWith<_PaginateOrdersList> get copyWith =>
+      __$PaginateOrdersListCopyWithImpl<_PaginateOrdersList>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _PaginateOrdersList &&
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.expressOnly, expressOnly) ||
+                other.expressOnly == expressOnly) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, skip, limit, filter, expressOnly,
+      latitude, longitude, searchText);
+
+  @override
+  String toString() {
+    return 'OrderEvent.paginateOrdersList(skip: $skip, limit: $limit, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$PaginateOrdersListCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$PaginateOrdersListCopyWith(
+          _PaginateOrdersList value, $Res Function(_PaginateOrdersList) _then) =
+      __$PaginateOrdersListCopyWithImpl;
+  @useResult
+  $Res call(
+      {int skip,
+      int limit,
+      String filter,
+      bool expressOnly,
+      double? latitude,
+      double? longitude,
+      String? searchText});
+}
+
+/// @nodoc
+class __$PaginateOrdersListCopyWithImpl<$Res>
+    implements _$PaginateOrdersListCopyWith<$Res> {
+  __$PaginateOrdersListCopyWithImpl(this._self, this._then);
+
+  final _PaginateOrdersList _self;
+  final $Res Function(_PaginateOrdersList) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? skip = null,
+    Object? limit = null,
+    Object? filter = null,
+    Object? expressOnly = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? searchText = freezed,
+  }) {
+    return _then(_PaginateOrdersList(
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      filter: null == filter
+          ? _self.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String,
+      expressOnly: null == expressOnly
+          ? _self.expressOnly
+          : expressOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      latitude: freezed == latitude
+          ? _self.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _self.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      searchText: freezed == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
@@ -727,260 +1028,149 @@ class __$GetServicesListCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _GetOrdersList implements OrderEvent {
-  const _GetOrdersList(
-      {required this.limit,
-      required this.skip,
-      required this.filter,
-      required this.expressOnly,
-      this.latitude,
-      this.longitude,
-      this.searchText});
+class _UpdateScannedBagsLocally implements OrderEvent {
+  const _UpdateScannedBagsLocally(
+      {required this.orderItemId, required this.bagId});
 
-  final int limit;
-  final int skip;
-  final String filter;
-  final bool expressOnly;
-  final double? latitude;
-  final double? longitude;
-  final String? searchText;
+  final String orderItemId;
+  final String bagId;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$GetOrdersListCopyWith<_GetOrdersList> get copyWith =>
-      __$GetOrdersListCopyWithImpl<_GetOrdersList>(this, _$identity);
+  _$UpdateScannedBagsLocallyCopyWith<_UpdateScannedBagsLocally> get copyWith =>
+      __$UpdateScannedBagsLocallyCopyWithImpl<_UpdateScannedBagsLocally>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _GetOrdersList &&
-            (identical(other.limit, limit) || other.limit == limit) &&
-            (identical(other.skip, skip) || other.skip == skip) &&
-            (identical(other.filter, filter) || other.filter == filter) &&
-            (identical(other.expressOnly, expressOnly) ||
-                other.expressOnly == expressOnly) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude) &&
-            (identical(other.searchText, searchText) ||
-                other.searchText == searchText));
+            other is _UpdateScannedBagsLocally &&
+            (identical(other.orderItemId, orderItemId) ||
+                other.orderItemId == orderItemId) &&
+            (identical(other.bagId, bagId) || other.bagId == bagId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
-      latitude, longitude, searchText);
+  int get hashCode => Object.hash(runtimeType, orderItemId, bagId);
 
   @override
   String toString() {
-    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
+    return 'OrderEvent.updateScannedBagsLocally(orderItemId: $orderItemId, bagId: $bagId)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$GetOrdersListCopyWith<$Res>
+abstract mixin class _$UpdateScannedBagsLocallyCopyWith<$Res>
     implements $OrderEventCopyWith<$Res> {
-  factory _$GetOrdersListCopyWith(
-          _GetOrdersList value, $Res Function(_GetOrdersList) _then) =
-      __$GetOrdersListCopyWithImpl;
+  factory _$UpdateScannedBagsLocallyCopyWith(_UpdateScannedBagsLocally value,
+          $Res Function(_UpdateScannedBagsLocally) _then) =
+      __$UpdateScannedBagsLocallyCopyWithImpl;
   @useResult
-  $Res call(
-      {int limit,
-      int skip,
-      String filter,
-      bool expressOnly,
-      double? latitude,
-      double? longitude,
-      String? searchText});
+  $Res call({String orderItemId, String bagId});
 }
 
 /// @nodoc
-class __$GetOrdersListCopyWithImpl<$Res>
-    implements _$GetOrdersListCopyWith<$Res> {
-  __$GetOrdersListCopyWithImpl(this._self, this._then);
+class __$UpdateScannedBagsLocallyCopyWithImpl<$Res>
+    implements _$UpdateScannedBagsLocallyCopyWith<$Res> {
+  __$UpdateScannedBagsLocallyCopyWithImpl(this._self, this._then);
 
-  final _GetOrdersList _self;
-  final $Res Function(_GetOrdersList) _then;
+  final _UpdateScannedBagsLocally _self;
+  final $Res Function(_UpdateScannedBagsLocally) _then;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? limit = null,
-    Object? skip = null,
-    Object? filter = null,
-    Object? expressOnly = null,
-    Object? latitude = freezed,
-    Object? longitude = freezed,
-    Object? searchText = freezed,
+    Object? orderItemId = null,
+    Object? bagId = null,
   }) {
-    return _then(_GetOrdersList(
-      limit: null == limit
-          ? _self.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int,
-      skip: null == skip
-          ? _self.skip
-          : skip // ignore: cast_nullable_to_non_nullable
-              as int,
-      filter: null == filter
-          ? _self.filter
-          : filter // ignore: cast_nullable_to_non_nullable
+    return _then(_UpdateScannedBagsLocally(
+      orderItemId: null == orderItemId
+          ? _self.orderItemId
+          : orderItemId // ignore: cast_nullable_to_non_nullable
               as String,
-      expressOnly: null == expressOnly
-          ? _self.expressOnly
-          : expressOnly // ignore: cast_nullable_to_non_nullable
-              as bool,
-      latitude: freezed == latitude
-          ? _self.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _self.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      searchText: freezed == searchText
-          ? _self.searchText
-          : searchText // ignore: cast_nullable_to_non_nullable
-              as String?,
+      bagId: null == bagId
+          ? _self.bagId
+          : bagId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 
-class _PaginateOrdersList implements OrderEvent {
-  const _PaginateOrdersList(
-      {required this.skip,
-      required this.limit,
-      required this.filter,
-      required this.expressOnly,
-      this.latitude,
-      this.longitude,
-      this.searchText});
+class _UpdateScannedBagsForNewBag implements OrderEvent {
+  const _UpdateScannedBagsForNewBag(
+      {required this.serviceId, required this.bagId});
 
-  @override
-  final int skip;
-  @override
-  final int limit;
-  @override
-  final String filter;
-  @override
-  final bool expressOnly;
-  @override
-  final double? latitude;
-  @override
-  final double? longitude;
-  @override
-  final String? searchText;
+  final String serviceId;
+  final String bagId;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$PaginateOrdersListCopyWith<_PaginateOrdersList> get copyWith =>
-      __$PaginateOrdersListCopyWithImpl<_PaginateOrdersList>(this, _$identity);
+  _$UpdateScannedBagsForNewBagCopyWith<_UpdateScannedBagsForNewBag>
+      get copyWith => __$UpdateScannedBagsForNewBagCopyWithImpl<
+          _UpdateScannedBagsForNewBag>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _PaginateOrdersList &&
-            (identical(other.skip, skip) || other.skip == skip) &&
-            (identical(other.limit, limit) || other.limit == limit) &&
-            (identical(other.filter, filter) || other.filter == filter) &&
-            (identical(other.expressOnly, expressOnly) ||
-                other.expressOnly == expressOnly) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude) &&
-            (identical(other.searchText, searchText) ||
-                other.searchText == searchText));
+            other is _UpdateScannedBagsForNewBag &&
+            (identical(other.serviceId, serviceId) ||
+                other.serviceId == serviceId) &&
+            (identical(other.bagId, bagId) || other.bagId == bagId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, skip, limit, filter, expressOnly,
-      latitude, longitude, searchText);
+  int get hashCode => Object.hash(runtimeType, serviceId, bagId);
 
   @override
   String toString() {
-    return 'OrderEvent.paginateOrdersList(skip: $skip, limit: $limit, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
+    return 'OrderEvent.updateScannedBagsForNewBag(serviceId: $serviceId, bagId: $bagId)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$PaginateOrdersListCopyWith<$Res>
+abstract mixin class _$UpdateScannedBagsForNewBagCopyWith<$Res>
     implements $OrderEventCopyWith<$Res> {
-  factory _$PaginateOrdersListCopyWith(
-          _PaginateOrdersList value, $Res Function(_PaginateOrdersList) _then) =
-      __$PaginateOrdersListCopyWithImpl;
-  @override
+  factory _$UpdateScannedBagsForNewBagCopyWith(
+          _UpdateScannedBagsForNewBag value,
+          $Res Function(_UpdateScannedBagsForNewBag) _then) =
+      __$UpdateScannedBagsForNewBagCopyWithImpl;
   @useResult
-  $Res call(
-      {int skip,
-      int limit,
-      String filter,
-      bool expressOnly,
-      double? latitude,
-      double? longitude,
-      String? searchText});
+  $Res call({String serviceId, String bagId});
 }
 
 /// @nodoc
-class __$PaginateOrdersListCopyWithImpl<$Res>
-    implements _$PaginateOrdersListCopyWith<$Res> {
-  __$PaginateOrdersListCopyWithImpl(this._self, this._then);
+class __$UpdateScannedBagsForNewBagCopyWithImpl<$Res>
+    implements _$UpdateScannedBagsForNewBagCopyWith<$Res> {
+  __$UpdateScannedBagsForNewBagCopyWithImpl(this._self, this._then);
 
-  final _PaginateOrdersList _self;
-  final $Res Function(_PaginateOrdersList) _then;
+  final _UpdateScannedBagsForNewBag _self;
+  final $Res Function(_UpdateScannedBagsForNewBag) _then;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? skip = null,
-    Object? limit = null,
-    Object? filter = null,
-    Object? expressOnly = null,
-    Object? latitude = freezed,
-    Object? longitude = freezed,
-    Object? searchText = freezed,
+    Object? serviceId = null,
+    Object? bagId = null,
   }) {
-    return _then(_PaginateOrdersList(
-      skip: null == skip
-          ? _self.skip
-          : skip // ignore: cast_nullable_to_non_nullable
-              as int,
-      limit: null == limit
-          ? _self.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int,
-      filter: null == filter
-          ? _self.filter
-          : filter // ignore: cast_nullable_to_non_nullable
+    return _then(_UpdateScannedBagsForNewBag(
+      serviceId: null == serviceId
+          ? _self.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
               as String,
-      expressOnly: null == expressOnly
-          ? _self.expressOnly
-          : expressOnly // ignore: cast_nullable_to_non_nullable
-              as bool,
-      latitude: freezed == latitude
-          ? _self.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _self.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      searchText: freezed == searchText
-          ? _self.searchText
-          : searchText // ignore: cast_nullable_to_non_nullable
-              as String?,
+      bagId: null == bagId
+          ? _self.bagId
+          : bagId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }

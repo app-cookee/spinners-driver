@@ -40,7 +40,7 @@ mixin _$OrderDetailsResponseModel {
   SelectedAddress get selectedAddress;
   TimeSlot get pickupSlot;
   TimeSlot get deliverySlot;
-  List<OrderedItem> get orderedItems;
+  List<OrderedItems> get orderedItems;
   List<PromoItem> get promoUsages;
   List<Payment> get payment;
   List<AdditionalCharges> get additionalCharges;
@@ -193,7 +193,7 @@ abstract mixin class $OrderDetailsResponseModelCopyWith<$Res> {
       SelectedAddress selectedAddress,
       TimeSlot pickupSlot,
       TimeSlot deliverySlot,
-      List<OrderedItem> orderedItems,
+      List<OrderedItems> orderedItems,
       List<PromoItem> promoUsages,
       List<Payment> payment,
       List<AdditionalCharges> additionalCharges});
@@ -356,7 +356,7 @@ class _$OrderDetailsResponseModelCopyWithImpl<$Res>
       orderedItems: null == orderedItems
           ? _self.orderedItems
           : orderedItems // ignore: cast_nullable_to_non_nullable
-              as List<OrderedItem>,
+              as List<OrderedItems>,
       promoUsages: null == promoUsages
           ? _self.promoUsages
           : promoUsages // ignore: cast_nullable_to_non_nullable
@@ -533,7 +533,7 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             SelectedAddress selectedAddress,
             TimeSlot pickupSlot,
             TimeSlot deliverySlot,
-            List<OrderedItem> orderedItems,
+            List<OrderedItems> orderedItems,
             List<PromoItem> promoUsages,
             List<Payment> payment,
             List<AdditionalCharges> additionalCharges)?
@@ -621,7 +621,7 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             SelectedAddress selectedAddress,
             TimeSlot pickupSlot,
             TimeSlot deliverySlot,
-            List<OrderedItem> orderedItems,
+            List<OrderedItems> orderedItems,
             List<PromoItem> promoUsages,
             List<Payment> payment,
             List<AdditionalCharges> additionalCharges)
@@ -707,7 +707,7 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             SelectedAddress selectedAddress,
             TimeSlot pickupSlot,
             TimeSlot deliverySlot,
-            List<OrderedItem> orderedItems,
+            List<OrderedItems> orderedItems,
             List<PromoItem> promoUsages,
             List<Payment> payment,
             List<AdditionalCharges> additionalCharges)?
@@ -783,7 +783,7 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
       this.selectedAddress = const SelectedAddress(),
       this.pickupSlot = const TimeSlot(),
       this.deliverySlot = const TimeSlot(),
-      final List<OrderedItem> orderedItems = const [],
+      final List<OrderedItems> orderedItems = const [],
       final List<PromoItem> promoUsages = const [],
       final List<Payment> payment = const [],
       final List<AdditionalCharges> additionalCharges = const []})
@@ -879,10 +879,10 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
   @override
   @JsonKey()
   final TimeSlot deliverySlot;
-  final List<OrderedItem> _orderedItems;
+  final List<OrderedItems> _orderedItems;
   @override
   @JsonKey()
-  List<OrderedItem> get orderedItems {
+  List<OrderedItems> get orderedItems {
     if (_orderedItems is EqualUnmodifiableListView) return _orderedItems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_orderedItems);
@@ -1072,7 +1072,7 @@ abstract mixin class _$OrderDetailsResponseModelCopyWith<$Res>
       SelectedAddress selectedAddress,
       TimeSlot pickupSlot,
       TimeSlot deliverySlot,
-      List<OrderedItem> orderedItems,
+      List<OrderedItems> orderedItems,
       List<PromoItem> promoUsages,
       List<Payment> payment,
       List<AdditionalCharges> additionalCharges});
@@ -1239,7 +1239,7 @@ class __$OrderDetailsResponseModelCopyWithImpl<$Res>
       orderedItems: null == orderedItems
           ? _self._orderedItems
           : orderedItems // ignore: cast_nullable_to_non_nullable
-              as List<OrderedItem>,
+              as List<OrderedItems>,
       promoUsages: null == promoUsages
           ? _self._promoUsages
           : promoUsages // ignore: cast_nullable_to_non_nullable
@@ -1297,7 +1297,7 @@ class __$OrderDetailsResponseModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-mixin _$OrderedItem {
+mixin _$OrderedItems {
   String get id;
   int get quantity;
   String get soldPrice;
@@ -1307,21 +1307,22 @@ mixin _$OrderedItem {
   List<ScannedBags> get scannedBags;
   String get driverNotes;
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $OrderedItemCopyWith<OrderedItem> get copyWith =>
-      _$OrderedItemCopyWithImpl<OrderedItem>(this as OrderedItem, _$identity);
+  $OrderedItemsCopyWith<OrderedItems> get copyWith =>
+      _$OrderedItemsCopyWithImpl<OrderedItems>(
+          this as OrderedItems, _$identity);
 
-  /// Serializes this OrderedItem to a JSON map.
+  /// Serializes this OrderedItems to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is OrderedItem &&
+            other is OrderedItems &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
@@ -1352,15 +1353,15 @@ mixin _$OrderedItem {
 
   @override
   String toString() {
-    return 'OrderedItem(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, scannedBags: $scannedBags, driverNotes: $driverNotes)';
+    return 'OrderedItems(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, scannedBags: $scannedBags, driverNotes: $driverNotes)';
   }
 }
 
 /// @nodoc
-abstract mixin class $OrderedItemCopyWith<$Res> {
-  factory $OrderedItemCopyWith(
-          OrderedItem value, $Res Function(OrderedItem) _then) =
-      _$OrderedItemCopyWithImpl;
+abstract mixin class $OrderedItemsCopyWith<$Res> {
+  factory $OrderedItemsCopyWith(
+          OrderedItems value, $Res Function(OrderedItems) _then) =
+      _$OrderedItemsCopyWithImpl;
   @useResult
   $Res call(
       {String id,
@@ -1377,13 +1378,13 @@ abstract mixin class $OrderedItemCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$OrderedItemCopyWithImpl<$Res> implements $OrderedItemCopyWith<$Res> {
-  _$OrderedItemCopyWithImpl(this._self, this._then);
+class _$OrderedItemsCopyWithImpl<$Res> implements $OrderedItemsCopyWith<$Res> {
+  _$OrderedItemsCopyWithImpl(this._self, this._then);
 
-  final OrderedItem _self;
-  final $Res Function(OrderedItem) _then;
+  final OrderedItems _self;
+  final $Res Function(OrderedItems) _then;
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -1433,7 +1434,7 @@ class _$OrderedItemCopyWithImpl<$Res> implements $OrderedItemCopyWith<$Res> {
     ));
   }
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -1443,7 +1444,7 @@ class _$OrderedItemCopyWithImpl<$Res> implements $OrderedItemCopyWith<$Res> {
     });
   }
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -1454,8 +1455,8 @@ class _$OrderedItemCopyWithImpl<$Res> implements $OrderedItemCopyWith<$Res> {
   }
 }
 
-/// Adds pattern-matching-related methods to [OrderedItem].
-extension OrderedItemPatterns on OrderedItem {
+/// Adds pattern-matching-related methods to [OrderedItems].
+extension OrderedItemsPatterns on OrderedItems {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -1470,12 +1471,12 @@ extension OrderedItemPatterns on OrderedItem {
 
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
-    TResult Function(_OrderedItem value)? $default, {
+    TResult Function(_OrderedItems value)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _OrderedItem() when $default != null:
+      case _OrderedItems() when $default != null:
         return $default(_that);
       case _:
         return orElse();
@@ -1497,11 +1498,11 @@ extension OrderedItemPatterns on OrderedItem {
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
-    TResult Function(_OrderedItem value) $default,
+    TResult Function(_OrderedItems value) $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _OrderedItem():
+      case _OrderedItems():
         return $default(_that);
       case _:
         throw StateError('Unexpected subclass');
@@ -1522,11 +1523,11 @@ extension OrderedItemPatterns on OrderedItem {
 
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_OrderedItem value)? $default,
+    TResult? Function(_OrderedItems value)? $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _OrderedItem() when $default != null:
+      case _OrderedItems() when $default != null:
         return $default(_that);
       case _:
         return null;
@@ -1561,7 +1562,7 @@ extension OrderedItemPatterns on OrderedItem {
   }) {
     final _that = this;
     switch (_that) {
-      case _OrderedItem() when $default != null:
+      case _OrderedItems() when $default != null:
         return $default(
             _that.id,
             _that.quantity,
@@ -1604,7 +1605,7 @@ extension OrderedItemPatterns on OrderedItem {
   ) {
     final _that = this;
     switch (_that) {
-      case _OrderedItem():
+      case _OrderedItems():
         return $default(
             _that.id,
             _that.quantity,
@@ -1646,7 +1647,7 @@ extension OrderedItemPatterns on OrderedItem {
   ) {
     final _that = this;
     switch (_that) {
-      case _OrderedItem() when $default != null:
+      case _OrderedItems() when $default != null:
         return $default(
             _that.id,
             _that.quantity,
@@ -1664,8 +1665,8 @@ extension OrderedItemPatterns on OrderedItem {
 
 /// @nodoc
 @JsonSerializable()
-class _OrderedItem implements OrderedItem {
-  const _OrderedItem(
+class _OrderedItems implements OrderedItems {
+  const _OrderedItems(
       {this.id = "",
       this.quantity = 0,
       this.soldPrice = "",
@@ -1675,8 +1676,8 @@ class _OrderedItem implements OrderedItem {
       final List<ScannedBags> scannedBags = const [],
       this.driverNotes = ""})
       : _scannedBags = scannedBags;
-  factory _OrderedItem.fromJson(Map<String, dynamic> json) =>
-      _$OrderedItemFromJson(json);
+  factory _OrderedItems.fromJson(Map<String, dynamic> json) =>
+      _$OrderedItemsFromJson(json);
 
   @override
   @JsonKey()
@@ -1709,17 +1710,17 @@ class _OrderedItem implements OrderedItem {
   @JsonKey()
   final String driverNotes;
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$OrderedItemCopyWith<_OrderedItem> get copyWith =>
-      __$OrderedItemCopyWithImpl<_OrderedItem>(this, _$identity);
+  _$OrderedItemsCopyWith<_OrderedItems> get copyWith =>
+      __$OrderedItemsCopyWithImpl<_OrderedItems>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$OrderedItemToJson(
+    return _$OrderedItemsToJson(
       this,
     );
   }
@@ -1728,7 +1729,7 @@ class _OrderedItem implements OrderedItem {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _OrderedItem &&
+            other is _OrderedItems &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
@@ -1759,16 +1760,16 @@ class _OrderedItem implements OrderedItem {
 
   @override
   String toString() {
-    return 'OrderedItem(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, scannedBags: $scannedBags, driverNotes: $driverNotes)';
+    return 'OrderedItems(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, scannedBags: $scannedBags, driverNotes: $driverNotes)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$OrderedItemCopyWith<$Res>
-    implements $OrderedItemCopyWith<$Res> {
-  factory _$OrderedItemCopyWith(
-          _OrderedItem value, $Res Function(_OrderedItem) _then) =
-      __$OrderedItemCopyWithImpl;
+abstract mixin class _$OrderedItemsCopyWith<$Res>
+    implements $OrderedItemsCopyWith<$Res> {
+  factory _$OrderedItemsCopyWith(
+          _OrderedItems value, $Res Function(_OrderedItems) _then) =
+      __$OrderedItemsCopyWithImpl;
   @override
   @useResult
   $Res call(
@@ -1788,13 +1789,14 @@ abstract mixin class _$OrderedItemCopyWith<$Res>
 }
 
 /// @nodoc
-class __$OrderedItemCopyWithImpl<$Res> implements _$OrderedItemCopyWith<$Res> {
-  __$OrderedItemCopyWithImpl(this._self, this._then);
+class __$OrderedItemsCopyWithImpl<$Res>
+    implements _$OrderedItemsCopyWith<$Res> {
+  __$OrderedItemsCopyWithImpl(this._self, this._then);
 
-  final _OrderedItem _self;
-  final $Res Function(_OrderedItem) _then;
+  final _OrderedItems _self;
+  final $Res Function(_OrderedItems) _then;
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -1808,7 +1810,7 @@ class __$OrderedItemCopyWithImpl<$Res> implements _$OrderedItemCopyWith<$Res> {
     Object? scannedBags = null,
     Object? driverNotes = null,
   }) {
-    return _then(_OrderedItem(
+    return _then(_OrderedItems(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1844,7 +1846,7 @@ class __$OrderedItemCopyWithImpl<$Res> implements _$OrderedItemCopyWith<$Res> {
     ));
   }
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -1854,7 +1856,7 @@ class __$OrderedItemCopyWithImpl<$Res> implements _$OrderedItemCopyWith<$Res> {
     });
   }
 
-  /// Create a copy of OrderedItem
+  /// Create a copy of OrderedItems
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
