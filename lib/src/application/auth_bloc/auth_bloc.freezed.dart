@@ -55,6 +55,7 @@ extension AuthEventPatterns on AuthEvent {
     TResult Function(_Refreshtoken value)? refreshtoken,
     TResult Function(_LogOut value)? logOut,
     TResult Function(_ProfileAuth value)? profileAuth,
+    TResult Function(_UpdateProfileEvent value)? updateProfileEvent,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -69,6 +70,8 @@ extension AuthEventPatterns on AuthEvent {
         return logOut(_that);
       case _ProfileAuth() when profileAuth != null:
         return profileAuth(_that);
+      case _UpdateProfileEvent() when updateProfileEvent != null:
+        return updateProfileEvent(_that);
       case _:
         return orElse();
     }
@@ -94,6 +97,7 @@ extension AuthEventPatterns on AuthEvent {
     required TResult Function(_Refreshtoken value) refreshtoken,
     required TResult Function(_LogOut value) logOut,
     required TResult Function(_ProfileAuth value) profileAuth,
+    required TResult Function(_UpdateProfileEvent value) updateProfileEvent,
   }) {
     final _that = this;
     switch (_that) {
@@ -107,6 +111,8 @@ extension AuthEventPatterns on AuthEvent {
         return logOut(_that);
       case _ProfileAuth():
         return profileAuth(_that);
+      case _UpdateProfileEvent():
+        return updateProfileEvent(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -131,6 +137,7 @@ extension AuthEventPatterns on AuthEvent {
     TResult? Function(_Refreshtoken value)? refreshtoken,
     TResult? Function(_LogOut value)? logOut,
     TResult? Function(_ProfileAuth value)? profileAuth,
+    TResult? Function(_UpdateProfileEvent value)? updateProfileEvent,
   }) {
     final _that = this;
     switch (_that) {
@@ -144,6 +151,8 @@ extension AuthEventPatterns on AuthEvent {
         return logOut(_that);
       case _ProfileAuth() when profileAuth != null:
         return profileAuth(_that);
+      case _UpdateProfileEvent() when updateProfileEvent != null:
+        return updateProfileEvent(_that);
       case _:
         return null;
     }
@@ -168,6 +177,9 @@ extension AuthEventPatterns on AuthEvent {
     TResult Function()? refreshtoken,
     TResult Function()? logOut,
     TResult Function()? profileAuth,
+    TResult Function(String firstName, String lastName, String photoName,
+            String photoPath)?
+        updateProfileEvent,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -182,6 +194,9 @@ extension AuthEventPatterns on AuthEvent {
         return logOut();
       case _ProfileAuth() when profileAuth != null:
         return profileAuth();
+      case _UpdateProfileEvent() when updateProfileEvent != null:
+        return updateProfileEvent(
+            _that.firstName, _that.lastName, _that.photoName, _that.photoPath);
       case _:
         return orElse();
     }
@@ -207,6 +222,9 @@ extension AuthEventPatterns on AuthEvent {
     required TResult Function() refreshtoken,
     required TResult Function() logOut,
     required TResult Function() profileAuth,
+    required TResult Function(String firstName, String lastName,
+            String photoName, String photoPath)
+        updateProfileEvent,
   }) {
     final _that = this;
     switch (_that) {
@@ -220,6 +238,9 @@ extension AuthEventPatterns on AuthEvent {
         return logOut();
       case _ProfileAuth():
         return profileAuth();
+      case _UpdateProfileEvent():
+        return updateProfileEvent(
+            _that.firstName, _that.lastName, _that.photoName, _that.photoPath);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -244,6 +265,9 @@ extension AuthEventPatterns on AuthEvent {
     TResult? Function()? refreshtoken,
     TResult? Function()? logOut,
     TResult? Function()? profileAuth,
+    TResult? Function(String firstName, String lastName, String photoName,
+            String photoPath)?
+        updateProfileEvent,
   }) {
     final _that = this;
     switch (_that) {
@@ -257,6 +281,9 @@ extension AuthEventPatterns on AuthEvent {
         return logOut();
       case _ProfileAuth() when profileAuth != null:
         return profileAuth();
+      case _UpdateProfileEvent() when updateProfileEvent != null:
+        return updateProfileEvent(
+            _that.firstName, _that.lastName, _that.photoName, _that.photoPath);
       case _:
         return null;
     }
@@ -466,6 +493,101 @@ class _ProfileAuth implements AuthEvent {
 }
 
 /// @nodoc
+
+class _UpdateProfileEvent implements AuthEvent {
+  const _UpdateProfileEvent(
+      {required this.firstName,
+      required this.lastName,
+      required this.photoName,
+      required this.photoPath});
+
+  final String firstName;
+  final String lastName;
+  final String photoName;
+  final String photoPath;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UpdateProfileEventCopyWith<_UpdateProfileEvent> get copyWith =>
+      __$UpdateProfileEventCopyWithImpl<_UpdateProfileEvent>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _UpdateProfileEvent &&
+            (identical(other.firstName, firstName) ||
+                other.firstName == firstName) &&
+            (identical(other.lastName, lastName) ||
+                other.lastName == lastName) &&
+            (identical(other.photoName, photoName) ||
+                other.photoName == photoName) &&
+            (identical(other.photoPath, photoPath) ||
+                other.photoPath == photoPath));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, firstName, lastName, photoName, photoPath);
+
+  @override
+  String toString() {
+    return 'AuthEvent.updateProfileEvent(firstName: $firstName, lastName: $lastName, photoName: $photoName, photoPath: $photoPath)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$UpdateProfileEventCopyWith<$Res>
+    implements $AuthEventCopyWith<$Res> {
+  factory _$UpdateProfileEventCopyWith(
+          _UpdateProfileEvent value, $Res Function(_UpdateProfileEvent) _then) =
+      __$UpdateProfileEventCopyWithImpl;
+  @useResult
+  $Res call(
+      {String firstName, String lastName, String photoName, String photoPath});
+}
+
+/// @nodoc
+class __$UpdateProfileEventCopyWithImpl<$Res>
+    implements _$UpdateProfileEventCopyWith<$Res> {
+  __$UpdateProfileEventCopyWithImpl(this._self, this._then);
+
+  final _UpdateProfileEvent _self;
+  final $Res Function(_UpdateProfileEvent) _then;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? firstName = null,
+    Object? lastName = null,
+    Object? photoName = null,
+    Object? photoPath = null,
+  }) {
+    return _then(_UpdateProfileEvent(
+      firstName: null == firstName
+          ? _self.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastName: null == lastName
+          ? _self.lastName
+          : lastName // ignore: cast_nullable_to_non_nullable
+              as String,
+      photoName: null == photoName
+          ? _self.photoName
+          : photoName // ignore: cast_nullable_to_non_nullable
+              as String,
+      photoPath: null == photoPath
+          ? _self.photoPath
+          : photoPath // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$AuthState {
   Status get sendOtpStatus;
   int get secondsToExpiry;
@@ -474,6 +596,7 @@ mixin _$AuthState {
   Status get refreshtokenStatus;
   Status get logOutStatus;
   Status get profileAuthStatus;
+  Status get updateProfileStatus;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -499,7 +622,9 @@ mixin _$AuthState {
             (identical(other.logOutStatus, logOutStatus) ||
                 other.logOutStatus == logOutStatus) &&
             (identical(other.profileAuthStatus, profileAuthStatus) ||
-                other.profileAuthStatus == profileAuthStatus));
+                other.profileAuthStatus == profileAuthStatus) &&
+            (identical(other.updateProfileStatus, updateProfileStatus) ||
+                other.updateProfileStatus == updateProfileStatus));
   }
 
   @override
@@ -511,11 +636,12 @@ mixin _$AuthState {
       appUser,
       refreshtokenStatus,
       logOutStatus,
-      profileAuthStatus);
+      profileAuthStatus,
+      updateProfileStatus);
 
   @override
   String toString() {
-    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus, logOutStatus: $logOutStatus, profileAuthStatus: $profileAuthStatus)';
+    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus, logOutStatus: $logOutStatus, profileAuthStatus: $profileAuthStatus, updateProfileStatus: $updateProfileStatus)';
   }
 }
 
@@ -531,7 +657,8 @@ abstract mixin class $AuthStateCopyWith<$Res> {
       AppUser? appUser,
       Status refreshtokenStatus,
       Status logOutStatus,
-      Status profileAuthStatus});
+      Status profileAuthStatus,
+      Status updateProfileStatus});
 
   $StatusCopyWith<$Res> get sendOtpStatus;
   $StatusCopyWith<$Res> get otpVerifyStatus;
@@ -539,6 +666,7 @@ abstract mixin class $AuthStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get refreshtokenStatus;
   $StatusCopyWith<$Res> get logOutStatus;
   $StatusCopyWith<$Res> get profileAuthStatus;
+  $StatusCopyWith<$Res> get updateProfileStatus;
 }
 
 /// @nodoc
@@ -560,6 +688,7 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
     Object? refreshtokenStatus = null,
     Object? logOutStatus = null,
     Object? profileAuthStatus = null,
+    Object? updateProfileStatus = null,
   }) {
     return _then(_self.copyWith(
       sendOtpStatus: null == sendOtpStatus
@@ -589,6 +718,10 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
       profileAuthStatus: null == profileAuthStatus
           ? _self.profileAuthStatus
           : profileAuthStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      updateProfileStatus: null == updateProfileStatus
+          ? _self.updateProfileStatus
+          : updateProfileStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -654,6 +787,16 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get profileAuthStatus {
     return $StatusCopyWith<$Res>(_self.profileAuthStatus, (value) {
       return _then(_self.copyWith(profileAuthStatus: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get updateProfileStatus {
+    return $StatusCopyWith<$Res>(_self.updateProfileStatus, (value) {
+      return _then(_self.copyWith(updateProfileStatus: value));
     });
   }
 }
@@ -758,7 +901,8 @@ extension AuthStatePatterns on AuthState {
             AppUser? appUser,
             Status refreshtokenStatus,
             Status logOutStatus,
-            Status profileAuthStatus)?
+            Status profileAuthStatus,
+            Status updateProfileStatus)?
         $default, {
     required TResult orElse(),
   }) {
@@ -772,7 +916,8 @@ extension AuthStatePatterns on AuthState {
             _that.appUser,
             _that.refreshtokenStatus,
             _that.logOutStatus,
-            _that.profileAuthStatus);
+            _that.profileAuthStatus,
+            _that.updateProfileStatus);
       case _:
         return orElse();
     }
@@ -800,7 +945,8 @@ extension AuthStatePatterns on AuthState {
             AppUser? appUser,
             Status refreshtokenStatus,
             Status logOutStatus,
-            Status profileAuthStatus)
+            Status profileAuthStatus,
+            Status updateProfileStatus)
         $default,
   ) {
     final _that = this;
@@ -813,7 +959,8 @@ extension AuthStatePatterns on AuthState {
             _that.appUser,
             _that.refreshtokenStatus,
             _that.logOutStatus,
-            _that.profileAuthStatus);
+            _that.profileAuthStatus,
+            _that.updateProfileStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -840,7 +987,8 @@ extension AuthStatePatterns on AuthState {
             AppUser? appUser,
             Status refreshtokenStatus,
             Status logOutStatus,
-            Status profileAuthStatus)?
+            Status profileAuthStatus,
+            Status updateProfileStatus)?
         $default,
   ) {
     final _that = this;
@@ -853,7 +1001,8 @@ extension AuthStatePatterns on AuthState {
             _that.appUser,
             _that.refreshtokenStatus,
             _that.logOutStatus,
-            _that.profileAuthStatus);
+            _that.profileAuthStatus,
+            _that.updateProfileStatus);
       case _:
         return null;
     }
@@ -870,7 +1019,8 @@ class _AuthState implements AuthState {
       this.appUser,
       required this.refreshtokenStatus,
       required this.logOutStatus,
-      required this.profileAuthStatus});
+      required this.profileAuthStatus,
+      required this.updateProfileStatus});
 
   @override
   final Status sendOtpStatus;
@@ -886,6 +1036,8 @@ class _AuthState implements AuthState {
   final Status logOutStatus;
   @override
   final Status profileAuthStatus;
+  @override
+  final Status updateProfileStatus;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -912,7 +1064,9 @@ class _AuthState implements AuthState {
             (identical(other.logOutStatus, logOutStatus) ||
                 other.logOutStatus == logOutStatus) &&
             (identical(other.profileAuthStatus, profileAuthStatus) ||
-                other.profileAuthStatus == profileAuthStatus));
+                other.profileAuthStatus == profileAuthStatus) &&
+            (identical(other.updateProfileStatus, updateProfileStatus) ||
+                other.updateProfileStatus == updateProfileStatus));
   }
 
   @override
@@ -924,11 +1078,12 @@ class _AuthState implements AuthState {
       appUser,
       refreshtokenStatus,
       logOutStatus,
-      profileAuthStatus);
+      profileAuthStatus,
+      updateProfileStatus);
 
   @override
   String toString() {
-    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus, logOutStatus: $logOutStatus, profileAuthStatus: $profileAuthStatus)';
+    return 'AuthState(sendOtpStatus: $sendOtpStatus, secondsToExpiry: $secondsToExpiry, otpVerifyStatus: $otpVerifyStatus, appUser: $appUser, refreshtokenStatus: $refreshtokenStatus, logOutStatus: $logOutStatus, profileAuthStatus: $profileAuthStatus, updateProfileStatus: $updateProfileStatus)';
   }
 }
 
@@ -947,7 +1102,8 @@ abstract mixin class _$AuthStateCopyWith<$Res>
       AppUser? appUser,
       Status refreshtokenStatus,
       Status logOutStatus,
-      Status profileAuthStatus});
+      Status profileAuthStatus,
+      Status updateProfileStatus});
 
   @override
   $StatusCopyWith<$Res> get sendOtpStatus;
@@ -961,6 +1117,8 @@ abstract mixin class _$AuthStateCopyWith<$Res>
   $StatusCopyWith<$Res> get logOutStatus;
   @override
   $StatusCopyWith<$Res> get profileAuthStatus;
+  @override
+  $StatusCopyWith<$Res> get updateProfileStatus;
 }
 
 /// @nodoc
@@ -982,6 +1140,7 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
     Object? refreshtokenStatus = null,
     Object? logOutStatus = null,
     Object? profileAuthStatus = null,
+    Object? updateProfileStatus = null,
   }) {
     return _then(_AuthState(
       sendOtpStatus: null == sendOtpStatus
@@ -1011,6 +1170,10 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
       profileAuthStatus: null == profileAuthStatus
           ? _self.profileAuthStatus
           : profileAuthStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      updateProfileStatus: null == updateProfileStatus
+          ? _self.updateProfileStatus
+          : updateProfileStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -1076,6 +1239,16 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get profileAuthStatus {
     return $StatusCopyWith<$Res>(_self.profileAuthStatus, (value) {
       return _then(_self.copyWith(profileAuthStatus: value));
+    });
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get updateProfileStatus {
+    return $StatusCopyWith<$Res>(_self.updateProfileStatus, (value) {
+      return _then(_self.copyWith(updateProfileStatus: value));
     });
   }
 }

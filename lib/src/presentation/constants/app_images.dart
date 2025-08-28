@@ -86,6 +86,10 @@ static const String emptyPlaceholderImage = 'assets/images/emptyPlaceholderImage
   static const String home = 'assets/images/home.png';
 
   static const String orderStatus = 'assets/images/order_status.png';
+  static const String moneysIcon = 'assets/images/moneysIcon.png';
+  static const String storeIcon = 'assets/images/storeIcon.png';
+  static const String personIcon = 'assets/images/personIcon.png';
+  static const String editIcon = 'assets/images/editIcon.png';
 
 
 }

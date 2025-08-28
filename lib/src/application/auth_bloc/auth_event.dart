@@ -15,4 +15,10 @@ abstract class AuthEvent with _$AuthEvent {
   const factory AuthEvent.refreshtoken() = _Refreshtoken;
    const factory AuthEvent.logOut() = _LogOut;
    const factory AuthEvent.profileAuth() = _ProfileAuth;
+   const factory AuthEvent.updateProfileEvent({
+    required String firstName,
+    required String lastName,
+    required String photoName,
+    required String photoPath,
+   }) = _UpdateProfileEvent;
 }

@@ -10,6 +10,7 @@ abstract class AuthState with _$AuthState {
     required Status refreshtokenStatus,
     required Status logOutStatus,
       required Status profileAuthStatus,
+      required Status updateProfileStatus,
   }) = _AuthState;
   factory AuthState.initial() => AuthState(
         sendOtpStatus: Status.initial(),
@@ -19,5 +20,6 @@ abstract class AuthState with _$AuthState {
         refreshtokenStatus: Status.initial(),
          logOutStatus: Status.initial(),
            profileAuthStatus: Status.initial(),
+           updateProfileStatus: Status.initial()
       );
 }

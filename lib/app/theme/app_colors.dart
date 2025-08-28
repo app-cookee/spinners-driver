@@ -111,4 +111,8 @@ static const Color deliveredColor= Color(0xFF43A047);
                     static const Color shoeBagTagDotted = Color(0xFFC7CBFF);
                      static const Color luxuryTextgradient1 = Color(0xFFFFCA2A);
                             static const Color luxuryTextgradient2 = Color(0xFFBC941D);
+  static const Color activeGreen = Color(0xFFD1FFDA);
+  static const Color activeStrokeGreen = Color(0xFFA1F9B2);
+  static const Color activeTextGreen = Color(0xFF31B64B);
+  static const Color grey13=Color(0xFFD7DCCA);
 }

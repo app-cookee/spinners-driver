@@ -21,6 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<_Refreshtoken>(_onRefreshtoken);
         on<_LogOut>(_logOut);
             on<_ProfileAuth>(_onProfileAuth);
+    on<_UpdateProfileEvent>(_onUpdateProfileEvent);
   }
 
   FutureOr<void> _onSendOtp(_SendOtp event, Emitter<AuthState> emit) async {
@@ -103,4 +104,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
 
+
+  FutureOr<void> _onUpdateProfileEvent(_UpdateProfileEvent event, Emitter<AuthState> emit) async {
+    try {
+      emit(state.copyWith(updateProfileStatus: Status.loading()));
+      var response = await authRepository.updateProfile(event.firstName, event.lastName, event.photoName, event.photoPath);
+      emit(state.copyWith(updateProfileStatus: Status.success()));
+    } catch (e) {
+      emit(state.copyWith(updateProfileStatus: Status.failure(e.toString())));
+    }
+  }
 }

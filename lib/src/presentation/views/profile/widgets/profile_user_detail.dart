@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 
 class ProfileUserDetail extends StatelessWidget {
   final String avatar;
   final String name;
   final String phone;
+  final bool active;
 
   const ProfileUserDetail({
     super.key,
     required this.avatar,
     required this.name,
-    required this.phone,
+    required this.phone, required this.active,
   });
 
   @override
@@ -67,7 +70,8 @@ class ProfileUserDetail extends StatelessWidget {
                 ],
               ).createShader(bounds),
               child: Text(
-                avatar,
+                // avatar,
+                avatar.isNotEmpty ? avatar[0].toUpperCase() : 'D',
                 style: AppTypography.sfProRoundedSemiBold.copyWith(
                   color: AppColors.white,
                   fontSize: 20,
@@ -96,6 +100,29 @@ class ProfileUserDetail extends StatelessWidget {
             ),
           ],
         ),
+        const Spacer(),
+        if(active)
+        Container(
+          height: 20.dp,
+          width: 62.dp,
+          decoration: BoxDecoration(
+            color: AppColors.activeGreen,
+            borderRadius: BorderRadius.circular(110.dp),
+            border: Border.all(
+              color: AppColors.activeStrokeGreen,
+              width: 1.dp,
+            ),
+          ),
+          child: Center(
+            child: Text('Active',
+                textAlign: TextAlign.center,
+                style: AppTypography.sfProRoundedSemiBold.copyWith(
+                  color: AppColors.activeTextGreen,
+                  fontSize: 12.dp,
+                )),
+          ),
+        ),
+        Gap(16.dp),
       ],
     );
   }
