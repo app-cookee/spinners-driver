@@ -1,3 +1,4 @@
+
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
@@ -39,7 +40,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     log('Fetching order details for order ID: ${widget.orderId}');
 
     super.initState();
-    
+
   }
 
   @override
@@ -50,79 +51,85 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final ValueNotifier<Set<String>> scannedQRCodes = ValueNotifier<Set<String>>({});
   @override
   Widget build(BuildContext context) {
-    final refId = context.read<OrderBloc>().state.orderDetails.refId;
     return ScrollConfiguration(
       behavior: NoGlowScrollBehavior(),
       child: Scaffold(
         backgroundColor: AppColors.white,
-        body: Stack(
-          children: [
-            GestureDetector(onTap: () => Navigator.pop(context), child: _header(context, refId)),
-            Padding(
-              padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
-              child: BlocBuilder<OrderBloc, OrderState>(
-                builder: (context, state) {
-                  if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
-                    return const PickupOrderDetailScreenPlaceholder();
-                  }
-                
-                  return CustomScrollView(
-                    slivers: [
-                      _orderInfo(state),
-                      OrderDetailnfo(
-                        notes: state.orderDetails.driverNotes,
-                        customer: _getCustomerName(state.orderDetails.customer),
-                        amount: state.orderDetails.totalAmount,
-                        title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
-                        timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
-                        address: formatAddress(state.orderDetails.selectedAddress.place),
-                        status: state.orderDetails.status,
-                        onNavigateTap: () {
-                          final lat = state.orderDetails.selectedAddress.latitude;
-                          final lon = state.orderDetails.selectedAddress.longitude;
-                          (lat == "" || lon == "")
-                              ? TheToast.show(message: "This location is not available", context: context)
-                              : MapNavigationHelper.openNavigation(double.tryParse(lat), double.tryParse(lon), context);
-                        },
-                        onCallTap: () {
-                          LauncherUtils.launchPhoneDialer(state.orderDetails.customer.user?.phoneNumber ?? '', context: context);
-                        },
-                        onWhatsAppTap: () {
-                          LauncherUtils.launchWhatsApp(state.orderDetails.customer.user?.phoneNumber ?? '', 'Hi', context: context);
-                        },
-                      ),
-                      SliverToBoxAdapter(
-                        child: ServicesWidget(
-                          orderState: state,
-                          orderId: widget.orderId,
-                          scannedQRCodes: scannedQRCodes,
-                          additionalNotesController: additionalNotesController,
-                        ),
-                      )
-                    ],
-                  );
-                },
-              ),
-            ),
-            BlocBuilder<OrderBloc, OrderState>(
-              builder: (context, state) {
-                // Hide footer button when loading, initial state, or order is picked up
-                if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial || state.orderDetails.status == 'pickedUp') {
-                  return const SizedBox.shrink();
-                }
-                return Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: FooterButtons(
-                    orderId: widget.orderId,
-                    additionalNotesController: additionalNotesController,
-                   
+        body: BlocBuilder<OrderBloc, OrderState>(
+          builder: (context, state) {
+            return Stack(
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context), 
+                  child: _header(context, state.orderDetails.refId)
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
+                  child: Builder(
+                    builder: (context) {
+                      if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
+                        return const PickupOrderDetailScreenPlaceholder();
+                      }
+                    
+                      return CustomScrollView(
+                        slivers: [
+                          _orderInfo(state),
+                          OrderDetailnfo(
+                            notes: state.orderDetails.driverNotes,
+                            customer: _getCustomerName(state.orderDetails.customer),
+                            amount: state.orderDetails.totalAmount,
+                            title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
+                            timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
+                            address: formatAddress(state.orderDetails.selectedAddress.place),
+                            status: state.orderDetails.status,
+                            onNavigateTap: () {
+                              final lat = state.orderDetails.selectedAddress.latitude;
+                              final lon = state.orderDetails.selectedAddress.longitude;
+                              (lat == "" || lon == "")
+                                  ? TheToast.show(message: "This location is not available", context: context)
+                                  : MapNavigationHelper.openNavigation(double.tryParse(lat), double.tryParse(lon), context);
+                            },
+                            onCallTap: () {
+                              LauncherUtils.launchPhoneDialer(state.orderDetails.customer.user?.phoneNumber ?? '', context: context);
+                            },
+                            onWhatsAppTap: () {
+                              LauncherUtils.launchWhatsApp(state.orderDetails.customer.user?.phoneNumber ?? '', 'Hi', context: context);
+                            },
+                          ),
+                          SliverToBoxAdapter(
+                            child: ServicesWidget(
+                              orderState: state,
+                              orderId: widget.orderId,
+                              scannedQRCodes: scannedQRCodes,
+                              additionalNotesController: additionalNotesController,
+                            ),
+                          )
+                        ],
+                      );
+                    },
                   ),
-                );
-              },
-            )
-          ],
+                ),
+                Builder(
+                  builder: (context) {
+                    // Hide footer button when loading, initial state, or order is picked up
+                    if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial || state.orderDetails.status == 'pickedUp') {
+                      return const SizedBox.shrink();
+                    }
+                    return Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: FooterButtons(
+                        orderId: widget.orderId,
+                        additionalNotesController: additionalNotesController,
+                       
+                      ),
+                    );
+                  },
+                )
+              ],
+            );
+          },
         ),
       ),
     );
@@ -154,7 +161,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Widget _header(BuildContext context, int orderRefId) {
-    final loading = context.read<OrderBloc>().state.getOrderDetailStatus is StatusLoading || context.read<OrderBloc>().state.getOrderDetailStatus is StatusInitial;
+    
     return Container(
       padding: EdgeInsets.only(top: 7.h, left: 16.dp, right: 16.dp, bottom: 8.dp),
       width: 100.w,

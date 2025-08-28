@@ -14,6 +14,7 @@ import 'package:spinners_driver/src/domain/models/order_details_response_model/o
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/already_scanned_warning_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/change_service_bottomsheet.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/invalid_bag_warning_dialog.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_widget.dart';
@@ -377,20 +378,52 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
         // Handle failures for both APIs
         if (state.createNewBagStatus is StatusFailure) {
           final errorMessage = (state.createNewBagStatus as StatusFailure).toString();
-          TheToast.show(
-            isError: true,
-            message: errorMessage,
-            context: context,
-          );
+          
+          // Check if the error indicates bag is already assigned to another order
+          if (errorMessage.toLowerCase().contains('already assigned') || 
+              errorMessage.toLowerCase().contains('another order') ||
+              errorMessage.toLowerCase().contains('bag already exists')) {
+            // Show InvalidBagWarningDialog
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return const InvalidBagWarningDialog();
+              },
+            );
+          } else {
+            // Show regular error toast for other errors
+            TheToast.show(
+              isError: true,
+              message: errorMessage,
+              context: context,
+            );
+          }
         }
 
         if (state.addBagStatus is StatusFailure) {
           final errorMessage = (state.addBagStatus as StatusFailure).toString();
-          TheToast.show(
-            isError: true,
-            message: errorMessage,
-            context: context,
-          );
+          
+          // Check if the error indicates bag is already assigned to another order
+          if (errorMessage.toLowerCase().contains('already assigned') || 
+              errorMessage.toLowerCase().contains('another order') ||
+              errorMessage.toLowerCase().contains('bag already exists')) {
+            // Show InvalidBagWarningDialog
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return const InvalidBagWarningDialog();
+              },
+            );
+          } else {
+            // Show regular error toast for other errors
+            TheToast.show(
+              isError: true,
+              message: errorMessage,
+              context: context,
+            );
+          }
         }
       },
       listenWhen: (previous, current) => previous.createNewBagStatus != current.createNewBagStatus || previous.addBagStatus != current.addBagStatus,
