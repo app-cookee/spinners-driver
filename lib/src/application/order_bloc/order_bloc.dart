@@ -29,6 +29,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_GetServicesList>(_onGetServicesList);
     on<_UpdateScannedBagsLocally>(_onUpdateScannedBagsLocally);
     on<_UpdateScannedBagsForNewBag>(_onUpdateScannedBagsForNewBag);
+    on<_RemoveBag>(_onRemoveBag);
   }
   
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
@@ -222,5 +223,22 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
   }
 
+
+  FutureOr<void> _onRemoveBag(_RemoveBag event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        removeBagStatus: Status.loading(),
+      ));
+      await orderRepository.removeBag(event.orderServiceId, event.bagId);
+      emit(state.copyWith(
+        removeBagStatus: Status.success(),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        removeBagStatus: Status.failure(
+          e.toString(),
+        ),
+      ));
+    }
+  }
 }
-  
