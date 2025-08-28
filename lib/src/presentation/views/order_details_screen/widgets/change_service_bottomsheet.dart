@@ -67,6 +67,17 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
   Widget build(BuildContext context) {
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
+        // Handle remove bag success first
+        if (state.removeBagStatus is StatusSuccess) {
+          // Remove bag locally to update UI
+          context.read<OrderBloc>().add(OrderEvent.removeBagLocally(
+            id: widget.existingScannedBagId,
+          ));
+          
+          // After successful removal, proceed with adding to new service
+          _proceedWithAddBag(state);
+        }
+
         // Handle add bag success
         if (state.addBagStatus is StatusSuccess || state.createNewBagStatus is StatusSuccess) {
           // Close bottomsheet first
@@ -84,6 +95,16 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
               }
             });
           }
+        }
+
+        // Handle remove bag failure
+        if (state.removeBagStatus is StatusFailure) {
+          final errorMessage = (state.removeBagStatus as StatusFailure).toString();
+          TheToast.show(
+            isError: true,
+            message: errorMessage,
+            context: context,
+          );
         }
 
         // Handle failures
@@ -138,10 +159,13 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
         }
       },
       listenWhen: (previous, current) => 
+        previous.removeBagStatus != current.removeBagStatus ||
         previous.createNewBagStatus != current.createNewBagStatus || 
         previous.addBagStatus != current.addBagStatus,
       builder: (context, state) {
-        final isLoading = state.createNewBagStatus is StatusLoading || state.addBagStatus is StatusLoading;
+        final isLoading = state.removeBagStatus is StatusLoading || 
+                         state.createNewBagStatus is StatusLoading || 
+                         state.addBagStatus is StatusLoading;
 
         return Container(
           decoration: BoxDecoration(
@@ -475,7 +499,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
     }
   }
 
-  void _handleChangeService(OrderState state) {
+  void _proceedWithAddBag(OrderState state) {
     // Validate bag ID
     final bagId = bagIdController.text.trim();
     if (bagId.isEmpty) {
@@ -516,5 +540,12 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
         bagId: bagId,
       ));
     }
+  }
+
+  void _handleChangeService(OrderState state) {
+    // Remove the bag from the old service using existingScannedBagId
+    context.read<OrderBloc>().add(OrderEvent.removeBag(
+      id: widget.existingScannedBagId,
+    ));
   }
 }
