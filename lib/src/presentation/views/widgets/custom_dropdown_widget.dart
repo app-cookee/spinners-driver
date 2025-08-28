@@ -31,6 +31,7 @@ class CustomDropDownWidget extends StatefulWidget {
     this.dropValueFontSize,
     this.height,
     this.dropDownIcon,
+    this.onDropdownStateChanged,
   });
 
   final Function(CustomDropDownMenuItem) onChanged;
@@ -43,6 +44,7 @@ class CustomDropDownWidget extends StatefulWidget {
   final List<CustomDropDownMenuItem> items;
   final double? height;
   final String? dropDownIcon;
+  final Function(bool)? onDropdownStateChanged;
 
   @override
   State<CustomDropDownWidget> createState() => _CustomDropDownState();
@@ -82,6 +84,7 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
       setState(() {
         isDropdownOpen = false;
       });
+      widget.onDropdownStateChanged?.call(false);
     }
   }
 
@@ -95,6 +98,7 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
       setState(() {
         isDropdownOpen = true;
       });
+      widget.onDropdownStateChanged?.call(true);
     }
   }
 
@@ -115,7 +119,7 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
               child: CompositedTransformFollower(
                 link: _layerLink,
                 showWhenUnlinked: false,
-                offset: Offset(0, size.height - 30.dp), //50
+                offset: Offset(0, size.height - 10.dp), //50
                 child: Material(
                   color: Colors.transparent,
                   child: GestureDetector(
@@ -127,35 +131,40 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
                         borderRadius: BorderRadius.circular(6.dp),
                         border: Border.all(color: AppColors.loginFieldBorderColor),
                       ),
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        children: widget.items
-                            .map((CustomDropDownMenuItem item) => ListTile(
-                                  leading: item.useImg != null
-                                      ? Image.asset(
-                                          item.useImg!,
-                                          height: 20.dp,
-                                          width: 20.dp,
-                                          color: item.imageColor,
-                                        )
-                                      : const SizedBox.shrink(),
-                                  onTap: () {
-                                    if (_isMounted) {
-                                      dropValue.value = item;
-                                      widget.onChanged(item);
-                                      _removeOverlay();
-                                    }
-                                  },
-                                  title: Text(
-                                    item.label,
-                                    style: AppTypography.sfProRoundedMedium.copyWith(
-                                      fontSize: 14.sp,
-                                      color: AppColors.neutral500,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: 200.dp, // Maximum height for the dropdown
+                        ),
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          children: widget.items
+                              .map((CustomDropDownMenuItem item) => ListTile(
+                                    leading: item.useImg != null
+                                        ? Image.asset(
+                                            item.useImg!,
+                                            height: 20.dp,
+                                            width: 20.dp,
+                                            color: item.imageColor,
+                                          )
+                                        : const SizedBox.shrink(),
+                                    onTap: () {
+                                      if (_isMounted) {
+                                        dropValue.value = item;
+                                        widget.onChanged(item);
+                                        _removeOverlay();
+                                      }
+                                    },
+                                    title: Text(
+                                      item.label,
+                                      style: AppTypography.sfProRoundedMedium.copyWith(
+                                        fontSize: 14.sp,
+                                        color: AppColors.neutral500,
+                                      ),
                                     ),
-                                  ),
-                                ))
-                            .toList(),
+                                  ))
+                              .toList(),
+                        ),
                       ),
                     ),
                   ),

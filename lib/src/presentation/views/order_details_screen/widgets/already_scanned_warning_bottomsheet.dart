@@ -109,10 +109,13 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
               Gap(15.dp),
               _bagID(),
               Gap(10.dp),
-              alreadyAssignedWidget(
-                serviceImage: widget.serviceImage,
-                serviceName: widget.serviceName,
-                serviceColor: widget.serviceColor,
+              Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 16.dp),
+                child: alreadyAssignedWidget(
+                  serviceImage: widget.serviceImage,
+                  serviceName: widget.serviceName,
+                  serviceColor: widget.serviceColor,
+                ),
               ),
               Gap(24.dp),
               Padding(
