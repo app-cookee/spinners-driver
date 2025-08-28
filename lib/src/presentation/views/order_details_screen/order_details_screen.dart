@@ -39,6 +39,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     log('Fetching order details for order ID: ${widget.orderId}');
 
     super.initState();
+    
   }
 
   @override
@@ -115,7 +116,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   right: 0,
                   child: FooterButtons(
                     orderId: widget.orderId,
-                    // additionalNotesController: additionalNotesController,
+                    additionalNotesController: additionalNotesController,
                    
                   ),
                 );
@@ -166,7 +167,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             width: 20.dp,
           ),
           Gap(6.dp),
-          if (loading) _shimmerContainer(),
+        
           Text(
             "Order ID: #SPN$orderRefId",
             style: AppTypography.sfProRoundedSemiBold.copyWith(

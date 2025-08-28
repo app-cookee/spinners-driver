@@ -11,8 +11,8 @@ abstract class OrderEvent with _$OrderEvent {
   const factory OrderEvent.getServicesList({required int limit, required int skip}) = _GetServicesList;
   const factory OrderEvent.updateScannedBagsLocally({required String orderItemId, required String bagId}) = _UpdateScannedBagsLocally;
   const factory OrderEvent.updateScannedBagsForNewBag({required String serviceId, required String bagId}) = _UpdateScannedBagsForNewBag;
-  const factory OrderEvent.removeBag({required String orderServiceId, required String bagId}) = _RemoveBag;
-  const factory OrderEvent.removeBagLocally({required String orderServiceId, required String bagId}) = _RemoveBagLocally;
+  const factory OrderEvent.removeBag({required String id}) = _RemoveBag;
+  const factory OrderEvent.removeBagLocally({required String id}) = _RemoveBagLocally;
 
 }
 

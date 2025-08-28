@@ -10,7 +10,7 @@ abstract class OrderRepository {
   Future<String> createNewBag(String bagId, String orderId, String serviceId);
   Future<List<ServiceListDatamodel>> getServices(int limit, int skip);
   Future<OrderModel> getOrdersList(int limit,int skip,String filter,bool expressOnly,double? latitude,double? longitude,String? searchText);
-    Future<void> removeBag(String orderServiceId, String bagId);
+    Future<void> removeBag(String id);
 
 
 

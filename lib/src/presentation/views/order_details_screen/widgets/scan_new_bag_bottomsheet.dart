@@ -13,6 +13,7 @@ import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/already_scanned_warning_bottomsheet.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/change_service_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_widget.dart';
@@ -426,10 +427,12 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
 
               // Check if bag ID already exists in any service
               bool bagAlreadyExists = false;
+              bool bagExistsInSameService = false;
               String? existingServiceName;
               String? existingServiceImage;
               Color? existingServiceColor;
               String? existingOrderServiceId;
+              String? existingScannedBagId;
 
               for (final item in state.orderDetails.orderedItems) {
                 final existingBag = item.scannedBags.firstWhere(
@@ -443,27 +446,59 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
                   existingServiceColor = hexToColor(item.service.color);
                   existingOrderServiceId = item.id;
+                  existingScannedBagId = existingBag.id;
+                  
+                  // Check if bag exists in the same service that user is trying to add to
+                  if (widget.isQuickOrder) {
+                    // For quick orders, check if the service ID matches
+                    if (item.service.id == selectedServiceId) {
+                      bagExistsInSameService = true;
+                    }
+                  } else {
+                    // For normal orders, check if the service ID matches
+                    if (item.service.id == selectedServiceId) {
+                      bagExistsInSameService = true;
+                    }
+                  }
                   break;
                 }
               }
 
               if (bagAlreadyExists) {
-                // Show warning bottomsheet
-                Navigator.of(context).pop(); // Close current bottomsheet
+                if (bagExistsInSameService) {
+                  // Show warning bottomsheet for same service
+                  Navigator.of(context).pop(); // Close current bottomsheet
 
-                CustomBottomSheetWidget(
-                  context: context,
-                  child: AlreadyScannedWarningBottomsheet(
-                    bagId: bagId,
-                    serviceName: existingServiceName!,
-                    serviceImage: existingServiceImage!,
-                    serviceColor: existingServiceColor!,
-                    orderServiceId: existingOrderServiceId!,
-                    onBagRemoved: () {
-                      // This will be called after successful removal
-                    },
-                  ),
-                ).show();
+                  CustomBottomSheetWidget(
+                    context: context,
+                    child: AlreadyScannedWarningBottomsheet(
+                      bagId: bagId,
+                      serviceName: existingServiceName!,
+                      serviceImage: existingServiceImage!,
+                      serviceColor: existingServiceColor!,
+                      scannedBagId: existingScannedBagId!,
+                      onBagRemoved: () {
+                        // This will be called after successful removal
+                      },
+                    ),
+                  ).show();
+                } else {
+                  // Show change service bottomsheet for different service
+                  Navigator.of(context).pop(); // Close current bottomsheet
+
+                  CustomBottomSheetWidget(
+                    context: context,
+                    child: ChangeServiceBottomsheet(
+                      bagId: bagId,
+                      serviceName: existingServiceName!,
+                      serviceImage: existingServiceImage!,
+                      serviceColor: existingServiceColor!,
+                      isQuickOrder: widget.isQuickOrder,
+                      orderId: widget.orderId,
+                      existingScannedBagId: existingScannedBagId!,
+                    ),
+                  ).show();
+                }
                 return;
               }
 

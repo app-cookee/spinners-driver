@@ -230,7 +230,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(state.copyWith(
         removeBagStatus: Status.loading(),
       ));
-      await orderRepository.removeBag(event.orderServiceId, event.bagId);
+      await orderRepository.removeBag(event.id);
       emit(state.copyWith(
         removeBagStatus: Status.success(),
       ));
@@ -245,16 +245,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   FutureOr<void> _onRemoveBagLocally(_RemoveBagLocally event, Emitter<OrderState> emit) async {
     try {
-      // Remove the bag from the local state
+      // Remove the bag from the local state by scanned bag id
       final updatedOrderedItems = state.orderDetails.orderedItems.map((item) {
-        if (item.id == event.orderServiceId) {
-          // Filter out the bag with the specified bagId
-          final updatedScannedBags = item.scannedBags.where((bag) => bag.bagId != event.bagId).toList();
-          return item.copyWith(
-            scannedBags: updatedScannedBags,
-          );
-        }
-        return item;
+        // Filter out the bag with the specified id
+        final updatedScannedBags = item.scannedBags.where((bag) => bag.id != event.id).toList();
+        return item.copyWith(
+          scannedBags: updatedScannedBags,
+        );
       }).toList();
 
       // Update the order details with the new ordered items

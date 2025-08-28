@@ -240,8 +240,8 @@ extension OrderEventPatterns on OrderEvent {
         updateScannedBagsLocally,
     TResult Function(String serviceId, String bagId)?
         updateScannedBagsForNewBag,
-    TResult Function(String orderServiceId, String bagId)? removeBag,
-    TResult Function(String orderServiceId, String bagId)? removeBagLocally,
+    TResult Function(String id)? removeBag,
+    TResult Function(String id)? removeBagLocally,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -280,9 +280,9 @@ extension OrderEventPatterns on OrderEvent {
           when updateScannedBagsForNewBag != null:
         return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
       case _RemoveBag() when removeBag != null:
-        return removeBag(_that.orderServiceId, _that.bagId);
+        return removeBag(_that.id);
       case _RemoveBagLocally() when removeBagLocally != null:
-        return removeBagLocally(_that.orderServiceId, _that.bagId);
+        return removeBagLocally(_that.id);
       case _:
         return orElse();
     }
@@ -331,9 +331,8 @@ extension OrderEventPatterns on OrderEvent {
         updateScannedBagsLocally,
     required TResult Function(String serviceId, String bagId)
         updateScannedBagsForNewBag,
-    required TResult Function(String orderServiceId, String bagId) removeBag,
-    required TResult Function(String orderServiceId, String bagId)
-        removeBagLocally,
+    required TResult Function(String id) removeBag,
+    required TResult Function(String id) removeBagLocally,
   }) {
     final _that = this;
     switch (_that) {
@@ -370,9 +369,9 @@ extension OrderEventPatterns on OrderEvent {
       case _UpdateScannedBagsForNewBag():
         return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
       case _RemoveBag():
-        return removeBag(_that.orderServiceId, _that.bagId);
+        return removeBag(_that.id);
       case _RemoveBagLocally():
-        return removeBagLocally(_that.orderServiceId, _that.bagId);
+        return removeBagLocally(_that.id);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -408,8 +407,8 @@ extension OrderEventPatterns on OrderEvent {
         updateScannedBagsLocally,
     TResult? Function(String serviceId, String bagId)?
         updateScannedBagsForNewBag,
-    TResult? Function(String orderServiceId, String bagId)? removeBag,
-    TResult? Function(String orderServiceId, String bagId)? removeBagLocally,
+    TResult? Function(String id)? removeBag,
+    TResult? Function(String id)? removeBagLocally,
   }) {
     final _that = this;
     switch (_that) {
@@ -447,9 +446,9 @@ extension OrderEventPatterns on OrderEvent {
           when updateScannedBagsForNewBag != null:
         return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
       case _RemoveBag() when removeBag != null:
-        return removeBag(_that.orderServiceId, _that.bagId);
+        return removeBag(_that.id);
       case _RemoveBagLocally() when removeBagLocally != null:
-        return removeBagLocally(_that.orderServiceId, _that.bagId);
+        return removeBagLocally(_that.id);
       case _:
         return null;
     }
@@ -1215,10 +1214,9 @@ class __$UpdateScannedBagsForNewBagCopyWithImpl<$Res>
 /// @nodoc
 
 class _RemoveBag implements OrderEvent {
-  const _RemoveBag({required this.orderServiceId, required this.bagId});
+  const _RemoveBag({required this.id});
 
-  final String orderServiceId;
-  final String bagId;
+  final String id;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1232,17 +1230,15 @@ class _RemoveBag implements OrderEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _RemoveBag &&
-            (identical(other.orderServiceId, orderServiceId) ||
-                other.orderServiceId == orderServiceId) &&
-            (identical(other.bagId, bagId) || other.bagId == bagId));
+            (identical(other.id, id) || other.id == id));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, orderServiceId, bagId);
+  int get hashCode => Object.hash(runtimeType, id);
 
   @override
   String toString() {
-    return 'OrderEvent.removeBag(orderServiceId: $orderServiceId, bagId: $bagId)';
+    return 'OrderEvent.removeBag(id: $id)';
   }
 }
 
@@ -1253,7 +1249,7 @@ abstract mixin class _$RemoveBagCopyWith<$Res>
           _RemoveBag value, $Res Function(_RemoveBag) _then) =
       __$RemoveBagCopyWithImpl;
   @useResult
-  $Res call({String orderServiceId, String bagId});
+  $Res call({String id});
 }
 
 /// @nodoc
@@ -1267,17 +1263,12 @@ class __$RemoveBagCopyWithImpl<$Res> implements _$RemoveBagCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? orderServiceId = null,
-    Object? bagId = null,
+    Object? id = null,
   }) {
     return _then(_RemoveBag(
-      orderServiceId: null == orderServiceId
-          ? _self.orderServiceId
-          : orderServiceId // ignore: cast_nullable_to_non_nullable
-              as String,
-      bagId: null == bagId
-          ? _self.bagId
-          : bagId // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -1286,10 +1277,9 @@ class __$RemoveBagCopyWithImpl<$Res> implements _$RemoveBagCopyWith<$Res> {
 /// @nodoc
 
 class _RemoveBagLocally implements OrderEvent {
-  const _RemoveBagLocally({required this.orderServiceId, required this.bagId});
+  const _RemoveBagLocally({required this.id});
 
-  final String orderServiceId;
-  final String bagId;
+  final String id;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1303,17 +1293,15 @@ class _RemoveBagLocally implements OrderEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _RemoveBagLocally &&
-            (identical(other.orderServiceId, orderServiceId) ||
-                other.orderServiceId == orderServiceId) &&
-            (identical(other.bagId, bagId) || other.bagId == bagId));
+            (identical(other.id, id) || other.id == id));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, orderServiceId, bagId);
+  int get hashCode => Object.hash(runtimeType, id);
 
   @override
   String toString() {
-    return 'OrderEvent.removeBagLocally(orderServiceId: $orderServiceId, bagId: $bagId)';
+    return 'OrderEvent.removeBagLocally(id: $id)';
   }
 }
 
@@ -1324,7 +1312,7 @@ abstract mixin class _$RemoveBagLocallyCopyWith<$Res>
           _RemoveBagLocally value, $Res Function(_RemoveBagLocally) _then) =
       __$RemoveBagLocallyCopyWithImpl;
   @useResult
-  $Res call({String orderServiceId, String bagId});
+  $Res call({String id});
 }
 
 /// @nodoc
@@ -1339,17 +1327,12 @@ class __$RemoveBagLocallyCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? orderServiceId = null,
-    Object? bagId = null,
+    Object? id = null,
   }) {
     return _then(_RemoveBagLocally(
-      orderServiceId: null == orderServiceId
-          ? _self.orderServiceId
-          : orderServiceId // ignore: cast_nullable_to_non_nullable
-              as String,
-      bagId: null == bagId
-          ? _self.bagId
-          : bagId // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

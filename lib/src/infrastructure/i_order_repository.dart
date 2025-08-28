@@ -113,11 +113,11 @@ class OrderRepositoryImplementation implements OrderRepository {
   }
 
   @override
-  Future<void> removeBag(String orderServiceId, String bagId) async {
+  Future<void> removeBag(String id) async {
     try {
       final Map<String, dynamic> data = {
-        "orderServiceId": orderServiceId,
-        "bagId": bagId,
+       
+        "id": id,
       }.clean();
 
       await api.profile.post(ApiEndpoints().removeBag, data: data);

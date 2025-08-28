@@ -19,7 +19,7 @@ class AlreadyScannedWarningBottomsheet extends StatefulWidget {
     required this.serviceName, 
     required this.serviceImage, 
     required this.serviceColor,
-    required this.orderServiceId,
+    required this.scannedBagId,
     required this.onBagRemoved,
   });
   
@@ -27,7 +27,7 @@ class AlreadyScannedWarningBottomsheet extends StatefulWidget {
   final String serviceName;
   final String serviceImage;
   final Color serviceColor;
-  final String orderServiceId;
+  final String scannedBagId;
   final VoidCallback onBagRemoved;
 
   @override
@@ -55,12 +55,11 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
   Widget build(BuildContext context) {
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
-        if (state.removeBagStatus is StatusSuccess) {
-          // Remove bag locally to update UI
-          context.read<OrderBloc>().add(OrderEvent.removeBagLocally(
-            orderServiceId: widget.orderServiceId,
-            bagId: bagIdController.text.trim(),
-          ));
+                 if (state.removeBagStatus is StatusSuccess) {
+           // Remove bag locally to update UI
+           context.read<OrderBloc>().add(OrderEvent.removeBagLocally(
+             id: widget.scannedBagId,
+           ));
           
           // Close the bottomsheet
           Navigator.of(context).pop();
@@ -122,12 +121,11 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
                   buttonBgImage: AppImages.redButtonBg,
 
                   backgroundColor: const Color(0xFFD90F0F),
-                  onPressed: () {
-                    context.read<OrderBloc>().add(OrderEvent.removeBag(
-                      orderServiceId: widget.orderServiceId,
-                      bagId: bagIdController.text.trim(),
-                    )); 
-                  },
+                                     onPressed: () {
+                     context.read<OrderBloc>().add(OrderEvent.removeBag(
+                       id: widget.scannedBagId,
+                     )); 
+                   },
                   text: 'Remove This Bag',
                   isLoading: isLoading,
                 ),
