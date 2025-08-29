@@ -330,7 +330,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderDetailsResponseModel _preserveServicesForNormalOrders(OrderDetailsResponseModel serverResponse) {
     // Check if this is a normal order (not a quick order)
     // Quick orders typically have a different structure or flag
-    final isQuickOrder = serverResponse.type.toLowerCase().contains('quick') || 
+    final isQuickOrder = serverResponse.type.toLowerCase().contains('oneTapOrder') || 
                         serverResponse.expressService;
     
     if (isQuickOrder) {
