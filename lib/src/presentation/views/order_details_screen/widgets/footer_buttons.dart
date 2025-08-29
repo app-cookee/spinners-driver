@@ -135,6 +135,12 @@ class _FooterButtonsState extends State<FooterButtons> {
                       context: context,
                     );
                   },
+                  // onPressed: () {
+                  //      context.read<OrderBloc>().add(OrderEvent.confirmPickup(
+                  //         orderId: widget.orderId,
+                  //         driverNotes: widget.additionalNotesController.text,
+                  //       ));
+                  // },
                   isLoading: isLoading,
                   text: "Confirm Pickup",
                   height: 48.dp,

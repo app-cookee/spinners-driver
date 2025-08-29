@@ -313,11 +313,72 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       if (state.orderDetails.id.isNotEmpty) {
         log('Refreshing order details for order ID: ${state.orderDetails.id}', name: "OrderBloc");
         final response = await orderRepository.getOrdersDetail(state.orderDetails.id);
-        emit(state.copyWith(orderDetails: response));
+        
+        // For normal orders, preserve services that might have been removed by the server
+        // when all bags were removed from them
+        final preservedOrderDetails = _preserveServicesForNormalOrders(response);
+        
+        emit(state.copyWith(orderDetails: preservedOrderDetails));
       }
     } catch (e) {
       log('Error refreshing order details: $e', name: "OrderBloc");
       // Don't emit error state here as it might interfere with the success state of the main operation
     }
+  }
+
+  /// Helper method to preserve services for normal orders even if they have no bags
+  OrderDetailsResponseModel _preserveServicesForNormalOrders(OrderDetailsResponseModel serverResponse) {
+    // Check if this is a normal order (not a quick order)
+    // Quick orders typically have a different structure or flag
+    final isQuickOrder = serverResponse.type.toLowerCase().contains('quick') || 
+                        serverResponse.expressService;
+    
+    if (isQuickOrder) {
+      // For quick orders, use the server response as is
+      return serverResponse;
+    }
+    
+    // For normal orders, preserve all services from the original state
+    // that might have been removed by the server when they became empty
+    final originalServices = state.orderDetails.orderedItems;
+    final serverServices = serverResponse.orderedItems;
+    
+    // Create a map of server services by service ID for quick lookup
+    final serverServicesMap = <String, OrderedItems>{};
+    for (final service in serverServices) {
+      serverServicesMap[service.service.id] = service;
+    }
+    
+    // Merge original services with server services
+    final preservedServices = <OrderedItems>[];
+    for (final originalService in originalServices) {
+      final serviceId = originalService.service.id;
+      final serverService = serverServicesMap[serviceId];
+      
+      if (serverService != null) {
+        // Service exists in server response, use server data (with updated bag counts)
+        preservedServices.add(serverService);
+      } else {
+        // Service was removed by server (probably because it has no bags)
+        // Preserve it with empty scanned bags list
+        preservedServices.add(originalService.copyWith(
+          scannedBags: [],
+        ));
+      }
+    }
+    
+    // Add any new services that might have been added by the server
+    for (final serverService in serverServices) {
+      final serviceId = serverService.service.id;
+      final existsInOriginal = originalServices.any((service) => service.service.id == serviceId);
+      
+      if (!existsInOriginal) {
+        preservedServices.add(serverService);
+      }
+    }
+    
+    return serverResponse.copyWith(
+      orderedItems: preservedServices,
+    );
   }
 }

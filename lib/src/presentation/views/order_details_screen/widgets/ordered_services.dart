@@ -69,11 +69,11 @@ class OrderedServices extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.network(
-                '${ApiUrls.stagingUrl}/${orderedItem.service.icon}',
-                height: 32.dp,
-                width: 32.dp,
-              ),
+              // Image.network(
+              //   '${ApiUrls.stagingUrl}/${orderedItem.service.icon}',
+              //   height: 32.dp,
+              //   width: 32.dp,
+              // ),
               Gap(8.dp),
               Expanded(
                 child: Column(
