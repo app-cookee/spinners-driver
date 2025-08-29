@@ -89,37 +89,37 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                   ),
                                 ),
                               ),
-                              if (dState.orderDetails.payment
-                                      .where((p) =>
-                                          p.status.toLowerCase() == "pending")
-                                      .map((p) =>
-                                          double.tryParse(p.amount) ?? 0.0)
-                                      .fold(0.0, (sum, amt) => sum + amt) >
-                                  0)
-                                SliverPersistentHeader(
-                                  pinned: true,
-                                  delegate: StickyHeaderDelegate(
-                                    child: Container(
-                                      color: AppColors.white,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16.dp, vertical: 0),
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Column(
-                                          children: [
-                                            Gap(4.dp),
-                                            InfoCard(
-                                              label: "COD",
-                                              value:
-                                                  "AED ${dState.orderDetails.payment.where((p) => p.status.toLowerCase() == "pending").map((p) => double.tryParse(p.amount) ?? 0.0).fold(0.0, (sum, amt) => sum + amt).toStringAsFixed(2)}",
-                                            ),
-                                            Gap(4.dp),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              // if (dState.orderDetails.payment
+                              //         .where((p) =>
+                              //             p.status.toLowerCase() == "pending")
+                              //         .map((p) =>
+                              //             double.tryParse(p.amount) ?? 0.0)
+                              //         .fold(0.0, (sum, amt) => sum + amt) >
+                              //     0)
+                              //   SliverPersistentHeader(
+                              //     pinned: true,
+                              //     delegate: StickyHeaderDelegate(
+                              //       child: Container(
+                              //         color: AppColors.white,
+                              //         padding: EdgeInsets.symmetric(
+                              //             horizontal: 16.dp, vertical: 0),
+                              //         child: Align(
+                              //           alignment: Alignment.center,
+                              //           child: Column(
+                              //             children: [
+                              //               Gap(4.dp),
+                              //               InfoCard(
+                              //                 label: "COD",
+                              //                 value:
+                              //                     "AED ${dState.orderDetails.payment.where((p) => p.status.toLowerCase() == "pending").map((p) => double.tryParse(p.amount) ?? 0.0).fold(0.0, (sum, amt) => sum + amt).toStringAsFixed(2)}",
+                              //               ),
+                              //               Gap(4.dp),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
                               SliverToBoxAdapter(
                                 child: Padding(
                                   padding:
