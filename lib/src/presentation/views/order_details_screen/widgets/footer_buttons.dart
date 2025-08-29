@@ -37,7 +37,7 @@ class _FooterButtonsState extends State<FooterButtons> {
     if (orderType == 'normalOrder') {
       for (final item in orderedItems) {
         // Check if the number of scanned bags equals the quantity for each service
-        if (item.scannedBags.length < item.quantity) {
+        if (item.service.scannedBags.length < item.quantity) {
           return false;
         }
       }
@@ -46,7 +46,7 @@ class _FooterButtonsState extends State<FooterButtons> {
       // For non-normal orders (express, quick, etc.), at least one bag must be scanned
       int totalScannedBags = 0;
       for (final item in orderedItems) {
-        totalScannedBags += item.scannedBags.length;
+        totalScannedBags += item.service.scannedBags.length;
       }
       return totalScannedBags > 0;
     }
@@ -66,7 +66,7 @@ class _FooterButtonsState extends State<FooterButtons> {
       // Check which services are missing bags
       List<String> missingServices = [];
       for (final item in orderedItems) {
-        if (item.scannedBags.length < item.quantity) {
+        if (item.service.scannedBags.length < item.quantity) {
           missingServices.add(item.service.name);
         }
       }
@@ -78,7 +78,7 @@ class _FooterButtonsState extends State<FooterButtons> {
       // For non-normal orders, check if any bags are scanned
       int totalScannedBags = 0;
       for (final item in orderedItems) {
-        totalScannedBags += item.scannedBags.length;
+        totalScannedBags += item.service.scannedBags.length;
       }
       
       if (totalScannedBags == 0 && orderType!='normalOrder') {

@@ -162,7 +162,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
                   text: 'Cancel',
                 ),
               ),
-              Gap(16.dp),
+              // Gap(16.dp),
             ],
           ),
         );
@@ -201,6 +201,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
             hintText: 'Enter Bag ID',
             textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
             readOnly: widget.bagId != null,
+             borderRadius: 12.dp,
           ),
         ],
       ),
@@ -383,8 +384,10 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
                   text: '',
                   hint: selectedServiceName ?? 'Choose a service',
                 )
+               
               // Show empty state
-              else
+              else if (services.isNotEmpty && services.where((service) => service.color.isEmpty).isEmpty)//else
+
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 12.dp, vertical: 16.dp),
@@ -476,10 +479,10 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
     String? existingScannedBagId;
 
     for (final item in state.orderDetails.orderedItems) {
-      final existingBag = item.scannedBags.firstWhere(
-        (bag) => bag.bagId == bagId,
-        orElse: () => const ScannedBags(),
-      );
+                    final existingBag = item.service.scannedBags.firstWhere(
+                (bag) => bag.bagId == bagId,
+                orElse: () => const ScannedBags(),
+              );
 
       if (existingBag.bagId.isNotEmpty) {
         // Check if bag exists in the same service that user is trying to add to

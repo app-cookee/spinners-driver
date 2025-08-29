@@ -1302,9 +1302,9 @@ mixin _$OrderedItems {
   int get quantity;
   String get soldPrice;
   String get listedPrice;
-  Service get service;
+  @JsonKey(name: 'service')
+  OrderItemService get service;
   Item get item;
-  List<ScannedBags> get scannedBags;
   String get driverNotes;
 
   /// Create a copy of OrderedItems
@@ -1332,28 +1332,18 @@ mixin _$OrderedItems {
                 other.listedPrice == listedPrice) &&
             (identical(other.service, service) || other.service == service) &&
             (identical(other.item, item) || other.item == item) &&
-            const DeepCollectionEquality()
-                .equals(other.scannedBags, scannedBags) &&
             (identical(other.driverNotes, driverNotes) ||
                 other.driverNotes == driverNotes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      quantity,
-      soldPrice,
-      listedPrice,
-      service,
-      item,
-      const DeepCollectionEquality().hash(scannedBags),
-      driverNotes);
+  int get hashCode => Object.hash(runtimeType, id, quantity, soldPrice,
+      listedPrice, service, item, driverNotes);
 
   @override
   String toString() {
-    return 'OrderedItems(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, scannedBags: $scannedBags, driverNotes: $driverNotes)';
+    return 'OrderedItems(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, driverNotes: $driverNotes)';
   }
 }
 
@@ -1368,12 +1358,11 @@ abstract mixin class $OrderedItemsCopyWith<$Res> {
       int quantity,
       String soldPrice,
       String listedPrice,
-      Service service,
+      @JsonKey(name: 'service') OrderItemService service,
       Item item,
-      List<ScannedBags> scannedBags,
       String driverNotes});
 
-  $ServiceCopyWith<$Res> get service;
+  $OrderItemServiceCopyWith<$Res> get service;
   $ItemCopyWith<$Res> get item;
 }
 
@@ -1395,7 +1384,6 @@ class _$OrderedItemsCopyWithImpl<$Res> implements $OrderedItemsCopyWith<$Res> {
     Object? listedPrice = null,
     Object? service = null,
     Object? item = null,
-    Object? scannedBags = null,
     Object? driverNotes = null,
   }) {
     return _then(_self.copyWith(
@@ -1418,15 +1406,11 @@ class _$OrderedItemsCopyWithImpl<$Res> implements $OrderedItemsCopyWith<$Res> {
       service: null == service
           ? _self.service
           : service // ignore: cast_nullable_to_non_nullable
-              as Service,
+              as OrderItemService,
       item: null == item
           ? _self.item
           : item // ignore: cast_nullable_to_non_nullable
               as Item,
-      scannedBags: null == scannedBags
-          ? _self.scannedBags
-          : scannedBags // ignore: cast_nullable_to_non_nullable
-              as List<ScannedBags>,
       driverNotes: null == driverNotes
           ? _self.driverNotes
           : driverNotes // ignore: cast_nullable_to_non_nullable
@@ -1438,8 +1422,8 @@ class _$OrderedItemsCopyWithImpl<$Res> implements $OrderedItemsCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ServiceCopyWith<$Res> get service {
-    return $ServiceCopyWith<$Res>(_self.service, (value) {
+  $OrderItemServiceCopyWith<$Res> get service {
+    return $OrderItemServiceCopyWith<$Res>(_self.service, (value) {
       return _then(_self.copyWith(service: value));
     });
   }
@@ -1553,9 +1537,8 @@ extension OrderedItemsPatterns on OrderedItems {
             int quantity,
             String soldPrice,
             String listedPrice,
-            Service service,
+            @JsonKey(name: 'service') OrderItemService service,
             Item item,
-            List<ScannedBags> scannedBags,
             String driverNotes)?
         $default, {
     required TResult orElse(),
@@ -1563,15 +1546,8 @@ extension OrderedItemsPatterns on OrderedItems {
     final _that = this;
     switch (_that) {
       case _OrderedItems() when $default != null:
-        return $default(
-            _that.id,
-            _that.quantity,
-            _that.soldPrice,
-            _that.listedPrice,
-            _that.service,
-            _that.item,
-            _that.scannedBags,
-            _that.driverNotes);
+        return $default(_that.id, _that.quantity, _that.soldPrice,
+            _that.listedPrice, _that.service, _that.item, _that.driverNotes);
       case _:
         return orElse();
     }
@@ -1597,24 +1573,16 @@ extension OrderedItemsPatterns on OrderedItems {
             int quantity,
             String soldPrice,
             String listedPrice,
-            Service service,
+            @JsonKey(name: 'service') OrderItemService service,
             Item item,
-            List<ScannedBags> scannedBags,
             String driverNotes)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _OrderedItems():
-        return $default(
-            _that.id,
-            _that.quantity,
-            _that.soldPrice,
-            _that.listedPrice,
-            _that.service,
-            _that.item,
-            _that.scannedBags,
-            _that.driverNotes);
+        return $default(_that.id, _that.quantity, _that.soldPrice,
+            _that.listedPrice, _that.service, _that.item, _that.driverNotes);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -1639,24 +1607,16 @@ extension OrderedItemsPatterns on OrderedItems {
             int quantity,
             String soldPrice,
             String listedPrice,
-            Service service,
+            @JsonKey(name: 'service') OrderItemService service,
             Item item,
-            List<ScannedBags> scannedBags,
             String driverNotes)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _OrderedItems() when $default != null:
-        return $default(
-            _that.id,
-            _that.quantity,
-            _that.soldPrice,
-            _that.listedPrice,
-            _that.service,
-            _that.item,
-            _that.scannedBags,
-            _that.driverNotes);
+        return $default(_that.id, _that.quantity, _that.soldPrice,
+            _that.listedPrice, _that.service, _that.item, _that.driverNotes);
       case _:
         return null;
     }
@@ -1671,11 +1631,9 @@ class _OrderedItems implements OrderedItems {
       this.quantity = 0,
       this.soldPrice = "",
       this.listedPrice = "",
-      this.service = const Service(),
+      @JsonKey(name: 'service') this.service = const OrderItemService(),
       this.item = const Item(),
-      final List<ScannedBags> scannedBags = const [],
-      this.driverNotes = ""})
-      : _scannedBags = scannedBags;
+      this.driverNotes = ""});
   factory _OrderedItems.fromJson(Map<String, dynamic> json) =>
       _$OrderedItemsFromJson(json);
 
@@ -1692,20 +1650,11 @@ class _OrderedItems implements OrderedItems {
   @JsonKey()
   final String listedPrice;
   @override
-  @JsonKey()
-  final Service service;
+  @JsonKey(name: 'service')
+  final OrderItemService service;
   @override
   @JsonKey()
   final Item item;
-  final List<ScannedBags> _scannedBags;
-  @override
-  @JsonKey()
-  List<ScannedBags> get scannedBags {
-    if (_scannedBags is EqualUnmodifiableListView) return _scannedBags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_scannedBags);
-  }
-
   @override
   @JsonKey()
   final String driverNotes;
@@ -1739,28 +1688,18 @@ class _OrderedItems implements OrderedItems {
                 other.listedPrice == listedPrice) &&
             (identical(other.service, service) || other.service == service) &&
             (identical(other.item, item) || other.item == item) &&
-            const DeepCollectionEquality()
-                .equals(other._scannedBags, _scannedBags) &&
             (identical(other.driverNotes, driverNotes) ||
                 other.driverNotes == driverNotes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      quantity,
-      soldPrice,
-      listedPrice,
-      service,
-      item,
-      const DeepCollectionEquality().hash(_scannedBags),
-      driverNotes);
+  int get hashCode => Object.hash(runtimeType, id, quantity, soldPrice,
+      listedPrice, service, item, driverNotes);
 
   @override
   String toString() {
-    return 'OrderedItems(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, scannedBags: $scannedBags, driverNotes: $driverNotes)';
+    return 'OrderedItems(id: $id, quantity: $quantity, soldPrice: $soldPrice, listedPrice: $listedPrice, service: $service, item: $item, driverNotes: $driverNotes)';
   }
 }
 
@@ -1777,13 +1716,12 @@ abstract mixin class _$OrderedItemsCopyWith<$Res>
       int quantity,
       String soldPrice,
       String listedPrice,
-      Service service,
+      @JsonKey(name: 'service') OrderItemService service,
       Item item,
-      List<ScannedBags> scannedBags,
       String driverNotes});
 
   @override
-  $ServiceCopyWith<$Res> get service;
+  $OrderItemServiceCopyWith<$Res> get service;
   @override
   $ItemCopyWith<$Res> get item;
 }
@@ -1807,7 +1745,6 @@ class __$OrderedItemsCopyWithImpl<$Res>
     Object? listedPrice = null,
     Object? service = null,
     Object? item = null,
-    Object? scannedBags = null,
     Object? driverNotes = null,
   }) {
     return _then(_OrderedItems(
@@ -1830,15 +1767,11 @@ class __$OrderedItemsCopyWithImpl<$Res>
       service: null == service
           ? _self.service
           : service // ignore: cast_nullable_to_non_nullable
-              as Service,
+              as OrderItemService,
       item: null == item
           ? _self.item
           : item // ignore: cast_nullable_to_non_nullable
               as Item,
-      scannedBags: null == scannedBags
-          ? _self._scannedBags
-          : scannedBags // ignore: cast_nullable_to_non_nullable
-              as List<ScannedBags>,
       driverNotes: null == driverNotes
           ? _self.driverNotes
           : driverNotes // ignore: cast_nullable_to_non_nullable
@@ -1850,8 +1783,8 @@ class __$OrderedItemsCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ServiceCopyWith<$Res> get service {
-    return $ServiceCopyWith<$Res>(_self.service, (value) {
+  $OrderItemServiceCopyWith<$Res> get service {
+    return $OrderItemServiceCopyWith<$Res>(_self.service, (value) {
       return _then(_self.copyWith(service: value));
     });
   }
@@ -2197,6 +2130,618 @@ class __$ScannedBagsCopyWithImpl<$Res> implements _$ScannedBagsCopyWith<$Res> {
           ? _self.bagId
           : bagId // ignore: cast_nullable_to_non_nullable
               as String,
+    ));
+  }
+}
+
+/// @nodoc
+mixin _$OrderItemService {
+  @JsonKey(name: 'id')
+  String get id;
+  @JsonKey(name: 'name')
+  String get name;
+  @JsonKey(name: 'description')
+  String get description;
+  @JsonKey(name: 'tagLine')
+  String get tagLine;
+  @JsonKey(name: 'color')
+  String get color;
+  @JsonKey(name: 'icon')
+  String get icon;
+  @JsonKey(name: 'active')
+  bool get active;
+  @JsonKey(name: 'deleted')
+  bool get deleted;
+  @JsonKey(name: 'createdAt')
+  String get createdAt;
+  @JsonKey(name: 'sortOrder')
+  int get sortOrder;
+  List<ScannedBags> get scannedBags;
+
+  /// Create a copy of OrderItemService
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $OrderItemServiceCopyWith<OrderItemService> get copyWith =>
+      _$OrderItemServiceCopyWithImpl<OrderItemService>(
+          this as OrderItemService, _$identity);
+
+  /// Serializes this OrderItemService to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is OrderItemService &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.tagLine, tagLine) || other.tagLine == tagLine) &&
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.icon, icon) || other.icon == icon) &&
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.deleted, deleted) || other.deleted == deleted) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.sortOrder, sortOrder) ||
+                other.sortOrder == sortOrder) &&
+            const DeepCollectionEquality()
+                .equals(other.scannedBags, scannedBags));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      description,
+      tagLine,
+      color,
+      icon,
+      active,
+      deleted,
+      createdAt,
+      sortOrder,
+      const DeepCollectionEquality().hash(scannedBags));
+
+  @override
+  String toString() {
+    return 'OrderItemService(id: $id, name: $name, description: $description, tagLine: $tagLine, color: $color, icon: $icon, active: $active, deleted: $deleted, createdAt: $createdAt, sortOrder: $sortOrder, scannedBags: $scannedBags)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $OrderItemServiceCopyWith<$Res> {
+  factory $OrderItemServiceCopyWith(
+          OrderItemService value, $Res Function(OrderItemService) _then) =
+      _$OrderItemServiceCopyWithImpl;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'id') String id,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'tagLine') String tagLine,
+      @JsonKey(name: 'color') String color,
+      @JsonKey(name: 'icon') String icon,
+      @JsonKey(name: 'active') bool active,
+      @JsonKey(name: 'deleted') bool deleted,
+      @JsonKey(name: 'createdAt') String createdAt,
+      @JsonKey(name: 'sortOrder') int sortOrder,
+      List<ScannedBags> scannedBags});
+}
+
+/// @nodoc
+class _$OrderItemServiceCopyWithImpl<$Res>
+    implements $OrderItemServiceCopyWith<$Res> {
+  _$OrderItemServiceCopyWithImpl(this._self, this._then);
+
+  final OrderItemService _self;
+  final $Res Function(OrderItemService) _then;
+
+  /// Create a copy of OrderItemService
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? description = null,
+    Object? tagLine = null,
+    Object? color = null,
+    Object? icon = null,
+    Object? active = null,
+    Object? deleted = null,
+    Object? createdAt = null,
+    Object? sortOrder = null,
+    Object? scannedBags = null,
+  }) {
+    return _then(_self.copyWith(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _self.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      tagLine: null == tagLine
+          ? _self.tagLine
+          : tagLine // ignore: cast_nullable_to_non_nullable
+              as String,
+      color: null == color
+          ? _self.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      icon: null == icon
+          ? _self.icon
+          : icon // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _self.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+      deleted: null == deleted
+          ? _self.deleted
+          : deleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      sortOrder: null == sortOrder
+          ? _self.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as int,
+      scannedBags: null == scannedBags
+          ? _self.scannedBags
+          : scannedBags // ignore: cast_nullable_to_non_nullable
+              as List<ScannedBags>,
+    ));
+  }
+}
+
+/// Adds pattern-matching-related methods to [OrderItemService].
+extension OrderItemServicePatterns on OrderItemService {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_OrderItemService value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _OrderItemService() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_OrderItemService value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _OrderItemService():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_OrderItemService value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _OrderItemService() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'name') String name,
+            @JsonKey(name: 'description') String description,
+            @JsonKey(name: 'tagLine') String tagLine,
+            @JsonKey(name: 'color') String color,
+            @JsonKey(name: 'icon') String icon,
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'deleted') bool deleted,
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'sortOrder') int sortOrder,
+            List<ScannedBags> scannedBags)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _OrderItemService() when $default != null:
+        return $default(
+            _that.id,
+            _that.name,
+            _that.description,
+            _that.tagLine,
+            _that.color,
+            _that.icon,
+            _that.active,
+            _that.deleted,
+            _that.createdAt,
+            _that.sortOrder,
+            _that.scannedBags);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'name') String name,
+            @JsonKey(name: 'description') String description,
+            @JsonKey(name: 'tagLine') String tagLine,
+            @JsonKey(name: 'color') String color,
+            @JsonKey(name: 'icon') String icon,
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'deleted') bool deleted,
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'sortOrder') int sortOrder,
+            List<ScannedBags> scannedBags)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _OrderItemService():
+        return $default(
+            _that.id,
+            _that.name,
+            _that.description,
+            _that.tagLine,
+            _that.color,
+            _that.icon,
+            _that.active,
+            _that.deleted,
+            _that.createdAt,
+            _that.sortOrder,
+            _that.scannedBags);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'name') String name,
+            @JsonKey(name: 'description') String description,
+            @JsonKey(name: 'tagLine') String tagLine,
+            @JsonKey(name: 'color') String color,
+            @JsonKey(name: 'icon') String icon,
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'deleted') bool deleted,
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'sortOrder') int sortOrder,
+            List<ScannedBags> scannedBags)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _OrderItemService() when $default != null:
+        return $default(
+            _that.id,
+            _that.name,
+            _that.description,
+            _that.tagLine,
+            _that.color,
+            _that.icon,
+            _that.active,
+            _that.deleted,
+            _that.createdAt,
+            _that.sortOrder,
+            _that.scannedBags);
+      case _:
+        return null;
+    }
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _OrderItemService implements OrderItemService {
+  const _OrderItemService(
+      {@JsonKey(name: 'id') this.id = "",
+      @JsonKey(name: 'name') this.name = "",
+      @JsonKey(name: 'description') this.description = "",
+      @JsonKey(name: 'tagLine') this.tagLine = "",
+      @JsonKey(name: 'color') this.color = "",
+      @JsonKey(name: 'icon') this.icon = "",
+      @JsonKey(name: 'active') this.active = false,
+      @JsonKey(name: 'deleted') this.deleted = false,
+      @JsonKey(name: 'createdAt') this.createdAt = "",
+      @JsonKey(name: 'sortOrder') this.sortOrder = 0,
+      final List<ScannedBags> scannedBags = const []})
+      : _scannedBags = scannedBags;
+  factory _OrderItemService.fromJson(Map<String, dynamic> json) =>
+      _$OrderItemServiceFromJson(json);
+
+  @override
+  @JsonKey(name: 'id')
+  final String id;
+  @override
+  @JsonKey(name: 'name')
+  final String name;
+  @override
+  @JsonKey(name: 'description')
+  final String description;
+  @override
+  @JsonKey(name: 'tagLine')
+  final String tagLine;
+  @override
+  @JsonKey(name: 'color')
+  final String color;
+  @override
+  @JsonKey(name: 'icon')
+  final String icon;
+  @override
+  @JsonKey(name: 'active')
+  final bool active;
+  @override
+  @JsonKey(name: 'deleted')
+  final bool deleted;
+  @override
+  @JsonKey(name: 'createdAt')
+  final String createdAt;
+  @override
+  @JsonKey(name: 'sortOrder')
+  final int sortOrder;
+  final List<ScannedBags> _scannedBags;
+  @override
+  @JsonKey()
+  List<ScannedBags> get scannedBags {
+    if (_scannedBags is EqualUnmodifiableListView) return _scannedBags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_scannedBags);
+  }
+
+  /// Create a copy of OrderItemService
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$OrderItemServiceCopyWith<_OrderItemService> get copyWith =>
+      __$OrderItemServiceCopyWithImpl<_OrderItemService>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$OrderItemServiceToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _OrderItemService &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.tagLine, tagLine) || other.tagLine == tagLine) &&
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.icon, icon) || other.icon == icon) &&
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.deleted, deleted) || other.deleted == deleted) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.sortOrder, sortOrder) ||
+                other.sortOrder == sortOrder) &&
+            const DeepCollectionEquality()
+                .equals(other._scannedBags, _scannedBags));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      description,
+      tagLine,
+      color,
+      icon,
+      active,
+      deleted,
+      createdAt,
+      sortOrder,
+      const DeepCollectionEquality().hash(_scannedBags));
+
+  @override
+  String toString() {
+    return 'OrderItemService(id: $id, name: $name, description: $description, tagLine: $tagLine, color: $color, icon: $icon, active: $active, deleted: $deleted, createdAt: $createdAt, sortOrder: $sortOrder, scannedBags: $scannedBags)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$OrderItemServiceCopyWith<$Res>
+    implements $OrderItemServiceCopyWith<$Res> {
+  factory _$OrderItemServiceCopyWith(
+          _OrderItemService value, $Res Function(_OrderItemService) _then) =
+      __$OrderItemServiceCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'id') String id,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'tagLine') String tagLine,
+      @JsonKey(name: 'color') String color,
+      @JsonKey(name: 'icon') String icon,
+      @JsonKey(name: 'active') bool active,
+      @JsonKey(name: 'deleted') bool deleted,
+      @JsonKey(name: 'createdAt') String createdAt,
+      @JsonKey(name: 'sortOrder') int sortOrder,
+      List<ScannedBags> scannedBags});
+}
+
+/// @nodoc
+class __$OrderItemServiceCopyWithImpl<$Res>
+    implements _$OrderItemServiceCopyWith<$Res> {
+  __$OrderItemServiceCopyWithImpl(this._self, this._then);
+
+  final _OrderItemService _self;
+  final $Res Function(_OrderItemService) _then;
+
+  /// Create a copy of OrderItemService
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? description = null,
+    Object? tagLine = null,
+    Object? color = null,
+    Object? icon = null,
+    Object? active = null,
+    Object? deleted = null,
+    Object? createdAt = null,
+    Object? sortOrder = null,
+    Object? scannedBags = null,
+  }) {
+    return _then(_OrderItemService(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _self.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      tagLine: null == tagLine
+          ? _self.tagLine
+          : tagLine // ignore: cast_nullable_to_non_nullable
+              as String,
+      color: null == color
+          ? _self.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      icon: null == icon
+          ? _self.icon
+          : icon // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _self.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+      deleted: null == deleted
+          ? _self.deleted
+          : deleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      sortOrder: null == sortOrder
+          ? _self.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as int,
+      scannedBags: null == scannedBags
+          ? _self._scannedBags
+          : scannedBags // ignore: cast_nullable_to_non_nullable
+              as List<ScannedBags>,
     ));
   }
 }

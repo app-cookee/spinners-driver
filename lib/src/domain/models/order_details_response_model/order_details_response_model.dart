@@ -47,9 +47,8 @@ abstract class OrderedItems with _$OrderedItems {
     @Default(0) int quantity,
     @Default("") String soldPrice,
     @Default("") String listedPrice,
-    @Default(Service()) Service service,
+   @JsonKey(name:'service') @Default(OrderItemService()) OrderItemService service,
     @Default(Item()) Item item,
-    @Default([]) List<ScannedBags> scannedBags,
     @Default("") String driverNotes,
   }) = _OrderedItems;
 
@@ -65,4 +64,24 @@ abstract class ScannedBags with _$ScannedBags{
   }) = _ScannedBags;
 
   factory ScannedBags.fromJson(Map<String, dynamic> json) => _$ScannedBagsFromJson(json);
+}
+@freezed
+abstract class OrderItemService with _$OrderItemService {
+  const factory OrderItemService({
+    @JsonKey(name: 'id') @Default("") String id,
+    @JsonKey(name: 'name') @Default("") String name,
+    @JsonKey(name: 'description') @Default("") String description,
+    @JsonKey(name: 'tagLine') @Default("") String tagLine,
+    @JsonKey(name: 'color') @Default("") String color,
+    @JsonKey(name: 'icon') @Default("") String icon,
+    @JsonKey(name: 'active') @Default(false) bool active,
+    @JsonKey(name: 'deleted') @Default(false) bool deleted,
+    @JsonKey(name: 'createdAt') @Default("") String createdAt,
+    @JsonKey(name: 'sortOrder') @Default(0) int sortOrder,
+        @Default([]) List<ScannedBags> scannedBags,
+
+  }) = _OrderItemService;
+
+  factory OrderItemService.fromJson(Map<String, dynamic> json) =>
+      _$OrderItemServiceFromJson(json);
 }

@@ -453,7 +453,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               String? existingScannedBagId;
 
               for (final item in state.orderDetails.orderedItems) {
-                final existingBag = item.scannedBags.firstWhere(
+                final existingBag = item.service.scannedBags.firstWhere(
                   (bag) => bag.bagId == bagId,
                   orElse: () => const ScannedBags(),
                 );

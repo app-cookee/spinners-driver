@@ -109,15 +109,11 @@ _OrderedItems _$OrderedItemsFromJson(Map<String, dynamic> json) =>
       soldPrice: json['soldPrice'] as String? ?? "",
       listedPrice: json['listedPrice'] as String? ?? "",
       service: json['service'] == null
-          ? const Service()
-          : Service.fromJson(json['service'] as Map<String, dynamic>),
+          ? const OrderItemService()
+          : OrderItemService.fromJson(json['service'] as Map<String, dynamic>),
       item: json['item'] == null
           ? const Item()
           : Item.fromJson(json['item'] as Map<String, dynamic>),
-      scannedBags: (json['scannedBags'] as List<dynamic>?)
-              ?.map((e) => ScannedBags.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       driverNotes: json['driverNotes'] as String? ?? "",
     );
 
@@ -129,7 +125,6 @@ Map<String, dynamic> _$OrderedItemsToJson(_OrderedItems instance) =>
       'listedPrice': instance.listedPrice,
       'service': instance.service,
       'item': instance.item,
-      'scannedBags': instance.scannedBags,
       'driverNotes': instance.driverNotes,
     };
 
@@ -144,4 +139,37 @@ Map<String, dynamic> _$ScannedBagsToJson(_ScannedBags instance) =>
       'id': instance.id,
       'orderServiceId': instance.orderServiceId,
       'bagId': instance.bagId,
+    };
+
+_OrderItemService _$OrderItemServiceFromJson(Map<String, dynamic> json) =>
+    _OrderItemService(
+      id: json['id'] as String? ?? "",
+      name: json['name'] as String? ?? "",
+      description: json['description'] as String? ?? "",
+      tagLine: json['tagLine'] as String? ?? "",
+      color: json['color'] as String? ?? "",
+      icon: json['icon'] as String? ?? "",
+      active: json['active'] as bool? ?? false,
+      deleted: json['deleted'] as bool? ?? false,
+      createdAt: json['createdAt'] as String? ?? "",
+      sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
+      scannedBags: (json['scannedBags'] as List<dynamic>?)
+              ?.map((e) => ScannedBags.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$OrderItemServiceToJson(_OrderItemService instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'description': instance.description,
+      'tagLine': instance.tagLine,
+      'color': instance.color,
+      'icon': instance.icon,
+      'active': instance.active,
+      'deleted': instance.deleted,
+      'createdAt': instance.createdAt,
+      'sortOrder': instance.sortOrder,
+      'scannedBags': instance.scannedBags,
     };

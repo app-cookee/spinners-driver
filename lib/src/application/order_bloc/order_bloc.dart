@@ -180,7 +180,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final updatedOrderedItems = state.orderDetails.orderedItems.map((item) {
         if (item.id == event.orderItemId) {
           return item.copyWith(
-            scannedBags: [...item.scannedBags, newBag],
+            service: item.service.copyWith(
+              scannedBags: [...item.service.scannedBags, newBag],
+            ),
           );
         }
         return item;
@@ -212,7 +214,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final updatedOrderedItems = state.orderDetails.orderedItems.map((item) {
         if (item.service.id == event.serviceId) {
           return item.copyWith(
-            scannedBags: [...item.scannedBags, newBag.copyWith(orderServiceId: item.id)],
+            service: item.service.copyWith(
+              scannedBags: [...item.service.scannedBags, newBag.copyWith(orderServiceId: item.id)],
+            ),
           );
         }
         return item;
@@ -258,9 +262,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       // Remove the bag from the local state by scanned bag id
       final updatedOrderedItems = state.orderDetails.orderedItems.map((item) {
         // Filter out the bag with the specified id
-        final updatedScannedBags = item.scannedBags.where((bag) => bag.id != event.id).toList();
+        final updatedScannedBags = item.service.scannedBags.where((bag) => bag.id != event.id).toList();
         return item.copyWith(
-          scannedBags: updatedScannedBags,
+          service: item.service.copyWith(
+            scannedBags: updatedScannedBags,
+          ),
         );
       }).toList();
 
@@ -362,7 +368,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         // Service was removed by server (probably because it has no bags)
         // Preserve it with empty scanned bags list
         preservedServices.add(originalService.copyWith(
-          scannedBags: [],
+          service: originalService.service.copyWith(
+            scannedBags: [],
+          ),
         ));
       }
     }

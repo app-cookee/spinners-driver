@@ -14,15 +14,15 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class AlreadyScannedWarningBottomsheet extends StatefulWidget {
   const AlreadyScannedWarningBottomsheet({
-    super.key, 
-    this.bagId, 
-    required this.serviceName, 
-    required this.serviceImage, 
+    super.key,
+    this.bagId,
+    required this.serviceName,
+    required this.serviceImage,
     required this.serviceColor,
     required this.scannedBagId,
     required this.onBagRemoved,
   });
-  
+
   final String? bagId;
   final String serviceName;
   final String serviceImage;
@@ -55,13 +55,13 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
   Widget build(BuildContext context) {
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
-                 if (state.removeBagStatus is StatusSuccess) {
+        if (state.removeBagStatus is StatusSuccess) {
           // Close the bottomsheet
           Navigator.of(context).pop();
-          
+
           // Call the callback to notify parent
           widget.onBagRemoved();
-          
+
           // Show success message
           TheToast.show(
             isError: false,
@@ -105,7 +105,7 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
               _bagID(),
               Gap(10.dp),
               Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 16.dp),
+                padding: EdgeInsets.symmetric(horizontal: 16.dp),
                 child: alreadyAssignedWidget(
                   serviceImage: widget.serviceImage,
                   serviceName: widget.serviceName,
@@ -114,16 +114,18 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
               ),
               Gap(24.dp),
               Padding(
-                padding: EdgeInsets.only(left: 16.dp, right: 16.dp,),
+                padding: EdgeInsets.only(
+                  left: 16.dp,
+                  right: 16.dp,
+                ),
                 child: PrimaryButtonWidget(
                   buttonBgImage: AppImages.redButtonBg,
-
                   backgroundColor: const Color(0xFFD90F0F),
-                                     onPressed: () {
-                     context.read<OrderBloc>().add(OrderEvent.removeBag(
-                       id: widget.scannedBagId,
-                     )); 
-                   },
+                  onPressed: () {
+                    context.read<OrderBloc>().add(OrderEvent.removeBag(
+                          id: widget.scannedBagId,
+                        ));
+                  },
                   text: 'Remove This Bag',
                   isLoading: isLoading,
                 ),
@@ -140,7 +142,7 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
                   text: 'Cancel',
                 ),
               ),
-              Gap(16.dp),
+              // Gap(16.dp),
             ],
           ),
         );
@@ -179,13 +181,14 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
             hintText: 'Enter Bag ID',
             textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
             readOnly: widget.bagId != null,
+            borderRadius: 12.dp,
           ),
         ],
       ),
     );
   }
 
-  Widget alreadyAssignedWidget({required String serviceImage,required String serviceName,required Color serviceColor}) {
+  Widget alreadyAssignedWidget({required String serviceImage, required String serviceName, required Color serviceColor}) {
     return Container(
       padding: EdgeInsets.all(12.dp),
       decoration: BoxDecoration(
@@ -219,7 +222,12 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
                   ),
                 ),
                 const Spacer(),
-                Image.asset(AppImages.bag, width: 20.dp, height: 20.dp,color: serviceColor,)
+                Image.asset(
+                  AppImages.bag,
+                  width: 20.dp,
+                  height: 20.dp,
+                  color: serviceColor,
+                )
               ],
             ),
           )

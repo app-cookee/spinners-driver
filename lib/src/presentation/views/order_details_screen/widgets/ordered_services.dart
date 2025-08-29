@@ -38,7 +38,7 @@ class OrderedServices extends StatelessWidget {
 
   Widget _orderedServiceCard(int index, OrderState state, BuildContext context) {
     final orderedItem = state.orderDetails.orderedItems[index];
-    final scannedBagsCount = orderedItem.scannedBags.length;
+    final scannedBagsCount = orderedItem.service.scannedBags.length;
     return Container(
       margin: EdgeInsets.only(bottom: 8.dp),
       padding: EdgeInsets.all(16.dp),
@@ -69,11 +69,11 @@ class OrderedServices extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.network(
-                '${ApiUrls.stagingUrl}/${orderedItem.service.icon}',
-                height: 32.dp,
-                width: 32.dp,
-              ),
+              // Image.network(
+              //   '${ApiUrls.stagingUrl}/${orderedItem.service.icon}',
+              //   height: 32.dp,
+              //   width: 32.dp,
+              // ),
               Gap(8.dp),
               Expanded(
                 child: Column(
@@ -100,7 +100,7 @@ class OrderedServices extends StatelessWidget {
                         ),
                         Gap(4.dp),
                         Text(
-                          'x ${orderedItem.scannedBags.length}',
+                          'x ${orderedItem.service.scannedBags.length}',
                           style: AppTypography.sfProRoundedBold.copyWith(
                             fontSize: 14.sp,
                             color: AppColors.primaryColor500,
