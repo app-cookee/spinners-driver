@@ -88,7 +88,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
               if (mounted) {
                 TheToast.show(
                   isError: false,
-                  message: "Bag service changed successfully",
+                  message: "Service changed successfully",
                   context: context,
                 );
               }
