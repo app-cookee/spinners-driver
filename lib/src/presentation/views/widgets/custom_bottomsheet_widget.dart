@@ -11,20 +11,27 @@ class CustomBottomSheetWidget {
   final Widget child;
 
   Future show() async {
+    print('CustomBottomSheetWidget.show() called');
     final result = await showModalBottomSheet(
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24.dp),
-          topRight: Radius.circular(24.dp),
-        ),
-      ),
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: child,
+        print('CustomBottomSheetWidget builder called');
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24.dp),
+              topRight: Radius.circular(24.dp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: child,
+          ),
         );
       },
     );

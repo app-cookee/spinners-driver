@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
@@ -14,14 +16,25 @@ import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen
 import 'package:spinners_driver/src/presentation/views/widgets/secondary_button_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-class ServicesWidget extends StatelessWidget {
-  const ServicesWidget({super.key, required this.orderState, required this.orderId, required this.selectedIndex, required this.scannedItems, required this.scannedQRCodes, required this.additionalNotesController, });
+class ServicesWidget extends StatefulWidget {
+  const ServicesWidget({
+    super.key,
+    required this.orderState,
+    required this.orderId,
+    required this.scannedQRCodes,
+    required this.additionalNotesController,
+  });
   final OrderState orderState;
   final String orderId;
-  final ValueNotifier<int?> selectedIndex;
-  final ValueNotifier<Set<int>> scannedItems;
   final ValueNotifier<Set<String>> scannedQRCodes;
   final TextEditingController additionalNotesController;
+
+  @override
+  State<ServicesWidget> createState() => _ServicesWidgetState();
+}
+
+class _ServicesWidgetState extends State<ServicesWidget> {
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -48,21 +61,18 @@ class ServicesWidget extends StatelessWidget {
                 ),
               ),
               Gap(6.dp),
-              orderState.orderDetails.type == "normalOrder"
+              widget.orderState.orderDetails.type == "normalOrder"
                   ? OrderedServices(
-                      selectedIndex: selectedIndex,
-                      scannedItems: scannedItems,
-                      orderId: orderId,
-                      scannedQRCodes: scannedQRCodes,
-                      status: orderState.orderDetails.status,
+                      orderId: widget.orderId,
+                      status: widget.orderState.orderDetails.status,
                     )
                   : const SizedBox.shrink(),
-              orderState.orderDetails.type != "normalOrder"
+              widget.orderState.orderDetails.type != "normalOrder"
                   ? Column(
                       children: [
                         QuickOrderBags(
-                          orderId: orderId,
-                          scannedBags: scannedQRCodes,
+                          orderId: widget.orderId,
+                          scannedBags: widget.scannedQRCodes,
                         ),
                         Gap(8.dp),
                         Padding(
@@ -77,7 +87,20 @@ class ServicesWidget extends StatelessWidget {
                               color: AppColors.primaryColor,
                             ),
                             onPressed: () async {
-                              await _handleQuickOrderScan(context);
+                              // await _handleQuickOrderScan(context);
+                              final result = await Navigator.push<String>(
+                                context,
+                                MaterialPageRoute(builder: (context) => const QRScannerScreen()),
+                              );
+
+                              CustomBottomSheetWidget(
+                                context: context,
+                                child: ScanNewBagBottomsheet(
+                                  bagId: result,
+                                  orderId: widget.orderId,
+                                  isQuickOrder: true,
+                                ),
+                              ).show();
                             },
                             text: "Scan New Bag",
                             leadingIcon: Image.asset(
@@ -103,8 +126,8 @@ class ServicesWidget extends StatelessWidget {
               ),
               Gap(6.dp),
               AdditionalNotes(
-                additionalNotesController: additionalNotesController,
-                readOnly: orderState.orderDetails.status == "pickedUp",
+                additionalNotesController: widget.additionalNotesController,
+                readOnly: widget.orderState.orderDetails.status == "pickedUp",
               ),
               SizedBox(height: 17.h)
             ],
@@ -113,38 +136,5 @@ class ServicesWidget extends StatelessWidget {
       ],
     );
   }
-    // Add this method to the _OrderDetailScreenState class:
-  Future<void> _handleQuickOrderScan(BuildContext context) async {
-    final result = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => const QRScannerScreen()),
-    );
 
-    if (result != null && result.isNotEmpty) {
-      // // Check if this QR has already been scanned
-      // if (scannedQRCodes.value.contains(result)) {
-      //   TheToast.show(
-      //     isError: true,
-      //     message: "This QR code has already been scanned",
-      //     context: context,
-      //   );
-      //   return;
-      // }
-
-      // Add to scanned QR codes set
-      final newScannedQRCodes = Set<String>.from(scannedQRCodes.value);
-      newScannedQRCodes.add(result);
-      scannedQRCodes.value = newScannedQRCodes;
-
-      // Show bottomsheet with scanned data
-      CustomBottomSheetWidget(
-        context: context,
-        child: ScanNewBagBottomsheet(
-          bagId: result,
-          orderId: orderId,
-          isQuickOrder: true,
-        ),
-      ).show();
-    }
-  }
 }

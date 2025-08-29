@@ -33,21 +33,21 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: AppColors.blue1,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state.logOutStatus is StatusSuccess) {
-            Navigator.of(context).pop(true);
-            context.router.pushAndPopUntil(
-              const SplashRoute(),
-              predicate: (route) => true,
-            );
-            LocalStorage.remove(StorageKey.accessToken);
-            LocalStorage.remove(StorageKey.refreshToken);
-          }
-          if (state.logOutStatus is StatusFailure) {
-            TheToast.show(
-                message: state.logOutStatus.errorMessage,
-                context: context,
-                isError: true);
-          }
+          // if (state.logOutStatus is StatusSuccess) {
+          //   Navigator.of(context).pop(true);
+          //   context.router.pushAndPopUntil(
+          //     const SplashRoute(),
+          //     predicate: (route) => true,
+          //   );
+          //   LocalStorage.remove(StorageKey.accessToken);
+          //   LocalStorage.remove(StorageKey.refreshToken);
+          // }
+          // if (state.logOutStatus is StatusFailure) {
+          //   TheToast.show(
+          //       message: state.logOutStatus.errorMessage,
+          //       context: context,
+          //       isError: true);
+          // }
         },
         listenWhen: (previous, current) =>
             previous.logOutStatus != current.logOutStatus,
@@ -242,7 +242,14 @@ class AccountScreen extends StatelessWidget {
                                 onConfirm: () {
                                   context
                                       .read<AuthBloc>()
-                                      .add(const AuthEvent.logOut());
+                                      .add(AuthEvent.logOut());
+                                  Navigator.of(context).pop(true);
+                                  context.router.pushAndPopUntil(
+                                    const SplashRoute(),
+                                    predicate: (route) => true,
+                                  );
+                                  LocalStorage.remove(StorageKey.accessToken);
+                                  LocalStorage.remove(StorageKey.refreshToken);
                                 },
                               ),
                             );

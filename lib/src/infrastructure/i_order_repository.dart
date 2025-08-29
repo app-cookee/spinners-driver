@@ -15,26 +15,19 @@ class OrderRepositoryImplementation implements OrderRepository {
 
   OrderRepositoryImplementation({required this.api});
 
-   @override
-  Future<OrderModel> getOrdersList(int limit, int skip, String filter,bool expressOnly,double? latitude,double? longitude,String? searchText) async{
+  @override
+  Future<OrderModel> getOrdersList(int limit, int skip, String filter, bool expressOnly, double? latitude, double? longitude, String? searchText) async {
+    try {
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "status": filter, "expressOnly": expressOnly, "latitude": latitude, "longitude": longitude, "searchText": searchText}.clean();
 
-    try{
-final Map<String, dynamic> params =
-          {"limit": limit, "skip": skip, "status": filter,"expressOnly":expressOnly,"latitude":latitude,"longitude":longitude,"searchText":searchText}.clean();
-
-      log(params.toString(),name: "params");
-      var response = await api.profile
-          .get(ApiEndpoints().ordersList, queryParameters: params);
-     OrderModel orders = OrderModel.fromJson(response.data);
-         return orders;
+      log(params.toString(), name: "params");
+      var response = await api.profile.get(ApiEndpoints().ordersList, queryParameters: params);
+      OrderModel orders = OrderModel.fromJson(response.data);
+      return orders;
+    } catch (e) {
+      rethrow;
     }
-    catch(e){
-       rethrow;
-
-    }
-   
   }
-
 
   @override
   Future<OrderDetailsResponseModel> getOrdersDetail(String orderId) async {
@@ -105,18 +98,30 @@ final Map<String, dynamic> params =
 
       log('Fetching services with params: $params', name: "getServices");
       var response = await api.profile.get(ApiEndpoints().serviceList, queryParameters: params);
-      
+
       List<ServiceListDatamodel> services = [];
       if (response.data['data'] != null) {
         final List<dynamic> dataList = response.data['data'] as List<dynamic>;
-        services = dataList
-            .map((item) => ServiceListDatamodel.fromJson(item as Map<String, dynamic>))
-            .toList();
+        services = dataList.map((item) => ServiceListDatamodel.fromJson(item as Map<String, dynamic>)).toList();
       }
       log('Parsed services count: ${services.length}', name: "getServices");
       return services;
     } catch (e) {
       log('Error fetching services: $e', name: "getServices");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> removeBag(String id) async {
+    try {
+      final Map<String, dynamic> data = {
+       
+        "id": id,
+      }.clean();
+
+      await api.profile.post(ApiEndpoints().removeBag, data: data);
+    } catch (e) {
       rethrow;
     }
   }

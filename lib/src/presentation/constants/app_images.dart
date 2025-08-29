@@ -37,8 +37,9 @@ static const String arrowDownIcon='assets/images/ic_arrow_down.png';
 static const String homeBg='assets/images/home_bg.png';
 static const String searchIcon = 'assets/images/search_Ic.png';
 static const String emptyPlaceholderImage = 'assets/images/emptyPlaceholderImage.png';
-
-
+static const String redButtonBg='assets/images/red_button_bg.png';
+static const String arrowDown='assets/images/arrow-down.png';
+static const String warningIcon='assets/images/ic_warning.png';
 
 
 

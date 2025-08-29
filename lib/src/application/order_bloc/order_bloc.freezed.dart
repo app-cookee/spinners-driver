@@ -57,6 +57,11 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(_AddBag value)? addBag,
     TResult Function(_CreateNewBag value)? createNewBag,
     TResult Function(_GetServicesList value)? getServicesList,
+    TResult Function(_UpdateScannedBagsLocally value)? updateScannedBagsLocally,
+    TResult Function(_UpdateScannedBagsForNewBag value)?
+        updateScannedBagsForNewBag,
+    TResult Function(_RemoveBag value)? removeBag,
+    TResult Function(_RemoveBagLocally value)? removeBagLocally,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -75,6 +80,15 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetServicesList() when getServicesList != null:
         return getServicesList(_that);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that);
+      case _RemoveBag() when removeBag != null:
+        return removeBag(_that);
+      case _RemoveBagLocally() when removeBagLocally != null:
+        return removeBagLocally(_that);
       case _:
         return orElse();
     }
@@ -102,6 +116,12 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(_AddBag value) addBag,
     required TResult Function(_CreateNewBag value) createNewBag,
     required TResult Function(_GetServicesList value) getServicesList,
+    required TResult Function(_UpdateScannedBagsLocally value)
+        updateScannedBagsLocally,
+    required TResult Function(_UpdateScannedBagsForNewBag value)
+        updateScannedBagsForNewBag,
+    required TResult Function(_RemoveBag value) removeBag,
+    required TResult Function(_RemoveBagLocally value) removeBagLocally,
   }) {
     final _that = this;
     switch (_that) {
@@ -119,6 +139,14 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetServicesList():
         return getServicesList(_that);
+      case _UpdateScannedBagsLocally():
+        return updateScannedBagsLocally(_that);
+      case _UpdateScannedBagsForNewBag():
+        return updateScannedBagsForNewBag(_that);
+      case _RemoveBag():
+        return removeBag(_that);
+      case _RemoveBagLocally():
+        return removeBagLocally(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -145,6 +173,12 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(_AddBag value)? addBag,
     TResult? Function(_CreateNewBag value)? createNewBag,
     TResult? Function(_GetServicesList value)? getServicesList,
+    TResult? Function(_UpdateScannedBagsLocally value)?
+        updateScannedBagsLocally,
+    TResult? Function(_UpdateScannedBagsForNewBag value)?
+        updateScannedBagsForNewBag,
+    TResult? Function(_RemoveBag value)? removeBag,
+    TResult? Function(_RemoveBagLocally value)? removeBagLocally,
   }) {
     final _that = this;
     switch (_that) {
@@ -162,6 +196,15 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that);
       case _GetServicesList() when getServicesList != null:
         return getServicesList(_that);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that);
+      case _RemoveBag() when removeBag != null:
+        return removeBag(_that);
+      case _RemoveBagLocally() when removeBagLocally != null:
+        return removeBagLocally(_that);
       case _:
         return null;
     }
@@ -193,6 +236,12 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(String bagId, String orderId, String serviceId)?
         createNewBag,
     TResult Function(int limit, int skip)? getServicesList,
+    TResult Function(String orderItemId, String bagId)?
+        updateScannedBagsLocally,
+    TResult Function(String serviceId, String bagId)?
+        updateScannedBagsForNewBag,
+    TResult Function(String id)? removeBag,
+    TResult Function(String id)? removeBagLocally,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -225,6 +274,15 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
       case _GetServicesList() when getServicesList != null:
         return getServicesList(_that.limit, _that.skip);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
+      case _RemoveBag() when removeBag != null:
+        return removeBag(_that.id);
+      case _RemoveBagLocally() when removeBagLocally != null:
+        return removeBagLocally(_that.id);
       case _:
         return orElse();
     }
@@ -269,6 +327,12 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(String bagId, String orderId, String serviceId)
         createNewBag,
     required TResult Function(int limit, int skip) getServicesList,
+    required TResult Function(String orderItemId, String bagId)
+        updateScannedBagsLocally,
+    required TResult Function(String serviceId, String bagId)
+        updateScannedBagsForNewBag,
+    required TResult Function(String id) removeBag,
+    required TResult Function(String id) removeBagLocally,
   }) {
     final _that = this;
     switch (_that) {
@@ -300,6 +364,14 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
       case _GetServicesList():
         return getServicesList(_that.limit, _that.skip);
+      case _UpdateScannedBagsLocally():
+        return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
+      case _UpdateScannedBagsForNewBag():
+        return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
+      case _RemoveBag():
+        return removeBag(_that.id);
+      case _RemoveBagLocally():
+        return removeBagLocally(_that.id);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -331,6 +403,12 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(String bagId, String orderId, String serviceId)?
         createNewBag,
     TResult? Function(int limit, int skip)? getServicesList,
+    TResult? Function(String orderItemId, String bagId)?
+        updateScannedBagsLocally,
+    TResult? Function(String serviceId, String bagId)?
+        updateScannedBagsForNewBag,
+    TResult? Function(String id)? removeBag,
+    TResult? Function(String id)? removeBagLocally,
   }) {
     final _that = this;
     switch (_that) {
@@ -362,6 +440,15 @@ extension OrderEventPatterns on OrderEvent {
         return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
       case _GetServicesList() when getServicesList != null:
         return getServicesList(_that.limit, _that.skip);
+      case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
+        return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
+      case _UpdateScannedBagsForNewBag()
+          when updateScannedBagsForNewBag != null:
+        return updateScannedBagsForNewBag(_that.serviceId, _that.bagId);
+      case _RemoveBag() when removeBag != null:
+        return removeBag(_that.id);
+      case _RemoveBagLocally() when removeBagLocally != null:
+        return removeBagLocally(_that.id);
       case _:
         return null;
     }
@@ -976,6 +1063,282 @@ class __$GetServicesListCopyWithImpl<$Res>
 }
 
 /// @nodoc
+
+class _UpdateScannedBagsLocally implements OrderEvent {
+  const _UpdateScannedBagsLocally(
+      {required this.orderItemId, required this.bagId});
+
+  final String orderItemId;
+  final String bagId;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UpdateScannedBagsLocallyCopyWith<_UpdateScannedBagsLocally> get copyWith =>
+      __$UpdateScannedBagsLocallyCopyWithImpl<_UpdateScannedBagsLocally>(
+          this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _UpdateScannedBagsLocally &&
+            (identical(other.orderItemId, orderItemId) ||
+                other.orderItemId == orderItemId) &&
+            (identical(other.bagId, bagId) || other.bagId == bagId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, orderItemId, bagId);
+
+  @override
+  String toString() {
+    return 'OrderEvent.updateScannedBagsLocally(orderItemId: $orderItemId, bagId: $bagId)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$UpdateScannedBagsLocallyCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$UpdateScannedBagsLocallyCopyWith(_UpdateScannedBagsLocally value,
+          $Res Function(_UpdateScannedBagsLocally) _then) =
+      __$UpdateScannedBagsLocallyCopyWithImpl;
+  @useResult
+  $Res call({String orderItemId, String bagId});
+}
+
+/// @nodoc
+class __$UpdateScannedBagsLocallyCopyWithImpl<$Res>
+    implements _$UpdateScannedBagsLocallyCopyWith<$Res> {
+  __$UpdateScannedBagsLocallyCopyWithImpl(this._self, this._then);
+
+  final _UpdateScannedBagsLocally _self;
+  final $Res Function(_UpdateScannedBagsLocally) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? orderItemId = null,
+    Object? bagId = null,
+  }) {
+    return _then(_UpdateScannedBagsLocally(
+      orderItemId: null == orderItemId
+          ? _self.orderItemId
+          : orderItemId // ignore: cast_nullable_to_non_nullable
+              as String,
+      bagId: null == bagId
+          ? _self.bagId
+          : bagId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _UpdateScannedBagsForNewBag implements OrderEvent {
+  const _UpdateScannedBagsForNewBag(
+      {required this.serviceId, required this.bagId});
+
+  final String serviceId;
+  final String bagId;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UpdateScannedBagsForNewBagCopyWith<_UpdateScannedBagsForNewBag>
+      get copyWith => __$UpdateScannedBagsForNewBagCopyWithImpl<
+          _UpdateScannedBagsForNewBag>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _UpdateScannedBagsForNewBag &&
+            (identical(other.serviceId, serviceId) ||
+                other.serviceId == serviceId) &&
+            (identical(other.bagId, bagId) || other.bagId == bagId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, serviceId, bagId);
+
+  @override
+  String toString() {
+    return 'OrderEvent.updateScannedBagsForNewBag(serviceId: $serviceId, bagId: $bagId)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$UpdateScannedBagsForNewBagCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$UpdateScannedBagsForNewBagCopyWith(
+          _UpdateScannedBagsForNewBag value,
+          $Res Function(_UpdateScannedBagsForNewBag) _then) =
+      __$UpdateScannedBagsForNewBagCopyWithImpl;
+  @useResult
+  $Res call({String serviceId, String bagId});
+}
+
+/// @nodoc
+class __$UpdateScannedBagsForNewBagCopyWithImpl<$Res>
+    implements _$UpdateScannedBagsForNewBagCopyWith<$Res> {
+  __$UpdateScannedBagsForNewBagCopyWithImpl(this._self, this._then);
+
+  final _UpdateScannedBagsForNewBag _self;
+  final $Res Function(_UpdateScannedBagsForNewBag) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? serviceId = null,
+    Object? bagId = null,
+  }) {
+    return _then(_UpdateScannedBagsForNewBag(
+      serviceId: null == serviceId
+          ? _self.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as String,
+      bagId: null == bagId
+          ? _self.bagId
+          : bagId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _RemoveBag implements OrderEvent {
+  const _RemoveBag({required this.id});
+
+  final String id;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$RemoveBagCopyWith<_RemoveBag> get copyWith =>
+      __$RemoveBagCopyWithImpl<_RemoveBag>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _RemoveBag &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, id);
+
+  @override
+  String toString() {
+    return 'OrderEvent.removeBag(id: $id)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$RemoveBagCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$RemoveBagCopyWith(
+          _RemoveBag value, $Res Function(_RemoveBag) _then) =
+      __$RemoveBagCopyWithImpl;
+  @useResult
+  $Res call({String id});
+}
+
+/// @nodoc
+class __$RemoveBagCopyWithImpl<$Res> implements _$RemoveBagCopyWith<$Res> {
+  __$RemoveBagCopyWithImpl(this._self, this._then);
+
+  final _RemoveBag _self;
+  final $Res Function(_RemoveBag) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+  }) {
+    return _then(_RemoveBag(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _RemoveBagLocally implements OrderEvent {
+  const _RemoveBagLocally({required this.id});
+
+  final String id;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$RemoveBagLocallyCopyWith<_RemoveBagLocally> get copyWith =>
+      __$RemoveBagLocallyCopyWithImpl<_RemoveBagLocally>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _RemoveBagLocally &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, id);
+
+  @override
+  String toString() {
+    return 'OrderEvent.removeBagLocally(id: $id)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$RemoveBagLocallyCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$RemoveBagLocallyCopyWith(
+          _RemoveBagLocally value, $Res Function(_RemoveBagLocally) _then) =
+      __$RemoveBagLocallyCopyWithImpl;
+  @useResult
+  $Res call({String id});
+}
+
+/// @nodoc
+class __$RemoveBagLocallyCopyWithImpl<$Res>
+    implements _$RemoveBagLocallyCopyWith<$Res> {
+  __$RemoveBagLocallyCopyWithImpl(this._self, this._then);
+
+  final _RemoveBagLocally _self;
+  final $Res Function(_RemoveBagLocally) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+  }) {
+    return _then(_RemoveBagLocally(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$OrderState {
   Status get getOrderListStatus;
   List<OrderResponse> get ordersList;
@@ -989,6 +1352,7 @@ mixin _$OrderState {
   Status get addBagStatus;
   Status get createNewBagStatus;
   Status get getServicesListStatus;
+  Status get removeBagStatus;
   List<ServiceListDatamodel> get servicesList;
 
   /// Create a copy of OrderState
@@ -1026,6 +1390,8 @@ mixin _$OrderState {
                 other.createNewBagStatus == createNewBagStatus) &&
             (identical(other.getServicesListStatus, getServicesListStatus) ||
                 other.getServicesListStatus == getServicesListStatus) &&
+            (identical(other.removeBagStatus, removeBagStatus) ||
+                other.removeBagStatus == removeBagStatus) &&
             const DeepCollectionEquality()
                 .equals(other.servicesList, servicesList));
   }
@@ -1045,11 +1411,12 @@ mixin _$OrderState {
       addBagStatus,
       createNewBagStatus,
       getServicesListStatus,
+      removeBagStatus,
       const DeepCollectionEquality().hash(servicesList));
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, servicesList: $servicesList)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, servicesList: $servicesList)';
   }
 }
 
@@ -1072,6 +1439,7 @@ abstract mixin class $OrderStateCopyWith<$Res> {
       Status addBagStatus,
       Status createNewBagStatus,
       Status getServicesListStatus,
+      Status removeBagStatus,
       List<ServiceListDatamodel> servicesList});
 
   $StatusCopyWith<$Res> get getOrderListStatus;
@@ -1082,6 +1450,7 @@ abstract mixin class $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get addBagStatus;
   $StatusCopyWith<$Res> get createNewBagStatus;
   $StatusCopyWith<$Res> get getServicesListStatus;
+  $StatusCopyWith<$Res> get removeBagStatus;
 }
 
 /// @nodoc
@@ -1108,6 +1477,7 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
     Object? addBagStatus = null,
     Object? createNewBagStatus = null,
     Object? getServicesListStatus = null,
+    Object? removeBagStatus = null,
     Object? servicesList = null,
   }) {
     return _then(_self.copyWith(
@@ -1158,6 +1528,10 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
       getServicesListStatus: null == getServicesListStatus
           ? _self.getServicesListStatus
           : getServicesListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      removeBagStatus: null == removeBagStatus
+          ? _self.removeBagStatus
+          : removeBagStatus // ignore: cast_nullable_to_non_nullable
               as Status,
       servicesList: null == servicesList
           ? _self.servicesList
@@ -1244,6 +1618,16 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get getServicesListStatus {
     return $StatusCopyWith<$Res>(_self.getServicesListStatus, (value) {
       return _then(_self.copyWith(getServicesListStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get removeBagStatus {
+    return $StatusCopyWith<$Res>(_self.removeBagStatus, (value) {
+      return _then(_self.copyWith(removeBagStatus: value));
     });
   }
 }
@@ -1354,6 +1738,7 @@ extension OrderStatePatterns on OrderState {
             Status addBagStatus,
             Status createNewBagStatus,
             Status getServicesListStatus,
+            Status removeBagStatus,
             List<ServiceListDatamodel> servicesList)?
         $default, {
     required TResult orElse(),
@@ -1374,6 +1759,7 @@ extension OrderStatePatterns on OrderState {
             _that.addBagStatus,
             _that.createNewBagStatus,
             _that.getServicesListStatus,
+            _that.removeBagStatus,
             _that.servicesList);
       case _:
         return orElse();
@@ -1408,6 +1794,7 @@ extension OrderStatePatterns on OrderState {
             Status addBagStatus,
             Status createNewBagStatus,
             Status getServicesListStatus,
+            Status removeBagStatus,
             List<ServiceListDatamodel> servicesList)
         $default,
   ) {
@@ -1427,6 +1814,7 @@ extension OrderStatePatterns on OrderState {
             _that.addBagStatus,
             _that.createNewBagStatus,
             _that.getServicesListStatus,
+            _that.removeBagStatus,
             _that.servicesList);
       case _:
         throw StateError('Unexpected subclass');
@@ -1460,6 +1848,7 @@ extension OrderStatePatterns on OrderState {
             Status addBagStatus,
             Status createNewBagStatus,
             Status getServicesListStatus,
+            Status removeBagStatus,
             List<ServiceListDatamodel> servicesList)?
         $default,
   ) {
@@ -1479,6 +1868,7 @@ extension OrderStatePatterns on OrderState {
             _that.addBagStatus,
             _that.createNewBagStatus,
             _that.getServicesListStatus,
+            _that.removeBagStatus,
             _that.servicesList);
       case _:
         return null;
@@ -1502,6 +1892,7 @@ class _OrderState implements OrderState {
       required this.addBagStatus,
       required this.createNewBagStatus,
       required this.getServicesListStatus,
+      required this.removeBagStatus,
       required final List<ServiceListDatamodel> servicesList})
       : _ordersList = ordersList,
         _servicesList = servicesList;
@@ -1536,6 +1927,8 @@ class _OrderState implements OrderState {
   final Status createNewBagStatus;
   @override
   final Status getServicesListStatus;
+  @override
+  final Status removeBagStatus;
   final List<ServiceListDatamodel> _servicesList;
   @override
   List<ServiceListDatamodel> get servicesList {
@@ -1580,6 +1973,8 @@ class _OrderState implements OrderState {
                 other.createNewBagStatus == createNewBagStatus) &&
             (identical(other.getServicesListStatus, getServicesListStatus) ||
                 other.getServicesListStatus == getServicesListStatus) &&
+            (identical(other.removeBagStatus, removeBagStatus) ||
+                other.removeBagStatus == removeBagStatus) &&
             const DeepCollectionEquality()
                 .equals(other._servicesList, _servicesList));
   }
@@ -1599,11 +1994,12 @@ class _OrderState implements OrderState {
       addBagStatus,
       createNewBagStatus,
       getServicesListStatus,
+      removeBagStatus,
       const DeepCollectionEquality().hash(_servicesList));
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, servicesList: $servicesList)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, servicesList: $servicesList)';
   }
 }
 
@@ -1628,6 +2024,7 @@ abstract mixin class _$OrderStateCopyWith<$Res>
       Status addBagStatus,
       Status createNewBagStatus,
       Status getServicesListStatus,
+      Status removeBagStatus,
       List<ServiceListDatamodel> servicesList});
 
   @override
@@ -1646,6 +2043,8 @@ abstract mixin class _$OrderStateCopyWith<$Res>
   $StatusCopyWith<$Res> get createNewBagStatus;
   @override
   $StatusCopyWith<$Res> get getServicesListStatus;
+  @override
+  $StatusCopyWith<$Res> get removeBagStatus;
 }
 
 /// @nodoc
@@ -1672,6 +2071,7 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
     Object? addBagStatus = null,
     Object? createNewBagStatus = null,
     Object? getServicesListStatus = null,
+    Object? removeBagStatus = null,
     Object? servicesList = null,
   }) {
     return _then(_OrderState(
@@ -1722,6 +2122,10 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
       getServicesListStatus: null == getServicesListStatus
           ? _self.getServicesListStatus
           : getServicesListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      removeBagStatus: null == removeBagStatus
+          ? _self.removeBagStatus
+          : removeBagStatus // ignore: cast_nullable_to_non_nullable
               as Status,
       servicesList: null == servicesList
           ? _self._servicesList
@@ -1808,6 +2212,16 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get getServicesListStatus {
     return $StatusCopyWith<$Res>(_self.getServicesListStatus, (value) {
       return _then(_self.copyWith(getServicesListStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get removeBagStatus {
+    return $StatusCopyWith<$Res>(_self.removeBagStatus, (value) {
+      return _then(_self.copyWith(removeBagStatus: value));
     });
   }
 }

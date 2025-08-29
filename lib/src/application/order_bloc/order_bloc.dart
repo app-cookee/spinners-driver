@@ -27,6 +27,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_AddBag>(_onAddBag);
     on<_CreateNewBag>(_onCreateNewBag);
     on<_GetServicesList>(_onGetServicesList);
+    on<_UpdateScannedBagsLocally>(_onUpdateScannedBagsLocally);
+    on<_UpdateScannedBagsForNewBag>(_onUpdateScannedBagsForNewBag);
+    on<_RemoveBag>(_onRemoveBag);
+    on<_RemoveBagLocally>(_onRemoveBagLocally);
   }
   
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
@@ -156,5 +160,110 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
   }
 
+  FutureOr<void> _onUpdateScannedBagsLocally(_UpdateScannedBagsLocally event, Emitter<OrderState> emit) async {
+    try {
+      // Create a new bag entry
+      final newBag = ScannedBags(
+        id: DateTime.now().millisecondsSinceEpoch.toString(), // Temporary ID
+        orderServiceId: event.orderItemId,
+        bagId: event.bagId,
+      );
+
+      // Update the ordered items list with the new bag
+      final updatedOrderedItems = state.orderDetails.orderedItems.map((item) {
+        if (item.id == event.orderItemId) {
+          return item.copyWith(
+            scannedBags: [...item.scannedBags, newBag],
+          );
+        }
+        return item;
+      }).toList();
+
+      // Update the order details with the new ordered items
+      final updatedOrderDetails = state.orderDetails.copyWith(
+        orderedItems: updatedOrderedItems,
+      );
+
+      emit(state.copyWith(
+        orderDetails: updatedOrderDetails,
+      ));
+    } catch (e) {
+      log('Error updating scanned bags locally: $e', name: "OrderBloc");
+    }
+  }
+
+  FutureOr<void> _onUpdateScannedBagsForNewBag(_UpdateScannedBagsForNewBag event, Emitter<OrderState> emit) async {
+    try {
+      // Create a new bag entry
+      final newBag = ScannedBags(
+        id: DateTime.now().millisecondsSinceEpoch.toString(), // Temporary ID
+        orderServiceId: '', // Will be set when the order item is found
+        bagId: event.bagId,
+      );
+
+      // Find the ordered item for this service and update it
+      final updatedOrderedItems = state.orderDetails.orderedItems.map((item) {
+        if (item.service.id == event.serviceId) {
+          return item.copyWith(
+            scannedBags: [...item.scannedBags, newBag.copyWith(orderServiceId: item.id)],
+          );
+        }
+        return item;
+      }).toList();
+
+      // Update the order details with the new ordered items
+      final updatedOrderDetails = state.orderDetails.copyWith(
+        orderedItems: updatedOrderedItems,
+      );
+
+      emit(state.copyWith(
+        orderDetails: updatedOrderDetails,
+      ));
+    } catch (e) {
+      log('Error updating scanned bags for new bag: $e', name: "OrderBloc");
+    }
+  }
+
+
+  FutureOr<void> _onRemoveBag(_RemoveBag event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        removeBagStatus: Status.loading(),
+      ));
+      await orderRepository.removeBag(event.id);
+      emit(state.copyWith(
+        removeBagStatus: Status.success(),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        removeBagStatus: Status.failure(
+          e.toString(),
+        ),
+      ));
+    }
+  }
+
+  FutureOr<void> _onRemoveBagLocally(_RemoveBagLocally event, Emitter<OrderState> emit) async {
+    try {
+      // Remove the bag from the local state by scanned bag id
+      final updatedOrderedItems = state.orderDetails.orderedItems.map((item) {
+        // Filter out the bag with the specified id
+        final updatedScannedBags = item.scannedBags.where((bag) => bag.id != event.id).toList();
+        return item.copyWith(
+          scannedBags: updatedScannedBags,
+        );
+      }).toList();
+
+      // Update the order details with the new ordered items
+      final updatedOrderDetails = state.orderDetails.copyWith(
+        orderedItems: updatedOrderedItems,
+      );
+
+      emit(state.copyWith(
+        orderDetails: updatedOrderDetails,
+      ));
+    } catch (e) {
+      log('Error removing bag locally: $e', name: "OrderBloc");
+    }
+  }
 }
-  

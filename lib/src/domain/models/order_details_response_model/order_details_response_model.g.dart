@@ -49,7 +49,7 @@ _OrderDetailsResponseModel _$OrderDetailsResponseModelFromJson(
           ? const TimeSlot()
           : TimeSlot.fromJson(json['deliverySlot'] as Map<String, dynamic>),
       orderedItems: (json['orderedItems'] as List<dynamic>?)
-              ?.map((e) => OrderedItem.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => OrderedItems.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       promoUsages: (json['promoUsages'] as List<dynamic>?)
@@ -102,7 +102,8 @@ Map<String, dynamic> _$OrderDetailsResponseModelToJson(
       'additionalCharges': instance.additionalCharges,
     };
 
-_OrderedItem _$OrderedItemFromJson(Map<String, dynamic> json) => _OrderedItem(
+_OrderedItems _$OrderedItemsFromJson(Map<String, dynamic> json) =>
+    _OrderedItems(
       id: json['id'] as String? ?? "",
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       soldPrice: json['soldPrice'] as String? ?? "",
@@ -120,7 +121,7 @@ _OrderedItem _$OrderedItemFromJson(Map<String, dynamic> json) => _OrderedItem(
       driverNotes: json['driverNotes'] as String? ?? "",
     );
 
-Map<String, dynamic> _$OrderedItemToJson(_OrderedItem instance) =>
+Map<String, dynamic> _$OrderedItemsToJson(_OrderedItems instance) =>
     <String, dynamic>{
       'id': instance.id,
       'quantity': instance.quantity,
