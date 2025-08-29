@@ -71,14 +71,8 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
   Widget build(BuildContext context) {
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
-        // Handle remove bag success first
-        if (state.removeBagStatus is StatusSuccess) {
-          // After successful removal, proceed with adding to new service
-          _proceedWithAddBag(state);
-        }
-
-        // Handle add bag success
-        if (state.addBagStatus is StatusSuccess || state.createNewBagStatus is StatusSuccess) {
+        // Handle move bag success
+        if (state.moveBagStatus is StatusSuccess) {
           // Close bottomsheet first
           if (mounted) {
             Navigator.of(context).pop();
@@ -88,7 +82,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
               if (mounted) {
                 TheToast.show(
                   isError: false,
-                  message: "Service changed successfully",
+                  message: "Bag moved to new service successfully",
                   context: context,
                 );
               }
@@ -96,9 +90,9 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
           }
         }
 
-        // Handle remove bag failure
-        if (state.removeBagStatus is StatusFailure) {
-          final errorMessage = (state.removeBagStatus as StatusFailure).toString();
+        // Handle move bag failure
+        if (state.moveBagStatus is StatusFailure) {
+          final errorMessage = (state.moveBagStatus as StatusFailure).toString();
           TheToast.show(
             isError: true,
             message: errorMessage,
@@ -106,65 +100,12 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
           );
         }
 
-        // Handle failures
-        if (state.createNewBagStatus is StatusFailure) {
-          final errorMessage = (state.createNewBagStatus as StatusFailure).toString();
-          
-          // Check if the error indicates bag is already assigned to another order
-          if (errorMessage.toLowerCase().contains('already assigned') || 
-              errorMessage.toLowerCase().contains('another order') ||
-              errorMessage.toLowerCase().contains('bag already exists')) {
-            // Show InvalidBagWarningDialog
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return const InvalidBagWarningDialog();
-              },
-            );
-          } else {
-            // Show regular error toast for other errors
-            TheToast.show(
-              isError: true,
-              message: errorMessage,
-              context: context,
-            );
-          }
-        }
 
-        if (state.addBagStatus is StatusFailure) {
-          final errorMessage = (state.addBagStatus as StatusFailure).toString();
-          
-          // Check if the error indicates bag is already assigned to another order
-          if (errorMessage.toLowerCase().contains('already assigned') || 
-              errorMessage.toLowerCase().contains('another order') ||
-              errorMessage.toLowerCase().contains('bag already exists')) {
-            // Show InvalidBagWarningDialog
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return const InvalidBagWarningDialog();
-              },
-            );
-          } else {
-            // Show regular error toast for other errors
-            TheToast.show(
-              isError: true,
-              message: errorMessage,
-              context: context,
-            );
-          }
-        }
       },
       listenWhen: (previous, current) => 
-        previous.removeBagStatus != current.removeBagStatus ||
-        previous.createNewBagStatus != current.createNewBagStatus || 
-        previous.addBagStatus != current.addBagStatus,
+        previous.moveBagStatus != current.moveBagStatus,
       builder: (context, state) {
-        final isLoading = state.removeBagStatus is StatusLoading || 
-                         state.createNewBagStatus is StatusLoading || 
-                         state.addBagStatus is StatusLoading;
+        final isLoading = state.moveBagStatus is StatusLoading;
 
         return Container(
           decoration: BoxDecoration(
@@ -501,48 +442,9 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
     }
   }
 
-  void _proceedWithAddBag(OrderState state) {
-    // Validate bag ID
-    final bagId = bagIdController.text.trim();
-    if (bagId.isEmpty) {
-      TheToast.show(
-        isError: true,
-        message: "Please enter Bag ID",
-        context: context,
-      );
-      return;
-    }
 
-    // Validate service selection
-    if (selectedServiceId == null || selectedServiceId!.isEmpty) {
-      TheToast.show(
-        isError: true,
-        message: "Please select a service",
-        context: context,
-      );
-      return;
-    }
 
-    // Call add bag API directly for the selected service
-    if (widget.isQuickOrder) {
-      context.read<OrderBloc>().add(OrderEvent.createNewBag(
-        bagId: bagId,
-        orderId: widget.orderId!,
-        serviceId: selectedServiceId!,
-      ));
-    } else {
-      // Find the ordered item for this service
-      final orderedItem = state.orderDetails.orderedItems.firstWhere(
-        (item) => item.service.id == selectedServiceId,
-        orElse: () => state.orderDetails.orderedItems.first,
-      );
 
-      context.read<OrderBloc>().add(OrderEvent.addBag(
-        orderItemId: orderedItem.id,
-        bagId: bagId,
-      ));
-    }
-  }
 
   void _handleChangeService(OrderState state) {
     // Validate bag ID
@@ -612,9 +514,34 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
       return;
     }
 
-    // Remove the bag from the old service using existingScannedBagId
-    context.read<OrderBloc>().add(OrderEvent.removeBag(
-      id: widget.existingScannedBagId,
-    ));
+    // If we reach here, the bag exists in a different service and user wants to move it to a new service
+    // Use the moveBag event to handle both remove and add operations atomically
+    // final bagId = bagIdController.text.trim();
+    
+    if (widget.isQuickOrder) {
+      context.read<OrderBloc>().add(OrderEvent.moveBag(
+        bagId: bagId,
+        fromScannedBagId: widget.existingScannedBagId,
+        toOrderItemId: '', // Not needed for quick orders
+        toServiceId: selectedServiceId!,
+        orderId: widget.orderId!,
+        isQuickOrder: true,
+      ));
+    } else {
+      // Find the ordered item for this service
+      final orderedItem = state.orderDetails.orderedItems.firstWhere(
+        (item) => item.service.id == selectedServiceId,
+        orElse: () => state.orderDetails.orderedItems.first,
+      );
+
+      context.read<OrderBloc>().add(OrderEvent.moveBag(
+        bagId: bagId,
+        fromScannedBagId: widget.existingScannedBagId,
+        toOrderItemId: orderedItem.id,
+        toServiceId: selectedServiceId!,
+        orderId: widget.orderId!,
+        isQuickOrder: false,
+      ));
+    }
   }
 }

@@ -31,6 +31,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_UpdateScannedBagsForNewBag>(_onUpdateScannedBagsForNewBag);
     on<_RemoveBag>(_onRemoveBag);
     on<_RemoveBagLocally>(_onRemoveBagLocally);
+    on<_MoveBag>(_onMoveBag);
   }
   
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
@@ -273,6 +274,35 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       ));
     } catch (e) {
       log('Error removing bag locally: $e', name: "OrderBloc");
+    }
+  }
+
+  FutureOr<void> _onMoveBag(_MoveBag event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        moveBagStatus: Status.loading(),
+      ));
+
+      // First remove the bag from the old service
+      await orderRepository.removeBag(event.fromScannedBagId);
+
+      // Then add the bag to the new service
+      if (event.isQuickOrder) {
+        await orderRepository.createNewBag(event.bagId, event.orderId, event.toServiceId);
+      } else {
+        await orderRepository.addBag(event.toOrderItemId, event.bagId);
+      }
+
+      emit(state.copyWith(
+        moveBagStatus: Status.success(),
+      ));
+      
+      // Refresh order details after successful bag move
+      await _refreshOrderDetails(emit);
+    } catch (e) {
+      emit(state.copyWith(
+        moveBagStatus: Status.failure(e.toString()),
+      ));
     }
   }
 
