@@ -346,29 +346,35 @@ Map<String, dynamic> _$TimeSlotToJson(_TimeSlot instance) => <String, dynamic>{
     };
 
 _Payment _$PaymentFromJson(Map<String, dynamic> json) => _Payment(
-      id: json['id'] as String? ?? "",
-      slNo: (json['slNo'] as num?)?.toInt() ?? 0,
-      orderId: json['orderId'] as String? ?? "",
       method: json['method'] as String? ?? "",
-      walletTransactionId: json['walletTransactionId'] as String?,
-      amount: json['amount'] as String? ?? "",
-      refId: json['refId'] as String?,
-      invoice: json['invoice'] as String? ?? "",
+      walletTransaction: json['walletTransaction'] == null
+          ? null
+          : WalletItem.fromJson(
+              json['walletTransaction'] as Map<String, dynamic>),
       status: json['status'] as String? ?? "",
-      paidAt: json['paidAt'] as String?,
-      createdAt: json['createdAt'] as String? ?? "",
+      amount: json['amount'] as String? ?? "",
     );
 
 Map<String, dynamic> _$PaymentToJson(_Payment instance) => <String, dynamic>{
-      'id': instance.id,
-      'slNo': instance.slNo,
-      'orderId': instance.orderId,
       'method': instance.method,
-      'walletTransactionId': instance.walletTransactionId,
-      'amount': instance.amount,
-      'refId': instance.refId,
-      'invoice': instance.invoice,
+      'walletTransaction': instance.walletTransaction,
       'status': instance.status,
-      'paidAt': instance.paidAt,
-      'createdAt': instance.createdAt,
+      'amount': instance.amount,
+    };
+
+_WalletItem _$WalletItemFromJson(Map<String, dynamic> json) => _WalletItem(
+      id: json['id'] as String? ?? "",
+      walletId: json['walletId'] as String? ?? "",
+      description: json['description'] as String? ?? "",
+      amount: (json['amount'] as num?)?.toInt() ?? 0,
+      type: json['type'] as String? ?? "",
+    );
+
+Map<String, dynamic> _$WalletItemToJson(_WalletItem instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'walletId': instance.walletId,
+      'description': instance.description,
+      'amount': instance.amount,
+      'type': instance.type,
     };
