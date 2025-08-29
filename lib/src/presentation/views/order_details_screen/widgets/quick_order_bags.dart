@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
@@ -101,14 +102,41 @@ class QuickOrderBags extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Image.network(
-            '${ApiUrls.stagingUrl}/${bag['serviceIcon']}',
-            height: 32.dp,
-            width: 32.dp,
-          ),
-          Gap(8.dp),
+             child: Row(
+         children: [
+           // Show service icon if available, otherwise show a placeholder
+           if (bag['serviceIcon'] != null && bag['serviceIcon'].toString().isNotEmpty)
+             CachedNetworkImage(
+               imageUrl: '${ApiUrls.stagingUrl}/${bag['serviceIcon']}',
+               height: 32.dp,
+               width: 32.dp,
+               placeholder: (context, url) => SizedBox(
+                 height: 32.dp,
+                 width: 32.dp,
+                 child: Image.asset(
+                   AppImages.dress,
+                  //  color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
+                 ),
+               ),
+               errorWidget: (context, url, error) => SizedBox(
+                 height: 32.dp,
+                 width: 32.dp,
+                 child: Image.asset(
+                   AppImages.dress,
+                  //  color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
+                 ),
+               ),
+             )
+           else
+             SizedBox(
+               height: 32.dp,
+               width: 32.dp,
+               child: Image.asset(
+                 AppImages.bag,
+                 color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
+               ),
+             ),
+           Gap(8.dp),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
