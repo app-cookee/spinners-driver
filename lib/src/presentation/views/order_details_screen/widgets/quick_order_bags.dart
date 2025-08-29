@@ -132,8 +132,8 @@ class QuickOrderBags extends StatelessWidget {
                height: 32.dp,
                width: 32.dp,
                child: Image.asset(
-                 AppImages.bag,
-                 color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
+                 AppImages.dress,
+                //  color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
                ),
              ),
            Gap(8.dp),

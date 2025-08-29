@@ -243,16 +243,16 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
                        width: 24.dp,
                        height: 24.dp,
                        child: Image.asset(
-                         AppImages.bag,
-                         color: serviceColor,
+                         AppImages.dress,
+                        //  color: serviceColor,
                        ),
                      ),
                      errorWidget: (context, url, error) => SizedBox(
                        width: 24.dp,
                        height: 24.dp,
                        child: Image.asset(
-                         AppImages.bag,
-                         color: serviceColor,
+                         AppImages.dress,
+                        //  color: serviceColor,
                        ),
                      ),
                    )
@@ -261,8 +261,8 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
                      width: 24.dp,
                      height: 24.dp,
                      child: Image.asset(
-                       AppImages.bag,
-                       color: serviceColor,
+                       AppImages.dress,
+                      //  color: serviceColor,
                      ),
                    ),
                  Gap(8.dp),

@@ -223,16 +223,16 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
                        width: 24.dp,
                        height: 24.dp,
                        child: Image.asset(
-                         AppImages.bag,
-                         color: serviceColor,
+                         AppImages.dress,
+                        //  color: serviceColor,
                        ),
                      ),
                      errorWidget: (context, url, error) => SizedBox(
                        width: 24.dp,
                        height: 24.dp,
                        child: Image.asset(
-                         AppImages.bag,
-                         color: serviceColor,
+                         AppImages.dress,
+                        //  color: serviceColor,
                        ),
                      ),
                    )
@@ -241,8 +241,8 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
                      width: 24.dp,
                      height: 24.dp,
                      child: Image.asset(
-                       AppImages.bag,
-                       color: serviceColor,
+                       AppImages.dress,
+                      //  color: serviceColor,
                      ),
                    ),
                  Gap(8.dp),

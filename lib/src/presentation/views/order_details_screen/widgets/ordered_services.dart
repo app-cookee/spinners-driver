@@ -98,8 +98,8 @@ class OrderedServices extends StatelessWidget {
                    height: 32.dp,
                    width: 32.dp,
                    child: Image.asset(
-                     AppImages.bag,
-                     color: hexToColor(orderedItem.service.color),
+                     AppImages.dress,
+                    //  color: hexToColor(orderedItem.service.color),
                    ),
                  ),
                Gap(8.dp),
