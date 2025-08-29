@@ -212,15 +212,15 @@ class AccountScreen extends StatelessWidget {
                                 text: "Personal Details");
                           },
                         ),
-                        AccountSettings(
-                          onTap: () {
-                            context.router.push(const PickUpDropoffHistoryRoute());
-                          },
-                            imagePath: AppImages.arrowRight,
-                            text: "Pickup & Dropoff History"),
-                        const AccountSettings(
-                            imagePath: AppImages.arrowRight,
-                            text: "Cash Settlement History"),
+                        // AccountSettings(
+                        //   onTap: () {
+                        //     context.router.push(const PickUpDropoffHistoryRoute());
+                        //   },
+                        //     imagePath: AppImages.arrowRight,
+                        //     text: "Pickup & Dropoff History"),
+                        // const AccountSettings(
+                        //     imagePath: AppImages.arrowRight,
+                        //     text: "Cash Settlement History"),
                         const AccountSettings(
                             imagePath: AppImages.arrowRight,
                             text: "Terms of Service"),
@@ -260,7 +260,10 @@ class AccountScreen extends StatelessWidget {
                   ),
 
                   Padding(
-                    padding: EdgeInsetsGeometry.only(left: 16.dp, top: 3.h),
+                    padding: EdgeInsetsGeometry.only(left: 16.dp, top: 
+                    // 3.h
+                    18.h
+                    ),
                     child: Text(
                       "App Version 1.0.0",
                       style: AppTypography.sfProRoundedMedium.copyWith(
