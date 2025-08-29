@@ -73,11 +73,6 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
       listener: (context, state) {
         // Handle remove bag success first
         if (state.removeBagStatus is StatusSuccess) {
-          // Remove bag locally to update UI
-          context.read<OrderBloc>().add(OrderEvent.removeBagLocally(
-            id: widget.existingScannedBagId,
-          ));
-          
           // After successful removal, proceed with adding to new service
           _proceedWithAddBag(state);
         }

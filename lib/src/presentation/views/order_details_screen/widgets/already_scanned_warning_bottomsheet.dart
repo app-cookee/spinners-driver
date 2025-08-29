@@ -56,11 +56,6 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
                  if (state.removeBagStatus is StatusSuccess) {
-           // Remove bag locally to update UI
-           context.read<OrderBloc>().add(OrderEvent.removeBagLocally(
-             id: widget.scannedBagId,
-           ));
-          
           // Close the bottomsheet
           Navigator.of(context).pop();
           

@@ -70,6 +70,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(state.copyWith(
         addBagStatus: Status.success(),
       ));
+      
+      // Refresh order details after successful bag addition
+      await _refreshOrderDetails(emit);
     } catch (e) {
       emit(state.copyWith(
         addBagStatus: Status.failure(e.toString()),
@@ -86,6 +89,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(state.copyWith(
         createNewBagStatus: Status.success(),
       ));
+      
+      // Refresh order details after successful new bag creation
+      await _refreshOrderDetails(emit);
     } catch (e) {
       emit(state.copyWith(
         createNewBagStatus: Status.failure(e.toString()),
@@ -234,6 +240,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(state.copyWith(
         removeBagStatus: Status.success(),
       ));
+      
+      // Refresh order details after successful bag removal
+      await _refreshOrderDetails(emit);
     } catch (e) {
       emit(state.copyWith(
         removeBagStatus: Status.failure(
@@ -264,6 +273,21 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       ));
     } catch (e) {
       log('Error removing bag locally: $e', name: "OrderBloc");
+    }
+  }
+
+  /// Helper method to refresh order details from the server
+  Future<void> _refreshOrderDetails(Emitter<OrderState> emit) async {
+    try {
+      // Only refresh if we have an order ID
+      if (state.orderDetails.id.isNotEmpty) {
+        log('Refreshing order details for order ID: ${state.orderDetails.id}', name: "OrderBloc");
+        final response = await orderRepository.getOrdersDetail(state.orderDetails.id);
+        emit(state.copyWith(orderDetails: response));
+      }
+    } catch (e) {
+      log('Error refreshing order details: $e', name: "OrderBloc");
+      // Don't emit error state here as it might interfere with the success state of the main operation
     }
   }
 }

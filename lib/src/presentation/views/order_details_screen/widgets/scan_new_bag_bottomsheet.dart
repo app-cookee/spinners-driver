@@ -343,29 +343,6 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
       listener: (context, state) {
         // Handle success for both APIs
         if (state.createNewBagStatus is StatusSuccess || state.addBagStatus is StatusSuccess) {
-          // Update scanned bags list locally first
-          final bagId = bagIdController.text.trim();
-          final selectedServiceId = this.selectedServiceId;
-
-          if (widget.isQuickOrder == false && selectedServiceId != null) {
-            // For normal orders, find the ordered item and update locally
-            final orderedItem = state.orderDetails.orderedItems.firstWhere(
-              (item) => item.service.id == selectedServiceId,
-              orElse: () => state.orderDetails.orderedItems.first,
-            );
-
-            context.read<OrderBloc>().add(OrderEvent.updateScannedBagsLocally(
-                  orderItemId: orderedItem.id,
-                  bagId: bagId,
-                ));
-          } else if (widget.isQuickOrder == true && selectedServiceId != null) {
-            // For quick orders, update by service ID
-            context.read<OrderBloc>().add(OrderEvent.updateScannedBagsForNewBag(
-                  serviceId: selectedServiceId,
-                  bagId: bagId,
-                ));
-          }
-
           // Close bottomsheet first
           if (mounted) {
             Navigator.of(context).pop();
