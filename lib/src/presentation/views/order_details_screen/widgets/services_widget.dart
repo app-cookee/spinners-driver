@@ -36,6 +36,30 @@ class ServicesWidget extends StatefulWidget {
 class _ServicesWidgetState extends State<ServicesWidget> {
 
   @override
+  void initState() {
+    super.initState();
+    _populateAdditionalNotes();
+  }
+
+  @override
+  void didUpdateWidget(ServicesWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update additional notes when order state changes
+    if (oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status ||
+        oldWidget.orderState.orderDetails.driverNotes != widget.orderState.orderDetails.driverNotes) {
+      _populateAdditionalNotes();
+    }
+  }
+
+  void _populateAdditionalNotes() {
+    // If status is pickedUp and there are driver notes, populate the controller
+    if (widget.orderState.orderDetails.status == "pickedUp" && 
+        widget.orderState.orderDetails.driverNotes.isNotEmpty) {
+      widget.additionalNotesController.text = widget.orderState.orderDetails.driverNotes;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
