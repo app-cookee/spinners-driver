@@ -29,21 +29,21 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: AppColors.blue1,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state.logOutStatus is StatusSuccess) {
-            Navigator.of(context).pop(true);
-            context.router.pushAndPopUntil(
-              const SplashRoute(),
-              predicate: (route) => true,
-            );
-            LocalStorage.remove(StorageKey.accessToken);
-            LocalStorage.remove(StorageKey.refreshToken);
-          }
-          if (state.logOutStatus is StatusFailure) {
-            TheToast.show(
-                message: state.logOutStatus.errorMessage,
-                context: context,
-                isError: true);
-          }
+          // if (state.logOutStatus is StatusSuccess) {
+          //   Navigator.of(context).pop(true);
+          //   context.router.pushAndPopUntil(
+          //     const SplashRoute(),
+          //     predicate: (route) => true,
+          //   );
+          //   LocalStorage.remove(StorageKey.accessToken);
+          //   LocalStorage.remove(StorageKey.refreshToken);
+          // }
+          // if (state.logOutStatus is StatusFailure) {
+          //   TheToast.show(
+          //       message: state.logOutStatus.errorMessage,
+          //       context: context,
+          //       isError: true);
+          // }
         },
         listenWhen: (previous, current) =>
             previous.logOutStatus != current.logOutStatus,
@@ -84,14 +84,15 @@ class AccountScreen extends StatelessWidget {
                     padding: EdgeInsetsGeometry.only(left: 16.dp),
                     child: BlocBuilder<AuthBloc, AuthState>(
                       builder: (context, state) {
-                           if (state.profileAuthStatus is StatusLoading) {
+                        if (state.profileAuthStatus is StatusLoading) {
                           return UserDetailPlaceholder();
                         }
-                        return  ProfileUserDetail(profileImage: state.appUser?.photo??"",
-                          avatar:       (state.appUser?.firstName?.isNotEmpty ?? false)
+                        return ProfileUserDetail(
+                          profileImage: state.appUser?.photo ?? "",
+                          avatar:
+                              (state.appUser?.firstName?.isNotEmpty ?? false)
                                   ? state.appUser!.firstName![0]
-                                  : "D",  
-                               
+                                  : "D",
                           name: (state.appUser?.firstName?.isNotEmpty ?? false)
                               ? state.appUser!.firstName!
                               : "Driver",
@@ -186,6 +187,13 @@ class AccountScreen extends StatelessWidget {
                                   context
                                       .read<AuthBloc>()
                                       .add(AuthEvent.logOut());
+                                  Navigator.of(context).pop(true);
+                                  context.router.pushAndPopUntil(
+                                    const SplashRoute(),
+                                    predicate: (route) => true,
+                                  );
+                                  LocalStorage.remove(StorageKey.accessToken);
+                                  LocalStorage.remove(StorageKey.refreshToken);
                                 },
                               ),
                             );
