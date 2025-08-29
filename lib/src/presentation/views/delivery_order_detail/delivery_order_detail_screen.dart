@@ -200,6 +200,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                                   color: AppColors.textGrey,
                                                 ),
                                               ),
+                                              if(state.orderDetails.customer?.user?.firstName != '')
                                               Text(
                                                 state.orderDetails.customer
                                                         ?.user?.firstName ??
@@ -215,45 +216,45 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                           )
                                         ],
                                       ),
-                                      Gap(10.dp),
-                                      Row(
-                                        spacing: 12.dp,
-                                        children: [
-                                          Image.asset(
-                                            AppImages.clipboard,
-                                            height: 40.dp,
-                                            width: 40.dp,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Payment Method",
-                                                style: AppTypography
-                                                    .sfProRoundedMedium
-                                                    .copyWith(
-                                                  fontSize: 12.dp,
-                                                  color: AppColors.textGrey,
-                                                ),
-                                              ),
-                                              Text(
-                                                (state.orderDetails.payment)
-                                                    .map((payment) => payment
-                                                        .method
-                                                        .toString())
-                                                    .join(),
-                                                style: AppTypography
-                                                    .sfProRoundedSemiBold
-                                                    .copyWith(
-                                                  fontSize: 16.dp,
-                                                  color: AppColors.neutral950,
-                                                ),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
+                                      // Gap(10.dp),
+                                      // Row(
+                                      //   spacing: 12.dp,
+                                      //   children: [
+                                      //     Image.asset(
+                                      //       AppImages.clipboard,
+                                      //       height: 40.dp,
+                                      //       width: 40.dp,
+                                      //     ),
+                                      //     Column(
+                                      //       crossAxisAlignment:
+                                      //           CrossAxisAlignment.start,
+                                      //       children: [
+                                      //         Text(
+                                      //           "Payment Method",
+                                      //           style: AppTypography
+                                      //               .sfProRoundedMedium
+                                      //               .copyWith(
+                                      //             fontSize: 12.dp,
+                                      //             color: AppColors.textGrey,
+                                      //           ),
+                                      //         ),
+                                      //         Text(
+                                      //           (state.orderDetails.payment)
+                                      //               .map((payment) => payment
+                                      //                   .method
+                                      //                   .toString())
+                                      //               .join(),
+                                      //           style: AppTypography
+                                      //               .sfProRoundedSemiBold
+                                      //               .copyWith(
+                                      //             fontSize: 16.dp,
+                                      //             color: AppColors.neutral950,
+                                      //           ),
+                                      //         )
+                                      //       ],
+                                      //     )
+                                      //   ],
+                                      // ),
                                       Gap(10.dp),
                                       _buildStatusTrackingUI(state)
                                     ],

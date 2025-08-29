@@ -64,9 +64,9 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
 
       // Format price: "AED 24"
       final price =
-          "AED ${orderedItem.soldPrice}";
+          "AED ${orderedItem.quantity * int.parse(orderedItem.soldPrice)}";
 
-      return Column(
+      return  price!="AED 0"? Column(
         children: [
           InvoiceItemRow(
             itemName: itemName,
@@ -76,12 +76,73 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
           const DashedDivider(),
           Gap(8.dp),
         ],
-      );
+      ):const SizedBox.shrink();
     }
     )),
 
-              
-               if(state.orderDetails.promoUsages.isNotEmpty)...[Gap(8.dp),
+              if(state.orderDetails.additionalCharges.isNotEmpty)...[
+                Gap(6.dp),
+                Row(
+                  children: [
+                    Text(
+                      "Express Surcharge",
+                      style: AppTypography.sfProRoundedRegular
+                          .copyWith(
+                        fontSize: 14.dp,
+                        color: AppColors.neutral900,
+                      ),
+                    ),
+                    Spacer(),
+                   Text(
+  "+${(
+    (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0) /
+    ((double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0)- (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0)) * 100
+  ).toStringAsFixed(2)}%",
+  style: AppTypography.sfProRoundedRegular.copyWith(
+    fontSize: 14.dp,
+    color: AppColors.secondary600,
+  ),
+),
+
+                    Gap(8.dp),
+                    Text(state.orderDetails.additionalCharges.first.amount,
+                        style: AppTypography
+                            .sfProRoundedRegular
+                            .copyWith(
+                          fontSize: 14.dp,
+                          color: AppColors.neutral950,
+                        ))
+                  ],
+                ),
+                 
+             ],
+
+               Gap(8.dp),
+Row(
+                  children: [
+                    Text(
+                      "Total",
+                      style: AppTypography
+                          .sfProRoundedSemiBold
+                          .copyWith(
+                        fontSize: 20.dp,
+                        color: AppColors.neutral950,
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      "AED ${state.orderDetails.totalAmount}",
+                      style: AppTypography
+                          .sfProRoundedSemiBold
+                          .copyWith(
+                        fontSize: 20.dp,
+                        color: AppColors.neutral950,
+                      ),
+                    ),
+                  ],
+                ),
+
+                if(state.orderDetails.promoUsages.isNotEmpty)...[Gap(8.dp),
                Row(
                   children: [
                     Text(
@@ -122,43 +183,32 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                   ],
                 ),
                ],
-               
-                 if(state.orderDetails.additionalCharges.isNotEmpty)...[
-                Gap(6.dp),
-                Row(
-                  children: [
-                    Text(
-                      "Express Surcharge",
-                      style: AppTypography.sfProRoundedRegular
-                          .copyWith(
-                        fontSize: 14.dp,
-                        color: AppColors.neutral900,
-                      ),
-                    ),
-                    Spacer(),
-                   Text(
-  "+${(
-    (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0) /
-    ((double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0)- (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0)) * 100
-  ).toStringAsFixed(2)}%",
-  style: AppTypography.sfProRoundedRegular.copyWith(
-    fontSize: 14.dp,
-    color: AppColors.secondary600,
+               if (state.orderDetails.payment.any((p) => p.walletTransaction != null)) ...[
+  Gap(8.dp),
+  Row(
+    children: [
+      Text(
+        "Wallet Applied",
+        style: AppTypography.sfProRoundedRegular.copyWith(
+          fontSize: 14.dp,
+          color: AppColors.neutral900,
+        ),
+      ),
+      Spacer(),
+      Text(
+        "AED ${state.orderDetails.payment
+            .first.walletTransaction?.amount??""}",
+        style: AppTypography.sfProRoundedRegular.copyWith(
+          fontSize: 14.dp,
+          color: AppColors.green,
+        ),
+      ),
+    ],
   ),
-),
-
-                    Gap(8.dp),
-                    Text(state.orderDetails.additionalCharges.first.amount,
-                        style: AppTypography
-                            .sfProRoundedRegular
-                            .copyWith(
-                          fontSize: 14.dp,
-                          color: AppColors.neutral950,
-                        ))
-                  ],
-                ),
-                 
-             ],  Gap(12.dp),
+],
+                  if((state.orderDetails.payment.any((p) => p.walletTransaction != null))||(state.orderDetails.additionalCharges.isNotEmpty)||(state.orderDetails.promoUsages.isNotEmpty))
+              Gap(12.dp),
+            if((state.orderDetails.payment.any((p) => p.walletTransaction != null))||(state.orderDetails.additionalCharges.isNotEmpty)||(state.orderDetails.promoUsages.isNotEmpty))
               DashedDivider(
                   dashPattern: [6, 6],
                 ),
@@ -186,31 +236,30 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                 //         ))
                 //   ],
                 // ),
-               
-                Row(
-                  children: [
-                    Text(
-                      "Total",
-                      style: AppTypography
-                          .sfProRoundedSemiBold
-                          .copyWith(
-                        fontSize: 20.dp,
-                        color: AppColors.neutral950,
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      "AED ${state.orderDetails.totalAmount}",
-                      style: AppTypography
-                          .sfProRoundedSemiBold
-                          .copyWith(
-                        fontSize: 20.dp,
-                        color: AppColors.neutral950,
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(8.dp),
+                // Row(
+                //   children: [
+                //     Text(
+                //       "Total",
+                //       style: AppTypography
+                //           .sfProRoundedSemiBold
+                //           .copyWith(
+                //         fontSize: 20.dp,
+                //         color: AppColors.neutral950,
+                //       ),
+                //     ),
+                //     Spacer(),
+                //     Text(
+                //       "AED ${state.orderDetails.totalAmount}",
+                //       style: AppTypography
+                //           .sfProRoundedSemiBold
+                //           .copyWith(
+                //         fontSize: 20.dp,
+                //         color: AppColors.neutral950,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                
              if (codAmount > 0)
   Row(
     children: [

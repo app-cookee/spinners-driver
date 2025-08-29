@@ -10,4 +10,10 @@ abstract class AuthRepository {
   Future<String> refreshtoken();
   Future<AppUser> logOut();
   Future<AppUser> profileAuth();
+  Future<bool> updateProfile(
+    String firstName,
+    String lastName,
+    String photoName,
+    String photoPath,
+  );
 }

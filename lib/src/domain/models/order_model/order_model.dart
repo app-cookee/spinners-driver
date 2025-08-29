@@ -247,19 +247,23 @@ abstract class TimeSlot with _$TimeSlot {
 @freezed
 abstract class Payment with _$Payment {
   const factory Payment({
-    @JsonKey(name: 'id') @Default("") String id,
-    @JsonKey(name: 'slNo') @Default(0) int slNo,
-    @JsonKey(name: 'orderId') @Default("") String orderId,
     @JsonKey(name: 'method') @Default("") String method,
-    @JsonKey(name: 'walletTransactionId') String? walletTransactionId,
-    @JsonKey(name: 'amount') @Default("") String amount,
-    @JsonKey(name: 'refId') String? refId,
-    @JsonKey(name: 'invoice') @Default("") String invoice,
+    @JsonKey(name: 'walletTransaction') WalletItem? walletTransaction,
     @JsonKey(name: 'status') @Default("") String status,
-    @JsonKey(name: 'paidAt') String? paidAt,
-    @JsonKey(name: 'createdAt') @Default("") String createdAt,
+    @JsonKey(name: 'amount') @Default("") String amount,
   }) = _Payment;
-
   factory Payment.fromJson(Map<String, dynamic> json) =>
       _$PaymentFromJson(json);
+}
+@freezed
+abstract class WalletItem with _$WalletItem {
+  const factory WalletItem({
+    @JsonKey(name: 'id') @Default("") String id,
+       @JsonKey(name: 'walletId') @Default("") String walletId,
+          @JsonKey(name: 'description') @Default("") String description,
+    @JsonKey(name: 'amount') @Default(0) int amount,
+    @JsonKey(name: 'type') @Default("") String type,
+  }) = _WalletItem;
+  factory WalletItem.fromJson(Map<String, dynamic> json) =>
+      _$WalletItemFromJson(json);
 }

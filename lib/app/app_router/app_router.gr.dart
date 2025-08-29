@@ -288,6 +288,22 @@ class OtpRouteArgs {
 }
 
 /// generated route for
+/// [PickUpDropoffHistoryScreen]
+class PickUpDropoffHistoryRoute extends PageRouteInfo<void> {
+  const PickUpDropoffHistoryRoute({List<PageRouteInfo>? children})
+      : super(PickUpDropoffHistoryRoute.name, initialChildren: children);
+
+  static const String name = 'PickUpDropoffHistoryRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const PickUpDropoffHistoryScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [SplashScreen]
 class SplashRoute extends PageRouteInfo<void> {
   const SplashRoute({List<PageRouteInfo>? children})

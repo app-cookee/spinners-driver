@@ -7644,28 +7644,14 @@ class __$TimeSlotCopyWithImpl<$Res> implements _$TimeSlotCopyWith<$Res> {
 
 /// @nodoc
 mixin _$Payment {
-  @JsonKey(name: 'id')
-  String get id;
-  @JsonKey(name: 'slNo')
-  int get slNo;
-  @JsonKey(name: 'orderId')
-  String get orderId;
   @JsonKey(name: 'method')
   String get method;
-  @JsonKey(name: 'walletTransactionId')
-  String? get walletTransactionId;
-  @JsonKey(name: 'amount')
-  String get amount;
-  @JsonKey(name: 'refId')
-  String? get refId;
-  @JsonKey(name: 'invoice')
-  String get invoice;
+  @JsonKey(name: 'walletTransaction')
+  WalletItem? get walletTransaction;
   @JsonKey(name: 'status')
   String get status;
-  @JsonKey(name: 'paidAt')
-  String? get paidAt;
-  @JsonKey(name: 'createdAt')
-  String get createdAt;
+  @JsonKey(name: 'amount')
+  String get amount;
 
   /// Create a copy of Payment
   /// with the given fields replaced by the non-null parameter values.
@@ -7682,29 +7668,21 @@ mixin _$Payment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is Payment &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.slNo, slNo) || other.slNo == slNo) &&
-            (identical(other.orderId, orderId) || other.orderId == orderId) &&
             (identical(other.method, method) || other.method == method) &&
-            (identical(other.walletTransactionId, walletTransactionId) ||
-                other.walletTransactionId == walletTransactionId) &&
-            (identical(other.amount, amount) || other.amount == amount) &&
-            (identical(other.refId, refId) || other.refId == refId) &&
-            (identical(other.invoice, invoice) || other.invoice == invoice) &&
+            (identical(other.walletTransaction, walletTransaction) ||
+                other.walletTransaction == walletTransaction) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.paidAt, paidAt) || other.paidAt == paidAt) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+            (identical(other.amount, amount) || other.amount == amount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, slNo, orderId, method,
-      walletTransactionId, amount, refId, invoice, status, paidAt, createdAt);
+  int get hashCode =>
+      Object.hash(runtimeType, method, walletTransaction, status, amount);
 
   @override
   String toString() {
-    return 'Payment(id: $id, slNo: $slNo, orderId: $orderId, method: $method, walletTransactionId: $walletTransactionId, amount: $amount, refId: $refId, invoice: $invoice, status: $status, paidAt: $paidAt, createdAt: $createdAt)';
+    return 'Payment(method: $method, walletTransaction: $walletTransaction, status: $status, amount: $amount)';
   }
 }
 
@@ -7714,17 +7692,12 @@ abstract mixin class $PaymentCopyWith<$Res> {
       _$PaymentCopyWithImpl;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String id,
-      @JsonKey(name: 'slNo') int slNo,
-      @JsonKey(name: 'orderId') String orderId,
-      @JsonKey(name: 'method') String method,
-      @JsonKey(name: 'walletTransactionId') String? walletTransactionId,
-      @JsonKey(name: 'amount') String amount,
-      @JsonKey(name: 'refId') String? refId,
-      @JsonKey(name: 'invoice') String invoice,
+      {@JsonKey(name: 'method') String method,
+      @JsonKey(name: 'walletTransaction') WalletItem? walletTransaction,
       @JsonKey(name: 'status') String status,
-      @JsonKey(name: 'paidAt') String? paidAt,
-      @JsonKey(name: 'createdAt') String createdAt});
+      @JsonKey(name: 'amount') String amount});
+
+  $WalletItemCopyWith<$Res>? get walletTransaction;
 }
 
 /// @nodoc
@@ -7739,64 +7712,43 @@ class _$PaymentCopyWithImpl<$Res> implements $PaymentCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? slNo = null,
-    Object? orderId = null,
     Object? method = null,
-    Object? walletTransactionId = freezed,
-    Object? amount = null,
-    Object? refId = freezed,
-    Object? invoice = null,
+    Object? walletTransaction = freezed,
     Object? status = null,
-    Object? paidAt = freezed,
-    Object? createdAt = null,
+    Object? amount = null,
   }) {
     return _then(_self.copyWith(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      slNo: null == slNo
-          ? _self.slNo
-          : slNo // ignore: cast_nullable_to_non_nullable
-              as int,
-      orderId: null == orderId
-          ? _self.orderId
-          : orderId // ignore: cast_nullable_to_non_nullable
-              as String,
       method: null == method
           ? _self.method
           : method // ignore: cast_nullable_to_non_nullable
               as String,
-      walletTransactionId: freezed == walletTransactionId
-          ? _self.walletTransactionId
-          : walletTransactionId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      amount: null == amount
-          ? _self.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as String,
-      refId: freezed == refId
-          ? _self.refId
-          : refId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      invoice: null == invoice
-          ? _self.invoice
-          : invoice // ignore: cast_nullable_to_non_nullable
-              as String,
+      walletTransaction: freezed == walletTransaction
+          ? _self.walletTransaction
+          : walletTransaction // ignore: cast_nullable_to_non_nullable
+              as WalletItem?,
       status: null == status
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
-      paidAt: freezed == paidAt
-          ? _self.paidAt
-          : paidAt // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
+      amount: null == amount
+          ? _self.amount
+          : amount // ignore: cast_nullable_to_non_nullable
               as String,
     ));
+  }
+
+  /// Create a copy of Payment
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $WalletItemCopyWith<$Res>? get walletTransaction {
+    if (_self.walletTransaction == null) {
+      return null;
+    }
+
+    return $WalletItemCopyWith<$Res>(_self.walletTransaction!, (value) {
+      return _then(_self.copyWith(walletTransaction: value));
+    });
   }
 }
 
@@ -7894,17 +7846,10 @@ extension PaymentPatterns on Payment {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'id') String id,
-            @JsonKey(name: 'slNo') int slNo,
-            @JsonKey(name: 'orderId') String orderId,
             @JsonKey(name: 'method') String method,
-            @JsonKey(name: 'walletTransactionId') String? walletTransactionId,
-            @JsonKey(name: 'amount') String amount,
-            @JsonKey(name: 'refId') String? refId,
-            @JsonKey(name: 'invoice') String invoice,
+            @JsonKey(name: 'walletTransaction') WalletItem? walletTransaction,
             @JsonKey(name: 'status') String status,
-            @JsonKey(name: 'paidAt') String? paidAt,
-            @JsonKey(name: 'createdAt') String createdAt)?
+            @JsonKey(name: 'amount') String amount)?
         $default, {
     required TResult orElse(),
   }) {
@@ -7912,17 +7857,418 @@ extension PaymentPatterns on Payment {
     switch (_that) {
       case _Payment() when $default != null:
         return $default(
-            _that.id,
-            _that.slNo,
-            _that.orderId,
-            _that.method,
-            _that.walletTransactionId,
-            _that.amount,
-            _that.refId,
-            _that.invoice,
-            _that.status,
-            _that.paidAt,
-            _that.createdAt);
+            _that.method, _that.walletTransaction, _that.status, _that.amount);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'method') String method,
+            @JsonKey(name: 'walletTransaction') WalletItem? walletTransaction,
+            @JsonKey(name: 'status') String status,
+            @JsonKey(name: 'amount') String amount)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Payment():
+        return $default(
+            _that.method, _that.walletTransaction, _that.status, _that.amount);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'method') String method,
+            @JsonKey(name: 'walletTransaction') WalletItem? walletTransaction,
+            @JsonKey(name: 'status') String status,
+            @JsonKey(name: 'amount') String amount)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Payment() when $default != null:
+        return $default(
+            _that.method, _that.walletTransaction, _that.status, _that.amount);
+      case _:
+        return null;
+    }
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _Payment implements Payment {
+  const _Payment(
+      {@JsonKey(name: 'method') this.method = "",
+      @JsonKey(name: 'walletTransaction') this.walletTransaction,
+      @JsonKey(name: 'status') this.status = "",
+      @JsonKey(name: 'amount') this.amount = ""});
+  factory _Payment.fromJson(Map<String, dynamic> json) =>
+      _$PaymentFromJson(json);
+
+  @override
+  @JsonKey(name: 'method')
+  final String method;
+  @override
+  @JsonKey(name: 'walletTransaction')
+  final WalletItem? walletTransaction;
+  @override
+  @JsonKey(name: 'status')
+  final String status;
+  @override
+  @JsonKey(name: 'amount')
+  final String amount;
+
+  /// Create a copy of Payment
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$PaymentCopyWith<_Payment> get copyWith =>
+      __$PaymentCopyWithImpl<_Payment>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$PaymentToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _Payment &&
+            (identical(other.method, method) || other.method == method) &&
+            (identical(other.walletTransaction, walletTransaction) ||
+                other.walletTransaction == walletTransaction) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.amount, amount) || other.amount == amount));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, method, walletTransaction, status, amount);
+
+  @override
+  String toString() {
+    return 'Payment(method: $method, walletTransaction: $walletTransaction, status: $status, amount: $amount)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$PaymentCopyWith<$Res> implements $PaymentCopyWith<$Res> {
+  factory _$PaymentCopyWith(_Payment value, $Res Function(_Payment) _then) =
+      __$PaymentCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'method') String method,
+      @JsonKey(name: 'walletTransaction') WalletItem? walletTransaction,
+      @JsonKey(name: 'status') String status,
+      @JsonKey(name: 'amount') String amount});
+
+  @override
+  $WalletItemCopyWith<$Res>? get walletTransaction;
+}
+
+/// @nodoc
+class __$PaymentCopyWithImpl<$Res> implements _$PaymentCopyWith<$Res> {
+  __$PaymentCopyWithImpl(this._self, this._then);
+
+  final _Payment _self;
+  final $Res Function(_Payment) _then;
+
+  /// Create a copy of Payment
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? method = null,
+    Object? walletTransaction = freezed,
+    Object? status = null,
+    Object? amount = null,
+  }) {
+    return _then(_Payment(
+      method: null == method
+          ? _self.method
+          : method // ignore: cast_nullable_to_non_nullable
+              as String,
+      walletTransaction: freezed == walletTransaction
+          ? _self.walletTransaction
+          : walletTransaction // ignore: cast_nullable_to_non_nullable
+              as WalletItem?,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _self.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+
+  /// Create a copy of Payment
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $WalletItemCopyWith<$Res>? get walletTransaction {
+    if (_self.walletTransaction == null) {
+      return null;
+    }
+
+    return $WalletItemCopyWith<$Res>(_self.walletTransaction!, (value) {
+      return _then(_self.copyWith(walletTransaction: value));
+    });
+  }
+}
+
+/// @nodoc
+mixin _$WalletItem {
+  @JsonKey(name: 'id')
+  String get id;
+  @JsonKey(name: 'walletId')
+  String get walletId;
+  @JsonKey(name: 'description')
+  String get description;
+  @JsonKey(name: 'amount')
+  int get amount;
+  @JsonKey(name: 'type')
+  String get type;
+
+  /// Create a copy of WalletItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $WalletItemCopyWith<WalletItem> get copyWith =>
+      _$WalletItemCopyWithImpl<WalletItem>(this as WalletItem, _$identity);
+
+  /// Serializes this WalletItem to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is WalletItem &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.walletId, walletId) ||
+                other.walletId == walletId) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.type, type) || other.type == type));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, id, walletId, description, amount, type);
+
+  @override
+  String toString() {
+    return 'WalletItem(id: $id, walletId: $walletId, description: $description, amount: $amount, type: $type)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $WalletItemCopyWith<$Res> {
+  factory $WalletItemCopyWith(
+          WalletItem value, $Res Function(WalletItem) _then) =
+      _$WalletItemCopyWithImpl;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'id') String id,
+      @JsonKey(name: 'walletId') String walletId,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'amount') int amount,
+      @JsonKey(name: 'type') String type});
+}
+
+/// @nodoc
+class _$WalletItemCopyWithImpl<$Res> implements $WalletItemCopyWith<$Res> {
+  _$WalletItemCopyWithImpl(this._self, this._then);
+
+  final WalletItem _self;
+  final $Res Function(WalletItem) _then;
+
+  /// Create a copy of WalletItem
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? walletId = null,
+    Object? description = null,
+    Object? amount = null,
+    Object? type = null,
+  }) {
+    return _then(_self.copyWith(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      walletId: null == walletId
+          ? _self.walletId
+          : walletId // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _self.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _self.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// Adds pattern-matching-related methods to [WalletItem].
+extension WalletItemPatterns on WalletItem {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_WalletItem value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _WalletItem() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_WalletItem value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _WalletItem():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_WalletItem value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _WalletItem() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'walletId') String walletId,
+            @JsonKey(name: 'description') String description,
+            @JsonKey(name: 'amount') int amount,
+            @JsonKey(name: 'type') String type)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _WalletItem() when $default != null:
+        return $default(_that.id, _that.walletId, _that.description,
+            _that.amount, _that.type);
       case _:
         return orElse();
     }
@@ -7945,33 +8291,17 @@ extension PaymentPatterns on Payment {
   TResult when<TResult extends Object?>(
     TResult Function(
             @JsonKey(name: 'id') String id,
-            @JsonKey(name: 'slNo') int slNo,
-            @JsonKey(name: 'orderId') String orderId,
-            @JsonKey(name: 'method') String method,
-            @JsonKey(name: 'walletTransactionId') String? walletTransactionId,
-            @JsonKey(name: 'amount') String amount,
-            @JsonKey(name: 'refId') String? refId,
-            @JsonKey(name: 'invoice') String invoice,
-            @JsonKey(name: 'status') String status,
-            @JsonKey(name: 'paidAt') String? paidAt,
-            @JsonKey(name: 'createdAt') String createdAt)
+            @JsonKey(name: 'walletId') String walletId,
+            @JsonKey(name: 'description') String description,
+            @JsonKey(name: 'amount') int amount,
+            @JsonKey(name: 'type') String type)
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _Payment():
-        return $default(
-            _that.id,
-            _that.slNo,
-            _that.orderId,
-            _that.method,
-            _that.walletTransactionId,
-            _that.amount,
-            _that.refId,
-            _that.invoice,
-            _that.status,
-            _that.paidAt,
-            _that.createdAt);
+      case _WalletItem():
+        return $default(_that.id, _that.walletId, _that.description,
+            _that.amount, _that.type);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -7993,33 +8323,17 @@ extension PaymentPatterns on Payment {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
             @JsonKey(name: 'id') String id,
-            @JsonKey(name: 'slNo') int slNo,
-            @JsonKey(name: 'orderId') String orderId,
-            @JsonKey(name: 'method') String method,
-            @JsonKey(name: 'walletTransactionId') String? walletTransactionId,
-            @JsonKey(name: 'amount') String amount,
-            @JsonKey(name: 'refId') String? refId,
-            @JsonKey(name: 'invoice') String invoice,
-            @JsonKey(name: 'status') String status,
-            @JsonKey(name: 'paidAt') String? paidAt,
-            @JsonKey(name: 'createdAt') String createdAt)?
+            @JsonKey(name: 'walletId') String walletId,
+            @JsonKey(name: 'description') String description,
+            @JsonKey(name: 'amount') int amount,
+            @JsonKey(name: 'type') String type)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _Payment() when $default != null:
-        return $default(
-            _that.id,
-            _that.slNo,
-            _that.orderId,
-            _that.method,
-            _that.walletTransactionId,
-            _that.amount,
-            _that.refId,
-            _that.invoice,
-            _that.status,
-            _that.paidAt,
-            _that.createdAt);
+      case _WalletItem() when $default != null:
+        return $default(_that.id, _that.walletId, _that.description,
+            _that.amount, _that.type);
       case _:
         return null;
     }
@@ -8028,67 +8342,43 @@ extension PaymentPatterns on Payment {
 
 /// @nodoc
 @JsonSerializable()
-class _Payment implements Payment {
-  const _Payment(
+class _WalletItem implements WalletItem {
+  const _WalletItem(
       {@JsonKey(name: 'id') this.id = "",
-      @JsonKey(name: 'slNo') this.slNo = 0,
-      @JsonKey(name: 'orderId') this.orderId = "",
-      @JsonKey(name: 'method') this.method = "",
-      @JsonKey(name: 'walletTransactionId') this.walletTransactionId,
-      @JsonKey(name: 'amount') this.amount = "",
-      @JsonKey(name: 'refId') this.refId,
-      @JsonKey(name: 'invoice') this.invoice = "",
-      @JsonKey(name: 'status') this.status = "",
-      @JsonKey(name: 'paidAt') this.paidAt,
-      @JsonKey(name: 'createdAt') this.createdAt = ""});
-  factory _Payment.fromJson(Map<String, dynamic> json) =>
-      _$PaymentFromJson(json);
+      @JsonKey(name: 'walletId') this.walletId = "",
+      @JsonKey(name: 'description') this.description = "",
+      @JsonKey(name: 'amount') this.amount = 0,
+      @JsonKey(name: 'type') this.type = ""});
+  factory _WalletItem.fromJson(Map<String, dynamic> json) =>
+      _$WalletItemFromJson(json);
 
   @override
   @JsonKey(name: 'id')
   final String id;
   @override
-  @JsonKey(name: 'slNo')
-  final int slNo;
+  @JsonKey(name: 'walletId')
+  final String walletId;
   @override
-  @JsonKey(name: 'orderId')
-  final String orderId;
-  @override
-  @JsonKey(name: 'method')
-  final String method;
-  @override
-  @JsonKey(name: 'walletTransactionId')
-  final String? walletTransactionId;
+  @JsonKey(name: 'description')
+  final String description;
   @override
   @JsonKey(name: 'amount')
-  final String amount;
+  final int amount;
   @override
-  @JsonKey(name: 'refId')
-  final String? refId;
-  @override
-  @JsonKey(name: 'invoice')
-  final String invoice;
-  @override
-  @JsonKey(name: 'status')
-  final String status;
-  @override
-  @JsonKey(name: 'paidAt')
-  final String? paidAt;
-  @override
-  @JsonKey(name: 'createdAt')
-  final String createdAt;
+  @JsonKey(name: 'type')
+  final String type;
 
-  /// Create a copy of Payment
+  /// Create a copy of WalletItem
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$PaymentCopyWith<_Payment> get copyWith =>
-      __$PaymentCopyWithImpl<_Payment>(this, _$identity);
+  _$WalletItemCopyWith<_WalletItem> get copyWith =>
+      __$WalletItemCopyWithImpl<_WalletItem>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$PaymentToJson(
+    return _$WalletItemToJson(
       this,
     );
   }
@@ -8097,121 +8387,81 @@ class _Payment implements Payment {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Payment &&
+            other is _WalletItem &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.slNo, slNo) || other.slNo == slNo) &&
-            (identical(other.orderId, orderId) || other.orderId == orderId) &&
-            (identical(other.method, method) || other.method == method) &&
-            (identical(other.walletTransactionId, walletTransactionId) ||
-                other.walletTransactionId == walletTransactionId) &&
+            (identical(other.walletId, walletId) ||
+                other.walletId == walletId) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.amount, amount) || other.amount == amount) &&
-            (identical(other.refId, refId) || other.refId == refId) &&
-            (identical(other.invoice, invoice) || other.invoice == invoice) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.paidAt, paidAt) || other.paidAt == paidAt) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+            (identical(other.type, type) || other.type == type));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, slNo, orderId, method,
-      walletTransactionId, amount, refId, invoice, status, paidAt, createdAt);
+  int get hashCode =>
+      Object.hash(runtimeType, id, walletId, description, amount, type);
 
   @override
   String toString() {
-    return 'Payment(id: $id, slNo: $slNo, orderId: $orderId, method: $method, walletTransactionId: $walletTransactionId, amount: $amount, refId: $refId, invoice: $invoice, status: $status, paidAt: $paidAt, createdAt: $createdAt)';
+    return 'WalletItem(id: $id, walletId: $walletId, description: $description, amount: $amount, type: $type)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$PaymentCopyWith<$Res> implements $PaymentCopyWith<$Res> {
-  factory _$PaymentCopyWith(_Payment value, $Res Function(_Payment) _then) =
-      __$PaymentCopyWithImpl;
+abstract mixin class _$WalletItemCopyWith<$Res>
+    implements $WalletItemCopyWith<$Res> {
+  factory _$WalletItemCopyWith(
+          _WalletItem value, $Res Function(_WalletItem) _then) =
+      __$WalletItemCopyWithImpl;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'id') String id,
-      @JsonKey(name: 'slNo') int slNo,
-      @JsonKey(name: 'orderId') String orderId,
-      @JsonKey(name: 'method') String method,
-      @JsonKey(name: 'walletTransactionId') String? walletTransactionId,
-      @JsonKey(name: 'amount') String amount,
-      @JsonKey(name: 'refId') String? refId,
-      @JsonKey(name: 'invoice') String invoice,
-      @JsonKey(name: 'status') String status,
-      @JsonKey(name: 'paidAt') String? paidAt,
-      @JsonKey(name: 'createdAt') String createdAt});
+      @JsonKey(name: 'walletId') String walletId,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'amount') int amount,
+      @JsonKey(name: 'type') String type});
 }
 
 /// @nodoc
-class __$PaymentCopyWithImpl<$Res> implements _$PaymentCopyWith<$Res> {
-  __$PaymentCopyWithImpl(this._self, this._then);
+class __$WalletItemCopyWithImpl<$Res> implements _$WalletItemCopyWith<$Res> {
+  __$WalletItemCopyWithImpl(this._self, this._then);
 
-  final _Payment _self;
-  final $Res Function(_Payment) _then;
+  final _WalletItem _self;
+  final $Res Function(_WalletItem) _then;
 
-  /// Create a copy of Payment
+  /// Create a copy of WalletItem
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = null,
-    Object? slNo = null,
-    Object? orderId = null,
-    Object? method = null,
-    Object? walletTransactionId = freezed,
+    Object? walletId = null,
+    Object? description = null,
     Object? amount = null,
-    Object? refId = freezed,
-    Object? invoice = null,
-    Object? status = null,
-    Object? paidAt = freezed,
-    Object? createdAt = null,
+    Object? type = null,
   }) {
-    return _then(_Payment(
+    return _then(_WalletItem(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      slNo: null == slNo
-          ? _self.slNo
-          : slNo // ignore: cast_nullable_to_non_nullable
-              as int,
-      orderId: null == orderId
-          ? _self.orderId
-          : orderId // ignore: cast_nullable_to_non_nullable
+      walletId: null == walletId
+          ? _self.walletId
+          : walletId // ignore: cast_nullable_to_non_nullable
               as String,
-      method: null == method
-          ? _self.method
-          : method // ignore: cast_nullable_to_non_nullable
+      description: null == description
+          ? _self.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
-      walletTransactionId: freezed == walletTransactionId
-          ? _self.walletTransactionId
-          : walletTransactionId // ignore: cast_nullable_to_non_nullable
-              as String?,
       amount: null == amount
           ? _self.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as String,
-      refId: freezed == refId
-          ? _self.refId
-          : refId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      invoice: null == invoice
-          ? _self.invoice
-          : invoice // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _self.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      paidAt: freezed == paidAt
-          ? _self.paidAt
-          : paidAt // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
+              as int,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

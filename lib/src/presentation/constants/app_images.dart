@@ -87,6 +87,12 @@ static const String warningIcon='assets/images/ic_warning.png';
   static const String home = 'assets/images/home.png';
 
   static const String orderStatus = 'assets/images/order_status.png';
-
+  static const String moneysIcon = 'assets/images/moneysIcon.png';
+  static const String storeIcon = 'assets/images/storeIcon.png';
+  static const String personIcon = 'assets/images/personIcon.png';
+  static const String editIcon = 'assets/images/editIcon.png';
+static const String calendarIcon = 'assets/images/calendarIcon.png';
+static const String customerIcon = 'assets/images/customerIcon.png';
+static const String locationIcon = 'assets/images/locationIcon.png';
 
 }

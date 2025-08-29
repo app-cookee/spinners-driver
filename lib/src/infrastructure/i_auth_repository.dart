@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/api_constants.dart';
 import 'package:spinners_driver/app/constants/storage_constants.dart';
+import 'package:spinners_driver/app/extensions/map_extension.dart';
 import 'package:spinners_driver/app/services/api_services/api_service.dart';
 import 'package:spinners_driver/app/services/local_storage_service.dart';
 import 'package:spinners_driver/src/domain/respositories/auth_respository.dart';
@@ -96,6 +97,22 @@ import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.
       return userData;
     } catch (e) {
       log(e.toString(), name: 'error in profile repo');
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<bool> updateProfile(String firstName, String lastName, String photoName, String photoPath) async {
+    try {
+      final formData = FormData.fromMap({
+        'photo': (photoPath!=''&&photoName!='') ? await MultipartFile.fromFile(photoPath, filename: photoName):'',
+        'firstName': firstName,
+        'lastName': lastName,
+        }.clean());
+      var response = await api.profile.post(ApiEndpoints().updateProfile, data: formData);
+      return response.data['updated']==true;
+    } catch (e) {
+      log(e.toString(),name: 'error Update Profile');
       rethrow;
     }
   }

@@ -13,9 +13,13 @@ import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/placeholders/userdetail_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
+import 'package:spinners_driver/src/presentation/views/profile/widgets/dashed_coupen_box.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/profile_user_detail.dart';
+import 'package:spinners_driver/src/presentation/views/profile/widgets/update_details_bottom_sheet.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dialogue_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -85,73 +89,103 @@ class AccountScreen extends StatelessWidget {
                     child: BlocBuilder<AuthBloc, AuthState>(
                       builder: (context, state) {
                         if (state.profileAuthStatus is StatusLoading) {
-                          return UserDetailPlaceholder();
+                          return const UserDetailPlaceholder();
                         }
                         return ProfileUserDetail(
-                          profileImage: state.appUser?.photo ?? "",
-                          avatar:
-                              (state.appUser?.firstName?.isNotEmpty ?? false)
-                                  ? state.appUser!.firstName![0]
-                                  : "D",
-                          name: (state.appUser?.firstName?.isNotEmpty ?? false)
-                              ? state.appUser!.firstName!
+                          profileImage: state.appUser?.photo ?? '',
+                          active: state.appUser?.active ?? false,
+                          name: (state.appUser?.firstName.isNotEmpty ?? false)
+                              ? state.appUser!.firstName
                               : "Driver",
                           phone:
-                              (state.appUser?.phoneNumber?.isNotEmpty ?? false)
-                                  ? state.appUser!.phoneNumber!
+                              (state.appUser?.phoneNumber.isNotEmpty ?? false)
+                                  ? state.appUser!.phoneNumber
                                   : "",
                         );
                       },
                     ),
                   ),
                   Gap(21.dp),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //       gradient: LinearGradient(
-                  //           begin: Alignment.topCenter,
-                  //           end: Alignment.bottomCenter,
-                  //           colors: [
-                  //         AppColors.primaryColor.withValues(alpha: 0.1),
-                  //         AppColors.primaryColor.withValues(alpha: 0)
-                  //       ])),
-                  //   width: 100.w,
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     mainAxisSize: MainAxisSize.min,
-                  //     children: [
-                  //      const DashedDivider(),
-                  //       Padding(
-                  //         padding: EdgeInsets.all(16.dp),
-                  //         child: Row(
-                  //           children: [
-                  //             Image.asset(
-                  //               AppImages.wallet,
-                  //               height: 24.dp,
-                  //               width: 24.dp,
-                  //             ),
-                  //             Gap(4.dp),
-                  //             Text(
-                  //               "Wallet Balance",
-                  //               style: AppTypography.sfProRoundedMedium.copyWith(
-                  //                 color: AppColors.textGrey,
-                  //                 fontSize: 14.sp,
-                  //               ),
-                  //             ),
-                  //             const Spacer(),
-                  //             Text(
-                  //               "AED 120",
-                  //               style:
-                  //                   AppTypography.sfProRoundedSemiBold.copyWith(
-                  //                 color: AppColors.primaryColor,
-                  //                 fontSize: 24.sp,
-                  //               ),
-                  //             )
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                          AppColors.primaryColor.withValues(alpha: 0.1),
+                          AppColors.primaryColor.withValues(alpha: 0)
+                        ])),
+                    width: 100.w,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const DashedDivider(),
+                        Padding(
+                          padding: EdgeInsets.all(16.dp),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                AppImages.moneysIcon,
+                                height: 24.dp,
+                                width: 24.dp,
+                              ),
+                              Gap(4.dp),
+                              Text(
+                                "Cash In Hand",
+                                style:
+                                    AppTypography.sfProRoundedMedium.copyWith(
+                                  color: AppColors.textGrey,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                "AED 120",
+                                style:
+                                    AppTypography.sfProRoundedSemiBold.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 24.sp,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
+                    child: CustomPaint(
+                      painter: DashRectPainter(
+                          gapLength: 4,
+                          strokeWidth: 1,
+                          color: AppColors.lightGrey,
+                          backgroundColor: AppColors.white),
+                      child: Container(
+                        padding: EdgeInsets.all(12.dp),
+                        decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(12.dp)),
+                        width: 100.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const DashedCouponBox(),
+                            Gap(14.dp),
+                            Text(
+                              'Vehicle No : A 34567',
+                              style: AppTypography.sfProRoundedSemiBold
+                                  .copyWith(
+                                      color: AppColors.secondary950,
+                                      fontSize: 12.dp),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
 
                   // Gap(20.dp),
                   Padding(
@@ -160,14 +194,36 @@ class AccountScreen extends StatelessWidget {
                     child: Column(
                       spacing: 6.dp,
                       children: [
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            return AccountSettings(
+                                onTap: () {
+                                  CustomBottomSheetWidget(
+                                          child: UpdateDetailsBottomSheet(
+                                            firstName:
+                                                state.appUser?.firstName ?? "",
+                                            lastName:
+                                                state.appUser?.lastName ?? "",
+                                          ),
+                                          context: context)
+                                      .show();
+                                },
+                                imagePath: AppImages.arrowRight,
+                                text: "Personal Details");
+                          },
+                        ),
                         // AccountSettings(
+                        //   onTap: () {
+                        //     context.router.push(const PickUpDropoffHistoryRoute());
+                        //   },
                         //     imagePath: AppImages.arrowRight,
-                        //     text: "Personal Details"),
-
-                        AccountSettings(
+                        //     text: "Pickup & Dropoff History"),
+                        // const AccountSettings(
+                        //     imagePath: AppImages.arrowRight,
+                        //     text: "Cash Settlement History"),
+                        const AccountSettings(
                             imagePath: AppImages.arrowRight,
                             text: "Terms of Service"),
-
                         AccountSettings(
                           imagePath: AppImages.arrowRight,
                           text: "Log Out",
@@ -204,14 +260,16 @@ class AccountScreen extends StatelessWidget {
                   ),
 
                   Padding(
-                    padding: EdgeInsetsGeometry.only(left: 16.dp, top: 50.h),
+                    padding: EdgeInsetsGeometry.only(left: 16.dp, top: 
+                    // 3.h
+                    18.h
+                    ),
                     child: Text(
                       "App Version 1.0.0",
                       style: AppTypography.sfProRoundedMedium.copyWith(
                           color: AppColors.versionColor, fontSize: 9.dp),
                     ),
                   ),
-                  Gap(14.h)
                 ],
               ),
             ),

@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
 
 import 'package:spinners_driver/app/theme/app_colors.dart';
@@ -9,18 +12,16 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/user_details
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class ProfileUserDetail extends StatefulWidget {
-  final String avatar;
   final String name;
   final String phone;
+  final bool active;
   final String profileImage;
 
   const ProfileUserDetail({
-    Key? key,
-    required this.avatar,
+    super.key,
     required this.name,
-    required this.phone,
-    required this.profileImage,
-  }) : super(key: key);
+    required this.phone, required this.active, required this.profileImage,
+  });
 
   @override
   State<ProfileUserDetail> createState() => _ProfileUserDetailState();
@@ -146,7 +147,8 @@ class _ProfileUserDetailState extends State<ProfileUserDetail> with SingleTicker
                 ],
               ).createShader(bounds),
               child: Text(
-                widget.avatar,
+                // avatar,
+                widget.name.isNotEmpty ? widget.name[0].toUpperCase() : 'D',
                 style: AppTypography.sfProRoundedSemiBold.copyWith(
                   color: AppColors.white,
                   fontSize: 20,
@@ -175,6 +177,29 @@ class _ProfileUserDetailState extends State<ProfileUserDetail> with SingleTicker
             ),
           ],
         ),
+        const Spacer(),
+        if(widget.active)
+        Container(
+          height: 20.dp,
+          width: 62.dp,
+          decoration: BoxDecoration(
+            color: AppColors.activeGreen,
+            borderRadius: BorderRadius.circular(110.dp),
+            border: Border.all(
+              color: AppColors.activeStrokeGreen,
+              width: 1.dp,
+            ),
+          ),
+          child: Center(
+            child: Text('Active',
+                textAlign: TextAlign.center,
+                style: AppTypography.sfProRoundedSemiBold.copyWith(
+                  color: AppColors.activeTextGreen,
+                  fontSize: 12.dp,
+                )),
+          ),
+        ),
+        Gap(16.dp),
       ],
     );
   }
