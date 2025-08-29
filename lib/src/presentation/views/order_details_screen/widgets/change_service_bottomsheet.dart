@@ -6,13 +6,17 @@ import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/app/services/api_services/environment/config.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/invalid_bag_warning_dialog.dart';
+import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/already_scanned_warning_bottomsheet.dart';
+import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class ChangeServiceBottomsheet extends StatefulWidget {
@@ -67,6 +71,17 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
   Widget build(BuildContext context) {
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
+        // Handle remove bag success first
+        if (state.removeBagStatus is StatusSuccess) {
+          // Remove bag locally to update UI
+          context.read<OrderBloc>().add(OrderEvent.removeBagLocally(
+            id: widget.existingScannedBagId,
+          ));
+          
+          // After successful removal, proceed with adding to new service
+          _proceedWithAddBag(state);
+        }
+
         // Handle add bag success
         if (state.addBagStatus is StatusSuccess || state.createNewBagStatus is StatusSuccess) {
           // Close bottomsheet first
@@ -84,6 +99,16 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
               }
             });
           }
+        }
+
+        // Handle remove bag failure
+        if (state.removeBagStatus is StatusFailure) {
+          final errorMessage = (state.removeBagStatus as StatusFailure).toString();
+          TheToast.show(
+            isError: true,
+            message: errorMessage,
+            context: context,
+          );
         }
 
         // Handle failures
@@ -138,10 +163,13 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
         }
       },
       listenWhen: (previous, current) => 
+        previous.removeBagStatus != current.removeBagStatus ||
         previous.createNewBagStatus != current.createNewBagStatus || 
         previous.addBagStatus != current.addBagStatus,
       builder: (context, state) {
-        final isLoading = state.createNewBagStatus is StatusLoading || state.addBagStatus is StatusLoading;
+        final isLoading = state.removeBagStatus is StatusLoading || 
+                         state.createNewBagStatus is StatusLoading || 
+                         state.addBagStatus is StatusLoading;
 
         return Container(
           decoration: BoxDecoration(
@@ -164,10 +192,13 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
               Gap(15.dp),
               _bagID(),
               Gap(10.dp),
-              alreadyAssignedWidget(
-                serviceImage: widget.serviceImage,
-                serviceName: widget.serviceName,
-                serviceColor: widget.serviceColor,
+              Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 16.dp),
+                child: alreadyAssignedWidget(
+                  serviceImage: widget.serviceImage,
+                  serviceName: widget.serviceName,
+                  serviceColor: widget.serviceColor,
+                ),
               ),
               Gap(14.dp),
               Image.asset(AppImages.arrowDown, width: 24.dp, height: 24.dp),
@@ -259,7 +290,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
           Container(
             padding: EdgeInsets.all(8.dp),
             decoration: BoxDecoration(
-              color: const Color(0xFFE0E0E0),
+              color: AppColors.white,
               borderRadius: BorderRadius.circular(8.dp),
             ),
             child: Row(
@@ -475,7 +506,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
     }
   }
 
-  void _handleChangeService(OrderState state) {
+  void _proceedWithAddBag(OrderState state) {
     // Validate bag ID
     final bagId = bagIdController.text.trim();
     if (bagId.isEmpty) {
@@ -516,5 +547,79 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
         bagId: bagId,
       ));
     }
+  }
+
+  void _handleChangeService(OrderState state) {
+    // Validate bag ID
+    final bagId = bagIdController.text.trim();
+    if (bagId.isEmpty) {
+      TheToast.show(
+        isError: true,
+        message: "Please enter Bag ID",
+        context: context,
+      );
+      return;
+    }
+
+    // Validate service selection
+    if (selectedServiceId == null || selectedServiceId!.isEmpty) {
+      TheToast.show(
+        isError: true,
+        message: "Please select a service",
+        context: context,
+      );
+      return;
+    }
+
+    // Check if the user is trying to add the same bag under the same service
+    bool bagExistsInSameService = false;
+    String? existingServiceName;
+    String? existingServiceImage;
+    Color? existingServiceColor;
+    String? existingScannedBagId;
+
+    for (final item in state.orderDetails.orderedItems) {
+      final existingBag = item.scannedBags.firstWhere(
+        (bag) => bag.bagId == bagId,
+        orElse: () => const ScannedBags(),
+      );
+
+      if (existingBag.bagId.isNotEmpty) {
+        // Check if bag exists in the same service that user is trying to add to
+        if (item.service.id == selectedServiceId) {
+          bagExistsInSameService = true;
+          existingServiceName = item.service.name;
+          existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
+          existingServiceColor = hexToColor(item.service.color);
+          existingScannedBagId = existingBag.id;
+          break;
+        }
+      }
+    }
+
+    if (bagExistsInSameService) {
+      // Show already scanned warning bottomsheet for same service
+      Navigator.of(context).pop(); // Close current bottomsheet
+
+      CustomBottomSheetWidget(
+        context: context,
+        child: AlreadyScannedWarningBottomsheet(
+          bagId: bagId,
+          serviceName: existingServiceName!,
+          serviceImage: existingServiceImage!,
+          serviceColor: existingServiceColor!,
+          scannedBagId: existingScannedBagId!,
+          onBagRemoved: () {
+            // This will be called after successful removal
+          },
+        ),
+      ).show();
+      return;
+    }
+
+    // Remove the bag from the old service using existingScannedBagId
+    context.read<OrderBloc>().add(OrderEvent.removeBag(
+      id: widget.existingScannedBagId,
+    ));
   }
 }

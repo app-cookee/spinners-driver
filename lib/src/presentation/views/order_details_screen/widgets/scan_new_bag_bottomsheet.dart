@@ -46,6 +46,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   final TextEditingController bagIdController = TextEditingController();
   String? selectedServiceId;
   String? selectedServiceName;
+  bool isDropdownOpen = false;
 
   @override
   void initState() {
@@ -78,7 +79,9 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
 
     return Container(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.8,
+        maxHeight: isDropdownOpen 
+            ? MediaQuery.of(context).size.height * 0.9  // Increase height when dropdown is open
+            : MediaQuery.of(context).size.height * 0.8,
       ),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -257,6 +260,11 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                     setState(() {
                       selectedServiceId = service.id;
                       selectedServiceName = service.name;
+                    });
+                  },
+                  onDropdownStateChanged: (isOpen) {
+                    setState(() {
+                      isDropdownOpen = isOpen;
                     });
                   },
                   items: services
