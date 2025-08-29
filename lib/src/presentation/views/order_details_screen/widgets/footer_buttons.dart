@@ -81,8 +81,11 @@ class _FooterButtonsState extends State<FooterButtons> {
         totalScannedBags += item.scannedBags.length;
       }
       
-      if (totalScannedBags == 0) {
+      if (totalScannedBags == 0 && orderType!='normalOrder') {
         return "Please scan at least one bag to confirm pickup";
+      }
+      if(orderType=='normalOrder' && totalScannedBags==0){
+        return "Please scan at least one bag for each service";
       }
     }
 

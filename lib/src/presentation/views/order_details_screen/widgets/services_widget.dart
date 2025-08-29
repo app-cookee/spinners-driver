@@ -73,8 +73,10 @@ class _ServicesWidgetState extends State<ServicesWidget> {
                         QuickOrderBags(
                           orderId: widget.orderId,
                           scannedBags: widget.scannedQRCodes,
+                          status: widget.orderState.orderDetails.status,
                         ),
-                        Gap(8.dp),
+                        if(widget.orderState.orderDetails.status != 'pickedUp')
+                          ...[Gap(8.dp),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.dp),
                           child: SecondaryButtonWidget(
@@ -109,7 +111,7 @@ class _ServicesWidgetState extends State<ServicesWidget> {
                               AppImages.scanner,
                             ),
                           ),
-                        ),
+                        ),]
                       ],
                     )
                   : const SizedBox.shrink(),

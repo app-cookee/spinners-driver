@@ -19,11 +19,13 @@ class QuickOrderBags extends StatelessWidget {
   const QuickOrderBags({
     super.key,
     required this.orderId,
-    required this.scannedBags,
+    required this.scannedBags, 
+    required this.status,
   });
 
   final String orderId;
   final ValueNotifier<Set<String>> scannedBags;
+   final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +145,7 @@ class QuickOrderBags extends StatelessWidget {
               ],
             ),
           ),
+          if (status != 'pickedUp')
           InkWell(
             onTap: () =>
              _handleScanForQuickOrder(context, bag),

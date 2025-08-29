@@ -146,14 +146,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               value: state.orderDetails.type == "normalOrder" ? "Normal" : "Quick Order⚡",
             ),
             Gap(4.dp),
-            OrderInfoCard(label: "Pickup Time", value: _calculatePickupTime(state)),
-            if (state.orderDetails.payment.isNotEmpty) ...[
-              Gap(4.dp),
-              OrderInfoCard(
-                label: "Payment Method",
-                value: (state.orderDetails.payment).map((payment) => payment.method.toString()).join().toUpperCase(),
-              ),
-            ]
+            OrderInfoCard(label:state.orderDetails.status == 'pickedUp' ? "Pickedup Time" : "Pickup Time", value: _calculatePickupTime(state)),
+            // if (state.orderDetails.payment.isNotEmpty) ...[
+            //   Gap(4.dp),
+            //   OrderInfoCard(
+            //     label: "Payment Method",
+            //     value: (state.orderDetails.payment).map((payment) => payment.method.toString()).join().toUpperCase(),
+            //   ),
+            // ]
           ],
         ),
       ),

@@ -15,7 +15,10 @@ class OrderDetailnfo extends StatelessWidget {
     required this.title,
     required this.timeSlot,
     required this.address,
-    required this.status, required this.onNavigateTap, required this.onCallTap, required this.onWhatsAppTap,
+    required this.status,
+    required this.onNavigateTap,
+    required this.onCallTap,
+    required this.onWhatsAppTap,
   });
   final String notes;
   final String customer;
@@ -24,7 +27,7 @@ class OrderDetailnfo extends StatelessWidget {
   final String timeSlot;
   final String address;
   final String status;
- final VoidCallback onNavigateTap;
+  final VoidCallback onNavigateTap;
   final VoidCallback onCallTap;
   final VoidCallback onWhatsAppTap;
   @override
@@ -72,9 +75,7 @@ class OrderDetailnfo extends StatelessWidget {
                     ),
                   )
                 : const SizedBox.shrink(),
-
             Gap(20.dp),
-
             Row(
               spacing: 12.dp,
               children: [
@@ -105,13 +106,24 @@ class OrderDetailnfo extends StatelessWidget {
               ],
             ),
             Gap(10.dp),
-            _codBalance(context, amount),
-            Gap(10.dp),
+            if (amount != '0') ...[
+              _codBalance(context, amount),
+              Gap(10.dp),
+            ],
             StatusHistory(
               title: title,
               timeSlot: timeSlot,
               address: address,
-              status: status, onNavigateTap: () { onNavigateTap(); }, onCallTap: () { onCallTap(); }, onWhatsAppTap: () { onWhatsAppTap(); },
+              status: status,
+              onNavigateTap: () {
+                onNavigateTap();
+              },
+              onCallTap: () {
+                onCallTap();
+              },
+              onWhatsAppTap: () {
+                onWhatsAppTap();
+              },
             )
           ],
         ),

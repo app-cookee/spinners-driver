@@ -437,7 +437,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               if (selectedServiceId == null || selectedServiceId!.isEmpty) {
                 TheToast.show(
                   isError: true,
-                  message: "Please select a service",
+                  message: "Please select a service before adding the bag",
                   context: context,
                 );
                 return;
@@ -449,7 +449,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               String? existingServiceName;
               String? existingServiceImage;
               Color? existingServiceColor;
-              String? existingOrderServiceId;
+              // String? existingOrderServiceId;
               String? existingScannedBagId;
 
               for (final item in state.orderDetails.orderedItems) {
@@ -463,7 +463,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   existingServiceName = item.service.name;
                   existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
                   existingServiceColor = hexToColor(item.service.color);
-                  existingOrderServiceId = item.id;
+                  // existingOrderServiceId = item.id;
                   existingScannedBagId = existingBag.id;
                   
                   // Check if bag exists in the same service that user is trying to add to
