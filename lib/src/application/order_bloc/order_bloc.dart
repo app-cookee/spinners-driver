@@ -64,6 +64,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   FutureOr<void> _onAddBag(_AddBag event, Emitter<OrderState> emit) async {
     try {
+      log('Adding bag: orderItemId=${event.orderItemId}, bagId=${event.bagId}', name: "OrderBloc");
       emit(state.copyWith(
         addBagStatus: Status.loading(),
       ));
@@ -75,6 +76,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       // Refresh order details after successful bag addition
       await _refreshOrderDetails(emit);
     } catch (e) {
+      log('Error adding bag: $e', name: "OrderBloc");
       emit(state.copyWith(
         addBagStatus: Status.failure(e.toString()),
       ));
@@ -83,6 +85,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   FutureOr<void> _onCreateNewBag(_CreateNewBag event, Emitter<OrderState> emit) async {
     try {
+      log('Creating new bag: bagId=${event.bagId}, orderId=${event.orderId}, serviceId=${event.serviceId}', name: "OrderBloc");
       emit(state.copyWith(
         createNewBagStatus: Status.loading(),
       ));
@@ -94,6 +97,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       // Refresh order details after successful new bag creation
       await _refreshOrderDetails(emit);
     } catch (e) {
+      log('Error creating new bag: $e', name: "OrderBloc");
       emit(state.copyWith(
         createNewBagStatus: Status.failure(e.toString()),
       ));

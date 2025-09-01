@@ -65,6 +65,9 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
       selectedServiceName = widget.serviceName;
       log('Auto-filled service: ${widget.serviceName} (${widget.serviceId})');
     }
+
+    // Log widget parameters for debugging
+    log('Widget initialized with: isQuickOrder=${widget.isQuickOrder}, orderId=${widget.orderId}, serviceId=${widget.serviceId}');
   }
 
   @override
@@ -410,6 +413,8 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
             );
           }
         }
+       
+       
       },
       listenWhen: (previous, current) => previous.createNewBagStatus != current.createNewBagStatus || previous.addBagStatus != current.addBagStatus,
       builder: (context, state) {
@@ -443,6 +448,11 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                 return;
               }
 
+              // Debug logging
+              log('Debug: selectedServiceId: $selectedServiceId');
+              log('Debug: orderDetails.orderedItems.length: ${state.orderDetails.orderedItems.length}');
+              log('Debug: orderDetails.orderedItems: ${state.orderDetails.orderedItems.map((item) => '${item.service.id}:${item.service.name}').toList()}');
+
               // Check if bag ID already exists in any service
               bool bagAlreadyExists = false;
               bool bagExistsInSameService = false;
@@ -453,10 +463,12 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               String? existingScannedBagId;
 
               for (final item in state.orderDetails.orderedItems) {
-                final existingBag = item.service.scannedBags.firstWhere(
-                  (bag) => bag.bagId == bagId,
-                  orElse: () => const ScannedBags(),
-                );
+                // Check if scannedBags list is not empty before calling firstWhere
+                if (item.service.scannedBags.isNotEmpty) {
+                  final existingBag = item.service.scannedBags.firstWhere(
+                    (bag) => bag.bagId == bagId,
+                    orElse: () => const ScannedBags(),
+                  );
 
                 if (existingBag.bagId.isNotEmpty) {
                   bagAlreadyExists = true;
@@ -480,6 +492,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   }
                   break;
                 }
+              }
               }
 
               if (bagAlreadyExists) {
@@ -520,19 +533,70 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                 return;
               }
 
-              // Find the ordered item for this service
-              final orderedItem = state.orderDetails.orderedItems.firstWhere(
-                (item) => item.service.id == selectedServiceId,
-                orElse: () => state.orderDetails.orderedItems.first,
-              );
-
-              // Check if bags already exist for this service
+              // For quick orders, we can create new bags even without existing ordered items
+              // For normal orders, we need to check if the service exists in ordered items
               if (widget.isQuickOrder == false) {
+                // Normal order flow - check if ordered items exist
+                if (state.orderDetails.orderedItems.isEmpty) {
+                  log('Error: No ordered items found in order details');
+                  TheToast.show(
+                    isError: true,
+                    message: "No services found for this order",
+                    context: context,
+                  );
+                  return;
+                }
+
+                // Check if the selected service exists in the ordered items
+                final serviceExists = state.orderDetails.orderedItems.any(
+                  (item) => item.service.id == selectedServiceId,
+                );
+
+                if (!serviceExists) {
+                  log('Error: Selected service $selectedServiceId not found in ordered items');
+                  TheToast.show(
+                    isError: true,
+                    message: "Selected service not found in this order",
+                    context: context,
+                  );
+                  return;
+                }
+
+                // Find the ordered item for this service
+                final orderedItem = state.orderDetails.orderedItems.firstWhere(
+                  (item) => item.service.id == selectedServiceId,
+                  orElse: () => state.orderDetails.orderedItems.first,
+                );
+
+                // Call addBag API for normal orders
                 context.read<OrderBloc>().add(OrderEvent.addBag(
                       orderItemId: orderedItem.id,
                       bagId: bagId,
                     ));
               } else {
+                // Quick order flow - directly call createNewBag API
+                // Validate required parameters for quick orders
+                if (widget.orderId == null || widget.orderId!.isEmpty) {
+                  log('Error: Order ID is required for quick orders');
+                  TheToast.show(
+                    isError: true,
+                    message: "Order ID is required for quick orders",
+                    context: context,
+                  );
+                  return;
+                }
+
+                if (selectedServiceId == null || selectedServiceId!.isEmpty) {
+                  log('Error: Service ID is required for quick orders');
+                  TheToast.show(
+                    isError: true,
+                    message: "Please select a service for quick orders",
+                    context: context,
+                  );
+                  return;
+                }
+
+                log('Creating new bag for quick order: bagId=$bagId, orderId=${widget.orderId}, serviceId=$selectedServiceId');
                 context.read<OrderBloc>().add(OrderEvent.createNewBag(
                       bagId: bagId,
                       orderId: widget.orderId!,

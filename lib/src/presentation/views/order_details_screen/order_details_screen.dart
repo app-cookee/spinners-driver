@@ -40,6 +40,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     log('Fetching order details for order ID: ${widget.orderId}');
 
     super.initState();
+    // additionalNotesController.text=
 
   }
 
@@ -75,7 +76,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         slivers: [
                           _orderInfo(state),
                           OrderDetailnfo(
-                            notes: state.orderDetails.driverNotes,
+                            notes: state.orderDetails.customerNote,
                             customer: _getCustomerName(state.orderDetails.customer),
                             amount: state.orderDetails.totalAmount,
                             title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",

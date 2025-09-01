@@ -62,13 +62,17 @@ class OrderRepositoryImplementation implements OrderRepository {
   @override
   Future<void> addBag(String orderItemId, String bagId) async {
     try {
+      log('Repository: Adding bag - orderItemId: $orderItemId, bagId: $bagId', name: "OrderRepository");
       final Map<String, dynamic> data = {
         "orderServiceId": orderItemId,
         "bagId": bagId,
       }.clean();
 
+      log('Repository: Request data: $data', name: "OrderRepository");
       await api.profile.post(ApiEndpoints().addBag, data: data);
+      log('Repository: Bag added successfully', name: "OrderRepository");
     } catch (e) {
+      log('Repository: Error adding bag: $e', name: "OrderRepository");
       rethrow;
     }
   }
@@ -76,6 +80,7 @@ class OrderRepositoryImplementation implements OrderRepository {
   @override
   Future<String> createNewBag(String bagId, String orderId, String serviceId) async {
     try {
+      log('Repository: Creating new bag - bagId: $bagId, orderId: $orderId, serviceId: $serviceId', name: "OrderRepository");
       final Map<String, dynamic> data = {
         "bagId": bagId,
         "orderId": orderId,
@@ -84,9 +89,12 @@ class OrderRepositoryImplementation implements OrderRepository {
         },
       }.clean();
 
+      log('Repository: Request data: $data', name: "OrderRepository");
       var response = await api.profile.post(ApiEndpoints().createNewBag, data: data);
+      log('Repository: New bag created successfully with ID: ${response.data['id']}', name: "OrderRepository");
       return response.data['id'] as String;
     } catch (e) {
+      log('Repository: Error creating new bag: $e', name: "OrderRepository");
       rethrow;
     }
   }
