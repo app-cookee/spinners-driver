@@ -12,7 +12,7 @@ import 'package:spinners_driver/src/presentation/views/order_details_screen/widg
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/secondary_button_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -34,7 +34,6 @@ class ServicesWidget extends StatefulWidget {
 }
 
 class _ServicesWidgetState extends State<ServicesWidget> {
-
   @override
   void initState() {
     super.initState();
@@ -45,16 +44,14 @@ class _ServicesWidgetState extends State<ServicesWidget> {
   void didUpdateWidget(ServicesWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Update additional notes when order state changes
-    if (oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status ||
-        oldWidget.orderState.orderDetails.driverNotes != widget.orderState.orderDetails.driverNotes) {
+    if (oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status || oldWidget.orderState.orderDetails.driverNotes != widget.orderState.orderDetails.driverNotes) {
       _populateAdditionalNotes();
     }
   }
 
   void _populateAdditionalNotes() {
     // If status is pickedUp and there are driver notes, populate the controller
-    if (widget.orderState.orderDetails.status == "pickedUp" && 
-        widget.orderState.orderDetails.driverNotes.isNotEmpty) {
+    if (widget.orderState.orderDetails.status == "pickedUp" && widget.orderState.orderDetails.driverNotes.isNotEmpty) {
       widget.additionalNotesController.text = widget.orderState.orderDetails.driverNotes;
     }
   }
@@ -99,43 +96,48 @@ class _ServicesWidgetState extends State<ServicesWidget> {
                           scannedBags: widget.scannedQRCodes,
                           status: widget.orderState.orderDetails.status,
                         ),
-                        if(widget.orderState.orderDetails.status != 'pickedUp')
-                          ...[Gap(8.dp),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                          child: SecondaryButtonWidget(
-                            height: 48.dp,
-                            bordercolor: AppColors.scanblue,
-                            backgroundColor: AppColors.white,
-                            textColor: AppColors.primaryColor,
-                            style: AppTypography.sfProRoundedSemiBold.copyWith(
-                              fontSize: 14.sp,
-                              color: AppColors.primaryColor,
-                            ),
-                            onPressed: () async {
-                              // await _handleQuickOrderScan(context);
-                              final result = await Navigator.push<String>(
-                                context,
-                                MaterialPageRoute(builder: (context) => const QRScannerScreen()),
-                              );
+                        if (widget.orderState.orderDetails.status != 'pickedUp') ...[
+                          Gap(8.dp),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                            child: SecondaryButtonWidget(
+                              height: 48.dp,
+                              bordercolor: AppColors.scanblue,
+                              backgroundColor: AppColors.white,
+                              textColor: AppColors.primaryColor,
+                              style: AppTypography.sfProRoundedSemiBold.copyWith(
+                                fontSize: 14.sp,
+                                color: AppColors.primaryColor,
+                              ),
+                              onPressed: () async {
+                                // await _handleQuickOrderScan(context);
+                                final result = await Navigator.push<String>(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
+                                );
 
-                              CustomBottomSheetWidget(
-                                context: context,
-                                child: ScanNewBagBottomsheet(
-                                  bagId: result,
-                                  orderId: widget.orderId,
-                                  isQuickOrder: true,
-                                ),
-                              ).show();
-                            },
-                            text: "Scan New Bag",
-                            leadingIcon: Image.asset(
-                              height: 24.dp,
-                              width: 24.dp,
-                              AppImages.scanner,
+                                // Only show bottomsheet if QR value is provided
+                                if (result != null && result.isNotEmpty) {
+                                  CustomBottomSheetWidget(
+                                    context: context,
+                                    child: ScanNewBagBottomsheet(
+                                      bagId: result,
+                                      orderId: widget.orderId,
+                                      isQuickOrder: true,
+                                    ),
+                                  ).show();
+                                }
+                                // If no QR value, just return to OrderDetailScreen (no bottomsheet)
+                              },
+                              text: "Scan New Bag",
+                              leadingIcon: Image.asset(
+                                height: 24.dp,
+                                width: 24.dp,
+                                AppImages.scanner,
+                              ),
                             ),
                           ),
-                        ),]
+                        ]
                       ],
                     )
                   : const SizedBox.shrink(),
@@ -162,5 +164,4 @@ class _ServicesWidgetState extends State<ServicesWidget> {
       ],
     );
   }
-
 }

@@ -391,6 +391,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                       child: DeliveryConfirmBottomsheet(
                         orderId: orderId,
                         totalCollected: totalAmount,
+                        orderRefId: widget.refId,
                       ),
                     ),
                   );
@@ -413,7 +414,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                     ),
                     Gap(6.dp),
                     Text(
-                      'AED ${totalAmount.toStringAsFixed(0)}',
+                      'AED $totalAmount',
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                         fontSize: 12.dp,
                         color: AppColors.white,

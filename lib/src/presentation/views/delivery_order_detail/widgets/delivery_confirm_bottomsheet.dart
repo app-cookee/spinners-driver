@@ -15,9 +15,10 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class DeliveryConfirmBottomsheet extends StatefulWidget {
   const DeliveryConfirmBottomsheet(
-      {super.key, required this.orderId, required this.totalCollected});
+      {super.key, required this.orderId, required this.totalCollected, required this.orderRefId});
   final String orderId;
   final double totalCollected;
+  final String orderRefId;
 
   @override
   State<DeliveryConfirmBottomsheet> createState() =>
@@ -152,7 +153,7 @@ class _DeliveryConfirmBottomsheetState
             textStyle: AppTypography.sfProRoundedBold
                 .copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
             borderRadius: 12.dp,
-            initialValue: widget.orderId,
+            initialValue:"#SPN${widget.orderRefId}" ,
             enabled: false,
           ),
         ],
