@@ -147,16 +147,16 @@ Map<String, dynamic> _$AdditionalChargesToJson(_AdditionalCharges instance) =>
 _PromoItem _$PromoItemFromJson(Map<String, dynamic> json) => _PromoItem(
       amount: json['amount'] as String? ?? "",
       promoId: json['promoId'] as String? ?? "",
-      promoCode: json['promoCode'] == null
+      promoCode: json['PromoCode'] == null
           ? null
-          : PromoCode.fromJson(json['promoCode'] as Map<String, dynamic>),
+          : PromoCode.fromJson(json['PromoCode'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PromoItemToJson(_PromoItem instance) =>
     <String, dynamic>{
       'amount': instance.amount,
       'promoId': instance.promoId,
-      'promoCode': instance.promoCode,
+      'PromoCode': instance.promoCode,
     };
 
 _PromoCode _$PromoCodeFromJson(Map<String, dynamic> json) => _PromoCode(

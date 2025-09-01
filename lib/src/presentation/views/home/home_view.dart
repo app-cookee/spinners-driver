@@ -313,25 +313,14 @@ void _loadMoreItems() {
                                           refId: state.ordersList[index].refId.toString(),
                                           orderId: state.ordersList[index].id,
                                           time: getOrderDisplayDate(state.ordersList[index]),
-                                        //   state.ordersList[index].status == "pickupScheduled"
-                                        //       ? formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,"pickupScheduled",state.ordersList[index].statusHistory)
-                                        //       // formatDeliverySlot({
-                                        //       //     "from": state.ordersList[index].pickupSlot?.from ?? "",
-                                        //       //     "to": state.ordersList[index].pickupSlot?.to ?? "",
-                                        //       //     "day": state.ordersList[index].pickupSlot?.day ?? ""
-                                        //       //   })
-                                        //       :state.ordersList[index].status == "readyForDelivery"?formatSingleDate(state.ordersList[index].deliveryAt,state.ordersList[index].deliverySlot,"readyForDelivery",state.ordersList[index].statusHistory)
-                                        //       //  formatDeliverySlot({
-                                        //         //   "from": state.ordersList[index].deliverySlot?.from ?? "",
-                                        //         //   "to": state.ordersList[index].deliverySlot?.to ?? "",
-                                        //         //   "day": state.ordersList[index].deliverySlot?.day ?? ""
-                                        //         // })
-                                        //         :state.ordersList[index].status == "pickedUp"?formatSingleDate(state.ordersList[index].pickupA,state.ordersList[index].pickupSlot,
-                                        //         "pickedUp",state.ordersList[index].statusHistory):formatSingleDate(state.ordersList[index].pickupAt,state.ordersList[index].pickupSlot,
-                                        //         "delivered",state.ordersList[index].statusHistory),
+                                    
                                           status: state.ordersList[index].status,
                                           isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
                                           isQuickOrder: state.ordersList[index].type == "oneTapOrder" ? true : false,
+                                          apiCallOnPop: (){_fetchOrders(currentOrderFilter);
+                                            context.read<DashboardDataBloc>()
+      .add(const DashboardDataEvent.getDashboardData());
+                                          }
                                         );
                                       });
                                 },

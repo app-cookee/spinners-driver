@@ -318,6 +318,12 @@ _currentSearchQuery="";
                                           status: state.ordersList[index].status,
                                           isDropoff: (state.ordersList[index].status == "pickupScheduled"||state.ordersList[index].status == "pickedUp") ? false : true,
                                           isQuickOrder:  state.ordersList[index].type=="oneTapOrder"?true:false,
+                                          apiCallOnPop: () {
+                                               _searchController.clear();
+                      
+_currentSearchQuery="";
+                          _fetchOrders(currentOrderFilter);
+                                          },
                                          
                                           // notes: 'Deliver to reception.',
                                         );

@@ -2470,7 +2470,7 @@ mixin _$PromoItem {
   String get amount;
   @JsonKey(name: 'promoId')
   String get promoId;
-  @JsonKey(name: 'promoCode')
+  @JsonKey(name: 'PromoCode')
   PromoCode? get promoCode;
 
   /// Create a copy of PromoItem
@@ -2512,7 +2512,7 @@ abstract mixin class $PromoItemCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'amount') String amount,
       @JsonKey(name: 'promoId') String promoId,
-      @JsonKey(name: 'promoCode') PromoCode? promoCode});
+      @JsonKey(name: 'PromoCode') PromoCode? promoCode});
 
   $PromoCodeCopyWith<$Res>? get promoCode;
 }
@@ -2660,7 +2660,7 @@ extension PromoItemPatterns on PromoItem {
     TResult Function(
             @JsonKey(name: 'amount') String amount,
             @JsonKey(name: 'promoId') String promoId,
-            @JsonKey(name: 'promoCode') PromoCode? promoCode)?
+            @JsonKey(name: 'PromoCode') PromoCode? promoCode)?
         $default, {
     required TResult orElse(),
   }) {
@@ -2691,7 +2691,7 @@ extension PromoItemPatterns on PromoItem {
     TResult Function(
             @JsonKey(name: 'amount') String amount,
             @JsonKey(name: 'promoId') String promoId,
-            @JsonKey(name: 'promoCode') PromoCode? promoCode)
+            @JsonKey(name: 'PromoCode') PromoCode? promoCode)
         $default,
   ) {
     final _that = this;
@@ -2720,7 +2720,7 @@ extension PromoItemPatterns on PromoItem {
     TResult? Function(
             @JsonKey(name: 'amount') String amount,
             @JsonKey(name: 'promoId') String promoId,
-            @JsonKey(name: 'promoCode') PromoCode? promoCode)?
+            @JsonKey(name: 'PromoCode') PromoCode? promoCode)?
         $default,
   ) {
     final _that = this;
@@ -2739,7 +2739,7 @@ class _PromoItem implements PromoItem {
   const _PromoItem(
       {@JsonKey(name: 'amount') this.amount = "",
       @JsonKey(name: 'promoId') this.promoId = "",
-      @JsonKey(name: 'promoCode') this.promoCode});
+      @JsonKey(name: 'PromoCode') this.promoCode});
   factory _PromoItem.fromJson(Map<String, dynamic> json) =>
       _$PromoItemFromJson(json);
 
@@ -2750,7 +2750,7 @@ class _PromoItem implements PromoItem {
   @JsonKey(name: 'promoId')
   final String promoId;
   @override
-  @JsonKey(name: 'promoCode')
+  @JsonKey(name: 'PromoCode')
   final PromoCode? promoCode;
 
   /// Create a copy of PromoItem
@@ -2800,7 +2800,7 @@ abstract mixin class _$PromoItemCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'amount') String amount,
       @JsonKey(name: 'promoId') String promoId,
-      @JsonKey(name: 'promoCode') PromoCode? promoCode});
+      @JsonKey(name: 'PromoCode') PromoCode? promoCode});
 
   @override
   $PromoCodeCopyWith<$Res>? get promoCode;

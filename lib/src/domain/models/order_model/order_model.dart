@@ -84,7 +84,7 @@ abstract class PromoItem with _$PromoItem {
   const factory PromoItem({
     @JsonKey(name: 'amount') @Default("") String amount,
     @JsonKey(name: 'promoId') @Default("") String promoId,
-    @JsonKey(name: 'promoCode') PromoCode? promoCode,
+    @JsonKey(name: 'PromoCode') PromoCode? promoCode,
   }) = _PromoItem;
 
   factory PromoItem.fromJson(Map<String, dynamic> json) =>

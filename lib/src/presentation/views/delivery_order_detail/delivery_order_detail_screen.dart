@@ -15,7 +15,6 @@ import 'package:spinners_driver/src/presentation/views/delivery_order_detail/pla
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/delivery_confirm_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/info_card.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/delivery_order_invoice_detail.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/order_details_screen.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
@@ -108,8 +107,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                         child: Column(
                                           children: [
                                             Gap(4.dp),
-                                            InfoCard(
-                                              label: "COD",
+                                            InfoCard(backgroundColor: const Color(0xFFFEF5D8),
+                                              label: "Pending Amount",
                                               value:
                                                   "AED ${dState.orderDetails.payment.where((p) => p.status.toLowerCase() == "pending").map((p) => double.tryParse(p.amount) ?? 0.0).fold(0.0, (sum, amt) => sum + amt).toStringAsFixed(2)}",
                                             ),

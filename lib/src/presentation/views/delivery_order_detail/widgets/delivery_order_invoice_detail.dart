@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
@@ -17,6 +19,7 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // log(state.orderDetails.promoUsages.first.promoCode?.name.toString());
     final codAmount = state.orderDetails.payment
                               .where((p) => p.status.toLowerCase() == "pending")
                               .map((p) => double.tryParse(p.amount) ?? 0.0)
@@ -264,7 +267,7 @@ Row(
   Row(
     children: [
       Text(
-        "Cash on Delivery",
+        "Pay on Delivery",
         style: AppTypography.sfProRoundedMedium.copyWith(
           fontSize: 14.dp,
           color: AppColors.neutral900,
