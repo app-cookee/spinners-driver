@@ -11,7 +11,7 @@ import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class OrderedServices extends StatelessWidget {
@@ -21,7 +21,6 @@ class OrderedServices extends StatelessWidget {
     required this.status,
   });
 
-  
   final String orderId;
   final String status;
 
@@ -68,41 +67,41 @@ class OrderedServices extends StatelessWidget {
       ),
       child: Column(
         children: [
-                     Row(
-             children: [
-               // Show service icon if available, otherwise show a placeholder
-               if (orderedItem.service.icon.isNotEmpty)
-                 CachedNetworkImage(
-                   imageUrl: '${ApiUrls.stagingUrl}/${orderedItem.service.icon}',
-                   height: 32.dp,
-                   width: 32.dp,
-                   placeholder: (context, url) => SizedBox(
-                     height: 32.dp,
-                     width: 32.dp,
-                     child: Image.asset(
-                       AppImages.dress,
+          Row(
+            children: [
+              // Show service icon if available, otherwise show a placeholder
+              if (orderedItem.service.icon.isNotEmpty)
+                CachedNetworkImage(
+                  imageUrl: '${ApiUrls.stagingUrl}/${orderedItem.service.icon}',
+                  height: 32.dp,
+                  width: 32.dp,
+                  placeholder: (context, url) => SizedBox(
+                    height: 32.dp,
+                    width: 32.dp,
+                    child: Image.asset(
+                      AppImages.dress,
                       //  color: hexToColor(orderedItem.service.color),
-                     ),
-                   ),
-                   errorWidget: (context, url, error) => SizedBox(
-                     height: 32.dp,
-                     width: 32.dp,
-                     child: Image.asset(
-                       AppImages.dress,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => SizedBox(
+                    height: 32.dp,
+                    width: 32.dp,
+                    child: Image.asset(
+                      AppImages.dress,
                       //  color: hexToColor(orderedItem.service.color),
-                     ),
-                   ),
-                 )
-               else
-                 SizedBox(
-                   height: 32.dp,
-                   width: 32.dp,
-                   child: Image.asset(
-                     AppImages.dress,
+                    ),
+                  ),
+                )
+              else
+                SizedBox(
+                  height: 32.dp,
+                  width: 32.dp,
+                  child: Image.asset(
+                    AppImages.dress,
                     //  color: hexToColor(orderedItem.service.color),
-                   ),
-                 ),
-               Gap(8.dp),
+                  ),
+                ),
+              Gap(8.dp),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,30 +138,29 @@ class OrderedServices extends StatelessWidget {
                   ],
                 ),
               ),
-            
+
               if (status != 'pickedUp')
                 InkWell(
                   onTap: () async {
-                   
-    
                     final result = await Navigator.push<String>(
                       context,
-                      MaterialPageRoute(builder: (context) => const QRScannerScreen()),
+                      MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
                     );
-                    CustomBottomSheetWidget(
-                      context: context,
-                      child: ScanNewBagBottomsheet(
-                        bagId: result,
-                        orderId: orderId,
-                        serviceId: orderedItem.service.id,
-                        serviceName: orderedItem.service.name,
-                        isQuickOrder: false,
-                      ),
-                    ).show();
-    
-                  
-    
-                  
+                    
+                    // Only show bottomsheet if QR value is provided
+                    if (result != null && result.isNotEmpty) {
+                      CustomBottomSheetWidget(
+                        context: context,
+                        child: ScanNewBagBottomsheet(
+                          bagId: result,
+                          orderId: orderId,
+                          serviceId: orderedItem.service.id,
+                          serviceName: orderedItem.service.name,
+                          isQuickOrder: false,
+                        ),
+                      ).show();
+                    }
+                    // If no QR value, just return to OrderDetailScreen (no bottomsheet)
                   },
                   child: _scanButton(),
                 ),

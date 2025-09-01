@@ -12,7 +12,7 @@ import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/qr_scanner_screen_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -20,13 +20,13 @@ class QuickOrderBags extends StatelessWidget {
   const QuickOrderBags({
     super.key,
     required this.orderId,
-    required this.scannedBags, 
+    required this.scannedBags,
     required this.status,
   });
 
   final String orderId;
   final ValueNotifier<Set<String>> scannedBags;
-   final String status;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class QuickOrderBags extends StatelessWidget {
       builder: (context, state) {
         // Group scanned bags by service
         final Map<String, Map<String, dynamic>> serviceGroups = {};
-        
+
         for (final item in state.orderDetails.orderedItems) {
           if (item.service.scannedBags.isNotEmpty) {
             final serviceId = item.service.id;
@@ -102,41 +102,41 @@ class QuickOrderBags extends StatelessWidget {
           ),
         ],
       ),
-             child: Row(
-         children: [
-           // Show service icon if available, otherwise show a placeholder
-           if (bag['serviceIcon'] != null && bag['serviceIcon'].toString().isNotEmpty)
-             CachedNetworkImage(
-               imageUrl: '${ApiUrls.stagingUrl}/${bag['serviceIcon']}',
-               height: 32.dp,
-               width: 32.dp,
-               placeholder: (context, url) => SizedBox(
-                 height: 32.dp,
-                 width: 32.dp,
-                 child: Image.asset(
-                   AppImages.dress,
+      child: Row(
+        children: [
+          // Show service icon if available, otherwise show a placeholder
+          if (bag['serviceIcon'] != null && bag['serviceIcon'].toString().isNotEmpty)
+            CachedNetworkImage(
+              imageUrl: '${ApiUrls.stagingUrl}/${bag['serviceIcon']}',
+              height: 32.dp,
+              width: 32.dp,
+              placeholder: (context, url) => SizedBox(
+                height: 32.dp,
+                width: 32.dp,
+                child: Image.asset(
+                  AppImages.dress,
                   //  color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
-                 ),
-               ),
-               errorWidget: (context, url, error) => SizedBox(
-                 height: 32.dp,
-                 width: 32.dp,
-                 child: Image.asset(
-                   AppImages.dress,
+                ),
+              ),
+              errorWidget: (context, url, error) => SizedBox(
+                height: 32.dp,
+                width: 32.dp,
+                child: Image.asset(
+                  AppImages.dress,
                   //  color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
-                 ),
-               ),
-             )
-           else
-             SizedBox(
-               height: 32.dp,
-               width: 32.dp,
-               child: Image.asset(
-                 AppImages.dress,
+                ),
+              ),
+            )
+          else
+            SizedBox(
+              height: 32.dp,
+              width: 32.dp,
+              child: Image.asset(
+                AppImages.dress,
                 //  color: hexToColor(bag['serviceColor'] as String? ?? '#000000'),
-               ),
-             ),
-           Gap(8.dp),
+              ),
+            ),
+          Gap(8.dp),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,11 +174,10 @@ class QuickOrderBags extends StatelessWidget {
             ),
           ),
           if (status != 'pickedUp')
-          InkWell(
-            onTap: () =>
-             _handleScanForQuickOrder(context, bag),
-            child: _scanButton(),
-          ),
+            InkWell(
+              onTap: () => _handleScanForQuickOrder(context, bag),
+              child: _scanButton(),
+            ),
         ],
       ),
     );
@@ -223,11 +222,11 @@ class QuickOrderBags extends StatelessWidget {
   Future<void> _handleScanForQuickOrder(BuildContext context, Map<String, dynamic> serviceData) async {
     final result = await Navigator.push<String>(
       context,
-      MaterialPageRoute(builder: (context) => const QRScannerScreen()),
+      MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
     );
 
+    // Only proceed if QR value is provided
     if (result != null && result.isNotEmpty) {
-      
       // Check if this QR has already been scanned
       if (scannedBags.value.contains(result)) {
         TheToast.show(
@@ -274,7 +273,8 @@ class QuickOrderBags extends StatelessWidget {
         log('Context is not mounted');
       }
     } else {
-      log('No QR result received');
+      // If no QR result, just return to OrderDetailScreen (no bottomsheet)
+      log('No QR result received - returning to OrderDetailScreen');
     }
   }
 
