@@ -38,12 +38,12 @@ class _QRScannerScreenWidgetState extends State<QRScannerScreenWidget> {
     super.dispose();
   }
 
-  void _toggleScanner() {
-    setState(() {
-      _showScanner = !_showScanner;
-      _isScanned = false; // Reset scan state when toggling
-    });
-  }
+  // void _toggleScanner() {
+  //   setState(() {
+  //     _showScanner = !_showScanner;
+  //     _isScanned = false; // Reset scan state when toggling
+  //   });
+  // }
 
   void _submitManualQr(BuildContext context) {
     final qrValue = _manualQrController.text.trim();
@@ -51,162 +51,155 @@ class _QRScannerScreenWidgetState extends State<QRScannerScreenWidget> {
       Navigator.pop(context, qrValue);
     } else {
       // Show validation message
-      TheToast.show(context: context,message: 'Please enter a QR code value', isError: true);
+      TheToast.show(context: context, message: 'Please enter a QR code value', isError: true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    const double scanBoxSize = 250;
+    const double scanBoxSize = 300;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor500,
-        title: Text(
-          "QR Scanner",
-          style: AppTypography.sfProRoundedBold.copyWith(color: AppColors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.flash_on),
-            onPressed: () => controller.toggleTorch(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.cameraswitch),
-            onPressed: () => controller.switchCamera(),
-          ),
-        ],
-      ),
       body: Stack(
         children: [
-          // Main content
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              if (!_showScanner) ...[
-                Gap(10.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                  child: CommonTextField(
-                    hintText: "Enter QR code value",
-                    controller: _manualQrController,
-                    
-                  ),
-                ),
-                Gap(16.dp),
-                // Submit button for manual input
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                  child: PrimaryButtonWidget(
-                    onPressed: () => _submitManualQr(context),
-                    text: "Submit QR Code",
-                  ),
-                ),
-                Gap(8.dp),
-                // Cancel button
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                  child: PrimaryButtonWidget(
-                    onPressed: () => Navigator.pop(context),
-                    text: "Cancel",
-                    backgroundColor: AppColors.grey1Color,
-                    buttonBgImage: AppImages.buttonGreyBg,
-                  ),
-                ),
-                Gap(24.dp),
-                Text(
-                  'OR',
-                  style: AppTypography.sfProRoundedRegular.copyWith(color: AppColors.neutral500),
-                ),
-                Gap(24.dp),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                  child: PrimaryButtonWidget(
-                    onPressed: _toggleScanner, // Use the toggle function
-                    text: _showScanner ? "Close Scanner" : "Scan QR Code",
-                  ),
-                ),
-              ]
-            ],
-          ),
+          _appbarWidget(context),
 
-          // Scanner overlay with blur background
-          if (_showScanner) ...[
-            // Blur background
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-              child: Container(
-                color: Colors.black.withValues(alpha: 0.3),
+          // Scanner widget
+          _scanQR(scanBoxSize, context),
+          bagIdField(context),
+
+          // ],
+        ],
+      ),
+    );
+  }
+
+  Widget bagIdField(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24.dp),
+            topRight: Radius.circular(24.dp),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Gap(16.dp),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.dp),
+              child: CommonTextField(
+                hintText: "Enter Bag ID",
+                hintStyle: AppTypography.sfProRoundedRegular.copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
+                controller: _manualQrController,
+                borderRadius: 12.dp,
               ),
             ),
+            Gap(8.dp),
+            // Submit button for manual input
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.dp),
+              child: PrimaryButtonWidget(
+                onPressed: () => _submitManualQr(context),
+                text: "Submit",
+              ),
+            ),
+            Gap(24.dp),
+          ],
+        ),
+      ),
+    );
+  }
 
-            // Scanner widget
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+  Widget _appbarWidget(BuildContext context) {
+    return Container(
+      height: 97.dp,
+      decoration: const BoxDecoration(
+        color: AppColors.white,
+      ),
+      child: Column(
+        children: [
+          Gap(62.dp),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 16.dp),
+              child: Row(
                 children: [
-                  _scanQR(scanBoxSize, context),
-                  Gap(20.dp),
-                  // Close button
-                  ElevatedButton(
-                    onPressed: _toggleScanner,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.white,
-                      foregroundColor: AppColors.primaryColor500,
-                    ),
-                    child: Text(
-                      "Close Scanner",
-                      style: AppTypography.sfProRoundedRegular.copyWith(color: AppColors.primaryColor500),
-                    ),
+                  Image.asset(
+                    AppImages.arrow,
+                    height: 20.dp,
+                    width: 20.dp,
                   ),
+                  Gap(6.dp),
+                  Text(
+                    "Scan Bag",
+                    style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 16.sp, color: AppColors.neutral950),
+                  ),
+                  Gap(15.dp)
                 ],
               ),
             ),
-          ],
+          ),
         ],
       ),
     );
   }
 
   Widget _scanQR(double scanBoxSize, BuildContext context) {
-    return Stack(
-      children: [
-        ///Camera preview
-        Center(
-          child: SizedBox(
-            width: scanBoxSize,
-            height: scanBoxSize,
-            child: MobileScanner(
-              controller: controller,
-              onDetect: (capture) {
-                if (_isScanned) return;
-                _isScanned = true;
+    return Container(
+      margin: EdgeInsets.only(
+        top: 97.dp,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(12.dp),
+      ),
+      child: Stack(
+        children: [
+          ///Camera preview
+          Center(
+            child: SizedBox(
+              width: scanBoxSize,
+              height: scanBoxSize,
+              child: MobileScanner(
+                controller: controller,
+                onDetect: (capture) {
+                  if (_isScanned) return;
+                  _isScanned = true;
 
-                for (final barcode in capture.barcodes) {
-                  final value = barcode.rawValue;
-                  if (value != null) {
-                    debugPrint("✅ Scanned: $value");
-                    Navigator.pop(context, value);
-                    break;
+                  for (final barcode in capture.barcodes) {
+                    final value = barcode.rawValue;
+                    if (value != null) {
+                      debugPrint("✅ Scanned: $value");
+                      Navigator.pop(context, value);
+                      break;
+                    }
                   }
-                }
-              },
+                },
+              ),
             ),
           ),
-        ),
 
-        ///Scanner overlay with only corners
-        Center(
-          child: SizedBox(
-            width: scanBoxSize,
-            height: scanBoxSize,
-            child: CustomPaint(
-              size: Size(scanBoxSize, scanBoxSize),
-              painter: CornerPainter(),
+          ///Scanner overlay with only corners
+          Center(
+            child: SizedBox(
+              width: scanBoxSize,
+              height: scanBoxSize,
+              child: CustomPaint(
+                size: Size(scanBoxSize, scanBoxSize),
+                painter: CornerPainter(),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -216,7 +209,7 @@ class CornerPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.green
+      ..color = AppColors.primaryColor
       ..strokeWidth = 4
       ..style = PaintingStyle.stroke;
 

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -15,7 +17,6 @@ import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_w
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_bottomsheet_widget.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/invalid_bag_warning_dialog.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/already_scanned_warning_bottomsheet.dart';
 import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
