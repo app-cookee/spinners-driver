@@ -29,6 +29,7 @@ final bool readOnly;
                   minLines: 6,
                   maxLines: 6,
                   readOnly: readOnly,
+                  textCapitalization: TextCapitalization.sentences,
                   style: AppTypography.sfProRoundedMedium.copyWith(
                     fontSize: 12.sp,
                     color: AppColors.neutral500,

@@ -51,7 +51,7 @@ class _QRScannerScreenWidgetState extends State<QRScannerScreenWidget> {
       Navigator.pop(context, qrValue);
     } else {
       // Show validation message
-      TheToast.show(context: context,message: 'Please enter a QR code value', isError: true);
+      TheToast.show(context: context, message: 'Please enter a QR code value', isError: true);
     }
   }
 
@@ -88,9 +88,10 @@ class _QRScannerScreenWidgetState extends State<QRScannerScreenWidget> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.dp),
                   child: CommonTextField(
-                    hintText: "Enter QR code value",
-                    controller: _manualQrController,
+                    hintText: "Enter bag code",
+                    hintStyle: AppTypography.sfProRoundedRegular.copyWith(fontSize: 14.sp, color: AppColors.neutral200),
                     
+                    controller: _manualQrController,
                   ),
                 ),
                 Gap(16.dp),
