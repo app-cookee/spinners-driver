@@ -188,34 +188,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
 
-  String formatSingleDate(String utcDate) {
-    try {
-      // Handle empty or null date strings
-      if (utcDate.isEmpty) {
-        return "Not specified";
-      }
-
-      final date = DateTime.parse(utcDate).toLocal();
-      final now = DateTime.now();
-
-      final today = DateTime(now.year, now.month, now.day);
-      final tomorrow = today.add(const Duration(days: 1));
-      final targetDate = DateTime(date.year, date.month, date.day);
-
-      final timeFormat = DateFormat('h:mm a');
-
-      if (targetDate == today) {
-        return "Today, ${timeFormat.format(date)}";
-      } else if (targetDate == tomorrow) {
-        return "Tomorrow, ${timeFormat.format(date)}";
-      } else {
-        return DateFormat('MMM d, y – h:mm a').format(date);
-      }
-    } catch (e) {
-      // Return a fallback value if date parsing fails
-      return "Invalid date format";
-    }
-  }
 
   String _calculatePickupTime(OrderState state) {
     final orderDetails = state.orderDetails;
