@@ -79,53 +79,69 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   @override
   Widget build(BuildContext context) {
     log('Building ScanNewBagBottomsheet');
+    // Calculate dynamic sizes based on dropdown state
+    final double initialSize = isDropdownOpen ? 0.73 : 0.5;
+    final double minSize = isDropdownOpen ? 0.55 : 0.4;
+    final double maxSize = isDropdownOpen ? 0.95 : 0.8;
 
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: isDropdownOpen 
-            ? MediaQuery.of(context).size.height * 0.9  // Increase height when dropdown is open
-            : MediaQuery.of(context).size.height * 0.8,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24.dp),
-          topRight: Radius.circular(24.dp),
-        ),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Gap(12.dp),
-            _header(),
-            Gap(11.dp),
-            Divider(
-              thickness: 1.dp,
-              color: AppColors.lightGrey,
+    return DraggableScrollableSheet(
+      initialChildSize: initialSize,
+      minChildSize: minSize,
+      maxChildSize: maxSize,
+      snap: false,
+      expand: false,
+      builder: (context, controller) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24.dp),
+              topRight: Radius.circular(24.dp),
             ),
-            Gap(15.dp),
-            _bagID(),
-            Gap(10.dp),
-            _serviceDropdown(),
-            Gap(24.dp),
-            _addBagButton(),
-            Gap(8.dp),
-            Padding(
-              padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
-              child: PrimaryButtonWidget(
-                buttonBgImage: AppImages.buttonGreyBg,
-                backgroundColor: AppColors.grey1Color,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                text: 'Cancel',
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Gap(12.dp),
+              _header(),
+              Gap(11.dp),
+              Divider(
+                thickness: 1.dp,
+                color: AppColors.lightGrey,
               ),
-            ),
-            Gap(16.dp),
-          ],
-        ),
-      ),
+              // Gap(15.dp),
+              // Scrollable content area (excluding buttons)
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: controller,
+                  child: Column(
+                    children: [
+                      _bagID(),
+                      Gap(10.dp),
+                      _serviceDropdown(),
+                      // Gap(24.dp),
+                    ],
+                  ),
+                ),
+              ),
+              // Fixed buttons at the bottom
+              _addBagButton(),
+              Gap(8.dp),
+              Padding(
+                padding: EdgeInsets.only(left: 16.dp, right: 16.dp, bottom: 24.dp),
+                child: PrimaryButtonWidget(
+                  buttonBgImage: AppImages.buttonGreyBg,
+                  backgroundColor: AppColors.grey1Color,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  text: 'Cancel',
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -366,11 +382,9 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
         // Handle failures for both APIs
         if (state.createNewBagStatus is StatusFailure) {
           final errorMessage = (state.createNewBagStatus as StatusFailure).toString();
-          
+
           // Check if the error indicates bag is already assigned to another order
-          if (errorMessage.toLowerCase().contains('already assigned') || 
-              errorMessage.toLowerCase().contains('another order') ||
-              errorMessage.toLowerCase().contains('bag already exists')) {
+          if (errorMessage.toLowerCase().contains('already assigned') || errorMessage.toLowerCase().contains('another order') || errorMessage.toLowerCase().contains('bag already exists')) {
             // Show InvalidBagWarningDialog
             showDialog(
               context: context,
@@ -391,11 +405,9 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
 
         if (state.addBagStatus is StatusFailure) {
           final errorMessage = (state.addBagStatus as StatusFailure).toString();
-          
+
           // Check if the error indicates bag is already assigned to another order
-          if (errorMessage.toLowerCase().contains('already assigned') || 
-              errorMessage.toLowerCase().contains('another order') ||
-              errorMessage.toLowerCase().contains('bag already exists')) {
+          if (errorMessage.toLowerCase().contains('already assigned') || errorMessage.toLowerCase().contains('another order') || errorMessage.toLowerCase().contains('bag already exists')) {
             // Show InvalidBagWarningDialog
             showDialog(
               context: context,
@@ -413,8 +425,6 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
             );
           }
         }
-       
-       
       },
       listenWhen: (previous, current) => previous.createNewBagStatus != current.createNewBagStatus || previous.addBagStatus != current.addBagStatus,
       builder: (context, state) {
@@ -470,29 +480,29 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                     orElse: () => const ScannedBags(),
                   );
 
-                if (existingBag.bagId.isNotEmpty) {
-                  bagAlreadyExists = true;
-                  existingServiceName = item.service.name;
-                  existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
-                  existingServiceColor = hexToColor(item.service.color);
-                  // existingOrderServiceId = item.id;
-                  existingScannedBagId = existingBag.id;
-                  
-                  // Check if bag exists in the same service that user is trying to add to
-                  if (widget.isQuickOrder) {
-                    // For quick orders, check if the service ID matches
-                    if (item.service.id == selectedServiceId) {
-                      bagExistsInSameService = true;
+                  if (existingBag.bagId.isNotEmpty) {
+                    bagAlreadyExists = true;
+                    existingServiceName = item.service.name;
+                    existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
+                    existingServiceColor = hexToColor(item.service.color);
+                    // existingOrderServiceId = item.id;
+                    existingScannedBagId = existingBag.id;
+
+                    // Check if bag exists in the same service that user is trying to add to
+                    if (widget.isQuickOrder) {
+                      // For quick orders, check if the service ID matches
+                      if (item.service.id == selectedServiceId) {
+                        bagExistsInSameService = true;
+                      }
+                    } else {
+                      // For normal orders, check if the service ID matches
+                      if (item.service.id == selectedServiceId) {
+                        bagExistsInSameService = true;
+                      }
                     }
-                  } else {
-                    // For normal orders, check if the service ID matches
-                    if (item.service.id == selectedServiceId) {
-                      bagExistsInSameService = true;
-                    }
+                    break;
                   }
-                  break;
                 }
-              }
               }
 
               if (bagAlreadyExists) {
