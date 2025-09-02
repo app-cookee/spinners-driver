@@ -54,18 +54,21 @@ class _DeliveryConfirmBottomsheetState
           Gap(10.dp),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.dp),
-            child: CustomDropDownWidget(
+            child: CustomDropDownWidget(offsetHeight: 22.dp,
+              // labelstyle: AppTypography.sfProRoundedMedium.copyWith(fontSize: 16.dp,color: AppColors.grey1Color),
+              //AppTypography.sfProRoundedMedium.copyWith(fontSize: 16.dp,color: AppColors.neutral950),
+          
               onChanged: (value) {
                 setState(() {
                   _selectedPayment = value.value;
                 });
               },
               items: [
-                CustomDropDownMenuItem(label: 'Bank', value: 'swipeCard'),
-                CustomDropDownMenuItem(label: 'Cash', value: 'cod'),
+                CustomDropDownMenuItem(useImg: AppImages.card,label: 'Bank', value: 'swipeCard'),
+                CustomDropDownMenuItem(useImg: AppImages.money,label: 'Cash', value: 'cod'),
               ],
               text: 'Payment Method',
-              hint: 'Select Payment Method',
+              hint: 'Select Any',
             ),
           ),
           Gap(10.dp),
@@ -153,7 +156,7 @@ class _DeliveryConfirmBottomsheetState
             textStyle: AppTypography.sfProRoundedBold
                 .copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
             borderRadius: 12.dp,
-            initialValue:"#SPN${widget.orderRefId}" ,
+            initialValue:widget.orderRefId ,
             enabled: false,
           ),
         ],
@@ -175,7 +178,7 @@ class _DeliveryConfirmBottomsheetState
           CommonTextField(
             hintText: '',
             textStyle: AppTypography.sfProRoundedBold
-                .copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
+                .copyWith(fontSize: 16.sp, color: AppColors.neutral950),
             borderRadius: 12.dp,
             initialValue: widget.totalCollected.toString(),
             enabled: false,

@@ -82,43 +82,51 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
       ):const SizedBox.shrink();
     }
     )),
-
-              if(state.orderDetails.additionalCharges.isNotEmpty)...[
-                Gap(6.dp),
-                Row(
-                  children: [
-                    Text(
-                      "Express Surcharge",
-                      style: AppTypography.sfProRoundedRegular
-                          .copyWith(
-                        fontSize: 14.dp,
-                        color: AppColors.neutral900,
-                      ),
-                    ),
-                    Spacer(),
-                   Text(
-  "+${(
-    (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0) /
-    ((double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0)- (double.tryParse(state.orderDetails.additionalCharges.first.amount ?? "0") ?? 0)) * 100
-  ).toStringAsFixed(2)}%",
-  style: AppTypography.sfProRoundedRegular.copyWith(
-    fontSize: 14.dp,
-    color: AppColors.secondary600,
+   if (state.orderDetails.additionalCharges.isNotEmpty) ...[
+  Gap(6.dp),
+  Column(
+    children: state.orderDetails.additionalCharges.map((charge) {
+      final double amount = double.tryParse(charge.amount ?? "0") ?? 0;
+      final double totalAmount = double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0;
+      final double percentage = totalAmount > amount
+          ? (amount / (totalAmount - amount)) * 100
+          : 0;
+      return Padding(
+        padding: EdgeInsets.only(bottom: 6.dp),
+        child: Row(
+          children: [
+            Text(
+              charge.type=='expressService'? 'Express Surcharge' : charge.type=='quickOrderCharge'? 'Quick Order Surcharge' : charge.type,
+              style: AppTypography.sfProRoundedRegular.copyWith(
+                fontSize: 14.dp,
+                color: AppColors.neutral900,
+              ),
+            ),
+            const Spacer(),
+            if(charge.type!='quickOrderCharge')
+            Text(
+              "+${percentage.toStringAsFixed(2)}%",
+              style: AppTypography.sfProRoundedRegular.copyWith(
+                fontSize: 14.dp,
+                color: AppColors.secondary600,
+              ),
+            ),
+            if(charge.type!='quickOrderCharge')
+            Gap(8.dp),
+            Text(
+              "AED ${charge.amount}",
+              style: AppTypography.sfProRoundedRegular.copyWith(
+                fontSize: 14.dp,
+                color: charge.type=='quickOrderCharge'? AppColors.green : AppColors.neutral950,
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList(),
   ),
-),
+],
 
-                    Gap(8.dp),
-                    Text(state.orderDetails.additionalCharges.first.amount,
-                        style: AppTypography
-                            .sfProRoundedRegular
-                            .copyWith(
-                          fontSize: 14.dp,
-                          color: AppColors.neutral950,
-                        ))
-                  ],
-                ),
-                 
-             ],
 
                Gap(8.dp),
 Row(

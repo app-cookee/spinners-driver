@@ -144,7 +144,7 @@ class OrderDetailnfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Cash On Delivery Amount",
+              "Pay On Delivery Amount",
               style: AppTypography.sfProRoundedMedium.copyWith(
                 fontSize: 12.dp,
                 color: AppColors.textGrey,

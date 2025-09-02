@@ -8,7 +8,7 @@ abstract class DashboardDataModel with _$DashboardDataModel{
     @Default(0) int remainingDeliveries,
     @Default(0) int completedPickups,
     @Default(0) int completedDeliveries,
-    @Default(0) int totalCollectedCash,
+    @Default(0.0) double totalCollectedCash,
     @Default('') String nextActivityAt,
     @Default('') String activityType,
     @Default('') String lastCollectedCashAt,

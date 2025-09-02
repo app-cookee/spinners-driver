@@ -257,7 +257,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                 )
               // Show dropdown for quick orders
               else if (services.isNotEmpty)
-                CustomDropDownWidget(
+                CustomDropDownWidget(offsetHeight: 4,
                   onChanged: (selectedItem) {
                     final service = services.firstWhere((s) => s.name == selectedItem.label);
                     setState(() {

@@ -12,7 +12,8 @@ _DashboardDataModel _$DashboardDataModelFromJson(Map<String, dynamic> json) =>
       remainingDeliveries: (json['remainingDeliveries'] as num?)?.toInt() ?? 0,
       completedPickups: (json['completedPickups'] as num?)?.toInt() ?? 0,
       completedDeliveries: (json['completedDeliveries'] as num?)?.toInt() ?? 0,
-      totalCollectedCash: (json['totalCollectedCash'] as num?)?.toInt() ?? 0,
+      totalCollectedCash:
+          (json['totalCollectedCash'] as num?)?.toDouble() ?? 0.0,
       nextActivityAt: json['nextActivityAt'] as String? ?? '',
       activityType: json['activityType'] as String? ?? '',
       lastCollectedCashAt: json['lastCollectedCashAt'] as String? ?? '',

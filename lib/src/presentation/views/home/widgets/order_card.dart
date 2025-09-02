@@ -128,9 +128,8 @@ class OrderCard extends StatelessWidget {
       padding: EdgeInsets.only(right: 9.dp, left: 16.dp, bottom: 8.dp),
       child: Row(
         children: [
-          Text("Order ID", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.countrycodeColor)),
-          Gap(6.dp),
-          Text("#SPN$refId", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
+          Text("Order ID : ", style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.countrycodeColor)),
+          Text(refId, style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
           const Spacer(),
           if(isExpressService)...[  
             _expressLabel(),],

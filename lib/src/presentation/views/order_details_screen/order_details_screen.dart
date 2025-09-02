@@ -177,7 +177,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Gap(6.dp),
         
           Text(
-            "Order ID: #SPN$orderRefId",
+            "Order ID : $orderRefId",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
               fontSize: 16.dp,
               color: AppColors.neutral950,
@@ -188,20 +188,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  Widget _shimmerContainer() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        height: 20.dp,
-        width: 20.w,
-        decoration: BoxDecoration(
-          color: AppColors.neutral50,
-          borderRadius: BorderRadius.circular(2.dp),
-        ),
-      ),
-    );
-  }
 
   String formatSingleDate(String utcDate) {
     try {

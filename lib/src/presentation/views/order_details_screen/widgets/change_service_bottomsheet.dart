@@ -396,7 +396,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
                 )
               // Show dropdown for quick orders
               else if (services.isNotEmpty)
-                CustomDropDownWidget(
+                CustomDropDownWidget(offsetHeight: 4.dp,
                   onChanged: (selectedItem) {
                     final service = services.firstWhere((s) => s.name == selectedItem.label);
                     setState(() {

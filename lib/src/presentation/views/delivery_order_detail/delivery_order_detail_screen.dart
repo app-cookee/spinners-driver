@@ -84,6 +84,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                               state.orderDetails.status,
                                               state
                                                   .orderDetails.statusHistory)),
+                                                  Gap(4.dp),
+                                                  
                                     ],
                                   ),
                                 ),
@@ -201,9 +203,11 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                               ),
                                               if(state.orderDetails.customer?.user?.firstName != '')
                                               Text(
-                                                state.orderDetails.customer
+                                                '${state.orderDetails.customer
                                                         ?.user?.firstName ??
-                                                    '',
+                                                    ''} ${state.orderDetails.customer
+                                                        ?.user?.lastName ??
+                                                    ''}',
                                                 style: AppTypography
                                                     .sfProRoundedSemiBold
                                                     .copyWith(
@@ -323,7 +327,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
           ),
           Gap(6.dp),
           Text(
-            "Order ID: #SPN${widget.refId}",
+            "Order ID : ${widget.refId}",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
               fontSize: 16.dp,
               color: AppColors.neutral950,

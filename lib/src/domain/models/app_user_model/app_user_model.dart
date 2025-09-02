@@ -18,6 +18,7 @@ abstract class AppUser with _$AppUser {
     @JsonKey(name: 'lastName') @Default('') String lastName,
     @JsonKey(name: 'phoneNumber') @Default('') String phoneNumber,
     @JsonKey(name: 'timestamp') @Default('') String timestamp,
+    @JsonKey(name: 'vehicleNumber') @Default('') String vehicleNumber,
 
     // New fields from schema
     @JsonKey(name: 'referralCode') @Default('') String referralCode,

@@ -2,26 +2,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:spinners_driver/app/theme/app_colors.dart';
-import 'package:spinners_driver/app/theme/app_typography.dart';
-import 'package:spinners_driver/app/services/api_services/environment/config.dart';
-
-import 'package:spinners_driver/app/theme/app_colors.dart';
-import 'package:spinners_driver/app/theme/app_typography.dart';
-import 'package:spinners_driver/src/presentation/views/home/widgets/user_details.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
+import 'package:spinners_driver/app/services/api_services/environment/config.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_colors.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/presentation/views/home/widgets/user_details.dart';
+
 class ProfileUserDetail extends StatefulWidget {
-  final String name;
+  final String firstName;
+    final String? lastName;
   final String phone;
   final bool active;
   final String profileImage;
 
   const ProfileUserDetail({
-    super.key,
-    required this.name,
-    required this.phone, required this.active, required this.profileImage,
-  });
+    Key? key,
+    required this.firstName,
+    this.lastName,
+    required this.phone,
+    required this.active,
+    required this.profileImage,
+  }) : super(key: key);
 
   @override
   State<ProfileUserDetail> createState() => _ProfileUserDetailState();
@@ -148,7 +152,7 @@ class _ProfileUserDetailState extends State<ProfileUserDetail> with SingleTicker
               ).createShader(bounds),
               child: Text(
                 // avatar,
-                widget.name.isNotEmpty ? widget.name[0].toUpperCase() : 'D',
+                widget.firstName.isNotEmpty ? widget.firstName[0].toUpperCase() : 'D',
                 style: AppTypography.sfProRoundedSemiBold.copyWith(
                   color: AppColors.white,
                   fontSize: 20,
@@ -162,7 +166,7 @@ class _ProfileUserDetailState extends State<ProfileUserDetail> with SingleTicker
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.name,
+              '${widget.firstName} ${widget.lastName}',
               style: AppTypography.sfProRoundedSemiBold.copyWith(
                 color: AppColors.primary950,
                 fontSize: 16,

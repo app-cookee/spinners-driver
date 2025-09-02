@@ -25,7 +25,9 @@ mixin _$AppUser {
   @JsonKey(name: 'phoneNumber')
   String get phoneNumber;
   @JsonKey(name: 'timestamp')
-  String get timestamp; // New fields from schema
+  String get timestamp;
+  @JsonKey(name: 'vehicleNumber')
+  String get vehicleNumber; // New fields from schema
   @JsonKey(name: 'referralCode')
   String get referralCode;
   @JsonKey(name: 'photo')
@@ -62,6 +64,8 @@ mixin _$AppUser {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
+            (identical(other.vehicleNumber, vehicleNumber) ||
+                other.vehicleNumber == vehicleNumber) &&
             (identical(other.referralCode, referralCode) ||
                 other.referralCode == referralCode) &&
             (identical(other.photo, photo) || other.photo == photo) &&
@@ -82,6 +86,7 @@ mixin _$AppUser {
       lastName,
       phoneNumber,
       timestamp,
+      vehicleNumber,
       referralCode,
       photo,
       storeName,
@@ -90,7 +95,7 @@ mixin _$AppUser {
 
   @override
   String toString() {
-    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
+    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, vehicleNumber: $vehicleNumber, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
   }
 }
 
@@ -106,6 +111,7 @@ abstract mixin class $AppUserCopyWith<$Res> {
       @JsonKey(name: 'lastName') String lastName,
       @JsonKey(name: 'phoneNumber') String phoneNumber,
       @JsonKey(name: 'timestamp') String timestamp,
+      @JsonKey(name: 'vehicleNumber') String vehicleNumber,
       @JsonKey(name: 'referralCode') String referralCode,
       @JsonKey(name: 'photo') String? photo,
       @JsonKey(name: 'storeName') String? storeName,
@@ -131,6 +137,7 @@ class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
     Object? lastName = null,
     Object? phoneNumber = null,
     Object? timestamp = null,
+    Object? vehicleNumber = null,
     Object? referralCode = null,
     Object? photo = freezed,
     Object? storeName = freezed,
@@ -161,6 +168,10 @@ class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
       timestamp: null == timestamp
           ? _self.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
+              as String,
+      vehicleNumber: null == vehicleNumber
+          ? _self.vehicleNumber
+          : vehicleNumber // ignore: cast_nullable_to_non_nullable
               as String,
       referralCode: null == referralCode
           ? _self.referralCode
@@ -286,6 +297,7 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'lastName') String lastName,
             @JsonKey(name: 'phoneNumber') String phoneNumber,
             @JsonKey(name: 'timestamp') String timestamp,
+            @JsonKey(name: 'vehicleNumber') String vehicleNumber,
             @JsonKey(name: 'referralCode') String referralCode,
             @JsonKey(name: 'photo') String? photo,
             @JsonKey(name: 'storeName') String? storeName,
@@ -304,6 +316,7 @@ extension AppUserPatterns on AppUser {
             _that.lastName,
             _that.phoneNumber,
             _that.timestamp,
+            _that.vehicleNumber,
             _that.referralCode,
             _that.photo,
             _that.storeName,
@@ -336,6 +349,7 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'lastName') String lastName,
             @JsonKey(name: 'phoneNumber') String phoneNumber,
             @JsonKey(name: 'timestamp') String timestamp,
+            @JsonKey(name: 'vehicleNumber') String vehicleNumber,
             @JsonKey(name: 'referralCode') String referralCode,
             @JsonKey(name: 'photo') String? photo,
             @JsonKey(name: 'storeName') String? storeName,
@@ -353,6 +367,7 @@ extension AppUserPatterns on AppUser {
             _that.lastName,
             _that.phoneNumber,
             _that.timestamp,
+            _that.vehicleNumber,
             _that.referralCode,
             _that.photo,
             _that.storeName,
@@ -384,6 +399,7 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'lastName') String lastName,
             @JsonKey(name: 'phoneNumber') String phoneNumber,
             @JsonKey(name: 'timestamp') String timestamp,
+            @JsonKey(name: 'vehicleNumber') String vehicleNumber,
             @JsonKey(name: 'referralCode') String referralCode,
             @JsonKey(name: 'photo') String? photo,
             @JsonKey(name: 'storeName') String? storeName,
@@ -401,6 +417,7 @@ extension AppUserPatterns on AppUser {
             _that.lastName,
             _that.phoneNumber,
             _that.timestamp,
+            _that.vehicleNumber,
             _that.referralCode,
             _that.photo,
             _that.storeName,
@@ -422,6 +439,7 @@ class _AppUser implements AppUser {
       @JsonKey(name: 'lastName') this.lastName = '',
       @JsonKey(name: 'phoneNumber') this.phoneNumber = '',
       @JsonKey(name: 'timestamp') this.timestamp = '',
+      @JsonKey(name: 'vehicleNumber') this.vehicleNumber = '',
       @JsonKey(name: 'referralCode') this.referralCode = '',
       @JsonKey(name: 'photo') this.photo,
       @JsonKey(name: 'storeName') this.storeName,
@@ -448,6 +466,9 @@ class _AppUser implements AppUser {
   @override
   @JsonKey(name: 'timestamp')
   final String timestamp;
+  @override
+  @JsonKey(name: 'vehicleNumber')
+  final String vehicleNumber;
 // New fields from schema
   @override
   @JsonKey(name: 'referralCode')
@@ -495,6 +516,8 @@ class _AppUser implements AppUser {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
+            (identical(other.vehicleNumber, vehicleNumber) ||
+                other.vehicleNumber == vehicleNumber) &&
             (identical(other.referralCode, referralCode) ||
                 other.referralCode == referralCode) &&
             (identical(other.photo, photo) || other.photo == photo) &&
@@ -515,6 +538,7 @@ class _AppUser implements AppUser {
       lastName,
       phoneNumber,
       timestamp,
+      vehicleNumber,
       referralCode,
       photo,
       storeName,
@@ -523,7 +547,7 @@ class _AppUser implements AppUser {
 
   @override
   String toString() {
-    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
+    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, vehicleNumber: $vehicleNumber, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
   }
 }
 
@@ -540,6 +564,7 @@ abstract mixin class _$AppUserCopyWith<$Res> implements $AppUserCopyWith<$Res> {
       @JsonKey(name: 'lastName') String lastName,
       @JsonKey(name: 'phoneNumber') String phoneNumber,
       @JsonKey(name: 'timestamp') String timestamp,
+      @JsonKey(name: 'vehicleNumber') String vehicleNumber,
       @JsonKey(name: 'referralCode') String referralCode,
       @JsonKey(name: 'photo') String? photo,
       @JsonKey(name: 'storeName') String? storeName,
@@ -565,6 +590,7 @@ class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
     Object? lastName = null,
     Object? phoneNumber = null,
     Object? timestamp = null,
+    Object? vehicleNumber = null,
     Object? referralCode = null,
     Object? photo = freezed,
     Object? storeName = freezed,
@@ -595,6 +621,10 @@ class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
       timestamp: null == timestamp
           ? _self.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
+              as String,
+      vehicleNumber: null == vehicleNumber
+          ? _self.vehicleNumber
+          : vehicleNumber // ignore: cast_nullable_to_non_nullable
               as String,
       referralCode: null == referralCode
           ? _self.referralCode

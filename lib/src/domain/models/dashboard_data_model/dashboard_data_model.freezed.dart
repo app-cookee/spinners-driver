@@ -18,7 +18,7 @@ mixin _$DashboardDataModel {
   int get remainingDeliveries;
   int get completedPickups;
   int get completedDeliveries;
-  int get totalCollectedCash;
+  double get totalCollectedCash;
   String get nextActivityAt;
   String get activityType;
   String get lastCollectedCashAt;
@@ -87,7 +87,7 @@ abstract mixin class $DashboardDataModelCopyWith<$Res> {
       int remainingDeliveries,
       int completedPickups,
       int completedDeliveries,
-      int totalCollectedCash,
+      double totalCollectedCash,
       String nextActivityAt,
       String activityType,
       String lastCollectedCashAt});
@@ -135,7 +135,7 @@ class _$DashboardDataModelCopyWithImpl<$Res>
       totalCollectedCash: null == totalCollectedCash
           ? _self.totalCollectedCash
           : totalCollectedCash // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       nextActivityAt: null == nextActivityAt
           ? _self.nextActivityAt
           : nextActivityAt // ignore: cast_nullable_to_non_nullable
@@ -250,7 +250,7 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             int remainingDeliveries,
             int completedPickups,
             int completedDeliveries,
-            int totalCollectedCash,
+            double totalCollectedCash,
             String nextActivityAt,
             String activityType,
             String lastCollectedCashAt)?
@@ -294,7 +294,7 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             int remainingDeliveries,
             int completedPickups,
             int completedDeliveries,
-            int totalCollectedCash,
+            double totalCollectedCash,
             String nextActivityAt,
             String activityType,
             String lastCollectedCashAt)
@@ -336,7 +336,7 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             int remainingDeliveries,
             int completedPickups,
             int completedDeliveries,
-            int totalCollectedCash,
+            double totalCollectedCash,
             String nextActivityAt,
             String activityType,
             String lastCollectedCashAt)?
@@ -368,7 +368,7 @@ class _DashboardDataModel implements DashboardDataModel {
       this.remainingDeliveries = 0,
       this.completedPickups = 0,
       this.completedDeliveries = 0,
-      this.totalCollectedCash = 0,
+      this.totalCollectedCash = 0.0,
       this.nextActivityAt = '',
       this.activityType = '',
       this.lastCollectedCashAt = ''});
@@ -389,7 +389,7 @@ class _DashboardDataModel implements DashboardDataModel {
   final int completedDeliveries;
   @override
   @JsonKey()
-  final int totalCollectedCash;
+  final double totalCollectedCash;
   @override
   @JsonKey()
   final String nextActivityAt;
@@ -470,7 +470,7 @@ abstract mixin class _$DashboardDataModelCopyWith<$Res>
       int remainingDeliveries,
       int completedPickups,
       int completedDeliveries,
-      int totalCollectedCash,
+      double totalCollectedCash,
       String nextActivityAt,
       String activityType,
       String lastCollectedCashAt});
@@ -518,7 +518,7 @@ class __$DashboardDataModelCopyWithImpl<$Res>
       totalCollectedCash: null == totalCollectedCash
           ? _self.totalCollectedCash
           : totalCollectedCash // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       nextActivityAt: null == nextActivityAt
           ? _self.nextActivityAt
           : nextActivityAt // ignore: cast_nullable_to_non_nullable

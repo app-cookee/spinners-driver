@@ -264,8 +264,8 @@ class _UpdateDetailsBottomSheetState extends State<UpdateDetailsBottomSheet> {
                     onPressed: () {
                       context.read<AuthBloc>().add(
                             AuthEvent.updateProfileEvent(
-                                firstName: firstNameController.text.trim(),
-                                lastName: lastNameController.text.trim(),
+                                    firstName: _capitalize(firstNameController.text.trim()),
+    lastName: _capitalize(lastNameController.text.trim()),
                                 photoName: _imageNameToUpload ?? '',
                                 photoPath: _imagePath ?? ''),
                           );
@@ -280,6 +280,11 @@ class _UpdateDetailsBottomSheetState extends State<UpdateDetailsBottomSheet> {
       ),
     );
   }
+  String _capitalize(String value) {
+  if (value.isEmpty) return value;
+  return value[0].toUpperCase() + value.substring(1);
+}
+
 
   Container userDetailsField(TextEditingController controller) {
     return Container(
@@ -299,10 +304,12 @@ class _UpdateDetailsBottomSheetState extends State<UpdateDetailsBottomSheet> {
           border: Border.all(color: AppColors.lightGrey, width: 1.2),
         ),
         child: TextFormField(
+          
+       
           controller: controller,
           style: AppTypography.sfProRoundedMedium
               .copyWith(fontSize: 16.dp, color: AppColors.neutral950),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: InputBorder.none,
             isDense: true,
           ),

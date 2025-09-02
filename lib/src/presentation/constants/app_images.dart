@@ -40,6 +40,8 @@ static const String emptyPlaceholderImage = 'assets/images/emptyPlaceholderImage
 static const String redButtonBg='assets/images/red_button_bg.png';
 static const String arrowDown='assets/images/arrow-down.png';
 static const String warningIcon='assets/images/ic_warning.png';
+static const String money='assets/images/money.png';
+static const String card='assets/images/cards.png';
 
 
 

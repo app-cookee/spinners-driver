@@ -89,11 +89,10 @@ class PickDropHistoryCard extends StatelessWidget {
       padding: EdgeInsets.only(right: 9.dp, left: 16.dp, bottom: 8.dp),
       child: Row(
         children: [
-          Text("Order ID",
+          Text("Order ID : ",
               style: AppTypography.sfProRoundedMedium.copyWith(
                   fontSize: 12.dp, color: AppColors.countrycodeColor)),
-          Gap(6.dp),
-          Text("#SPN$refId",
+          Text(refId,
               style: AppTypography.sfProRoundedMedium
                   .copyWith(fontSize: 12.dp, color: AppColors.textGrey)),
           const Spacer(),

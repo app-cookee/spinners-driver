@@ -31,7 +31,7 @@ class CustomDropDownWidget extends StatefulWidget {
     this.dropValueFontSize,
     this.height,
     this.dropDownIcon,
-    this.onDropdownStateChanged,
+    this.onDropdownStateChanged,required this.offsetHeight,
   });
 
   final Function(CustomDropDownMenuItem) onChanged;
@@ -43,6 +43,7 @@ class CustomDropDownWidget extends StatefulWidget {
   final bool isLoading;
   final List<CustomDropDownMenuItem> items;
   final double? height;
+  final num offsetHeight;
   final String? dropDownIcon;
   final Function(bool)? onDropdownStateChanged;
 
@@ -119,52 +120,116 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
               child: CompositedTransformFollower(
                 link: _layerLink,
                 showWhenUnlinked: false,
-                offset: Offset(0, size.height - 10.dp), //50
+                offset: Offset(0, size.height - widget.offsetHeight), //50
                 child: Material(
                   color: Colors.transparent,
                   child: GestureDetector(
                     onTap: () {}, // Prevent tap from propagating
                     child: Container(
-                      margin: const EdgeInsets.only(top: 5),
+                      // margin: const EdgeInsets.only(top: 5),
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(6.dp),
-                        border: Border.all(color: AppColors.loginFieldBorderColor),
+                        borderRadius: BorderRadius.circular(8.dp),
+                        border: Border.all(color:const Color(0xFFF4F4F4)),
+                           boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.18),
+        blurRadius: 16,
+        offset: const Offset(0, 7),
+        spreadRadius: 0,
+      ),
+     
+    ],
                       ),
+                      
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
                           maxHeight: 200.dp, // Maximum height for the dropdown
                         ),
                         child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          children: widget.items
-                              .map((CustomDropDownMenuItem item) => ListTile(
-                                    leading: item.useImg != null
-                                        ? Image.asset(
-                                            item.useImg!,
-                                            height: 20.dp,
-                                            width: 20.dp,
-                                            color: item.imageColor,
-                                          )
-                                        : const SizedBox.shrink(),
-                                    onTap: () {
-                                      if (_isMounted) {
-                                        dropValue.value = item;
-                                        widget.onChanged(item);
-                                        _removeOverlay();
-                                      }
-                                    },
-                                    title: Text(
-                                      item.label,
-                                      style: AppTypography.sfProRoundedMedium.copyWith(
-                                        fontSize: 14.sp,
-                                        color: AppColors.neutral500,
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
+  padding: EdgeInsets.zero,
+  shrinkWrap: true,
+  children: widget.items
+      .map((CustomDropDownMenuItem item) 
+      
+       {
+         bool isSelected = dropValue.value?.value == item.value;
+      return  GestureDetector(
+            onTap: () {
+              if (_isMounted) {
+                dropValue.value = item;
+                widget.onChanged(item);
+                _removeOverlay();
+              }
+            },
+            child: Container(
+               margin: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 2.dp),
+            decoration: BoxDecoration(
+              color: isSelected ? const Color(0xFFE9F7FF) : Colors.transparent,
+              borderRadius: BorderRadius.circular(8.dp),
+              border: isSelected 
+                  ? Border.all(color: const Color(0xFFD2E8F4), width: 1)
+                  : Border.all(color: Colors.transparent, width: 1),
+            ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // Add padding similar to ListTile
+                child: Row(
+                  children: [
+                    item.useImg != null
+                        ? Image.asset(
+                            item.useImg!,
+                            height: 20.dp,
+                            width: 20.dp,
+                            color: item.imageColor,
+                          )
+                        : const SizedBox.shrink(),
+                    SizedBox(width: 7.dp), // This is your 7-pixel gap
+                    Expanded(
+                      child: Text(
+                        item.label,
+                        style: AppTypography.sfProRoundedMedium.copyWith(
+                          fontSize: 16.sp,
+                          color: AppColors.neutral950,
                         ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );})
+      .toList(),
+),
+                        // child: ListView(
+                        //   padding: EdgeInsets.zero,
+                        //   shrinkWrap: true,
+                        //   children: widget.items
+                        //       .map((CustomDropDownMenuItem item) => ListTile(
+                        //             leading: item.useImg != null
+                        //                 ? Image.asset(
+                        //                     item.useImg!,
+                        //                     height: 20.dp,
+                        //                     width: 20.dp,
+                        //                     color: item.imageColor,
+                        //                   )
+                        //                 : const SizedBox.shrink(),
+                        //             onTap: () {
+                        //               if (_isMounted) {
+                        //                 dropValue.value = item;
+                        //                 widget.onChanged(item);
+                        //                 _removeOverlay();
+                        //               }
+                        //             },
+                        //             title: Text(
+                        //               item.label,
+                        //               style: AppTypography.sfProRoundedMedium.copyWith(
+                        //                 fontSize: 14.sp,
+                        //                 color: AppColors.neutral500,
+                        //               ),
+                        //             ),
+                        //           ))
+                        //       .toList(),
+                        // ),
                       ),
                     ),
                   ),
@@ -237,13 +302,28 @@ class _CustomDropDownState extends State<CustomDropDownWidget> {
                                     color: dropValue.value?.imageColor,
                                   ),
                                 ),
-                              Text(
-                                dropValue.value?.label ?? widget.hint,
-                                style:widget.labelstyle?? AppTypography.sfProRoundedMedium.copyWith(
-                                  fontSize: widget.dropValueFontSize ?? 16.sp,
-                                  color: dropValue.value != null ? AppColors.neutral950 : AppColors.neutral950,
-                                ),
-                              ),
+                                
+Text(
+  dropValue.value?.label ?? widget.hint,
+  style: dropValue.value != null 
+    ? AppTypography.sfProRoundedMedium.copyWith(
+        fontSize: widget.dropValueFontSize ?? 16.sp,
+        color: AppColors.neutral950, // Style for selected item
+        fontWeight: FontWeight.w600, // Make selected text bolder
+      )
+    : (widget.labelstyle ?? AppTypography.sfProRoundedMedium.copyWith(
+        fontSize: widget.dropValueFontSize ?? 16.sp,
+        color: AppColors.grey1Color, // Style for hint text
+        fontWeight: FontWeight.w500, // Keep hint text lighter
+      )),
+),
+                              // Text(
+                              //   dropValue.value?.label ?? widget.hint,
+                              //   style:widget.labelstyle?? AppTypography.sfProRoundedMedium.copyWith(
+                              //     fontSize: widget.dropValueFontSize ?? 16.sp,
+                              //     color: dropValue.value != null ? AppColors.neutral950 : AppColors.neutral950,
+                              //   ),
+                              // ),
                             ],
                           ),
                           Image.asset(
