@@ -27,17 +27,29 @@ class OrderedServices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrderBloc, OrderState>(builder: (context, state) {
+      // Get unique services by name to avoid duplicates
+      final seenServices = <String>{};
+      final uniqueServices = <dynamic>[];
+      
+      for (final orderedItem in state.orderDetails.orderedItems) {
+        final serviceName = orderedItem.service.name;
+        if (!seenServices.contains(serviceName)) {
+          seenServices.add(serviceName);
+          uniqueServices.add(orderedItem);
+        }
+      }
+
       return ListView.builder(
           padding: EdgeInsets.symmetric(horizontal: 16.dp),
-          itemCount: state.orderDetails.orderedItems.length,
+          itemCount: uniqueServices.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) => _orderedServiceCard(index, state, context));
+          itemBuilder: (context, index) => _orderedServiceCard(index, uniqueServices, state, context));
     });
   }
 
-  Widget _orderedServiceCard(int index, OrderState state, BuildContext context) {
-    final orderedItem = state.orderDetails.orderedItems[index];
+  Widget _orderedServiceCard(int index, List<dynamic> uniqueServices, OrderState state, BuildContext context) {
+    final orderedItem = uniqueServices[index];
     final scannedBagsCount = orderedItem.service.scannedBags.length;
     return Container(
       margin: EdgeInsets.only(bottom: 8.dp),

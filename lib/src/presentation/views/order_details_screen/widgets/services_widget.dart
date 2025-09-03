@@ -44,7 +44,9 @@ class _ServicesWidgetState extends State<ServicesWidget> {
   void didUpdateWidget(ServicesWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Update additional notes when order state changes
-    if (oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status || oldWidget.orderState.orderDetails.driverNotes != widget.orderState.orderDetails.driverNotes) {
+    if (oldWidget.orderState.orderDetails.id != widget.orderState.orderDetails.id || 
+        oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status || 
+        oldWidget.orderState.orderDetails.driverNotes != widget.orderState.orderDetails.driverNotes) {
       _populateAdditionalNotes();
     }
   }
@@ -53,6 +55,10 @@ class _ServicesWidgetState extends State<ServicesWidget> {
     // If status is pickedUp and there are driver notes, populate the controller
     if (widget.orderState.orderDetails.status == "pickedUp" && widget.orderState.orderDetails.driverNotes.isNotEmpty) {
       widget.additionalNotesController.text = widget.orderState.orderDetails.driverNotes;
+    } else {
+      // Clear the controller if there are no driver notes or status is not pickedUp
+      // This ensures notes from previous orders don't persist
+      widget.additionalNotesController.clear();
     }
   }
 

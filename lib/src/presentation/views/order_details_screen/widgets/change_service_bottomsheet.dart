@@ -292,7 +292,15 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
   Widget _serviceDropdown() {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        final services = state.servicesList;
+        // Get unique services by ID to avoid duplicates
+        final Map<String, dynamic> uniqueServicesMap = {};
+        for (final item in state.orderDetails.orderedItems) {
+          if (!uniqueServicesMap.containsKey(item.service.id)) {
+            uniqueServicesMap[item.service.id] = item.service;
+          }
+        }
+        final services = uniqueServicesMap.values.toList();
+        
         final isLoading = state.getServicesListStatus is StatusLoading;
         final hasError = state.getServicesListStatus is StatusFailure;
 
@@ -419,7 +427,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
                 )
                
               // Show empty state
-              else if (services.isNotEmpty && services.where((service) => service.color.isEmpty).isEmpty)//else
+              else if (services.isEmpty)
 
                 Container(
                   width: double.infinity,

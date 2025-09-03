@@ -41,6 +41,7 @@ class OrderDetailnfo extends StatelessWidget {
             notes != ""
                 ? Container(
                     width: 100.w,
+                    margin: EdgeInsets.only(top: 4.dp),
                     decoration: BoxDecoration(color: AppColors.secondary50, borderRadius: BorderRadius.circular(8.dp)),
                     padding: EdgeInsets.all(12.dp),
                     child: Column(

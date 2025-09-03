@@ -33,18 +33,29 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  @override
+    @override
   void initState() {
     context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId));
     log('Fetching order details for order ID: ${widget.orderId}');
 
     super.initState();
-    // additionalNotesController.text=
+    // Clear any previous notes when initializing
+    additionalNotesController.clear();
+  }
 
+  @override
+  void didUpdateWidget(OrderDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Clear additional notes when order changes
+    if (oldWidget.orderId != widget.orderId) {
+      additionalNotesController.clear();
+      log('Order changed from ${oldWidget.orderId} to ${widget.orderId}, cleared additional notes');
+    }
   }
 
   @override
   void dispose() {
+    additionalNotesController.dispose();
     super.dispose();
   }
   final TextEditingController additionalNotesController = TextEditingController();
@@ -55,81 +66,104 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       behavior: NoGlowScrollBehavior(),
       child: Scaffold(
         backgroundColor: AppColors.white,
-        body: BlocBuilder<OrderBloc, OrderState>(
-          builder: (context, state) {
-            return Stack(
-              children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context), 
-                  child: _header(context, state.orderDetails.refId)
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
-                  child: Builder(
-                    builder: (context) {
-                      if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
-                        return const PickupOrderDetailScreenPlaceholder();
-                      }
-                    
-                      return CustomScrollView(
-                        slivers: [
-                          _orderInfo(state),
-                          OrderDetailnfo(
-                            notes: state.orderDetails.customerNote,
-                            customer: _getCustomerName(state.orderDetails.customer),
-                            amount: state.orderDetails.totalAmount,
-                            title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
-                            timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
-                            address: formatAddress(state.orderDetails.selectedAddress.place),
-                            status: state.orderDetails.status,
-                            onNavigateTap: () {
-                              final lat = state.orderDetails.selectedAddress.latitude;
-                              final lon = state.orderDetails.selectedAddress.longitude;
-                              (lat == "" || lon == "")
-                                  ? TheToast.show(message: "This location is not available", context: context)
-                                  : MapNavigationHelper.openNavigation(double.tryParse(lat), double.tryParse(lon), context);
-                            },
-                            onCallTap: () {
-                              LauncherUtils.launchPhoneDialer(state.orderDetails.customer.user?.phoneNumber ?? '', context: context);
-                            },
-                            onWhatsAppTap: () {
-                              LauncherUtils.launchWhatsApp(state.orderDetails.customer.user?.phoneNumber ?? '', 'Hi', context: context);
-                            },
-                          ),
-                          SliverToBoxAdapter(
-                            child: ServicesWidget(
-                              orderState: state,
-                              orderId: widget.orderId,
-                              scannedQRCodes: scannedQRCodes,
-                              additionalNotesController: additionalNotesController,
+        body: BlocListener<OrderBloc, OrderState>(
+          listenWhen: (previous, current) => 
+            previous.orderDetails.id != current.orderDetails.id || 
+            previous.getOrderDetailStatus != current.getOrderDetailStatus,
+          listener: (context, state) {
+            // Clear additional notes when order details change or when a new order is fetched
+            if (state.orderDetails.id.isNotEmpty && 
+                state.orderDetails.id != widget.orderId && 
+                state.getOrderDetailStatus is StatusSuccess) {
+              additionalNotesController.clear();
+              log('Order details changed, cleared additional notes for order: ${state.orderDetails.id}');
+            }
+            // Also clear when current order details are successfully fetched (to ensure clean state)
+            if (state.orderDetails.id == widget.orderId && 
+                state.getOrderDetailStatus is StatusSuccess) {
+              // Only clear if there are no driver notes for picked up orders
+              if (state.orderDetails.status != "pickedUp" || state.orderDetails.driverNotes.isEmpty) {
+                additionalNotesController.clear();
+                log('Cleared additional notes for current order: ${state.orderDetails.id}');
+              }
+            }
+          },
+          child: BlocBuilder<OrderBloc, OrderState>(
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context), 
+                    child: _header(context, state.orderDetails.refId)
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
+                    child: Builder(
+                      builder: (context) {
+                        if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
+                          return const PickupOrderDetailScreenPlaceholder();
+                        }
+                       
+                        return CustomScrollView(
+                          slivers: [
+                            _orderInfo(state),
+                            OrderDetailnfo(
+                              notes: state.orderDetails.customerNote,
+                              customer: _getCustomerName(state.orderDetails.customer),
+                              amount: state.orderDetails.totalAmount,
+                              title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
+                              timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
+                              address: formatAddress(state.orderDetails.selectedAddress.place),
+                              status: state.orderDetails.status,
+                              onNavigateTap: () {
+                                final lat = state.orderDetails.selectedAddress.latitude;
+                                final lon = state.orderDetails.selectedAddress.longitude;
+                                (lat == "" || lon == "")
+                                    ? TheToast.show(message: "This location is not available", context: context)
+                                    : MapNavigationHelper.openNavigation(double.tryParse(lat), double.tryParse(lon), context);
+                              },
+                              onCallTap: () {
+                                LauncherUtils.launchPhoneDialer(state.orderDetails.customer.user?.phoneNumber ?? '', context: context);
+                              },
+                              onWhatsAppTap: () {
+                                LauncherUtils.launchWhatsApp(state.orderDetails.customer.user?.phoneNumber ?? '', 'Hi', context: context);
+                              },
                             ),
-                          )
-                        ],
+                            SliverToBoxAdapter(
+                              child: ServicesWidget(
+                                orderState: state,
+                                orderId: widget.orderId,
+                                scannedQRCodes: scannedQRCodes,
+                                additionalNotesController: additionalNotesController,
+                              ),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  Builder(
+                    builder: (context) {
+                      // Hide footer button when loading, initial state, or order is picked up
+                      if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial || state.orderDetails.status == 'pickedUp') {
+                        return const SizedBox.shrink();
+                      }
+                      return Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: FooterButtons(
+                          orderId: widget.orderId,
+                          additionalNotesController: additionalNotesController,
+                         
+                        ),
                       );
                     },
-                  ),
-                ),
-                Builder(
-                  builder: (context) {
-                    // Hide footer button when loading, initial state, or order is picked up
-                    if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial || state.orderDetails.status == 'pickedUp') {
-                      return const SizedBox.shrink();
-                    }
-                    return Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: FooterButtons(
-                        orderId: widget.orderId,
-                        additionalNotesController: additionalNotesController,
-                       
-                      ),
-                    );
-                  },
-                )
-              ],
-            );
-          },
+                  )
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

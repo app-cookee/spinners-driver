@@ -100,6 +100,13 @@ class _FooterButtonsState extends State<FooterButtons> {
         if (state.confirmPickupStatus is StatusSuccess) {
           context.router.pop();
         }
+        if(state.confirmPickupStatus is StatusFailure) {
+          TheToast.show(
+            isError: true,
+            message:state.confirmPickupStatus.errorMessage , 
+            context: context,
+          );
+        }
       },
       listenWhen: (previous, current) => current.confirmPickupStatus != previous.confirmPickupStatus,
       child: BlocBuilder<OrderBloc, OrderState>(
@@ -122,25 +129,25 @@ class _FooterButtonsState extends State<FooterButtons> {
             child: Column(
               children: [
                 PrimaryButtonWidget(
-                  onPressed: canConfirm ? () {
-                    context.read<OrderBloc>().add(OrderEvent.confirmPickup(
-                          orderId: widget.orderId,
-                          driverNotes: widget.additionalNotesController.text,
-                        ));
-                  } : () {
-                    // Show error message when conditions are not met
-                    TheToast.show(
-                      isError: true,
-                      message: _getErrorMessage(state),
-                      context: context,
-                    );
-                  },
-                  // onPressed: () {
-                  //      context.read<OrderBloc>().add(OrderEvent.confirmPickup(
+                  // onPressed: canConfirm ? () {
+                  //   context.read<OrderBloc>().add(OrderEvent.confirmPickup(
                   //         orderId: widget.orderId,
                   //         driverNotes: widget.additionalNotesController.text,
                   //       ));
+                  // } : () {
+                  //   // Show error message when conditions are not met
+                  //   TheToast.show(
+                  //     isError: true,
+                  //     message: _getErrorMessage(state),
+                  //     context: context,
+                  //   );
                   // },
+                  onPressed: () {
+                       context.read<OrderBloc>().add(OrderEvent.confirmPickup(
+                          orderId: widget.orderId,
+                          driverNotes: widget.additionalNotesController.text,
+                        ));
+                  },
                   isLoading: isLoading,
                   text: "Confirm Pickup",
                   height: 48.dp,
