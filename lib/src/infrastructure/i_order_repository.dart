@@ -41,6 +41,7 @@ class OrderRepositoryImplementation implements OrderRepository {
       OrderDetailsResponseModel orderDetail = OrderDetailsResponseModel.fromJson(response.data);
       return orderDetail;
     } catch (e) {
+    log(e.toString(),name: "error in detail");
       rethrow;
     }
   }

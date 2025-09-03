@@ -41,6 +41,11 @@ class _LoginScreenState extends State<OtpScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    showKeyboard.value = true;
+    
+    FocusScope.of(context).requestFocus(_focusNode);
+    });
     _focusNode.addListener(() {
       showKeyboard.value = _focusNode.hasFocus;
     });
@@ -55,6 +60,15 @@ class _LoginScreenState extends State<OtpScreen> {
             );
           }
         });
+      }
+    });
+    otpListener.addListener(() {
+      if (otpListener.value.length == 6) {
+        // Hide keyboard
+        _focusNode.unfocus();
+        showKeyboard.value = false;
+        // Auto-submit OTP
+        onButtonSubmit(otpp: otpListener.value);
       }
     });
   }
@@ -169,7 +183,7 @@ class _LoginScreenState extends State<OtpScreen> {
                                     child: ValueListenableBuilder<String>(
                                       valueListenable: otpListener,
                                       builder: (context, otp, child) {
-                                        return OtpFieldWidget(
+                                        return OtpFieldWidget(focusNode: _focusNode,
                                           otpValue: otp,
                                           onTap: () {
                                             if (!showKeyboard.value) {

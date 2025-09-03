@@ -16,7 +16,7 @@ _OrderDetailsResponseModel _$OrderDetailsResponseModelFromJson(
       customerNote: json['customerNote'] as String? ?? '',
       type: json['type'] as String? ?? '',
       status: json['status'] as String? ?? '',
-      refId: (json['refId'] as num?)?.toInt() ?? 0,
+      refId: json['refId'] as String? ?? '',
       pickupSlotId: json['pickupSlotId'] as String? ?? '',
       deliverySlotId: json['deliverySlotId'] as String? ?? '',
       selectedAddressId: json['selectedAddressId'] as String? ?? '',

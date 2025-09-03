@@ -372,7 +372,7 @@ mixin _$OrderResponse {
   @JsonKey(name: 'status')
   String get status;
   @JsonKey(name: 'refId')
-  int get refId;
+  String get refId;
   @JsonKey(name: 'pickupSlotId')
   String get pickupSlotId;
   @JsonKey(name: 'deliverySlotId')
@@ -539,7 +539,7 @@ abstract mixin class $OrderResponseCopyWith<$Res> {
       @JsonKey(name: 'expressDelivery') bool expressDelivery,
       @JsonKey(name: 'type') String type,
       @JsonKey(name: 'status') String status,
-      @JsonKey(name: 'refId') int refId,
+      @JsonKey(name: 'refId') String refId,
       @JsonKey(name: 'pickupSlotId') String pickupSlotId,
       @JsonKey(name: 'deliverySlotId') String deliverySlotId,
       @JsonKey(name: 'selectedAddressId') String selectedAddressId,
@@ -648,7 +648,7 @@ class _$OrderResponseCopyWithImpl<$Res>
       refId: null == refId
           ? _self.refId
           : refId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       pickupSlotId: null == pickupSlotId
           ? _self.pickupSlotId
           : pickupSlotId // ignore: cast_nullable_to_non_nullable
@@ -905,7 +905,7 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'expressDelivery') bool expressDelivery,
             @JsonKey(name: 'type') String type,
             @JsonKey(name: 'status') String status,
-            @JsonKey(name: 'refId') int refId,
+            @JsonKey(name: 'refId') String refId,
             @JsonKey(name: 'pickupSlotId') String pickupSlotId,
             @JsonKey(name: 'deliverySlotId') String deliverySlotId,
             @JsonKey(name: 'selectedAddressId') String selectedAddressId,
@@ -992,7 +992,7 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'expressDelivery') bool expressDelivery,
             @JsonKey(name: 'type') String type,
             @JsonKey(name: 'status') String status,
-            @JsonKey(name: 'refId') int refId,
+            @JsonKey(name: 'refId') String refId,
             @JsonKey(name: 'pickupSlotId') String pickupSlotId,
             @JsonKey(name: 'deliverySlotId') String deliverySlotId,
             @JsonKey(name: 'selectedAddressId') String selectedAddressId,
@@ -1077,7 +1077,7 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'expressDelivery') bool expressDelivery,
             @JsonKey(name: 'type') String type,
             @JsonKey(name: 'status') String status,
-            @JsonKey(name: 'refId') int refId,
+            @JsonKey(name: 'refId') String refId,
             @JsonKey(name: 'pickupSlotId') String pickupSlotId,
             @JsonKey(name: 'deliverySlotId') String deliverySlotId,
             @JsonKey(name: 'selectedAddressId') String selectedAddressId,
@@ -1152,7 +1152,7 @@ class _OrderResponse implements OrderResponse {
       @JsonKey(name: 'expressDelivery') this.expressDelivery = false,
       @JsonKey(name: 'type') this.type = "",
       @JsonKey(name: 'status') this.status = "",
-      @JsonKey(name: 'refId') this.refId = 0,
+      @JsonKey(name: 'refId') this.refId = "",
       @JsonKey(name: 'pickupSlotId') this.pickupSlotId = "",
       @JsonKey(name: 'deliverySlotId') this.deliverySlotId = "",
       @JsonKey(name: 'selectedAddressId') this.selectedAddressId = "",
@@ -1211,7 +1211,7 @@ class _OrderResponse implements OrderResponse {
   final String status;
   @override
   @JsonKey(name: 'refId')
-  final int refId;
+  final String refId;
   @override
   @JsonKey(name: 'pickupSlotId')
   final String pickupSlotId;
@@ -1434,7 +1434,7 @@ abstract mixin class _$OrderResponseCopyWith<$Res>
       @JsonKey(name: 'expressDelivery') bool expressDelivery,
       @JsonKey(name: 'type') String type,
       @JsonKey(name: 'status') String status,
-      @JsonKey(name: 'refId') int refId,
+      @JsonKey(name: 'refId') String refId,
       @JsonKey(name: 'pickupSlotId') String pickupSlotId,
       @JsonKey(name: 'deliverySlotId') String deliverySlotId,
       @JsonKey(name: 'selectedAddressId') String selectedAddressId,
@@ -1548,7 +1548,7 @@ class __$OrderResponseCopyWithImpl<$Res>
       refId: null == refId
           ? _self.refId
           : refId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       pickupSlotId: null == pickupSlotId
           ? _self.pickupSlotId
           : pickupSlotId // ignore: cast_nullable_to_non_nullable

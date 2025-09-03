@@ -26,7 +26,7 @@ abstract class OrderResponse with _$OrderResponse {
     @JsonKey(name: 'expressDelivery') @Default(false) bool expressDelivery,
     @JsonKey(name: 'type') @Default("") String type,
     @JsonKey(name: 'status') @Default("") String status,
-    @JsonKey(name: 'refId') @Default(0) int refId,
+    @JsonKey(name: 'refId') @Default("") String refId,
     @JsonKey(name: 'pickupSlotId') @Default("") String pickupSlotId,
     @JsonKey(name: 'deliverySlotId') @Default("") String deliverySlotId,
     @JsonKey(name: 'selectedAddressId') @Default("") String selectedAddressId,
