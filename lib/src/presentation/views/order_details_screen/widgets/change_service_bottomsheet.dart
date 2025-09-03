@@ -75,17 +75,19 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
       listener: (context, state) {
         // Handle move bag success
         if (state.moveBagStatus is StatusSuccess) {
-          // Show success message first
-          TheToast.show(
-            isError: false,
-            message: "Bag moved to new service successfully",
-            context: context,
-          );
+          // Close bottomsheet immediately on success
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
           
-          // Close bottomsheet after a short delay to ensure state propagation
-          Future.delayed(const Duration(milliseconds: 500), () {
+          // Show success message after closing the bottomsheet
+          Future.delayed(const Duration(milliseconds: 100), () {
             if (mounted) {
-              Navigator.of(context).pop();
+              TheToast.show(
+                isError: false,
+                message: "Bag moved to new service successfully",
+                context: context,
+              );
             }
           });
         }
