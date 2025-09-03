@@ -21,7 +21,7 @@ mixin _$OrderDetailsResponseModel {
   String get customerNote;
   String get type;
   String get status;
-  int get refId;
+  String get refId;
   String get pickupSlotId;
   String get deliverySlotId;
   String get selectedAddressId;
@@ -174,7 +174,7 @@ abstract mixin class $OrderDetailsResponseModelCopyWith<$Res> {
       String customerNote,
       String type,
       String status,
-      int refId,
+      String refId,
       String pickupSlotId,
       String deliverySlotId,
       String selectedAddressId,
@@ -280,7 +280,7 @@ class _$OrderDetailsResponseModelCopyWithImpl<$Res>
       refId: null == refId
           ? _self.refId
           : refId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       pickupSlotId: null == pickupSlotId
           ? _self.pickupSlotId
           : pickupSlotId // ignore: cast_nullable_to_non_nullable
@@ -514,7 +514,7 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             String customerNote,
             String type,
             String status,
-            int refId,
+            String refId,
             String pickupSlotId,
             String deliverySlotId,
             String selectedAddressId,
@@ -602,7 +602,7 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             String customerNote,
             String type,
             String status,
-            int refId,
+            String refId,
             String pickupSlotId,
             String deliverySlotId,
             String selectedAddressId,
@@ -688,7 +688,7 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             String customerNote,
             String type,
             String status,
-            int refId,
+            String refId,
             String pickupSlotId,
             String deliverySlotId,
             String selectedAddressId,
@@ -764,7 +764,7 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
       this.customerNote = '',
       this.type = '',
       this.status = '',
-      this.refId = 0,
+      this.refId = '',
       this.pickupSlotId = '',
       this.deliverySlotId = '',
       this.selectedAddressId = '',
@@ -818,7 +818,7 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
   final String status;
   @override
   @JsonKey()
-  final int refId;
+  final String refId;
   @override
   @JsonKey()
   final String pickupSlotId;
@@ -1053,7 +1053,7 @@ abstract mixin class _$OrderDetailsResponseModelCopyWith<$Res>
       String customerNote,
       String type,
       String status,
-      int refId,
+      String refId,
       String pickupSlotId,
       String deliverySlotId,
       String selectedAddressId,
@@ -1163,7 +1163,7 @@ class __$OrderDetailsResponseModelCopyWithImpl<$Res>
       refId: null == refId
           ? _self.refId
           : refId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       pickupSlotId: null == pickupSlotId
           ? _self.pickupSlotId
           : pickupSlotId // ignore: cast_nullable_to_non_nullable

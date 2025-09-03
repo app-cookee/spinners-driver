@@ -226,14 +226,17 @@ Widget _orderedCardButtons(BuildContext context,) {
           textColor: AppColors.grey1Color,
            onTap: () {
          if(isDropoff){
+        
           context.router.push(DeliveryOrderDetailRoute(orderId: orderId,refId: refId)).then((_){
               apiCallOnPop?.call();
+                
 
           
     
           });
          } else {
           context.router.push(OrderDetailRoute(orderId: orderId)).then((_){
+    
              apiCallOnPop?.call();
           });
 

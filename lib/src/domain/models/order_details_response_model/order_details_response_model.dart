@@ -12,7 +12,7 @@ abstract class OrderDetailsResponseModel with _$OrderDetailsResponseModel{
     @Default('') String customerNote,
     @Default('') String type,
     @Default('') String status,
-    @Default(0) int refId,
+    @Default('') String refId,
     @Default('') String pickupSlotId,
     @Default('') String deliverySlotId,
     @Default('') String selectedAddressId,

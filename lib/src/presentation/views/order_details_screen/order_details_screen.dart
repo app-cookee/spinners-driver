@@ -160,7 +160,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  Widget _header(BuildContext context, int orderRefId) {
+  Widget _header(BuildContext context, String orderRefId) {
     
     return Container(
       padding: EdgeInsets.only(top: 7.h, left: 16.dp, right: 16.dp, bottom: 8.dp),
