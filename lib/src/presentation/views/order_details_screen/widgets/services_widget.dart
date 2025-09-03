@@ -1,6 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
@@ -64,7 +67,22 @@ class _ServicesWidgetState extends State<ServicesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    // Debug logging to see when the widget rebuilds
+    log('ServicesWidget rebuilding with ${widget.orderState.orderDetails.orderedItems.length} ordered items');
+    for (final item in widget.orderState.orderDetails.orderedItems) {
+      log('Service ${item.service.name}: ${item.service.scannedBags.length} bags');
+    }
+    
+    return BlocListener<OrderBloc, OrderState>(
+      listenWhen: (previous, current) => 
+        previous.orderDetails.orderedItems != current.orderDetails.orderedItems,
+      listener: (context, state) {
+        log('ServicesWidget: Order details changed - ${state.orderDetails.orderedItems.length} ordered items');
+        for (final item in state.orderDetails.orderedItems) {
+          log('Service ${item.service.name}: ${item.service.scannedBags.length} bags');
+        }
+      },
+      child: Column(
       children: [
         Gap(20.dp),
         Container(
@@ -168,6 +186,7 @@ class _ServicesWidgetState extends State<ServicesWidget> {
           ),
         )
       ],
+    ),
     );
   }
 }

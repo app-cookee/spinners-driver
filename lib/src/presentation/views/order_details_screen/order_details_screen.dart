@@ -69,8 +69,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         body: BlocListener<OrderBloc, OrderState>(
           listenWhen: (previous, current) => 
             previous.orderDetails.id != current.orderDetails.id || 
-            previous.getOrderDetailStatus != current.getOrderDetailStatus,
+            previous.getOrderDetailStatus != current.getOrderDetailStatus ||
+            previous.orderDetails.orderedItems != current.orderDetails.orderedItems,
           listener: (context, state) {
+            // Log when the listener is triggered
+            log('OrderBloc state changed - Order ID: ${state.orderDetails.id}, Ordered Items: ${state.orderDetails.orderedItems.length}');
+            
             // Clear additional notes when order details change or when a new order is fetched
             if (state.orderDetails.id.isNotEmpty && 
                 state.orderDetails.id != widget.orderId && 

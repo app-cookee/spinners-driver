@@ -293,14 +293,22 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         moveBagStatus: Status.loading(),
       ));
 
+      log('Moving bag ${event.bagId} from scanned bag ID ${event.fromScannedBagId} to service ${event.toServiceId}', name: "OrderBloc");
+      
       // First remove the bag from the old service
+      log('Removing bag from old service...', name: "OrderBloc");
       await orderRepository.removeBag(event.fromScannedBagId);
+      log('Bag removed from old service successfully', name: "OrderBloc");
 
       // Then add the bag to the new service
       if (event.isQuickOrder) {
+        log('Adding bag to new service for quick order...', name: "OrderBloc");
         await orderRepository.createNewBag(event.bagId, event.orderId, event.toServiceId);
+        log('Bag added to new service for quick order successfully', name: "OrderBloc");
       } else {
+        log('Adding bag to new service for normal order...', name: "OrderBloc");
         await orderRepository.addBag(event.toOrderItemId, event.bagId);
+        log('Bag added to new service for normal order successfully', name: "OrderBloc");
       }
 
       emit(state.copyWith(
@@ -308,7 +316,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       ));
       
       // Refresh order details after successful bag move
+      log('Move bag operation successful, refreshing order details...', name: "OrderBloc");
       await _refreshOrderDetails(emit);
+      log('Order details refreshed after move bag operation', name: "OrderBloc");
     } catch (e) {
       emit(state.copyWith(
         moveBagStatus: Status.failure(e.toString()),
@@ -324,11 +334,26 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         log('Refreshing order details for order ID: ${state.orderDetails.id}', name: "OrderBloc");
         final response = await orderRepository.getOrdersDetail(state.orderDetails.id);
         
-        // For normal orders, preserve services that might have been removed by the server
-        // when all bags were removed from them
-        final preservedOrderDetails = _preserveServicesForNormalOrders(response);
+        // For now, use the server response directly to ensure we get the most up-to-date state
+        // The server should have the correct state after the move operation
+        final updatedOrderDetails = response;
         
-        emit(state.copyWith(orderDetails: preservedOrderDetails));
+        // Log the bag counts for debugging
+        log('Server response bag counts:', name: "OrderBloc");
+        for (final item in response.orderedItems) {
+          log('Service ${item.service.name} (${item.service.id}): ${item.service.scannedBags.length} bags', name: "OrderBloc");
+        }
+        
+        log('Emitting updated order details with ${updatedOrderDetails.orderedItems.length} ordered items', name: "OrderBloc");
+        
+        // Log the current state before update
+        log('Current state has ${state.orderDetails.orderedItems.length} ordered items', name: "OrderBloc");
+        
+        emit(state.copyWith(orderDetails: updatedOrderDetails));
+        
+        // Log the new state after update
+        log('New state has ${updatedOrderDetails.orderedItems.length} ordered items', name: "OrderBloc");
+        log('State updated successfully', name: "OrderBloc");
       }
     } catch (e) {
       log('Error refreshing order details: $e', name: "OrderBloc");
@@ -367,7 +392,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       
       if (serverService != null) {
         // Service exists in server response, use server data (with updated bag counts)
+        // This ensures we get the most up-to-date information from the server
         preservedServices.add(serverService);
+        
+        // Log the bag count change for debugging
+        final originalBagCount = originalService.service.scannedBags.length;
+        final newBagCount = serverService.service.scannedBags.length;
+        if (originalBagCount != newBagCount) {
+          log('Service ${serverService.service.name} bag count changed: $originalBagCount -> $newBagCount', name: "OrderBloc");
+        }
       } else {
         // Service was removed by server (probably because it has no bags)
         // Preserve it with empty scanned bags list
@@ -376,6 +409,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
             scannedBags: [],
           ),
         ));
+        
+        log('Service ${originalService.service.name} preserved with empty bags (removed by server)', name: "OrderBloc");
       }
     }
     
@@ -386,8 +421,12 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       
       if (!existsInOriginal) {
         preservedServices.add(serverService);
+        log('New service ${serverService.service.name} added by server with ${serverService.service.scannedBags.length} bags', name: "OrderBloc");
       }
     }
+    
+    // Log the preservation process for debugging
+    log('Preserving services: Original=${originalServices.length}, Server=${serverServices.length}, Final=${preservedServices.length}', name: "OrderBloc");
     
     return serverResponse.copyWith(
       orderedItems: preservedServices,
