@@ -175,7 +175,23 @@ class QuickOrderBags extends StatelessWidget {
           ),
           if (status != 'pickedUp')
             InkWell(
-              onTap: () => _handleScanForQuickOrder(context, bag),
+              // onTap: () => _handleScanForQuickOrder(context, bag),
+              onTap: () async{
+                  final result = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
+    );
+                CustomBottomSheetWidget(
+            context: context,
+            child: ScanNewBagBottomsheet(
+              bagId: result,
+              orderId: orderId,
+              serviceId: bag['serviceId'] as String,
+              serviceName: bag['serviceName'] as String,
+              isQuickOrder: false,
+            ),
+          ).show();
+              },
               child: _scanButton(),
             ),
         ],

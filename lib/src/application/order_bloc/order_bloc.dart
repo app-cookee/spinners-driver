@@ -329,8 +329,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   /// Helper method to refresh order details from the server
   Future<void> _refreshOrderDetails(Emitter<OrderState> emit) async {
     try {
+
       // Only refresh if we have an order ID
       if (state.orderDetails.id.isNotEmpty) {
+         emit(state.copyWith(getOrderDetailStatus: Status.loading()));
         log('Refreshing order details for order ID: ${state.orderDetails.id}', name: "OrderBloc");
         final response = await orderRepository.getOrdersDetail(state.orderDetails.id);
         
@@ -349,7 +351,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         // Log the current state before update
         log('Current state has ${state.orderDetails.orderedItems.length} ordered items', name: "OrderBloc");
         
-        emit(state.copyWith(orderDetails: updatedOrderDetails));
+        emit(state.copyWith(orderDetails: updatedOrderDetails,getOrderDetailStatus: Status.success()));
         
         // Log the new state after update
         log('New state has ${updatedOrderDetails.orderedItems.length} ordered items', name: "OrderBloc");
