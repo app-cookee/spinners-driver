@@ -47,8 +47,8 @@ class _ServicesWidgetState extends State<ServicesWidget> {
   void didUpdateWidget(ServicesWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Update additional notes when order state changes
-    if (oldWidget.orderState.orderDetails.id != widget.orderState.orderDetails.id || 
-        oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status || 
+    if (oldWidget.orderState.orderDetails.id != widget.orderState.orderDetails.id ||
+        oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status ||
         oldWidget.orderState.orderDetails.driverNotes != widget.orderState.orderDetails.driverNotes) {
       _populateAdditionalNotes();
     }
@@ -72,10 +72,9 @@ class _ServicesWidgetState extends State<ServicesWidget> {
     for (final item in widget.orderState.orderDetails.orderedItems) {
       log('Service ${item.service.name}: ${item.service.scannedBags.length} bags');
     }
-    
+
     return BlocListener<OrderBloc, OrderState>(
-      listenWhen: (previous, current) => 
-        previous.orderDetails.orderedItems != current.orderDetails.orderedItems,
+      listenWhen: (previous, current) => previous.orderDetails.orderedItems != current.orderDetails.orderedItems,
       listener: (context, state) {
         log('ServicesWidget: Order details changed - ${state.orderDetails.orderedItems.length} ordered items');
         for (final item in state.orderDetails.orderedItems) {
@@ -83,110 +82,112 @@ class _ServicesWidgetState extends State<ServicesWidget> {
         }
       },
       child: Column(
-      children: [
-        Gap(20.dp),
-        Container(
-          decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.grey, AppColors.white])),
-          width: 100.w,
+        children: [
+          Gap(20.dp),
+          Container(
+            decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.grey, AppColors.white])),
+            width: 100.w,
 
-          // color: const Color.fromARGB(255, 226, 218, 218),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const DashedDivider(),
-              Gap(20.dp),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                child: Text(
-                  "Services",
-                  style: AppTypography.sfProRoundedSemiBold.copyWith(
-                    fontSize: 12.dp,
-                    color: AppColors.textGrey,
+            // color: const Color.fromARGB(255, 226, 218, 218),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const DashedDivider(),
+                Gap(20.dp),
+                if (widget.orderState.orderDetails.orderedItems.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                    child: Text(
+                      "Services",
+                      style: AppTypography.sfProRoundedSemiBold.copyWith(
+                        fontSize: 12.dp,
+                        color: AppColors.textGrey,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Gap(6.dp),
-              widget.orderState.orderDetails.type == "normalOrder"
-                  ? OrderedServices(
-                      orderId: widget.orderId,
-                      status: widget.orderState.orderDetails.status,
-                    )
-                  : const SizedBox.shrink(),
-              widget.orderState.orderDetails.type != "normalOrder"
-                  ? Column(
-                      children: [
-                        QuickOrderBags(
-                          orderId: widget.orderId,
-                          scannedBags: widget.scannedQRCodes,
-                          status: widget.orderState.orderDetails.status,
-                        ),
-                        if (widget.orderState.orderDetails.status != 'pickedUp') ...[
-                          Gap(8.dp),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                            child: SecondaryButtonWidget(
-                              height: 48.dp,
-                              bordercolor: AppColors.scanblue,
-                              backgroundColor: AppColors.white,
-                              textColor: AppColors.primaryColor,
-                              style: AppTypography.sfProRoundedSemiBold.copyWith(
-                                fontSize: 14.sp,
-                                color: AppColors.primaryColor,
-                              ),
-                              onPressed: () async {
-                                // await _handleQuickOrderScan(context);
-                                final result = await Navigator.push<String>(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
-                                );
+                  Gap(6.dp),
+                ],
+                widget.orderState.orderDetails.type == "normalOrder"
+                    ? OrderedServices(
+                        orderId: widget.orderId,
+                        status: widget.orderState.orderDetails.status,
+                      )
+                    : const SizedBox.shrink(),
+                widget.orderState.orderDetails.type != "normalOrder"
+                    ? Column(
+                        children: [
+                          QuickOrderBags(
+                            orderId: widget.orderId,
+                            scannedBags: widget.scannedQRCodes,
+                            status: widget.orderState.orderDetails.status,
+                          ),
+                          if (widget.orderState.orderDetails.status != 'pickedUp') ...[
+                            Gap(8.dp),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                              child: SecondaryButtonWidget(
+                                height: 48.dp,
+                                bordercolor: AppColors.scanblue,
+                                backgroundColor: AppColors.white,
+                                textColor: AppColors.primaryColor,
+                                style: AppTypography.sfProRoundedSemiBold.copyWith(
+                                  fontSize: 14.sp,
+                                  color: AppColors.primaryColor,
+                                ),
+                                onPressed: () async {
+                                  // await _handleQuickOrderScan(context);
+                                  final result = await Navigator.push<String>(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
+                                  );
 
-                                // Only show bottomsheet if QR value is provided
-                                if (result != null && result.isNotEmpty) {
-                                  CustomBottomSheetWidget(
-                                    context: context,
-                                    child: ScanNewBagBottomsheet(
-                                      bagId: result,
-                                      orderId: widget.orderId,
-                                      isQuickOrder: true,
-                                    ),
-                                  ).show();
-                                }
-                                // If no QR value, just return to OrderDetailScreen (no bottomsheet)
-                              },
-                              text: "Scan New Bag",
-                              leadingIcon: Image.asset(
-                                height: 24.dp,
-                                width: 24.dp,
-                                AppImages.scanner,
+                                  // Only show bottomsheet if QR value is provided
+                                  if (result != null && result.isNotEmpty) {
+                                    CustomBottomSheetWidget(
+                                      context: context,
+                                      child: ScanNewBagBottomsheet(
+                                        bagId: result,
+                                        orderId: widget.orderId,
+                                        isQuickOrder: true,
+                                      ),
+                                    ).show();
+                                  }
+                                  // If no QR value, just return to OrderDetailScreen (no bottomsheet)
+                                },
+                                text: "Scan New Bag",
+                                leadingIcon: Image.asset(
+                                  height: 24.dp,
+                                  width: 24.dp,
+                                  AppImages.scanner,
+                                ),
                               ),
                             ),
-                          ),
-                        ]
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-              Gap(8.dp),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                child: Text(
-                  "Additional Notes",
-                  style: AppTypography.sfProRoundedSemiBold.copyWith(
-                    fontSize: 12.dp,
-                    color: AppColors.textGrey,
+                          ]
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+                Gap(8.dp),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                  child: Text(
+                    "Additional Notes",
+                    style: AppTypography.sfProRoundedSemiBold.copyWith(
+                      fontSize: 12.dp,
+                      color: AppColors.textGrey,
+                    ),
                   ),
                 ),
-              ),
-              Gap(6.dp),
-              AdditionalNotes(
-                additionalNotesController: widget.additionalNotesController,
-                readOnly: widget.orderState.orderDetails.status == "pickedUp",
-              ),
-              SizedBox(height: 17.h)
-            ],
-          ),
-        )
-      ],
-    ),
+                Gap(6.dp),
+                AdditionalNotes(
+                  additionalNotesController: widget.additionalNotesController,
+                  readOnly: widget.orderState.orderDetails.status == "pickedUp",
+                ),
+                SizedBox(height: 17.h)
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
