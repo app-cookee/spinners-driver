@@ -144,7 +144,7 @@ class _PickUpDropoffHistoryScreenState
               children: [
                 Expanded(
                   flex: 4,
-                  child: CommonTextField(
+                  child: CommonTextField(height: 36,
                     controller: _searchController,
                     hintText: "Search",
                     prefixIcon: Image.asset(
@@ -161,7 +161,7 @@ class _PickUpDropoffHistoryScreenState
                     child: GestureDetector(
                       onTap: () {},
                       child: Container(
-                        height: 48.dp,
+                        height: 36.dp,
                         decoration: BoxDecoration(
                             color: AppColors.filterBgColor,
                             borderRadius: BorderRadius.circular(8.dp),

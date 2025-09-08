@@ -43,6 +43,8 @@ static const String arrowDown='assets/images/arrow-down.png';
 static const String warningIcon='assets/images/ic_warning.png';
 static const String money='assets/images/money.png';
 static const String card='assets/images/cards.png';
+static const String liquidCash='assets/images/liquid_cash.png';
+
 
 
 

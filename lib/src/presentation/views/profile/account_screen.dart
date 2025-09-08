@@ -13,6 +13,7 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/cash_settlement_history/cash_settlement_history_screen.dart';
 import 'package:spinners_driver/src/presentation/views/home/placeholders/userdetail_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/dashed_coupen_box.dart';
@@ -263,7 +264,10 @@ class _AccountScreenState extends State<AccountScreen> {
                               },
                                 imagePath: AppImages.arrowRight,
                                 text: "Pickup & Dropoff History"),
-                            const AccountSettings(
+                             AccountSettings(
+                                 onTap: () {
+                                context.router.push( const CashSettlementHistoryRoute());
+                              },
                                 imagePath: AppImages.arrowRight,
                                 text: "Cash Settlement History"),
                             const AccountSettings(

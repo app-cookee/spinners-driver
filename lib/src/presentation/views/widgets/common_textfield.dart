@@ -22,6 +22,8 @@ class CommonTextField extends StatelessWidget {
   final TextStyle? textStyle;
  final bool? readOnly;
   final String? initialValue;
+  final double? height;
+  
 
   const CommonTextField({
     super.key,
@@ -42,12 +44,13 @@ class CommonTextField extends StatelessWidget {
     this.hintStyle,
     this.textStyle,
     this.readOnly,
-    this.initialValue,
+    this.initialValue, this.height,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(constraints: BoxConstraints(maxHeight:48.dp ),
+    return Container(constraints: BoxConstraints(maxHeight:
+    height??48.dp ),
       decoration: BoxDecoration(
         color: const Color(0xffD7E5EB),
         borderRadius: BorderRadius.circular(borderRadius??8.dp),
