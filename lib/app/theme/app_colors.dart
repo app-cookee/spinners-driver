@@ -40,6 +40,8 @@ static const Color pickupScheduledColor= Color(0xFF5C6BC0);
 static const Color pickedUpColor= Color(0xFFF9A825);
 static const Color readyForDeliveryColor= Color(0xFF2BB2C3);
 static const Color deliveredColor= Color(0xFF43A047);
+static const Color deliveredCompletd= Color(0xFF009081);
+
 
 
 

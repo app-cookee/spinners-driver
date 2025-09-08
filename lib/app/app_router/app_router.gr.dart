@@ -65,6 +65,22 @@ class AppBottomNavigationRouteArgs {
 }
 
 /// generated route for
+/// [CashSettlementHistoryScreen]
+class CashSettlementHistoryRoute extends PageRouteInfo<void> {
+  const CashSettlementHistoryRoute({List<PageRouteInfo>? children})
+      : super(CashSettlementHistoryRoute.name, initialChildren: children);
+
+  static const String name = 'CashSettlementHistoryRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CashSettlementHistoryScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [DeliveryOrderDetailScreen]
 class DeliveryOrderDetailRoute
     extends PageRouteInfo<DeliveryOrderDetailRouteArgs> {

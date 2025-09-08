@@ -297,7 +297,7 @@ class _PickUpDropoffHistoryScreenState
           ),
           Gap(6.dp),
           Text(
-            "Pickup & Dropoff Report",
+            "Pickup & Dropoff History",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
               fontSize: 16.dp,
               color: AppColors.neutral950,

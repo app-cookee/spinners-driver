@@ -257,15 +257,15 @@ class _AccountScreenState extends State<AccountScreen> {
                                     text: "Personal Details");
                               },
                             ),
-                            // AccountSettings(
-                            //   onTap: () {
-                            //     context.router.push(const PickUpDropoffHistoryRoute());
-                            //   },
-                            //     imagePath: AppImages.arrowRight,
-                            //     text: "Pickup & Dropoff History"),
-                            // const AccountSettings(
-                            //     imagePath: AppImages.arrowRight,
-                            //     text: "Cash Settlement History"),
+                            AccountSettings(
+                              onTap: () {
+                                context.router.push(const PickUpDropoffHistoryRoute());
+                              },
+                                imagePath: AppImages.arrowRight,
+                                text: "Pickup & Dropoff History"),
+                            const AccountSettings(
+                                imagePath: AppImages.arrowRight,
+                                text: "Cash Settlement History"),
                             const AccountSettings(
                                 imagePath: AppImages.arrowRight,
                                 text: "Terms of Service"),

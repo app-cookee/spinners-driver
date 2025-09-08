@@ -16,11 +16,12 @@ class AppImages {
   static const String ordersSelectedIcon ='assets/images/ic_order_selected.png';
   static const String remainingPickupIcon='assets/images/ic_remaining_pickup.png';
   static const String deliveriesLeftIcon='assets/images/ic_deliveries_left.png';
-  static const String completedDeliveriesIcon = 'assets/images/ic_completed_deliveries.png';
-  static const String completedDeliveryCard ='assets/images/completed_delivery_card.png';
-  static const String completedPickupCard ='assets/images/completed_pickup_card.png';
+  static const String completedDeliveriesIcon = 'assets/images/completed_deliveries.png';
+  static const String completedDeliveryCard ='assets/images/completed_deliveries_card.png';
+  static const String completedPickupCard ='assets/images/completed_pickups_card.png';
  static const String deliveriesLeftCard='assets/images/deliveries_left_card.png';
  static const String pickupRemainingCard='assets/images/pickup_remaining_card.png';
+  static const String pickupCompletdIcon='assets/images/completed_pickups.png';
 static const String box = 'assets/images/box.png';
 static const String bike = 'assets/images/bike.png';
 static const String zip = 'assets/images/zip.png';

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/login_screen.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/otp_screen.dart';
+import 'package:spinners_driver/src/presentation/views/cash_settlement_history/cash_settlement_history_screen.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/delivery_order_detail_screen.dart';
 import 'package:spinners_driver/src/presentation/views/navigation/app_bottom_navigation_view.dart';
 import 'package:spinners_driver/src/presentation/views/notification/notification_screen.dart';
@@ -39,5 +40,6 @@ class AppRouter extends RootStackRouter {
         AutoRoute(path: '/ordersScreen', page: OrderRoute.page),
          AutoRoute(path: '/deliveryOrderDetail', page: DeliveryOrderDetailRoute.page),
          AutoRoute(path: '/pickUpDropoffHistoryScreen', page: PickUpDropoffHistoryRoute.page),
+           AutoRoute(path: '/cashSettlementHistoryScreen', page: CashSettlementHistoryRoute.page),
       ];
 }

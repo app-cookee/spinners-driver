@@ -78,13 +78,13 @@ class PickDropHistoryCard extends StatelessWidget {
           border: Border.all(color: AppColors.shadowColor),
         ),
         child: Column(
-          children: [_orderId(), _details()],
+          children: [_orderHeader(), _details()],
         ),
       );
     // );
   }
 
-  Widget _orderId() {
+  Widget _orderHeader() {
     return Padding(
       padding: EdgeInsets.only(right: 9.dp, left: 16.dp, bottom: 8.dp),
       child: Row(

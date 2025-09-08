@@ -41,6 +41,7 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
         icon: AppImages.remainingPickupIcon,
         label: 'Pickup Remaining',
         value: remainingPickups,
+        textColor: Colors.white
       ),
       _CardConfig(
         bottomPadding: 12.h,
@@ -49,14 +50,16 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
         icon: AppImages.deliveriesLeftIcon,
         label: 'My Deliveries Left',
         value:remainingDeliveries,
+        textColor: Colors.white
       ),
       _CardConfig(
         bottomPadding: 5.h,
         height: 62.dp,
         backgroundImage: AppImages.completedPickupCard,
-        icon: AppImages.checkIcon,
+        icon: AppImages.pickupCompletdIcon,
         label: 'Completed Pickups',
         value: completedPickups,
+        textColor: AppColors.primary950
       ),
       _CardConfig(
         bottomPadding: 0.h,
@@ -65,6 +68,7 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
         icon: AppImages.completedDeliveriesIcon,
         label: 'Completed Deliveries',
         value:completedDeliveries,
+        textColor: AppColors.deliveredCompletd
       ),
     ];
   }
@@ -84,7 +88,7 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
       child: _buildCardContent(
         icon: config.icon,
         label: config.label,
-        value: config.value,
+        value: config.value, textColor: config.textColor,
       ),
     );
   }
@@ -93,6 +97,7 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
     required String icon,
     required String label,
     required int value,
+    required Color textColor
   }) {
     return Row(
       children: [
@@ -100,7 +105,7 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
           icon,
           width: 24.dp,
           height: 24.dp,
-          color: AppColors.white,
+          // color: AppColors.white,
         ),
         Gap(12.dp),
         Expanded(
@@ -108,7 +113,7 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
             label,
             style: AppTypography.sfProRoundedSemiBold.copyWith(
               fontSize: 12.sp,
-              color: AppColors.white.withValues(alpha: 0.5),
+              color:textColor,
             ),
           ),
         ),
@@ -116,7 +121,7 @@ const PickupAndDeliveryOverview({super.key, required this.remainingPickups, requ
           value.toString().padLeft(2, '0'),
           style: AppTypography.sfProRoundedBold.copyWith(
             fontSize: 20.sp,
-            color: AppColors.white,
+            color: textColor,
           ),
         ),
       ],
@@ -131,6 +136,7 @@ class _CardConfig {
   final String icon;
   final String label;
   final int value;
+  final Color textColor;
 
   const _CardConfig({
     required this.bottomPadding,
@@ -139,5 +145,6 @@ class _CardConfig {
     required this.icon,
     required this.label,
     required this.value,
+    required this.textColor
   });
 }
