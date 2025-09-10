@@ -5,7 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
+import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,6 +17,7 @@ import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dar
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 
 class OrderCard extends StatelessWidget {
   final String orderId;
@@ -31,12 +32,13 @@ class OrderCard extends StatelessWidget {
    final String lat;
    final String lon;
    final VoidCallback? apiCallOnPop;
+   final String mobileNumber;
   // final String notes;
   // final List service;
   const OrderCard({
     Key? key,
     required this.orderId,
-  required this.refId,
+    required this.refId,
     required this.time,
     required this.status,
     required this.isDropoff,
@@ -44,7 +46,9 @@ class OrderCard extends StatelessWidget {
     required this.isExpressService,
     required this.address,
     required this.lat,
-    required this.lon, this.apiCallOnPop,
+    required this.lon,
+    this.apiCallOnPop,
+    required this.mobileNumber,
   }) : super(key: key);
 
   Color getColor(String status) {
@@ -250,6 +254,8 @@ Widget _orderedCardButtons(BuildContext context,) {
           textColor: AppColors.grey1Color,
           onTap: () {
    
+     LauncherUtils.launchPhoneDialer(mobileNumber,
+                      context: context);
           },
         ),
       ],
