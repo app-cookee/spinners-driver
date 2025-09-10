@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
+import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -27,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    context.read<NetworkBloc>().add(const NetworkEvent.observe());
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -38,7 +40,6 @@ class _SplashScreenState extends State<SplashScreen>
         curve: Curves.easeInOut,
       ),
     );
-    // context.read<NetworkBloc>().add(const NetworkEvent.observe());
     // Wait until the first frame is rendered to safely use context
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadAssetsAndNavigate();

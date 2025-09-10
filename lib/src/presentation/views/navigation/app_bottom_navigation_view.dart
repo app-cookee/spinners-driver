@@ -1,12 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
 import 'package:spinners_driver/src/presentation/views/orders/order_screen.dart';
 import 'package:spinners_driver/src/presentation/views/profile/account_screen.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/no_network_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -14,7 +17,8 @@ class AppBottomNavigationView extends StatefulWidget {
   const AppBottomNavigationView({super.key, required this.selectedIndex});
   final int selectedIndex;
   @override
-  State<AppBottomNavigationView> createState() => _AppBottomNavigationViewState();
+  State<AppBottomNavigationView> createState() =>
+      _AppBottomNavigationViewState();
 }
 
 class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
@@ -47,12 +51,28 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        //backgroundColor: AppColors.transparent,
-        resizeToAvoidBottomInset: false,
-        extendBody: true,
-        bottomNavigationBar: bottomNavBar(),
-        body: _buildBottomNavigationPages());
+    return BlocBuilder<NetworkBloc, NetworkState>(
+      builder: (context, state) {
+        return Scaffold(
+            //backgroundColor: AppColors.transparent,
+            resizeToAvoidBottomInset: false,
+            extendBody: true,
+            bottomNavigationBar: bottomNavBar(),
+            body: _buildBody(state));
+      },
+    );
+  }
+
+    Widget _buildBody(NetworkState state) {
+    if (state == const NetworkState.success()) {
+      return _buildBottomNavigationPages();
+    } else if (state == const NetworkState.failure()) {
+      return const Center(
+        child: NoNetworkWidget(),
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 
   Widget _buildBottomNavigationPages() {
@@ -94,13 +114,15 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
       clipBehavior: Clip.none,
       children: [
         Container(
-          decoration:  BoxDecoration(boxShadow:
-          [BoxShadow(
-                 color: AppColors.black.withValues(alpha: .10), 
-             offset:const Offset(0, 0), blurRadius : 96,
-           spreadRadius :0.0,
-
-          )] ,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withValues(alpha: .10),
+                offset: const Offset(0, 0),
+                blurRadius: 96,
+                spreadRadius: 0.0,
+              )
+            ],
             color: AppColors.white,
           ),
           height: 88.dp,
@@ -119,7 +141,8 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
                     children: [
                       ValueListenableBuilder(
                         valueListenable: selectedIndex,
-                        builder: (BuildContext context, int value, Widget? child) {
+                        builder:
+                            (BuildContext context, int value, Widget? child) {
                           return AnimatedContainer(
                             duration: const Duration(milliseconds: 100),
                             padding: EdgeInsets.symmetric(horizontal: 11.w),
@@ -143,8 +166,11 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
                                 Gap(4.dp),
                                 Text(
                                   bottomNavLabels[index],
-                                  style: AppTypography.sfProRoundedMedium.copyWith(
-                                    color: selectedIndex.value == index ? AppColors.primaryColor : AppColors.textGrey,
+                                  style:
+                                      AppTypography.sfProRoundedMedium.copyWith(
+                                    color: selectedIndex.value == index
+                                        ? AppColors.primaryColor
+                                        : AppColors.textGrey,
                                     fontSize: 12.sp,
                                   ),
                                 )

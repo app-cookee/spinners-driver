@@ -7,6 +7,7 @@ import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart';
+import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
@@ -16,6 +17,7 @@ import 'package:spinners_driver/src/presentation/views/delivery_order_detail/wid
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/info_card.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/delivery_order_invoice_detail.dart';
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/no_network_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -43,272 +45,290 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: BlocBuilder<DeliveryBloc, DeliveryState>(
-        builder: (context, dState) {
-          return Stack(
-            children: [
-              GestureDetector(
-                  onTap: () => Navigator.pop(context), child: _header(context)),
-              Padding(
-                padding: EdgeInsets.only(top: 9.8.h),
-                child: BlocBuilder<DeliveryBloc, DeliveryState>(
-                  builder: (context, state) {
-                    if (state.getOrderDetailStatus is StatusLoading ||
-                        state.getOrderDetailStatus is StatusInitial) {
-                      return const OrderDetailShimmer();
-                    }
-                    return state.orderDetails.id.isEmpty
-                        ? const SizedBox.shrink()
-                        : CustomScrollView(
-                            slivers: [
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 16.dp, right: 16.dp, top: 8.dp),
-                                  child: Column(
-                                    children: [
-                                      InfoCard(
-                                          label: "Order Type",
-                                          value: state.orderDetails.type ==
-                                                  "normalOrder"
-                                              ? "Normal"
-                                              : "Quick Order⚡"),
-                                      Gap(4.dp),
-                                      InfoCard(
-                                          label: "Delivery Time",
-                                          value: formatSingleDate(
-                                              state.orderDetails.deliveryAt,
-                                              state.orderDetails.deliverySlot,
-                                              state.orderDetails.status,
-                                              state
-                                                  .orderDetails.statusHistory)),
-                                                  Gap(4.dp),
-                                                  
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              if (dState.orderDetails.payment
-                                      .where((p) =>
-                                          p.status.toLowerCase() == "pending")
-                                      .map((p) =>
-                                          double.tryParse(p.amount) ?? 0.0)
-                                      .fold(0.0, (sum, amt) => sum + amt) >
-                                  0)
-                                SliverPersistentHeader(
-                                  pinned: true,
-                                  delegate: StickyHeaderDelegate(
-                                    child: Container(
-                                      color: AppColors.white,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16.dp, vertical: 0),
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Column(
-                                          children: [
-                                            Gap(4.dp),
-                                            InfoCard(backgroundColor: const Color(0xFFFEF5D8),
-                                              label: "Pending Amount",
-                                              value:
-                                                  "AED ${dState.orderDetails.payment.where((p) => p.status.toLowerCase() == "pending").map((p) => double.tryParse(p.amount) ?? 0.0).fold(0.0, (sum, amt) => sum + amt).toStringAsFixed(2)}",
-                                            ),
-                                            Gap(4.dp),
-                                          ],
-                                        ),
+    return BlocBuilder<NetworkBloc, NetworkState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          body: (state == const NetworkState.success()) ? BlocBuilder<DeliveryBloc, DeliveryState>(
+            builder: (context, dState) {
+              return Stack(
+                children: [
+                  GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: _header(context)),
+                  Padding(
+                    padding: EdgeInsets.only(top: 9.8.h),
+                    child: BlocBuilder<DeliveryBloc, DeliveryState>(
+                      builder: (context, state) {
+                        if (state.getOrderDetailStatus is StatusLoading ||
+                            state.getOrderDetailStatus is StatusInitial) {
+                          return const OrderDetailShimmer();
+                        }
+                        return state.orderDetails.id.isEmpty
+                            ? const SizedBox.shrink()
+                            : CustomScrollView(
+                                slivers: [
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 16.dp, right: 16.dp, top: 8.dp),
+                                      child: Column(
+                                        children: [
+                                          InfoCard(
+                                              label: "Order Type",
+                                              value: state.orderDetails.type ==
+                                                      "normalOrder"
+                                                  ? "Normal"
+                                                  : "Quick Order⚡"),
+                                          Gap(4.dp),
+                                          InfoCard(
+                                              label: "Delivery Time",
+                                              value: formatSingleDate(
+                                                  state.orderDetails.deliveryAt,
+                                                  state.orderDetails
+                                                      .deliverySlot,
+                                                  state.orderDetails.status,
+                                                  state.orderDetails
+                                                      .statusHistory)),
+                                          Gap(4.dp),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ),
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 16.dp),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      state.orderDetails.customerNote.isNotEmpty
-                                          ? Container(
-                                              width: 100.w,
-                                              decoration: BoxDecoration(
-                                                  color: AppColors.secondary50,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.dp)),
-                                              padding: EdgeInsets.all(12.dp),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
+                                  if (dState.orderDetails.payment
+                                          .where((p) =>
+                                              p.status.toLowerCase() ==
+                                              "pending")
+                                          .map((p) =>
+                                              double.tryParse(p.amount) ?? 0.0)
+                                          .fold(0.0, (sum, amt) => sum + amt) >
+                                      0)
+                                    SliverPersistentHeader(
+                                      pinned: true,
+                                      delegate: StickyHeaderDelegate(
+                                        child: Container(
+                                          color: AppColors.white,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16.dp, vertical: 0),
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                              children: [
+                                                Gap(4.dp),
+                                                InfoCard(
+                                                  backgroundColor:
+                                                      const Color(0xFFFEF5D8),
+                                                  label: "Pending Amount",
+                                                  value:
+                                                      "AED ${dState.orderDetails.payment.where((p) => p.status.toLowerCase() == "pending").map((p) => double.tryParse(p.amount) ?? 0.0).fold(0.0, (sum, amt) => sum + amt).toStringAsFixed(2)}",
+                                                ),
+                                                Gap(4.dp),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16.dp),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          state.orderDetails.customerNote
+                                                  .isNotEmpty
+                                              ? Container(
+                                                  width: 100.w,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          AppColors.secondary50,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.dp)),
+                                                  padding:
+                                                      EdgeInsets.all(12.dp),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      Image.asset(
-                                                        AppImages.instructions,
-                                                        height: 12.dp,
-                                                        width: 12.dp,
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Image.asset(
+                                                            AppImages
+                                                                .instructions,
+                                                            height: 12.dp,
+                                                            width: 12.dp,
+                                                          ),
+                                                          Text(
+                                                            " Special Notes",
+                                                            style: AppTypography
+                                                                .sfProRoundedMedium
+                                                                .copyWith(
+                                                              fontSize: 12.dp,
+                                                              color: AppColors
+                                                                  .textGrey,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
+                                                      Gap(8.dp),
                                                       Text(
-                                                        " Special Notes",
+                                                        state.orderDetails
+                                                            .customerNote,
                                                         style: AppTypography
                                                             .sfProRoundedMedium
                                                             .copyWith(
                                                           fontSize: 12.dp,
                                                           color: AppColors
-                                                              .textGrey,
+                                                              .neutral950,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                  Gap(8.dp),
+                                                )
+                                              : const SizedBox.shrink(),
+                                          Gap(20.dp),
+                                          Row(
+                                            spacing: 12.dp,
+                                            children: [
+                                              Image.asset(
+                                                AppImages.person,
+                                                height: 40.dp,
+                                                width: 40.dp,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
                                                   Text(
-                                                    state.orderDetails
-                                                        .customerNote,
+                                                    "Customer",
                                                     style: AppTypography
                                                         .sfProRoundedMedium
                                                         .copyWith(
                                                       fontSize: 12.dp,
-                                                      color:
-                                                          AppColors.neutral950,
+                                                      color: AppColors.textGrey,
                                                     ),
                                                   ),
+                                                  if (state
+                                                          .orderDetails
+                                                          .customer
+                                                          ?.user
+                                                          ?.firstName !=
+                                                      '')
+                                                    Text(
+                                                      '${state.orderDetails.customer?.user?.firstName ?? ''} ${state.orderDetails.customer?.user?.lastName ?? ''}',
+                                                      style: AppTypography
+                                                          .sfProRoundedSemiBold
+                                                          .copyWith(
+                                                        fontSize: 16.dp,
+                                                        color: AppColors
+                                                            .neutral950,
+                                                      ),
+                                                    )
                                                 ],
-                                              ),
-                                            )
-                                          : const SizedBox.shrink(),
-                                      Gap(20.dp),
-                                      Row(
-                                        spacing: 12.dp,
-                                        children: [
-                                          Image.asset(
-                                            AppImages.person,
-                                            height: 40.dp,
-                                            width: 40.dp,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Customer",
-                                                style: AppTypography
-                                                    .sfProRoundedMedium
-                                                    .copyWith(
-                                                  fontSize: 12.dp,
-                                                  color: AppColors.textGrey,
-                                                ),
-                                              ),
-                                              if(state.orderDetails.customer?.user?.firstName != '')
-                                              Text(
-                                                '${state.orderDetails.customer
-                                                        ?.user?.firstName ??
-                                                    ''} ${state.orderDetails.customer
-                                                        ?.user?.lastName ??
-                                                    ''}',
-                                                style: AppTypography
-                                                    .sfProRoundedSemiBold
-                                                    .copyWith(
-                                                  fontSize: 16.dp,
-                                                  color: AppColors.neutral950,
-                                                ),
                                               )
                                             ],
-                                          )
+                                          ),
+                                          // Gap(10.dp),
+                                          // Row(
+                                          //   spacing: 12.dp,
+                                          //   children: [
+                                          //     Image.asset(
+                                          //       AppImages.clipboard,
+                                          //       height: 40.dp,
+                                          //       width: 40.dp,
+                                          //     ),
+                                          //     Column(
+                                          //       crossAxisAlignment:
+                                          //           CrossAxisAlignment.start,
+                                          //       children: [
+                                          //         Text(
+                                          //           "Payment Method",
+                                          //           style: AppTypography
+                                          //               .sfProRoundedMedium
+                                          //               .copyWith(
+                                          //             fontSize: 12.dp,
+                                          //             color: AppColors.textGrey,
+                                          //           ),
+                                          //         ),
+                                          //         Text(
+                                          //           (state.orderDetails.payment)
+                                          //               .map((payment) => payment
+                                          //                   .method
+                                          //                   .toString())
+                                          //               .join(),
+                                          //           style: AppTypography
+                                          //               .sfProRoundedSemiBold
+                                          //               .copyWith(
+                                          //             fontSize: 16.dp,
+                                          //             color: AppColors.neutral950,
+                                          //           ),
+                                          //         )
+                                          //       ],
+                                          //     )
+                                          //   ],
+                                          // ),
+                                          Gap(10.dp),
+                                          _buildStatusTrackingUI(state)
                                         ],
                                       ),
-                                      // Gap(10.dp),
-                                      // Row(
-                                      //   spacing: 12.dp,
-                                      //   children: [
-                                      //     Image.asset(
-                                      //       AppImages.clipboard,
-                                      //       height: 40.dp,
-                                      //       width: 40.dp,
-                                      //     ),
-                                      //     Column(
-                                      //       crossAxisAlignment:
-                                      //           CrossAxisAlignment.start,
-                                      //       children: [
-                                      //         Text(
-                                      //           "Payment Method",
-                                      //           style: AppTypography
-                                      //               .sfProRoundedMedium
-                                      //               .copyWith(
-                                      //             fontSize: 12.dp,
-                                      //             color: AppColors.textGrey,
-                                      //           ),
-                                      //         ),
-                                      //         Text(
-                                      //           (state.orderDetails.payment)
-                                      //               .map((payment) => payment
-                                      //                   .method
-                                      //                   .toString())
-                                      //               .join(),
-                                      //           style: AppTypography
-                                      //               .sfProRoundedSemiBold
-                                      //               .copyWith(
-                                      //             fontSize: 16.dp,
-                                      //             color: AppColors.neutral950,
-                                      //           ),
-                                      //         )
-                                      //       ],
-                                      //     )
-                                      //   ],
-                                      // ),
-                                      Gap(10.dp),
-                                      _buildStatusTrackingUI(state)
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              SliverToBoxAdapter(
-                                child: Column(
-                                  children: [
-                                    Gap(20.dp),
-                                    DeliveryOrderInvoiceDetails(
-                                      state: state,
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          );
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 9.3.h),
-                child: Container(
-                  color: Colors.white,
-                  width: 100.w,
-                  height: 4.dp,
-                ),
-              ),
-              Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: dState.orderDetails.id.isEmpty
-                      ? const SizedBox.shrink()
-                      : _footerButton(
-                          isCompleted: dState.orderDetails.statusHistory
-                              .map((status) => status.status)
-                              .toSet()
-                              .contains('delivered'),
-                          orderId: dState.orderDetails.id,
-                          totalItemsCount:
-                              dState.orderDetails.orderedItems.length,
-                          totalAmount: dState.orderDetails.payment
-                              .where((p) => p.status.toLowerCase() == "pending")
-                              .map((p) => double.tryParse(p.amount) ?? 0.0)
-                              .fold(0.0, (sum, amt) => sum + amt))),
-            ],
-          );
-        },
-      ),
+                                  SliverToBoxAdapter(
+                                    child: Column(
+                                      children: [
+                                        Gap(20.dp),
+                                        DeliveryOrderInvoiceDetails(
+                                          state: state,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 9.3.h),
+                    child: Container(
+                      color: Colors.white,
+                      width: 100.w,
+                      height: 4.dp,
+                    ),
+                  ),
+                  Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: dState.orderDetails.id.isEmpty
+                          ? const SizedBox.shrink()
+                          : _footerButton(
+                              isCompleted: dState.orderDetails.statusHistory
+                                  .map((status) => status.status)
+                                  .toSet()
+                                  .contains('delivered'),
+                              orderId: dState.orderDetails.id,
+                              totalItemsCount:
+                                  dState.orderDetails.orderedItems.length,
+                              totalAmount: dState.orderDetails.payment
+                                  .where((p) =>
+                                      p.status.toLowerCase() == "pending")
+                                  .map((p) => double.tryParse(p.amount) ?? 0.0)
+                                  .fold(0.0, (sum, amt) => sum + amt))),
+                ],
+              );
+            },
+          ) : const Center(
+          child: NoNetworkWidget(),
+        ),
+        );
+      },
     );
   }
 
@@ -431,23 +451,24 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
           if (!(totalAmount > 0) && isCompleted == false)
             BlocListener<DeliveryBloc, DeliveryState>(
               listener: (context, state) {
-              if (state.confirmDeliveryStatus is StatusSuccess) {
-                context.read<DeliveryBloc>().add(
-                    DeliveryEvent.getOrderDetails(orderId: widget.orderId));
-                TheToast.show(
-                    message: 'Delivery confirmed successfully',
-                    context: context,
-                    isError: false);
-              }
-              if (state.confirmDeliveryStatus is StatusFailure) {
-                TheToast.show(
-                    message: state.confirmDeliveryStatus.errorMessage,
-                    context: context,
-                    isError: true);
-              }
-            },
-            listenWhen: (previous, current) =>
-                previous.confirmDeliveryStatus != current.confirmDeliveryStatus,
+                if (state.confirmDeliveryStatus is StatusSuccess) {
+                  context.read<DeliveryBloc>().add(
+                      DeliveryEvent.getOrderDetails(orderId: widget.orderId));
+                  TheToast.show(
+                      message: 'Delivery confirmed successfully',
+                      context: context,
+                      isError: false);
+                }
+                if (state.confirmDeliveryStatus is StatusFailure) {
+                  TheToast.show(
+                      message: state.confirmDeliveryStatus.errorMessage,
+                      context: context,
+                      isError: true);
+                }
+              },
+              listenWhen: (previous, current) =>
+                  previous.confirmDeliveryStatus !=
+                  current.confirmDeliveryStatus,
               child: BlocBuilder<DeliveryBloc, DeliveryState>(
                 builder: (context, state) {
                   return PrimaryButtonWidget(

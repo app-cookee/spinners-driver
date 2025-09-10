@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
@@ -8,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
@@ -19,6 +19,7 @@ import 'package:spinners_driver/src/presentation/views/order_details_screen/widg
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_detail_info.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/order_info_card.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/services_widget.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/no_network_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 import 'package:intl/intl.dart';
@@ -33,9 +34,11 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-    @override
+  @override
   void initState() {
-    context.read<OrderBloc>().add(OrderEvent.getOrderDetails(orderId: widget.orderId));
+    context
+        .read<OrderBloc>()
+        .add(OrderEvent.getOrderDetails(orderId: widget.orderId));
     log('Fetching order details for order ID: ${widget.orderId}');
 
     super.initState();
@@ -58,117 +61,156 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     additionalNotesController.dispose();
     super.dispose();
   }
-  final TextEditingController additionalNotesController = TextEditingController();
-  final ValueNotifier<Set<String>> scannedQRCodes = ValueNotifier<Set<String>>({});
+
+  final TextEditingController additionalNotesController =
+      TextEditingController();
+  final ValueNotifier<Set<String>> scannedQRCodes =
+      ValueNotifier<Set<String>>({});
   @override
   Widget build(BuildContext context) {
     return ScrollConfiguration(
       behavior: NoGlowScrollBehavior(),
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        body: BlocListener<OrderBloc, OrderState>(
-          listenWhen: (previous, current) => 
-            previous.orderDetails.id != current.orderDetails.id || 
-            previous.getOrderDetailStatus != current.getOrderDetailStatus ||
-            previous.orderDetails.orderedItems != current.orderDetails.orderedItems,
-          listener: (context, state) {
-            // Log when the listener is triggered
-            log('OrderBloc state changed - Order ID: ${state.orderDetails.id}, Ordered Items: ${state.orderDetails.orderedItems.length}');
-            
-            // Clear additional notes when order details change or when a new order is fetched
-            if (state.orderDetails.id.isNotEmpty && 
-                state.orderDetails.id != widget.orderId && 
-                state.getOrderDetailStatus is StatusSuccess) {
-              additionalNotesController.clear();
-              log('Order details changed, cleared additional notes for order: ${state.orderDetails.id}');
-            }
-            // Also clear when current order details are successfully fetched (to ensure clean state)
-            if (state.orderDetails.id == widget.orderId && 
-                state.getOrderDetailStatus is StatusSuccess) {
-              // Only clear if there are no driver notes for picked up orders
-              if (state.orderDetails.status != "pickedUp" || state.orderDetails.driverNotes.isEmpty) {
-                additionalNotesController.clear();
-                log('Cleared additional notes for current order: ${state.orderDetails.id}');
-              }
-            }
-          },
-          child: BlocBuilder<OrderBloc, OrderState>(
-            builder: (context, state) {
-              return Stack(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context), 
-                    child: _header(context, state.orderDetails.refId)
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
-                    child: Builder(
-                      builder: (context) {
-                        if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial) {
-                          return const PickupOrderDetailScreenPlaceholder();
-                        }
-                       
-                        return CustomScrollView(
-                          slivers: [
-                            _orderInfo(state),
-                            OrderDetailnfo(
-                              notes: state.orderDetails.customerNote,
-                              customer: _getCustomerName(state.orderDetails.customer),
-                              amount: state.orderDetails.totalAmount,
-                              title: state.orderDetails.status == 'pickedUp' ? "Pickedup" : "Pickup",
-                              timeSlot: state.orderDetails.status == 'pickedUp' ? _calculatePickupTime(state) : _calculatePickupTime(state),
-                              address: formatAddress(state.orderDetails.selectedAddress.place),
-                              status: state.orderDetails.status,
-                              onNavigateTap: () {
-                                final lat = state.orderDetails.selectedAddress.latitude;
-                                final lon = state.orderDetails.selectedAddress.longitude;
-                                (lat == "" || lon == "")
-                                    ? TheToast.show(message: "This location is not available", context: context)
-                                    : MapNavigationHelper.openNavigation(double.tryParse(lat), double.tryParse(lon), context);
-                              },
-                              onCallTap: () {
-                                LauncherUtils.launchPhoneDialer(state.orderDetails.customer.user?.phoneNumber ?? '', context: context);
-                              },
-                              onWhatsAppTap: () {
-                                LauncherUtils.launchWhatsApp(state.orderDetails.customer.user?.phoneNumber ?? '', 'Hi', context: context);
-                              },
-                            ),
-                            SliverToBoxAdapter(
-                              child: ServicesWidget(
-                                orderState: state,
-                                orderId: widget.orderId,
-                                scannedQRCodes: scannedQRCodes,
-                                additionalNotesController: additionalNotesController,
-                              ),
-                            )
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  Builder(
-                    builder: (context) {
-                      // Hide footer button when loading, initial state, or order is picked up
-                      if (state.getOrderDetailStatus is StatusLoading || state.getOrderDetailStatus is StatusInitial || state.orderDetails.status == 'pickedUp') {
-                        return const SizedBox.shrink();
-                      }
-                      return Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: FooterButtons(
-                          orderId: widget.orderId,
-                          additionalNotesController: additionalNotesController,
-                         
+      child: BlocBuilder<NetworkBloc, NetworkState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.white,
+            body: (state == const NetworkState.success()) ? BlocListener<OrderBloc, OrderState>(
+              listenWhen: (previous, current) =>
+                  previous.orderDetails.id != current.orderDetails.id ||
+                  previous.getOrderDetailStatus !=
+                      current.getOrderDetailStatus ||
+                  previous.orderDetails.orderedItems !=
+                      current.orderDetails.orderedItems,
+              listener: (context, state) {
+                // Log when the listener is triggered
+                log('OrderBloc state changed - Order ID: ${state.orderDetails.id}, Ordered Items: ${state.orderDetails.orderedItems.length}');
+
+                // Clear additional notes when order details change or when a new order is fetched
+                if (state.orderDetails.id.isNotEmpty &&
+                    state.orderDetails.id != widget.orderId &&
+                    state.getOrderDetailStatus is StatusSuccess) {
+                  additionalNotesController.clear();
+                  log('Order details changed, cleared additional notes for order: ${state.orderDetails.id}');
+                }
+                // Also clear when current order details are successfully fetched (to ensure clean state)
+                if (state.orderDetails.id == widget.orderId &&
+                    state.getOrderDetailStatus is StatusSuccess) {
+                  // Only clear if there are no driver notes for picked up orders
+                  if (state.orderDetails.status != "pickedUp" ||
+                      state.orderDetails.driverNotes.isEmpty) {
+                    additionalNotesController.clear();
+                    log('Cleared additional notes for current order: ${state.orderDetails.id}');
+                  }
+                }
+              },
+              child: BlocBuilder<OrderBloc, OrderState>(
+                builder: (context, state) {
+                  return Stack(
+                    children: [
+                      GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: _header(context, state.orderDetails.refId)),
+                      Padding(
+                        padding: EdgeInsets.only(top: 9.8.h, bottom: 22.dp),
+                        child: Builder(
+                          builder: (context) {
+                            if (state.getOrderDetailStatus is StatusLoading ||
+                                state.getOrderDetailStatus is StatusInitial) {
+                              return const PickupOrderDetailScreenPlaceholder();
+                            }
+
+                            return CustomScrollView(
+                              slivers: [
+                                _orderInfo(state),
+                                OrderDetailnfo(
+                                  notes: state.orderDetails.customerNote,
+                                  customer: _getCustomerName(
+                                      state.orderDetails.customer),
+                                  amount: state.orderDetails.totalAmount,
+                                  title: state.orderDetails.status == 'pickedUp'
+                                      ? "Pickedup"
+                                      : "Pickup",
+                                  timeSlot:
+                                      state.orderDetails.status == 'pickedUp'
+                                          ? _calculatePickupTime(state)
+                                          : _calculatePickupTime(state),
+                                  address: formatAddress(
+                                      state.orderDetails.selectedAddress.place),
+                                  status: state.orderDetails.status,
+                                  onNavigateTap: () {
+                                    final lat = state
+                                        .orderDetails.selectedAddress.latitude;
+                                    final lon = state
+                                        .orderDetails.selectedAddress.longitude;
+                                    (lat == "" || lon == "")
+                                        ? TheToast.show(
+                                            message:
+                                                "This location is not available",
+                                            context: context)
+                                        : MapNavigationHelper.openNavigation(
+                                            double.tryParse(lat),
+                                            double.tryParse(lon),
+                                            context);
+                                  },
+                                  onCallTap: () {
+                                    LauncherUtils.launchPhoneDialer(
+                                        state.orderDetails.customer.user
+                                                ?.phoneNumber ??
+                                            '',
+                                        context: context);
+                                  },
+                                  onWhatsAppTap: () {
+                                    LauncherUtils.launchWhatsApp(
+                                        state.orderDetails.customer.user
+                                                ?.phoneNumber ??
+                                            '',
+                                        'Hi',
+                                        context: context);
+                                  },
+                                ),
+                                SliverToBoxAdapter(
+                                  child: ServicesWidget(
+                                    orderState: state,
+                                    orderId: widget.orderId,
+                                    scannedQRCodes: scannedQRCodes,
+                                    additionalNotesController:
+                                        additionalNotesController,
+                                  ),
+                                )
+                              ],
+                            );
+                          },
                         ),
-                      );
-                    },
-                  )
-                ],
-              );
-            },
-          ),
-        ),
+                      ),
+                      Builder(
+                        builder: (context) {
+                          // Hide footer button when loading, initial state, or order is picked up
+                          if (state.getOrderDetailStatus is StatusLoading ||
+                              state.getOrderDetailStatus is StatusInitial ||
+                              state.orderDetails.status == 'pickedUp') {
+                            return const SizedBox.shrink();
+                          }
+                          return Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: FooterButtons(
+                              orderId: widget.orderId,
+                              additionalNotesController:
+                                  additionalNotesController,
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  );
+                },
+              ),
+            ) : const Center(
+              child: NoNetworkWidget(),
+            ),
+          );
+        },
       ),
     );
   }
@@ -181,10 +223,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           children: [
             OrderInfoCard(
               label: "Order Type",
-              value: state.orderDetails.type == "normalOrder" ? "Normal" : "Quick Order⚡",
+              value: state.orderDetails.type == "normalOrder"
+                  ? "Normal"
+                  : "Quick Order⚡",
             ),
             Gap(4.dp),
-            OrderInfoCard(label:state.orderDetails.status == 'pickedUp' ? "Pickedup Time" : "Pickup Time", value: _calculatePickupTime(state)),
+            OrderInfoCard(
+                label: state.orderDetails.status == 'pickedUp'
+                    ? "Pickedup Time"
+                    : "Pickup Time",
+                value: _calculatePickupTime(state)),
             // if (state.orderDetails.payment.isNotEmpty) ...[
             //   Gap(4.dp),
             //   OrderInfoCard(
@@ -199,9 +247,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Widget _header(BuildContext context, String orderRefId) {
-    
     return Container(
-      padding: EdgeInsets.only(top: 7.h, left: 16.dp, right: 16.dp, bottom: 8.dp),
+      padding:
+          EdgeInsets.only(top: 7.h, left: 16.dp, right: 16.dp, bottom: 8.dp),
       width: 100.w,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -212,7 +260,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             width: 20.dp,
           ),
           Gap(6.dp),
-        
           Text(
             "Order ID : $orderRefId",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
@@ -224,8 +271,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
-
-
 
   String _calculatePickupTime(OrderState state) {
     final orderDetails = state.orderDetails;
@@ -246,8 +291,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
 
     // If status is not pickedup, take day from pickupAt and time from pickup time slot
-    if (orderDetails.pickupAt.isNotEmpty && orderDetails.pickupSlot.from.isNotEmpty) {
-      return _formatPickupTimeWithSlot(orderDetails.pickupAt, orderDetails.pickupSlot);
+    if (orderDetails.pickupAt.isNotEmpty &&
+        orderDetails.pickupSlot.from.isNotEmpty) {
+      return _formatPickupTimeWithSlot(
+          orderDetails.pickupAt, orderDetails.pickupSlot);
     }
 
     return "Not specified";
@@ -258,16 +305,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     try {
       // Parse UTC datetime and convert to UAE timezone (UTC+4)
       final utcDateTime = DateTime.parse(utcString);
-      final uaeDateTime = utcDateTime.add(const Duration(hours: 4)); // UAE is UTC+4
+      final uaeDateTime =
+          utcDateTime.add(const Duration(hours: 4)); // UAE is UTC+4
       final now = DateTime.now();
 
       String dayLabel;
       // Check if it's today
-      if (uaeDateTime.year == now.year && uaeDateTime.month == now.month && uaeDateTime.day == now.day) {
+      if (uaeDateTime.year == now.year &&
+          uaeDateTime.month == now.month &&
+          uaeDateTime.day == now.day) {
         dayLabel = "Today";
       }
       // Check if it's tomorrow
-      else if (uaeDateTime.year == now.year && uaeDateTime.month == now.month && uaeDateTime.day == now.day + 1) {
+      else if (uaeDateTime.year == now.year &&
+          uaeDateTime.month == now.month &&
+          uaeDateTime.day == now.day + 1) {
         dayLabel = "Tomorrow";
       }
       // For other dates, show month and day
@@ -298,11 +350,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       String dayLabel;
 
       // Check if it's today
-      if (uaePickupDate.year == now.year && uaePickupDate.month == now.month && uaePickupDate.day == now.day) {
+      if (uaePickupDate.year == now.year &&
+          uaePickupDate.month == now.month &&
+          uaePickupDate.day == now.day) {
         dayLabel = "Today";
       }
       // Check if it's tomorrow
-      else if (uaePickupDate.year == now.year && uaePickupDate.month == now.month && uaePickupDate.day == now.day + 1) {
+      else if (uaePickupDate.year == now.year &&
+          uaePickupDate.month == now.month &&
+          uaePickupDate.day == now.day + 1) {
         dayLabel = "Tomorrow";
       }
       // For other dates, show month and day
@@ -328,8 +384,10 @@ String formatAddress(String address) {
 
 String _getCustomerName(Customer customer) {
   if (customer.user != null) {
-    final firstName = customer.user!.firstName.isNotEmpty ? customer.user!.firstName : '';
-    final lastName = customer.user!.lastName.isNotEmpty ? customer.user!.lastName : '';
+    final firstName =
+        customer.user!.firstName.isNotEmpty ? customer.user!.firstName : '';
+    final lastName =
+        customer.user!.lastName.isNotEmpty ? customer.user!.lastName : '';
     if (firstName.isNotEmpty || lastName.isNotEmpty) {
       return "$firstName $lastName".trim();
     }

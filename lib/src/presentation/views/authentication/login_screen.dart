@@ -7,11 +7,13 @@ import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
+import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/constants/app_strings.dart';
 import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
 import 'package:spinners_driver/src/presentation/views/authentication/widgets/login_field.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_keyboard.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/no_network_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -117,15 +119,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   showKeyboard.value = false;
                 }
               },
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: _buildBody(),
+              child: BlocBuilder<NetworkBloc, NetworkState>(
+                builder: (context, state) {
+                  return Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    body: _buildBody(state),
+                  );
+                },
               ));
         });
   }
 
-  Widget _buildBody() {
-    return _loginBody();
+  Widget _buildBody(NetworkState state) {
+   if (state == const NetworkState.success()) {
+      return _loginBody();
+    } else {
+      return const Center(
+        child: NoNetworkWidget(),
+      );
+    }
   }
 
   Widget _loginBody() {
@@ -137,7 +149,8 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       child: Stack(
         children: [
-          Positioned.fill(child: Image.asset(AppImages.loginSpinBg, fit: BoxFit.fill)),
+          Positioned.fill(
+              child: Image.asset(AppImages.loginSpinBg, fit: BoxFit.fill)),
           SafeArea(
             child: Column(
               children: [
@@ -158,7 +171,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 AppStrings.loginFieldLabelText,
-                                style: AppTypography.sfProRoundedMedium.copyWith(
+                                style:
+                                    AppTypography.sfProRoundedMedium.copyWith(
                                   color: AppColors.textGrey,
                                   fontSize: 16.sp,
                                 ),
@@ -188,7 +202,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               _focusNode.requestFocus();
                             } else {
                               _focusNode.unfocus();
-                              Future.delayed(const Duration(milliseconds: 100), () {
+                              Future.delayed(const Duration(milliseconds: 100),
+                                  () {
                                 _focusNode.requestFocus();
                               });
                             }
@@ -199,48 +214,50 @@ class _LoginScreenState extends State<LoginScreen> {
                         Gap(10.h),
                         ValueListenableBuilder(
                           valueListenable: phoneNumberListener,
-                          builder: (context, value, child) => 
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                              child: BlocConsumer<AuthBloc, AuthState>(
-                                listener: (context, state) {
-                                  if (state.sendOtpStatus is StatusSuccess) {
-                                    // Navigate to OTP screen on success
-                                    context.router.push(OtpRoute(
-                                      countryCode: countryCodeListener.value,
-                                      phoneNumber: phoneNumberListener.value.trim(),
-                                    ));
-                                  } else if (state.sendOtpStatus is StatusFailure) {
-                                    // Show error message
-                                    TheToast.show(
+                          builder: (context, value, child) => Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                            child: BlocConsumer<AuthBloc, AuthState>(
+                              listener: (context, state) {
+                                if (state.sendOtpStatus is StatusSuccess) {
+                                  // Navigate to OTP screen on success
+                                  context.router.push(OtpRoute(
+                                    countryCode: countryCodeListener.value,
+                                    phoneNumber:
+                                        phoneNumberListener.value.trim(),
+                                  ));
+                                } else if (state.sendOtpStatus
+                                    is StatusFailure) {
+                                  // Show error message
+                                  TheToast.show(
                                       message: state.sendOtpStatus.errorMessage,
-                                      context: context
-                                    );
-                                  }
-                                },
-                                listenWhen: (previous, current) =>
-                                  current.sendOtpStatus != previous.sendOtpStatus,
-                                builder: (context, state) {
-                                  return PrimaryButtonWidget(
-                                    isLoading: state.sendOtpStatus is StatusLoading,
-                                    text: AppStrings.loginButtonText,
-                                    onPressed: () {
-                                      if (value.isNotEmpty && 
-                                          value.length >= 9 && 
-                                          !hasPhoneError.value) {
-                                        // Send OTP API call
-                                        onButtonSubmit(value.trim());
-                                      } else {
-                                        TheToast.show(
-                                          message: 'Please enter a valid phone number',
-                                          context: context
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
+                                      context: context);
+                                }
+                              },
+                              listenWhen: (previous, current) =>
+                                  current.sendOtpStatus !=
+                                  previous.sendOtpStatus,
+                              builder: (context, state) {
+                                return PrimaryButtonWidget(
+                                  isLoading:
+                                      state.sendOtpStatus is StatusLoading,
+                                  text: AppStrings.loginButtonText,
+                                  onPressed: () {
+                                    if (value.isNotEmpty &&
+                                        value.length >= 9 &&
+                                        !hasPhoneError.value) {
+                                      // Send OTP API call
+                                      onButtonSubmit(value.trim());
+                                    } else {
+                                      TheToast.show(
+                                          message:
+                                              'Please enter a valid phone number',
+                                          context: context);
+                                    }
+                                  },
+                                );
+                              },
                             ),
+                          ),
                         ),
                         // Padding(
                         //   padding: EdgeInsets.symmetric(horizontal: 16.dp),
@@ -285,6 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
         .read<AuthBloc>()
         .add(AuthEvent.sendOtp(phoneNumber: phoneNumber, isResent: false));
   }
+
   Widget _signInText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,

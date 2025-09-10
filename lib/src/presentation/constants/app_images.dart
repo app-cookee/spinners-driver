@@ -99,5 +99,5 @@ static const String liquidCash='assets/images/liquid_cash.png';
 static const String calendarIcon = 'assets/images/calendarIcon.png';
 static const String customerIcon = 'assets/images/customerIcon.png';
 static const String locationIcon = 'assets/images/locationIcon.png';
-
+static const String imgNoNetwork = 'assets/images/imgNoNetwork.png';
 }
