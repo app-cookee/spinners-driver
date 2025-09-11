@@ -182,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         Gap(6.dp),
                         LoginField(
-                          showRefferal: false,
+                         
                           formKey: formKey,
                           controller: _controller,
                           focusNode: _focusNode,
@@ -190,10 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Add this callback
                             phoneNumberListener.value = value;
                           },
-                          onReferralCodeChanged: (value) {
-                            // Add this callback
-                            referralCodeListener.value = value;
-                          },
+                        
                           onCountryCodeChanged: (p0) {
                             countryCodeListener.value = p0;
                           },
