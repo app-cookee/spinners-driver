@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
+            VALUE "CompanyName", "com.driver.spinners" "\0"
             VALUE "FileDescription", "Spinners Driver" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "spinners_driver" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.driver.spinners All rights reserved." "\0"
             VALUE "OriginalFilename", "spinners_driver.exe" "\0"
             VALUE "ProductName", "Spinners Driver" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

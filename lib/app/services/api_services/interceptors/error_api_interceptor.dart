@@ -78,7 +78,7 @@ class ErrorApiInterceptor extends Interceptor {
     LocalStorage.remove(StorageKey.accessToken);
     LocalStorage.remove(StorageKey.refreshToken);
     AppRouter.instance
-        .pushAndPopUntil(const SplashRoute(), predicate: (route) => false);
+        .pushAndPopUntil(SplashRoute(), predicate: (route) => false);
   }
 
   void _handleBadResponse(DioException err, ErrorInterceptorHandler handler) {

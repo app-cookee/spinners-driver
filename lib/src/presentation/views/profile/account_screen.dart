@@ -294,7 +294,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                           .add(AuthEvent.logOut());
                                       Navigator.of(context).pop(true);
                                       context.router.pushAndPopUntil(
-                                        const SplashRoute(),
+                                         SplashRoute(),
                                         predicate: (route) => true,
                                       );
                                       LocalStorage.remove(

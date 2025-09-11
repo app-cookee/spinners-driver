@@ -14,8 +14,9 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class AppBottomNavigationView extends StatefulWidget {
-  const AppBottomNavigationView({super.key, required this.selectedIndex});
+  const AppBottomNavigationView({super.key, required this.selectedIndex,this.isFromNotification = false});
   final int selectedIndex;
+  final bool isFromNotification;
   @override
   State<AppBottomNavigationView> createState() =>
       _AppBottomNavigationViewState();
