@@ -4,11 +4,39 @@ import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
-import 'package:spinners_driver/src/presentation/views/profile/widgets/dashed_coupen_box.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
+// Enhanced TimePeriod enum with abbreviated display names
+enum TimePeriod {
+  thisMonth('This Month', '1M'),
+  lastMonth('Last Month', '1M'),
+  lastThree('Last Three Months', '3M'),
+  lastSix('Last Six Months', '6M'),
+  allTime('All', 'All');
 
+  const TimePeriod(this.displayName, this.shortName);
+  final String displayName;
+  final String shortName; // For button display
+}
+
+// Alternative approach without modifying enum
+extension TimePeriodExtension on TimePeriod {
+  String get abbreviatedName {
+    switch (this) {
+      case TimePeriod.thisMonth:
+        return 'This Month';
+      case TimePeriod.lastMonth:
+        return 'Last Month';
+      case TimePeriod.lastThree:
+        return 'Last 3 Month'; // Short for 3 months
+      case TimePeriod.lastSix:
+        return 'Last 6 Month'; // Short for 6 months
+      case TimePeriod.allTime:
+        return 'All';
+    }
+  }
+}
 @RoutePage()
 class CashSettlementHistoryScreen extends StatefulWidget {
   const CashSettlementHistoryScreen({super.key});
@@ -21,6 +49,7 @@ class CashSettlementHistoryScreen extends StatefulWidget {
 class _CashSettlementHistoryScreenState
     extends State<CashSettlementHistoryScreen> {
   final TextEditingController _searchController = TextEditingController();
+  TimePeriod selectedPeriod = TimePeriod.thisMonth;
 
   void _onSearchChanged(String query) {
     // _currentSearchQuery = query; // Store the current search query
@@ -77,7 +106,7 @@ class _CashSettlementHistoryScreenState
                         style: AppTypography.sfProRoundedMedium.copyWith(
                             color: AppColors.textGrey, fontSize: 14.sp),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Text("AED 120",
                           style: AppTypography.sfProRoundedSemiBold.copyWith(
                               color: AppColors.primaryColor, fontSize: 24.sp))
@@ -108,54 +137,7 @@ class _CashSettlementHistoryScreenState
                       Gap(8.dp),
                       Expanded(
                           flex: 3,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              height: 36.dp,
-                              decoration: BoxDecoration(
-                                  color: AppColors.filterBgColor,
-                                  borderRadius: BorderRadius.circular(8.dp),
-                                  border: Border.all(
-                                      color: AppColors.loginFieldBorderColor)),
-                              child: Padding(
-                                padding: EdgeInsets.all(6.dp),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      AppImages.calendarIcon,
-                                      height: 24.dp,
-                                      width: 24.dp,
-                                    ),
-                                    Gap(8.dp),
-                                    //a vertical divider
-                                    Container(
-                                      width: 1.dp,
-                                      height: 24.dp,
-                                      decoration: const BoxDecoration(
-                                        gradient: LinearGradient(
-                                            colors: [
-                                              AppColors.white,
-                                              Color(0xffCFCFCF),
-                                              AppColors.white,
-                                            ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter),
-                                      ),
-                                    ),
-                                    Gap(8.dp),
-                                    Text(
-                                      "Last 6 Month",
-                                      style: AppTypography.sfProRoundedSemiBold
-                                          .copyWith(
-                                        fontSize: 12.dp,
-                                        color: AppColors.neutral900,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ))
+                          child: popUpButton(context))
                     ],
                   ),
                 ),
@@ -192,6 +174,92 @@ class _CashSettlementHistoryScreenState
         ],
       ),
     );
+  }
+
+  Theme popUpButton(BuildContext context) {
+    return Theme(
+                           data: Theme.of(context).copyWith(
+          highlightColor: AppColors.blue1, // Change this to your desired color
+        ),
+                          child: PopupMenuButton<TimePeriod>(
+                          
+                                                  
+                                                initialValue: selectedPeriod,
+                                                onSelected: (TimePeriod period) {
+                                                  setState(() {
+                                                    selectedPeriod = period;
+                                                  });
+                                                },
+                                                offset: const Offset(0, 45),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.dp),
+                                                ),
+                                                itemBuilder: (BuildContext context) => TimePeriod.values
+                                                    .map((TimePeriod period) => PopupMenuItem<TimePeriod>(
+                              value: period,
+                              child: Text(
+                                period.displayName,
+                                style: AppTypography.sfProRoundedMedium.copyWith(
+                                  fontSize: 12.sp,
+                                  fontWeight: selectedPeriod == period 
+                                      ? FontWeight.bold 
+                                      : FontWeight.normal,
+                                  color: selectedPeriod == period 
+                                      ? AppColors.black1 
+                                      : AppColors.black1,
+                                ),
+                              ),
+                            ))
+                                                    .toList(),
+                                                    child:  Container(
+                            height: 36.dp,
+                            decoration: BoxDecoration(
+                                color: AppColors.filterBgColor,
+                                borderRadius: BorderRadius.circular(8.dp),
+                                border: Border.all(
+                                    color: AppColors.loginFieldBorderColor)),
+                            child: Padding(
+                              padding: EdgeInsets.all(6.dp),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    AppImages.calendarIcon,
+                                    height: 24.dp,
+                                    width: 24.dp,
+                                  ),
+                                  Gap(8.dp),
+                                  //a vertical divider
+                                  Container(
+                                    width: 1.dp,
+                                    height: 24.dp,
+                                    decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                          colors: [
+                                            AppColors.white,
+                                            Color(0xffCFCFCF),
+                                            AppColors.white,
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter),
+                                    ),
+                                  ),
+                                  Gap(8.dp),
+                                 
+                                  Text(
+selectedPeriod.abbreviatedName, // Instead of selectedPeriod.displayName
+style: AppTypography.sfProRoundedSemiBold.copyWith(
+  fontSize: 12.dp,
+  color: AppColors.neutral900,
+),
+
+)
+                                ],
+                              ),
+                            ),
+                          ),
+                                            
+                                              ),
+                        );
   }
 
   Container _details() {
