@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
+import 'package:spinners_driver/app/services/fcm_service.dart';
 import 'package:spinners_driver/src/domain/respositories/auth_respository.dart';
 import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.dart';
 
@@ -14,8 +15,9 @@ part 'auth_bloc.freezed.dart';
 
 @injectable
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final FCMService fcmService;
     AuthRepository authRepository;
-  AuthBloc(  this.authRepository,) : super(AuthState.initial()) {
+  AuthBloc(  this.authRepository,this.fcmService) : super(AuthState.initial()) {
     on<_SendOtp>(_onSendOtp);
     on<_VerifyOtp>(_verifyOtp);
     on<_Refreshtoken>(_onRefreshtoken);
@@ -91,6 +93,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _onProfileAuth(_ProfileAuth event, Emitter<AuthState> emit) async {
     try {
+      String fcmToken = await fcmService.getFirebaseToken();
       emit(state.copyWith(
         profileAuthStatus: Status.loading(),
       ));
@@ -98,6 +101,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(
           profileAuthStatus: Status.success(),
           appUser: response));
+      log(fcmToken);
     } catch (e) {
       emit(state.copyWith(profileAuthStatus: Status.failure(e.toString())));
     }

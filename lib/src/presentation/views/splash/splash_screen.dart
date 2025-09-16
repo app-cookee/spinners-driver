@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
+import 'package:spinners_driver/app/services/fcm_service.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
@@ -14,7 +15,9 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({super.key,this.isFromNotification = false, this.bottomNavigationTabIndex = 0});
+  final bool isFromNotification;
+  final int bottomNavigationTabIndex;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -43,9 +46,8 @@ class _SplashScreenState extends State<SplashScreen>
     // Wait until the first frame is rendered to safely use context
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadAssetsAndNavigate();
+      FCMService().initialize();
     });
-    _startNavigationTimer();
-
   }
 
   Future<void> _loadAssetsAndNavigate() async {
@@ -54,18 +56,8 @@ class _SplashScreenState extends State<SplashScreen>
       precacheImage(const AssetImage(AppImages.splashBgImage), context),
       precacheImage(const AssetImage(AppImages.splashLogo), context),
     ]);
-  }
-
-  void _startNavigationTimer() {
-    navigationTimer = Timer(const Duration(seconds: 3), () {
-      if (mounted) {
-            context.read<AuthBloc>().add(AuthEvent.profileAuth());
-        // context.router.pushAndPopUntil(
-        //   const LoginRoute(),
-        //   predicate: (_) => false,
-        // );
-      }
-    });
+    
+    context.read<AuthBloc>().add(AuthEvent.profileAuth());
   }
 
   @override
@@ -87,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
               );
             } else {
               context.router.pushAndPopUntil(
-                AppBottomNavigationRoute(selectedIndex: 0),
+                AppBottomNavigationRoute(selectedIndex: widget.bottomNavigationTabIndex,isFromNotification: widget.isFromNotification,),
                 predicate: (_) => false,
               );
             }

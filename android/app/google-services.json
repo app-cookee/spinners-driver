@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "392492259736",
+    "project_id": "spinners-laundry",
+    "storage_bucket": "spinners-laundry.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392492259736:android:1c4b56f2bc0fb69439b3ed",
+        "android_client_info": {
+          "package_name": "com.driver.spinners"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnOmX1uPGYzMpECtRZTXaGaX0-K9JuPo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392492259736:android:f013983e531b85e439b3ed",
+        "android_client_info": {
+          "package_name": "com.laundry.spinners"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnOmX1uPGYzMpECtRZTXaGaX0-K9JuPo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

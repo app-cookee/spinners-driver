@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:spinners_driver/app/services/api_services/api_service.dart'
     as _i551;
+import 'package:spinners_driver/app/services/fcm_service.dart' as _i370;
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart'
     as _i403;
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart'
@@ -51,6 +52,7 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
+    gh.factory<_i370.FCMService>(() => _i370.FCMService());
     gh.factory<_i396.NetworkBloc>(() => _i396.NetworkBloc());
     gh.lazySingleton<_i551.Api>(() => _i551.Api());
     gh.lazySingleton<_i823.DashboardDataRepository>(() =>
@@ -65,8 +67,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i9.DeliveryBloc(gh<_i286.DeliveryRepository>()));
     gh.lazySingleton<_i701.AuthRepository>(
         () => _i1058.AuthRepositoryImplementation(api: gh<_i551.Api>()));
-    gh.factory<_i403.AuthBloc>(
-        () => _i403.AuthBloc(gh<_i701.AuthRepository>()));
+    gh.factory<_i403.AuthBloc>(() => _i403.AuthBloc(
+          gh<_i701.AuthRepository>(),
+          gh<_i370.FCMService>(),
+        ));
     gh.factory<_i277.OrderBloc>(
         () => _i277.OrderBloc(gh<_i168.OrderRepository>()));
     return this;

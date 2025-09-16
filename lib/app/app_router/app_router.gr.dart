@@ -17,12 +17,14 @@ class AppBottomNavigationRoute
   AppBottomNavigationRoute({
     Key? key,
     required int selectedIndex,
+    bool isFromNotification = false,
     List<PageRouteInfo>? children,
   }) : super(
           AppBottomNavigationRoute.name,
           args: AppBottomNavigationRouteArgs(
             key: key,
             selectedIndex: selectedIndex,
+            isFromNotification: isFromNotification,
           ),
           initialChildren: children,
         );
@@ -36,32 +38,42 @@ class AppBottomNavigationRoute
       return AppBottomNavigationView(
         key: args.key,
         selectedIndex: args.selectedIndex,
+        isFromNotification: args.isFromNotification,
       );
     },
   );
 }
 
 class AppBottomNavigationRouteArgs {
-  const AppBottomNavigationRouteArgs({this.key, required this.selectedIndex});
+  const AppBottomNavigationRouteArgs({
+    this.key,
+    required this.selectedIndex,
+    this.isFromNotification = false,
+  });
 
   final Key? key;
 
   final int selectedIndex;
 
+  final bool isFromNotification;
+
   @override
   String toString() {
-    return 'AppBottomNavigationRouteArgs{key: $key, selectedIndex: $selectedIndex}';
+    return 'AppBottomNavigationRouteArgs{key: $key, selectedIndex: $selectedIndex, isFromNotification: $isFromNotification}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! AppBottomNavigationRouteArgs) return false;
-    return key == other.key && selectedIndex == other.selectedIndex;
+    return key == other.key &&
+        selectedIndex == other.selectedIndex &&
+        isFromNotification == other.isFromNotification;
   }
 
   @override
-  int get hashCode => key.hashCode ^ selectedIndex.hashCode;
+  int get hashCode =>
+      key.hashCode ^ selectedIndex.hashCode ^ isFromNotification.hashCode;
 }
 
 /// generated route for
@@ -321,16 +333,69 @@ class PickUpDropoffHistoryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SplashScreen]
-class SplashRoute extends PageRouteInfo<void> {
-  const SplashRoute({List<PageRouteInfo>? children})
-      : super(SplashRoute.name, initialChildren: children);
+class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
+  SplashRoute({
+    Key? key,
+    bool isFromNotification = false,
+    int bottomNavigationTabIndex = 0,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SplashRoute.name,
+          args: SplashRouteArgs(
+            key: key,
+            isFromNotification: isFromNotification,
+            bottomNavigationTabIndex: bottomNavigationTabIndex,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'SplashRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const SplashScreen();
+      final args = data.argsAs<SplashRouteArgs>(
+        orElse: () => const SplashRouteArgs(),
+      );
+      return SplashScreen(
+        key: args.key,
+        isFromNotification: args.isFromNotification,
+        bottomNavigationTabIndex: args.bottomNavigationTabIndex,
+      );
     },
   );
+}
+
+class SplashRouteArgs {
+  const SplashRouteArgs({
+    this.key,
+    this.isFromNotification = false,
+    this.bottomNavigationTabIndex = 0,
+  });
+
+  final Key? key;
+
+  final bool isFromNotification;
+
+  final int bottomNavigationTabIndex;
+
+  @override
+  String toString() {
+    return 'SplashRouteArgs{key: $key, isFromNotification: $isFromNotification, bottomNavigationTabIndex: $bottomNavigationTabIndex}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SplashRouteArgs) return false;
+    return key == other.key &&
+        isFromNotification == other.isFromNotification &&
+        bottomNavigationTabIndex == other.bottomNavigationTabIndex;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      isFromNotification.hashCode ^
+      bottomNavigationTabIndex.hashCode;
 }
