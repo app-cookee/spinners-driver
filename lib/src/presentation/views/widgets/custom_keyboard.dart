@@ -37,45 +37,44 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
             Row(
               children: [
                 _buildKey('1', ' ', keyHeight, fontSize, subTextSize),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.dp),
                 _buildKey('2', 'ABC', keyHeight, fontSize, subTextSize),
-                const SizedBox(width: 8),
+               SizedBox(width: 8.dp),
                 _buildKey('3', 'DEF', keyHeight, fontSize, subTextSize),
               ],
             ),
-            const SizedBox(height: 8),
+           SizedBox(height: 100.h*(8/812),),
 
             // Row 2: 4, 5, 6
             Row(
               children: [
                 _buildKey('4', 'GHI', keyHeight, fontSize, subTextSize),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.dp),
                 _buildKey('5', 'JKL', keyHeight, fontSize, subTextSize),
-                const SizedBox(width: 8),
+              SizedBox(width: 8.dp),
                 _buildKey('6', 'MNO', keyHeight, fontSize, subTextSize),
               ],
             ),
-            const SizedBox(height: 8),
-
+            SizedBox(height: 100.h*(8/812),),
             // Row 3: 7, 8, 9
             Row(
               children: [
                 _buildKey('7', 'PQRS', keyHeight, fontSize, subTextSize),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.dp),
                 _buildKey('8', 'TUV', keyHeight, fontSize, subTextSize),
-                const SizedBox(width: 8),
+                 SizedBox(width: 8.dp),
                 _buildKey('9', 'WXYZ', keyHeight, fontSize, subTextSize),
               ],
             ),
-            const SizedBox(height: 8),
+           SizedBox(height: 100.h*(8/812),),
 
             // Row 4: symbols, 0, backspace
             Row(
               children: [
                 _buildSymbolKey(keyHeight),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.dp),
                 _buildKey('0', '', keyHeight, fontSize, subTextSize),
-                const SizedBox(width: 8),
+               SizedBox(width: 8.dp),
                 _buildBackspaceKey(keyHeight),
               ],
             ),
@@ -85,50 +84,50 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
             Row(
               children: [
                 _buildSymbolOnlyKey('!', keyHeight),
-                const SizedBox(width: 8),
+              SizedBox(width: 8.dp),
                 _buildSymbolOnlyKey('@', keyHeight),
-                const SizedBox(width: 8),
+             SizedBox(width: 8.dp),
                 _buildSymbolOnlyKey('#', keyHeight),
               ],
             ),
-            const SizedBox(height: 8),
+           SizedBox(height: 100.h*(8/812),),
 
             // Row 2
             Row(
               children: [
                 _buildSymbolOnlyKey('\$', keyHeight),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.dp),
                 _buildSymbolOnlyKey('%', keyHeight),
-                const SizedBox(width: 8),
+               SizedBox(width: 8.dp),
                 _buildSymbolOnlyKey('^', keyHeight),
               ],
             ),
-            const SizedBox(height: 8),
+         SizedBox(height: 100.h*(8/812),),
 
             // Row 3
             Row(
               children: [
                 _buildSymbolOnlyKey('&', keyHeight),
-                const SizedBox(width: 8),
+              SizedBox(width: 8.dp),
                 _buildSymbolOnlyKey('*', keyHeight),
-                const SizedBox(width: 8),
+            SizedBox(width: 8.dp),
                 _buildSymbolOnlyKey('(', keyHeight),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 100.h*(8/812),),
 
             // Row 4: back to numbers, ), backspace
             Row(
               children: [
                 _buildNumbersKey(keyHeight),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.dp),
                 _buildSymbolOnlyKey(')', keyHeight),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.dp),
                 _buildBackspaceKey(keyHeight),
               ],
             ),
           ],
-          Gap(39.dp)
+           SizedBox(height: 100.h*(56/812),),
         ],
       ),
     );
@@ -139,7 +138,7 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
       child: GestureDetector(
         onTap: () => widget.onKeyPressed(number),
         child: Container(
-          height: 50.dp,
+         height:46*(100.h/812),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -147,23 +146,27 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
             border: Border(
               bottom: BorderSide(width: 1.dp, color: AppColors.keyboardButtonBorderColor),)
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(number,
-                  style: AppTypography.sfProRoundedRegular.copyWith(
-                    fontSize: 25.sp,
-                    color: Colors.black,
-                  )),
-              if (letters.isNotEmpty) 
-                Text(letters, 
-                  style: AppTypography.sfProRoundedBold.copyWith(
-                    fontSize: 10.sp, 
-                    color: Colors.black, 
-                    letterSpacing: 1
-                  )
-                ),
-            ],
+          child:  Center(
+            child: Column(  mainAxisSize: MainAxisSize.min, 
+              mainAxisAlignment: MainAxisAlignment.center, 
+              children: [
+                Text(
+                  number,
+                    style: AppTypography.sfProRoundedRegular.copyWith(height: 1.0,
+                      fontSize: 25.sp,
+                      color: Colors.black,
+                    )),
+                
+                if (letters.isNotEmpty)
+                  Text(letters,
+                    style: AppTypography.sfProRoundedBold.copyWith(height: 1.0,
+                      fontSize: 10.sp,
+                      color: Colors.black,
+                      letterSpacing: 1
+                    )
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -175,7 +178,7 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
       child: GestureDetector(
         onTap: () => widget.onKeyPressed(symbol),
         child: Container(
-          height: 50.dp,
+          height:46*(100.h/812),
            alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -204,10 +207,10 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
+               borderRadius: BorderRadius.circular(8.dp),
           ),
-          height: height,
-          child:  Column(
+        height:46*(100.h/812),
+          child:  Column(mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
              Image.asset(AppImages.backspaceIcon, height: 17.dp, width: 24.dp,color: AppColors.black,)
@@ -227,7 +230,7 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
           });
         },
         child: Container(
-          height: height,
+            height:46*(100.h/812),
           decoration: BoxDecoration(
            
             borderRadius: BorderRadius.circular(8),
@@ -256,7 +259,7 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
           });
         },
         child: Container(
-          height: height,
+          height:46*(100.h/812),
           decoration: BoxDecoration(
            
             borderRadius: BorderRadius.circular(8),

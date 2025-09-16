@@ -148,7 +148,7 @@ String? _validatePhoneNumber(String value) {
                           focusNode: _focusNode,
                           autofocus: true,
                           maxLength: 9,
-                          keyboardType: TextInputType.none,
+                           keyboardType: TextInputType.none,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],

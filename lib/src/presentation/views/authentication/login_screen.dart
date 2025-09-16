@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (current.isNotEmpty) {
         current = current.substring(0, current.length - 1);
       }
-    } else if (current.length < 15) {
+    } else if (current.length < 9) {
       // Changed from 10 to 15 for international numbers
       current += value;
     }
