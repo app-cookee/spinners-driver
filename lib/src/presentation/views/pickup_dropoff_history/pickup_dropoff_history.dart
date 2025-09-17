@@ -1,14 +1,19 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
+import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/period_filter_button.dart';
+import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/time_period.dart';
 import 'package:spinners_driver/src/presentation/views/home/placeholders/order_list_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/orders/order_screen.dart';
 import 'package:spinners_driver/src/presentation/views/pickup_dropoff_history/widgets/pickup_drop_filter_tabs.dart';
@@ -28,11 +33,53 @@ class PickUpDropoffHistoryScreen extends StatefulWidget {
 
 class _PickUpDropoffHistoryScreenState
     extends State<PickUpDropoffHistoryScreen> {
+   
+  TimePeriod selectedPeriod = TimePeriod.thisMonth;
+
+ 
+String _formatDate(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
+}
+
+Map<String, String> getDateRangeForPeriod(TimePeriod period) {
+  final now = DateTime.now();
+  DateTime from;
+  DateTime to = now;
+
+  switch (period) {
+    case TimePeriod.thisMonth:
+      from = DateTime(now.year, now.month, 1);
+      break;
+    case TimePeriod.lastMonth:
+      final lastMonth = DateTime(now.year, now.month - 1, 1);
+      from = lastMonth;
+      to = DateTime(now.year, now.month, 0);
+      break;
+    case TimePeriod.lastThree:
+      from = DateTime(now.year, now.month - 3, 1);
+      break;
+    case TimePeriod.lastSix:
+      from = DateTime(now.year, now.month - 6, 1);
+      break;
+    case TimePeriod.allTime:
+       return {};
+     
+  }
+
+  return {
+    'from': _formatDate(from),
+    'to': _formatDate(to),
+  };
+}
+
+
+
+
   final _pickup = [
-    OrderFilter.pickupScheduled,
+    OrderFilter.pickedUp,
   ];
   final _dropOff = [
-    OrderFilter.readyForDelivery,
+    OrderFilter.delivered,
   ];
   final int _itemsPerPage = 10;
   List<OrderFilter> currentOrderFilter = [];
@@ -77,9 +124,7 @@ class _PickUpDropoffHistoryScreenState
     //           skip: orderState.ordersList.length,
     //           limit: _itemsPerPage,
     //           filter: statusString,
-    //           expressOnly: isExpressOnlyEnabled,
-    //           latitude: lat,
-    //           longitude: lng,
+             
     //           searchText:
     //               _currentSearchQuery.isEmpty ? null : _currentSearchQuery),
     //     );
@@ -96,18 +141,18 @@ class _PickUpDropoffHistoryScreenState
   }
 
   void _fetchOrders(List<OrderFilter> statuses, {String? searchQuery}) {
+    
     final statusStrings = statuses.map(statusToString).toList();
-
-    // context.read<OrderBloc>().add(
-    //       OrderEvent.getOrdersList(
-    //           limit: _itemsPerPage,
-    //           skip: 0,
-    //           filter: statusStrings.join(','),
-    //           expressOnly: isExpressOnlyEnabled,
-    //           latitude: latitudeNotifier.value,
-    //           longitude: longitudeNotifier.value,
-    //           searchText: searchQuery),
-    //     );
+log(statusStrings.toString());
+    context.read<OrderBloc>().add(
+          OrderEvent.getMyOrders(
+              limit: _itemsPerPage,
+              skip: 0,
+              filter: statusStrings.join(','),
+           
+              searchText: searchQuery
+              ),
+        );
   }
 
   @override
@@ -143,7 +188,7 @@ class _PickUpDropoffHistoryScreenState
             Row(
               children: [
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: CommonTextField(height: 36,
                     controller: _searchController,
                     hintText: "Search",
@@ -157,66 +202,33 @@ class _PickUpDropoffHistoryScreenState
                 ),
                 Gap(8.dp),
                 Expanded(
-                    flex: 3,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        height: 36.dp,
-                        decoration: BoxDecoration(
-                            color: AppColors.filterBgColor,
-                            borderRadius: BorderRadius.circular(8.dp),
-                            border: Border.all(
-                                color: AppColors.loginFieldBorderColor)),
-                        child: Padding(
-                          padding: EdgeInsets.all(6.dp),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                AppImages.calendarIcon,
-                                height: 24.dp,
-                                width: 24.dp,
-                              ),
-                              Gap(8.dp),
-                              //a vertical divider
-                              Container(
-                                width: 1.dp,
-                                height: 24.dp,
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.white,
-                                        Color(0xffCFCFCF),
-                                        AppColors.white,
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter),
-                                ),
-                              ),
-                              Gap(8.dp),
-                              Text(
-                                "Last 6 Month",
-                                style:
-                                    AppTypography.sfProRoundedSemiBold.copyWith(
-                                  fontSize: 12.dp,
-                                  color: AppColors.neutral900,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ))
+                          flex: 3,
+                          child:  PeriodFilterButton(
+                          selected: selectedPeriod,
+                          onSelected: (period) {
+                            setState(() => selectedPeriod = period);
+
+                                final range = getDateRangeForPeriod(period);
+    final from = range['from'];
+    final to = range['to'];
+
+
+    debugPrint('Selected Period: $period');
+    debugPrint('From: $from, To: $to');
+                          },
+                        ),)
+           
               ],
             ),
             Gap(8.dp),
             Expanded(
               child: BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
-                  if (state.getOrderListStatus is StatusLoading ||
-                      state.getOrderListStatus is StatusInitial) {
+                  if (state.getMyOrderListStatus is StatusLoading ||
+                      state.getMyOrderListStatus is StatusInitial) {
                     return const OrderListPlaceholder();
                   }
-                  if (state.ordersList.isEmpty) {
+                  if (state.myordersList.isEmpty) {
                     return Padding(
                       padding: EdgeInsetsGeometry.only(top: 6.h),
                       child: const Center(child: EmptyPlaceholder()),
@@ -232,41 +244,44 @@ class _PickUpDropoffHistoryScreenState
                     child: ListView.builder(
                         controller: _scrollController,
                         physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: state.ordersList.length +
-                            (state.isLoadingMore ? 1 : 0),
+                        itemCount: state.myordersList.length +
+                            (state.myOrdersisLoadingMore ? 1 : 0),
                         // shrinkWrap: true,
                         padding: EdgeInsets.only(
                             top: 9.dp, bottom: ((88 / 812) * 100.h)),
                         // primary: false,
                         itemBuilder: (context, index) {
-                          if (index == state.ordersList.length) {
+                          if (index == state.myordersList.length) {
                             return const SpinKitCircle(
                               color: AppColors.primaryColor,
                             );
                           }
                           return PickDropHistoryCard(
-                            custName: 'Frank Woods',
-                            amount: '120',
+                            
+                            custName: '${state.myordersList[index].customer?.user?.firstName??""}${state.myordersList[index].customer?.user?.lastName??""}'!=""?
+                            '${state.myordersList[index].customer?.user?.firstName??""}${state.myordersList[index].customer?.user?.lastName??""}':state.myordersList[index].customer?.user?.phoneNumber??"",
+                            amount:  state.myordersList[index].totalAmount,
                             paymentMethod: 'Cash',
                             address: state
-                                    .ordersList[index].selectedAddress?.place ??
+                                    .myordersList[index].selectedAddress?.place ??
                                 "",
-                            refId: state.ordersList[index].refId.toString(),
-                            orderId: state.ordersList[index].id,
+                            refId: state.myordersList[index].refId.toString(),
+                            orderId: state.myordersList[index].id,
 
-                            time: 'Time',
+                            time: formatUaeDateTime( state.myordersList[index].statusHistory.where((e) => e.status == 'pickedUp').toList().last.changedAt
+    ).last,
                             // getOrderDisplayDate(state.ordersList[index]),
-                            date: 'Date',
+                            date: formatUaeDateTime( state.myordersList[index].statusHistory.where((e) => e.status == 'pickedUp').toList().last.changedAt
+    ).first,
 
-                            status: state.ordersList[index].status,
-                            isDropoff: (state.ordersList[index].status ==
-                                        "pickupScheduled" ||
-                                    state.ordersList[index].status ==
+                            status: state.myordersList[index].status,
+                            isDropoff: (state.myordersList[index].status ==
+                                       
                                         "pickedUp")
                                 ? false
                                 : true,
                             isQuickOrder:
-                                state.ordersList[index].type == "oneTapOrder"
+                                state.myordersList[index].type == "oneTapOrder"
                                     ? true
                                     : false,
 
@@ -307,4 +322,23 @@ class _PickUpDropoffHistoryScreenState
       ),
     );
   }
+
+
+
+List<String> formatUaeDateTime(String utcString) {
+  // Parse the UTC string
+  final utcDate = DateTime.parse(utcString);
+
+  // Convert to UAE timezone (UTC+4)
+  final uaeDate = utcDate.add(const Duration(hours: 4));
+
+  // Format date part: 26 Aug 2025
+  final datePart = DateFormat('dd MMM yyyy').format(uaeDate);
+
+  // Format time part: 09:00 AM
+  final timePart = DateFormat('hh:mm a').format(uaeDate);
+
+  return [datePart,timePart];
+}
+
 }

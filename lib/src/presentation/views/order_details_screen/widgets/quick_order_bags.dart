@@ -20,12 +20,12 @@ class QuickOrderBags extends StatelessWidget {
   const QuickOrderBags({
     super.key,
     required this.orderId,
-    required this.scannedBags,
+    // required this.scannedBags,
     required this.status,
   });
 
   final String orderId;
-  final ValueNotifier<Set<String>> scannedBags;
+  // final ValueNotifier<Set<String>> scannedBags;
   final String status;
 
   @override
@@ -235,64 +235,64 @@ class QuickOrderBags extends StatelessWidget {
     );
   }
 
-  Future<void> _handleScanForQuickOrder(BuildContext context, Map<String, dynamic> serviceData) async {
-    final result = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
-    );
+  // Future<void> _handleScanForQuickOrder(BuildContext context, Map<String, dynamic> serviceData) async {
+  //   final result = await Navigator.push<String>(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
+  //   );
 
-    // Only proceed if QR value is provided
-    if (result != null && result.isNotEmpty) {
-      // Check if this QR has already been scanned
-      if (scannedBags.value.contains(result)) {
-        TheToast.show(
-          isError: true,
-          message: "This QR code has already been scanned",
-          context: context,
-        );
-        return;
-      }
+  //   // Only proceed if QR value is provided
+  //   if (result != null && result.isNotEmpty) {
+  //     // Check if this QR has already been scanned
+  //     if (scannedBags.value.contains(result)) {
+  //       TheToast.show(
+  //         isError: true,
+  //         message: "This QR code has already been scanned",
+  //         context: context,
+  //       );
+  //       return;
+  //     }
 
-      // Add to scanned bags set
-      final newScannedSet = Set<String>.from(scannedBags.value);
-      newScannedSet.add(result);
-      scannedBags.value = newScannedSet;
+  //     // Add to scanned bags set
+  //     final newScannedSet = Set<String>.from(scannedBags.value);
+  //     newScannedSet.add(result);
+  //     scannedBags.value = newScannedSet;
 
-      // Show bottomsheet with scanned data and pre-selected service
-      if (context.mounted) {
-        try {
-          await CustomBottomSheetWidget(
-            context: context,
-            child: ScanNewBagBottomsheet(
-              bagId: result,
-              orderId: orderId,
-              serviceId: serviceData['serviceId'] as String,
-              serviceName: serviceData['serviceName'] as String,
-              isQuickOrder: false,
-            ),
-          ).show();
-        } catch (e) {
-          // Fallback to simple bottom sheet
-          await showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => Container(
-              height: 200,
-              color: Colors.white,
-              child: Center(
-                child: Text('Error showing bottom sheet: $e'),
-              ),
-            ),
-          );
-        }
-      } else {
-        log('Context is not mounted');
-      }
-    } else {
-      // If no QR result, just return to OrderDetailScreen (no bottomsheet)
-      log('No QR result received - returning to OrderDetailScreen');
-    }
-  }
+  //     // Show bottomsheet with scanned data and pre-selected service
+  //     if (context.mounted) {
+  //       try {
+  //         await CustomBottomSheetWidget(
+  //           context: context,
+  //           child: ScanNewBagBottomsheet(
+  //             bagId: result,
+  //             orderId: orderId,
+  //             serviceId: serviceData['serviceId'] as String,
+  //             serviceName: serviceData['serviceName'] as String,
+  //             isQuickOrder: false,
+  //           ),
+  //         ).show();
+  //       } catch (e) {
+  //         // Fallback to simple bottom sheet
+  //         await showModalBottomSheet(
+  //           context: context,
+  //           isScrollControlled: true,
+  //           builder: (context) => Container(
+  //             height: 200,
+  //             color: Colors.white,
+  //             child: Center(
+  //               child: Text('Error showing bottom sheet: $e'),
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     } else {
+  //       log('Context is not mounted');
+  //     }
+  //   } else {
+  //     // If no QR result, just return to OrderDetailScreen (no bottomsheet)
+  //     log('No QR result received - returning to OrderDetailScreen');
+  //   }
+  // }
 
   Color hexToColor(String hex) {
     hex = hex.replaceAll('#', '');

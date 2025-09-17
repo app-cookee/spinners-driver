@@ -24,4 +24,5 @@ class ApiEndpoints {
   final String confirmDelivered = '$_base/orders/confirm_delivered';
   final String updateProfile = '$_base/auth/update-profile';
   final String removeBag = '$_base/orders/remove_bag';
+  final String driverOrders = '$_base/orders/my_orders';
 }

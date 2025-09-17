@@ -11,6 +11,7 @@ abstract class OrderRepository {
   Future<List<ServiceListDatamodel>> getServices(int limit, int skip);
   Future<OrderModel> getOrdersList(int limit,int skip,String filter,bool expressOnly,double? latitude,double? longitude,String? searchText);
     Future<void> removeBag(String id);
+     Future<OrderModel> getMyOrdersList(int limit,int skip,String filter,String? searchText,String? from,String? to);
 
 
 

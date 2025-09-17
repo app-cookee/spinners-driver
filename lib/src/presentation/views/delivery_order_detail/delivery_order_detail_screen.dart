@@ -137,8 +137,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          state.orderDetails.customerNote
-                                                  .isNotEmpty
+                                           (state.orderDetails.customerNote?.note!=null&&state.orderDetails.customerNote?.note!="")
                                               ? Container(
                                                   width: 100.w,
                                                   decoration: BoxDecoration(
@@ -178,8 +177,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                                       ),
                                                       Gap(8.dp),
                                                       Text(
-                                                        state.orderDetails
-                                                            .customerNote,
+                                                      state.orderDetails
+                                                        .customerNote?.note??"",
                                                         style: AppTypography
                                                             .sfProRoundedMedium
                                                             .copyWith(

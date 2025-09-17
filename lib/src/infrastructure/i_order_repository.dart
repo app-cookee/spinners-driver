@@ -134,4 +134,18 @@ class OrderRepositoryImplementation implements OrderRepository {
       rethrow;
     }
   }
+  
+  @override
+  Future<OrderModel> getMyOrdersList(int limit, int skip, String filter, String? searchText, String? from, String? to) async{
+  try {
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "status": filter, "from":from,"to":to, "searchText": searchText}.clean();
+
+      log(params.toString(), name: "params");
+      var response = await api.profile.get(ApiEndpoints().driverOrders, queryParameters: params);
+      OrderModel orders = OrderModel.fromJson(response.data);
+      return orders;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

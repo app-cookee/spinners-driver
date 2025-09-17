@@ -1,42 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/period_filter_button.dart';
+import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/time_period.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
-// Enhanced TimePeriod enum with abbreviated display names
-enum TimePeriod {
-  thisMonth('This Month', '1M'),
-  lastMonth('Last Month', '1M'),
-  lastThree('Last Three Months', '3M'),
-  lastSix('Last Six Months', '6M'),
-  allTime('All', 'All');
 
-  const TimePeriod(this.displayName, this.shortName);
-  final String displayName;
-  final String shortName; // For button display
-}
-
-// Alternative approach without modifying enum
-extension TimePeriodExtension on TimePeriod {
-  String get abbreviatedName {
-    switch (this) {
-      case TimePeriod.thisMonth:
-        return 'This Month';
-      case TimePeriod.lastMonth:
-        return 'Last Month';
-      case TimePeriod.lastThree:
-        return 'Last 3 Month'; // Short for 3 months
-      case TimePeriod.lastSix:
-        return 'Last 6 Month'; // Short for 6 months
-      case TimePeriod.allTime:
-        return 'All';
-    }
-  }
-}
 @RoutePage()
 class CashSettlementHistoryScreen extends StatefulWidget {
   const CashSettlementHistoryScreen({super.key});
@@ -60,6 +34,42 @@ class _CashSettlementHistoryScreenState
     //   // }
     // });
   }
+ 
+String _formatDate(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
+}
+
+Map<String, String> getDateRangeForPeriod(TimePeriod period) {
+  final now = DateTime.now();
+  DateTime from;
+  DateTime to = now;
+
+  switch (period) {
+    case TimePeriod.thisMonth:
+      from = DateTime(now.year, now.month, 1);
+      break;
+    case TimePeriod.lastMonth:
+      final lastMonth = DateTime(now.year, now.month - 1, 1);
+      from = lastMonth;
+      to = DateTime(now.year, now.month, 0);
+      break;
+    case TimePeriod.lastThree:
+      from = DateTime(now.year, now.month - 3, 1);
+      break;
+    case TimePeriod.lastSix:
+      from = DateTime(now.year, now.month - 6, 1);
+      break;
+    case TimePeriod.allTime:
+      from = DateTime(2000, 1, 1);
+      break;
+  }
+
+  return {
+    'from': _formatDate(from),
+    'to': _formatDate(to),
+  };
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +147,20 @@ class _CashSettlementHistoryScreenState
                       Gap(8.dp),
                       Expanded(
                           flex: 3,
-                          child: popUpButton(context))
+                          child:  PeriodFilterButton(
+                          selected: selectedPeriod,
+                          onSelected: (period) {
+                            setState(() => selectedPeriod = period);
+
+                                final range = getDateRangeForPeriod(period);
+    final from = range['from'];
+    final to = range['to'];
+
+
+    debugPrint('Selected Period: $period');
+    debugPrint('From: $from, To: $to');
+                          },
+                        ),)
                     ],
                   ),
                 ),
@@ -174,92 +197,6 @@ class _CashSettlementHistoryScreenState
         ],
       ),
     );
-  }
-
-  Theme popUpButton(BuildContext context) {
-    return Theme(
-                           data: Theme.of(context).copyWith(
-          highlightColor: AppColors.blue1, // Change this to your desired color
-        ),
-                          child: PopupMenuButton<TimePeriod>(
-                          
-                                                  
-                                                initialValue: selectedPeriod,
-                                                onSelected: (TimePeriod period) {
-                                                  setState(() {
-                                                    selectedPeriod = period;
-                                                  });
-                                                },
-                                                offset: const Offset(0, 45),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(8.dp),
-                                                ),
-                                                itemBuilder: (BuildContext context) => TimePeriod.values
-                                                    .map((TimePeriod period) => PopupMenuItem<TimePeriod>(
-                              value: period,
-                              child: Text(
-                                period.displayName,
-                                style: AppTypography.sfProRoundedMedium.copyWith(
-                                  fontSize: 12.sp,
-                                  fontWeight: selectedPeriod == period 
-                                      ? FontWeight.bold 
-                                      : FontWeight.normal,
-                                  color: selectedPeriod == period 
-                                      ? AppColors.black1 
-                                      : AppColors.black1,
-                                ),
-                              ),
-                            ))
-                                                    .toList(),
-                                                    child:  Container(
-                            height: 36.dp,
-                            decoration: BoxDecoration(
-                                color: AppColors.filterBgColor,
-                                borderRadius: BorderRadius.circular(8.dp),
-                                border: Border.all(
-                                    color: AppColors.loginFieldBorderColor)),
-                            child: Padding(
-                              padding: EdgeInsets.all(6.dp),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    AppImages.calendarIcon,
-                                    height: 24.dp,
-                                    width: 24.dp,
-                                  ),
-                                  Gap(8.dp),
-                                  //a vertical divider
-                                  Container(
-                                    width: 1.dp,
-                                    height: 24.dp,
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                          colors: [
-                                            AppColors.white,
-                                            Color(0xffCFCFCF),
-                                            AppColors.white,
-                                          ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter),
-                                    ),
-                                  ),
-                                  Gap(8.dp),
-                                 
-                                  Text(
-selectedPeriod.abbreviatedName, // Instead of selectedPeriod.displayName
-style: AppTypography.sfProRoundedSemiBold.copyWith(
-  fontSize: 12.dp,
-  color: AppColors.neutral900,
-),
-
-)
-                                ],
-                              ),
-                            ),
-                          ),
-                                            
-                                              ),
-                        );
   }
 
   Container _details() {

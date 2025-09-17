@@ -364,7 +364,7 @@ mixin _$OrderResponse {
   @JsonKey(name: 'orderedFrom')
   String get orderedFrom;
   @JsonKey(name: 'customerNote')
-  String get customerNote;
+  CustomerNote? get customerNote;
   @JsonKey(name: 'expressDelivery')
   bool get expressDelivery;
   @JsonKey(name: 'type')
@@ -535,7 +535,7 @@ abstract mixin class $OrderResponseCopyWith<$Res> {
       @JsonKey(name: 'customerId') String customerId,
       @JsonKey(name: 'storeId') String storeId,
       @JsonKey(name: 'orderedFrom') String orderedFrom,
-      @JsonKey(name: 'customerNote') String customerNote,
+      @JsonKey(name: 'customerNote') CustomerNote? customerNote,
       @JsonKey(name: 'expressDelivery') bool expressDelivery,
       @JsonKey(name: 'type') String type,
       @JsonKey(name: 'status') String status,
@@ -562,6 +562,7 @@ abstract mixin class $OrderResponseCopyWith<$Res> {
       @JsonKey(name: 'additionalCharges')
       List<AdditionalCharges> additionalCharges});
 
+  $CustomerNoteCopyWith<$Res>? get customerNote;
   $CustomerCopyWith<$Res>? get customer;
   $SelectedAddressCopyWith<$Res>? get selectedAddress;
   $StoreCopyWith<$Res>? get store;
@@ -586,7 +587,7 @@ class _$OrderResponseCopyWithImpl<$Res>
     Object? customerId = null,
     Object? storeId = null,
     Object? orderedFrom = null,
-    Object? customerNote = null,
+    Object? customerNote = freezed,
     Object? expressDelivery = null,
     Object? type = null,
     Object? status = null,
@@ -629,10 +630,10 @@ class _$OrderResponseCopyWithImpl<$Res>
           ? _self.orderedFrom
           : orderedFrom // ignore: cast_nullable_to_non_nullable
               as String,
-      customerNote: null == customerNote
+      customerNote: freezed == customerNote
           ? _self.customerNote
           : customerNote // ignore: cast_nullable_to_non_nullable
-              as String,
+              as CustomerNote?,
       expressDelivery: null == expressDelivery
           ? _self.expressDelivery
           : expressDelivery // ignore: cast_nullable_to_non_nullable
@@ -730,6 +731,20 @@ class _$OrderResponseCopyWithImpl<$Res>
           : additionalCharges // ignore: cast_nullable_to_non_nullable
               as List<AdditionalCharges>,
     ));
+  }
+
+  /// Create a copy of OrderResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CustomerNoteCopyWith<$Res>? get customerNote {
+    if (_self.customerNote == null) {
+      return null;
+    }
+
+    return $CustomerNoteCopyWith<$Res>(_self.customerNote!, (value) {
+      return _then(_self.copyWith(customerNote: value));
+    });
   }
 
   /// Create a copy of OrderResponse
@@ -901,7 +916,7 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'customerId') String customerId,
             @JsonKey(name: 'storeId') String storeId,
             @JsonKey(name: 'orderedFrom') String orderedFrom,
-            @JsonKey(name: 'customerNote') String customerNote,
+            @JsonKey(name: 'customerNote') CustomerNote? customerNote,
             @JsonKey(name: 'expressDelivery') bool expressDelivery,
             @JsonKey(name: 'type') String type,
             @JsonKey(name: 'status') String status,
@@ -988,7 +1003,7 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'customerId') String customerId,
             @JsonKey(name: 'storeId') String storeId,
             @JsonKey(name: 'orderedFrom') String orderedFrom,
-            @JsonKey(name: 'customerNote') String customerNote,
+            @JsonKey(name: 'customerNote') CustomerNote? customerNote,
             @JsonKey(name: 'expressDelivery') bool expressDelivery,
             @JsonKey(name: 'type') String type,
             @JsonKey(name: 'status') String status,
@@ -1073,7 +1088,7 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'customerId') String customerId,
             @JsonKey(name: 'storeId') String storeId,
             @JsonKey(name: 'orderedFrom') String orderedFrom,
-            @JsonKey(name: 'customerNote') String customerNote,
+            @JsonKey(name: 'customerNote') CustomerNote? customerNote,
             @JsonKey(name: 'expressDelivery') bool expressDelivery,
             @JsonKey(name: 'type') String type,
             @JsonKey(name: 'status') String status,
@@ -1148,7 +1163,7 @@ class _OrderResponse implements OrderResponse {
       @JsonKey(name: 'customerId') this.customerId = "",
       @JsonKey(name: 'storeId') this.storeId = "",
       @JsonKey(name: 'orderedFrom') this.orderedFrom = "",
-      @JsonKey(name: 'customerNote') this.customerNote = "",
+      @JsonKey(name: 'customerNote') this.customerNote,
       @JsonKey(name: 'expressDelivery') this.expressDelivery = false,
       @JsonKey(name: 'type') this.type = "",
       @JsonKey(name: 'status') this.status = "",
@@ -1199,7 +1214,7 @@ class _OrderResponse implements OrderResponse {
   final String orderedFrom;
   @override
   @JsonKey(name: 'customerNote')
-  final String customerNote;
+  final CustomerNote? customerNote;
   @override
   @JsonKey(name: 'expressDelivery')
   final bool expressDelivery;
@@ -1430,7 +1445,7 @@ abstract mixin class _$OrderResponseCopyWith<$Res>
       @JsonKey(name: 'customerId') String customerId,
       @JsonKey(name: 'storeId') String storeId,
       @JsonKey(name: 'orderedFrom') String orderedFrom,
-      @JsonKey(name: 'customerNote') String customerNote,
+      @JsonKey(name: 'customerNote') CustomerNote? customerNote,
       @JsonKey(name: 'expressDelivery') bool expressDelivery,
       @JsonKey(name: 'type') String type,
       @JsonKey(name: 'status') String status,
@@ -1457,6 +1472,8 @@ abstract mixin class _$OrderResponseCopyWith<$Res>
       @JsonKey(name: 'additionalCharges')
       List<AdditionalCharges> additionalCharges});
 
+  @override
+  $CustomerNoteCopyWith<$Res>? get customerNote;
   @override
   $CustomerCopyWith<$Res>? get customer;
   @override
@@ -1486,7 +1503,7 @@ class __$OrderResponseCopyWithImpl<$Res>
     Object? customerId = null,
     Object? storeId = null,
     Object? orderedFrom = null,
-    Object? customerNote = null,
+    Object? customerNote = freezed,
     Object? expressDelivery = null,
     Object? type = null,
     Object? status = null,
@@ -1529,10 +1546,10 @@ class __$OrderResponseCopyWithImpl<$Res>
           ? _self.orderedFrom
           : orderedFrom // ignore: cast_nullable_to_non_nullable
               as String,
-      customerNote: null == customerNote
+      customerNote: freezed == customerNote
           ? _self.customerNote
           : customerNote // ignore: cast_nullable_to_non_nullable
-              as String,
+              as CustomerNote?,
       expressDelivery: null == expressDelivery
           ? _self.expressDelivery
           : expressDelivery // ignore: cast_nullable_to_non_nullable
@@ -1630,6 +1647,20 @@ class __$OrderResponseCopyWithImpl<$Res>
           : additionalCharges // ignore: cast_nullable_to_non_nullable
               as List<AdditionalCharges>,
     ));
+  }
+
+  /// Create a copy of OrderResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CustomerNoteCopyWith<$Res>? get customerNote {
+    if (_self.customerNote == null) {
+      return null;
+    }
+
+    return $CustomerNoteCopyWith<$Res>(_self.customerNote!, (value) {
+      return _then(_self.copyWith(customerNote: value));
+    });
   }
 
   /// Create a copy of OrderResponse
@@ -2078,6 +2109,420 @@ class __$OrderStatusCopyWithImpl<$Res> implements _$OrderStatusCopyWith<$Res> {
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+mixin _$CustomerNote {
+  @JsonKey(name: 'note')
+  String get note;
+  @JsonKey(name: 'handledAt')
+  String get handledAt;
+  @JsonKey(name: 'createdAt')
+  String get createdAt;
+  @JsonKey(name: 'id')
+  String get id;
+  @JsonKey(name: 'actionTaken')
+  String get actionTaken;
+
+  /// Create a copy of CustomerNote
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $CustomerNoteCopyWith<CustomerNote> get copyWith =>
+      _$CustomerNoteCopyWithImpl<CustomerNote>(
+          this as CustomerNote, _$identity);
+
+  /// Serializes this CustomerNote to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is CustomerNote &&
+            (identical(other.note, note) || other.note == note) &&
+            (identical(other.handledAt, handledAt) ||
+                other.handledAt == handledAt) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.actionTaken, actionTaken) ||
+                other.actionTaken == actionTaken));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, note, handledAt, createdAt, id, actionTaken);
+
+  @override
+  String toString() {
+    return 'CustomerNote(note: $note, handledAt: $handledAt, createdAt: $createdAt, id: $id, actionTaken: $actionTaken)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $CustomerNoteCopyWith<$Res> {
+  factory $CustomerNoteCopyWith(
+          CustomerNote value, $Res Function(CustomerNote) _then) =
+      _$CustomerNoteCopyWithImpl;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'note') String note,
+      @JsonKey(name: 'handledAt') String handledAt,
+      @JsonKey(name: 'createdAt') String createdAt,
+      @JsonKey(name: 'id') String id,
+      @JsonKey(name: 'actionTaken') String actionTaken});
+}
+
+/// @nodoc
+class _$CustomerNoteCopyWithImpl<$Res> implements $CustomerNoteCopyWith<$Res> {
+  _$CustomerNoteCopyWithImpl(this._self, this._then);
+
+  final CustomerNote _self;
+  final $Res Function(CustomerNote) _then;
+
+  /// Create a copy of CustomerNote
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? note = null,
+    Object? handledAt = null,
+    Object? createdAt = null,
+    Object? id = null,
+    Object? actionTaken = null,
+  }) {
+    return _then(_self.copyWith(
+      note: null == note
+          ? _self.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String,
+      handledAt: null == handledAt
+          ? _self.handledAt
+          : handledAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      actionTaken: null == actionTaken
+          ? _self.actionTaken
+          : actionTaken // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// Adds pattern-matching-related methods to [CustomerNote].
+extension CustomerNotePatterns on CustomerNote {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_CustomerNote value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _CustomerNote() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_CustomerNote value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _CustomerNote():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_CustomerNote value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _CustomerNote() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'note') String note,
+            @JsonKey(name: 'handledAt') String handledAt,
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'actionTaken') String actionTaken)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _CustomerNote() when $default != null:
+        return $default(_that.note, _that.handledAt, _that.createdAt, _that.id,
+            _that.actionTaken);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'note') String note,
+            @JsonKey(name: 'handledAt') String handledAt,
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'actionTaken') String actionTaken)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _CustomerNote():
+        return $default(_that.note, _that.handledAt, _that.createdAt, _that.id,
+            _that.actionTaken);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'note') String note,
+            @JsonKey(name: 'handledAt') String handledAt,
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'actionTaken') String actionTaken)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _CustomerNote() when $default != null:
+        return $default(_that.note, _that.handledAt, _that.createdAt, _that.id,
+            _that.actionTaken);
+      case _:
+        return null;
+    }
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _CustomerNote implements CustomerNote {
+  const _CustomerNote(
+      {@JsonKey(name: 'note') this.note = "",
+      @JsonKey(name: 'handledAt') this.handledAt = "",
+      @JsonKey(name: 'createdAt') this.createdAt = "",
+      @JsonKey(name: 'id') this.id = "",
+      @JsonKey(name: 'actionTaken') this.actionTaken = ""});
+  factory _CustomerNote.fromJson(Map<String, dynamic> json) =>
+      _$CustomerNoteFromJson(json);
+
+  @override
+  @JsonKey(name: 'note')
+  final String note;
+  @override
+  @JsonKey(name: 'handledAt')
+  final String handledAt;
+  @override
+  @JsonKey(name: 'createdAt')
+  final String createdAt;
+  @override
+  @JsonKey(name: 'id')
+  final String id;
+  @override
+  @JsonKey(name: 'actionTaken')
+  final String actionTaken;
+
+  /// Create a copy of CustomerNote
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$CustomerNoteCopyWith<_CustomerNote> get copyWith =>
+      __$CustomerNoteCopyWithImpl<_CustomerNote>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$CustomerNoteToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _CustomerNote &&
+            (identical(other.note, note) || other.note == note) &&
+            (identical(other.handledAt, handledAt) ||
+                other.handledAt == handledAt) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.actionTaken, actionTaken) ||
+                other.actionTaken == actionTaken));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, note, handledAt, createdAt, id, actionTaken);
+
+  @override
+  String toString() {
+    return 'CustomerNote(note: $note, handledAt: $handledAt, createdAt: $createdAt, id: $id, actionTaken: $actionTaken)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$CustomerNoteCopyWith<$Res>
+    implements $CustomerNoteCopyWith<$Res> {
+  factory _$CustomerNoteCopyWith(
+          _CustomerNote value, $Res Function(_CustomerNote) _then) =
+      __$CustomerNoteCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'note') String note,
+      @JsonKey(name: 'handledAt') String handledAt,
+      @JsonKey(name: 'createdAt') String createdAt,
+      @JsonKey(name: 'id') String id,
+      @JsonKey(name: 'actionTaken') String actionTaken});
+}
+
+/// @nodoc
+class __$CustomerNoteCopyWithImpl<$Res>
+    implements _$CustomerNoteCopyWith<$Res> {
+  __$CustomerNoteCopyWithImpl(this._self, this._then);
+
+  final _CustomerNote _self;
+  final $Res Function(_CustomerNote) _then;
+
+  /// Create a copy of CustomerNote
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? note = null,
+    Object? handledAt = null,
+    Object? createdAt = null,
+    Object? id = null,
+    Object? actionTaken = null,
+  }) {
+    return _then(_CustomerNote(
+      note: null == note
+          ? _self.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String,
+      handledAt: null == handledAt
+          ? _self.handledAt
+          : handledAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      actionTaken: null == actionTaken
+          ? _self.actionTaken
+          : actionTaken // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

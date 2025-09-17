@@ -18,6 +18,12 @@ abstract class OrderState with _$OrderState {
     required Status removeBagStatus,
     required Status moveBagStatus,
     required List<ServiceListDatamodel> servicesList,
+    required Status getMyOrderListStatus,
+    required List<OrderResponse> myordersList,
+    required int myOrdersCount,
+     required bool myOrdershasMore,
+    required bool myOrdersisLoadingMore,
+    required Status myOrderspaginationStatus,
   }) = _OrderState;
   factory OrderState.initial() => OrderState(
         getOrderListStatus: Status.initial(),
@@ -35,5 +41,12 @@ abstract class OrderState with _$OrderState {
         servicesList: [],
         removeBagStatus: Status.initial(),
         moveBagStatus: Status.initial(),
+        getMyOrderListStatus: Status.initial(),
+        myordersList: [],
+        myOrdersCount: 0,
+        myOrdershasMore: true,
+        myOrdersisLoadingMore: false,
+        myOrderspaginationStatus: Status.initial()
+
       );
 }

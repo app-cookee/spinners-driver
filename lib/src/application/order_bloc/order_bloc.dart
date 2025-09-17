@@ -32,6 +32,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_RemoveBag>(_onRemoveBag);
     on<_RemoveBagLocally>(_onRemoveBagLocally);
     on<_MoveBag>(_onMoveBag);
+     on<_GetMyOrders>(_onGetMyOrders);
   }
   
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
@@ -434,4 +435,25 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       orderedItems: preservedServices,
     );
   }
+
+FutureOr<void> _onGetMyOrders(_GetMyOrders event, Emitter<OrderState> emit) async {
+   try {
+      emit(state.copyWith(
+        getMyOrderListStatus: Status.loading(),
+      ));
+         var response = await orderRepository.getMyOrdersList(event.limit,event.skip,event.filter,event.searchText,event.from,event.to);
+        final bool hasMoreItems = response.orderList.length == event.limit;
+        emit(state.copyWith(getMyOrderListStatus: Status.success(), 
+      myordersList: response.orderList,   myOrdersCount: response.totalCount,
+      myOrdershasMore: hasMoreItems, // Add this line!
+      myOrdersisLoadingMore: false));
+    } catch (e) {
+      emit(state.copyWith(
+       getMyOrderListStatus: Status.failure(
+          e.toString(),
+        ),
+      ));
+    }
+  }
+  
 }

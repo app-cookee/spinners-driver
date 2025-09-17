@@ -22,7 +22,7 @@ abstract class OrderResponse with _$OrderResponse {
     @JsonKey(name: 'customerId') @Default("") String customerId,
     @JsonKey(name: 'storeId') @Default("") String storeId,
     @JsonKey(name: 'orderedFrom') @Default("") String orderedFrom,
-    @JsonKey(name: 'customerNote') @Default("") String customerNote,
+     @JsonKey(name: 'customerNote') CustomerNote? customerNote,
     @JsonKey(name: 'expressDelivery') @Default(false) bool expressDelivery,
     @JsonKey(name: 'type') @Default("") String type,
     @JsonKey(name: 'status') @Default("") String status,
@@ -65,6 +65,22 @@ abstract class OrderStatus with _$OrderStatus {
   factory OrderStatus.fromJson(Map<String, dynamic> json) =>
       _$OrderStatusFromJson(json);
 }
+
+@freezed
+abstract class CustomerNote with _$CustomerNote{
+  const factory CustomerNote({
+    @JsonKey(name: 'note') @Default("") String note,
+    @JsonKey(name: 'handledAt') @Default("") String handledAt,
+     @JsonKey(name: 'createdAt') @Default("") String createdAt,
+    @JsonKey(name: 'id') @Default("") String id,
+      @JsonKey(name: 'actionTaken') @Default("") String actionTaken,
+    
+  }) = _CustomerNote;
+
+  factory CustomerNote.fromJson(Map<String, dynamic> json) =>
+      _$CustomerNoteFromJson(json);
+}
+
 
 @freezed
 abstract class AdditionalCharges with _$AdditionalCharges {

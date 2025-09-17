@@ -96,14 +96,16 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              charge.type=='expressService'? 'Express Surcharge' : charge.type=='quickOrderCharge'? 'Quick Order Surcharge' : charge.type,
+            charge.type == 'Quick Order Charge'
+                                            ? 'Quick Order Charge'
+                                            : charge.type,
               style: AppTypography.sfProRoundedRegular.copyWith(
                 fontSize: 14.dp,
                 color: AppColors.neutral900,
               ),
             ),
             const Spacer(),
-            if(charge.type!='quickOrderCharge')
+            if (charge.type != 'Quick Order Charge')
             Text(
               "+${percentage.toStringAsFixed(2)}%",
               style: AppTypography.sfProRoundedRegular.copyWith(
@@ -111,13 +113,15 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                 color: AppColors.secondary600,
               ),
             ),
-            if(charge.type!='quickOrderCharge')
+              if (charge.type != 'Quick Order Charge')
             Gap(8.dp),
             Text(
               "AED ${charge.amount}",
               style: AppTypography.sfProRoundedRegular.copyWith(
                 fontSize: 14.dp,
-                color: charge.type=='quickOrderCharge'? AppColors.green : AppColors.neutral950,
+                color: 
+                // charge.type=='quickOrderCharge'? AppColors.green : 
+                AppColors.neutral950,
               ),
             ),
           ],

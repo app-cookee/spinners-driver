@@ -26,7 +26,9 @@ _OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       customerId: json['customerId'] as String? ?? "",
       storeId: json['storeId'] as String? ?? "",
       orderedFrom: json['orderedFrom'] as String? ?? "",
-      customerNote: json['customerNote'] as String? ?? "",
+      customerNote: json['customerNote'] == null
+          ? null
+          : CustomerNote.fromJson(json['customerNote'] as Map<String, dynamic>),
       expressDelivery: json['expressDelivery'] as bool? ?? false,
       type: json['type'] as String? ?? "",
       status: json['status'] as String? ?? "",
@@ -126,6 +128,24 @@ Map<String, dynamic> _$OrderStatusToJson(_OrderStatus instance) =>
       'orderId': instance.orderId,
       'changedAt': instance.changedAt,
       'id': instance.id,
+    };
+
+_CustomerNote _$CustomerNoteFromJson(Map<String, dynamic> json) =>
+    _CustomerNote(
+      note: json['note'] as String? ?? "",
+      handledAt: json['handledAt'] as String? ?? "",
+      createdAt: json['createdAt'] as String? ?? "",
+      id: json['id'] as String? ?? "",
+      actionTaken: json['actionTaken'] as String? ?? "",
+    );
+
+Map<String, dynamic> _$CustomerNoteToJson(_CustomerNote instance) =>
+    <String, dynamic>{
+      'note': instance.note,
+      'handledAt': instance.handledAt,
+      'createdAt': instance.createdAt,
+      'id': instance.id,
+      'actionTaken': instance.actionTaken,
     };
 
 _AdditionalCharges _$AdditionalChargesFromJson(Map<String, dynamic> json) =>

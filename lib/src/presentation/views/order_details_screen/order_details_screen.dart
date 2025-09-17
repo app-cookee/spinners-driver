@@ -71,10 +71,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return ScrollConfiguration(
       behavior: NoGlowScrollBehavior(),
       child: BlocBuilder<NetworkBloc, NetworkState>(
-        builder: (context, state) {
+        builder: (context, networkState) {
           return Scaffold(
             backgroundColor: AppColors.white,
-            body: (state == const NetworkState.success()) ? BlocListener<OrderBloc, OrderState>(
+            body: (networkState == const NetworkState.success()) ? BlocListener<OrderBloc, OrderState>(
               listenWhen: (previous, current) =>
                   previous.orderDetails.id != current.orderDetails.id ||
                   previous.getOrderDetailStatus !=
@@ -105,6 +105,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               },
               child: BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
+                  log('ServicesWidget  with ${state.orderDetails.orderedItems} ordered items');
                   return Stack(
                     children: [
                       GestureDetector(

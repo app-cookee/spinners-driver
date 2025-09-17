@@ -63,6 +63,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(_RemoveBag value)? removeBag,
     TResult Function(_RemoveBagLocally value)? removeBagLocally,
     TResult Function(_MoveBag value)? moveBag,
+    TResult Function(_GetMyOrders value)? getMyOrders,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -92,6 +93,8 @@ extension OrderEventPatterns on OrderEvent {
         return removeBagLocally(_that);
       case _MoveBag() when moveBag != null:
         return moveBag(_that);
+      case _GetMyOrders() when getMyOrders != null:
+        return getMyOrders(_that);
       case _:
         return orElse();
     }
@@ -126,6 +129,7 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(_RemoveBag value) removeBag,
     required TResult Function(_RemoveBagLocally value) removeBagLocally,
     required TResult Function(_MoveBag value) moveBag,
+    required TResult Function(_GetMyOrders value) getMyOrders,
   }) {
     final _that = this;
     switch (_that) {
@@ -153,6 +157,8 @@ extension OrderEventPatterns on OrderEvent {
         return removeBagLocally(_that);
       case _MoveBag():
         return moveBag(_that);
+      case _GetMyOrders():
+        return getMyOrders(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -186,6 +192,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(_RemoveBag value)? removeBag,
     TResult? Function(_RemoveBagLocally value)? removeBagLocally,
     TResult? Function(_MoveBag value)? moveBag,
+    TResult? Function(_GetMyOrders value)? getMyOrders,
   }) {
     final _that = this;
     switch (_that) {
@@ -214,6 +221,8 @@ extension OrderEventPatterns on OrderEvent {
         return removeBagLocally(_that);
       case _MoveBag() when moveBag != null:
         return moveBag(_that);
+      case _GetMyOrders() when getMyOrders != null:
+        return getMyOrders(_that);
       case _:
         return null;
     }
@@ -259,6 +268,9 @@ extension OrderEventPatterns on OrderEvent {
             String orderId,
             bool isQuickOrder)?
         moveBag,
+    TResult Function(int limit, int skip, String filter, String? searchText,
+            String? from, String? to)?
+        getMyOrders,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -303,6 +315,9 @@ extension OrderEventPatterns on OrderEvent {
       case _MoveBag() when moveBag != null:
         return moveBag(_that.bagId, _that.fromScannedBagId, _that.toOrderItemId,
             _that.toServiceId, _that.orderId, _that.isQuickOrder);
+      case _GetMyOrders() when getMyOrders != null:
+        return getMyOrders(_that.limit, _that.skip, _that.filter,
+            _that.searchText, _that.from, _that.to);
       case _:
         return orElse();
     }
@@ -361,6 +376,9 @@ extension OrderEventPatterns on OrderEvent {
             String orderId,
             bool isQuickOrder)
         moveBag,
+    required TResult Function(int limit, int skip, String filter,
+            String? searchText, String? from, String? to)
+        getMyOrders,
   }) {
     final _that = this;
     switch (_that) {
@@ -403,6 +421,9 @@ extension OrderEventPatterns on OrderEvent {
       case _MoveBag():
         return moveBag(_that.bagId, _that.fromScannedBagId, _that.toOrderItemId,
             _that.toServiceId, _that.orderId, _that.isQuickOrder);
+      case _GetMyOrders():
+        return getMyOrders(_that.limit, _that.skip, _that.filter,
+            _that.searchText, _that.from, _that.to);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -448,6 +469,9 @@ extension OrderEventPatterns on OrderEvent {
             String orderId,
             bool isQuickOrder)?
         moveBag,
+    TResult? Function(int limit, int skip, String filter, String? searchText,
+            String? from, String? to)?
+        getMyOrders,
   }) {
     final _that = this;
     switch (_that) {
@@ -491,6 +515,9 @@ extension OrderEventPatterns on OrderEvent {
       case _MoveBag() when moveBag != null:
         return moveBag(_that.bagId, _that.fromScannedBagId, _that.toOrderItemId,
             _that.toServiceId, _that.orderId, _that.isQuickOrder);
+      case _GetMyOrders() when getMyOrders != null:
+        return getMyOrders(_that.limit, _that.skip, _that.filter,
+            _that.searchText, _that.from, _that.to);
       case _:
         return null;
     }
@@ -1495,6 +1522,118 @@ class __$MoveBagCopyWithImpl<$Res> implements _$MoveBagCopyWith<$Res> {
 }
 
 /// @nodoc
+
+class _GetMyOrders implements OrderEvent {
+  const _GetMyOrders(
+      {required this.limit,
+      required this.skip,
+      required this.filter,
+      this.searchText,
+      this.from,
+      this.to});
+
+  final int limit;
+  final int skip;
+  final String filter;
+  final String? searchText;
+  final String? from;
+  final String? to;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$GetMyOrdersCopyWith<_GetMyOrders> get copyWith =>
+      __$GetMyOrdersCopyWithImpl<_GetMyOrders>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _GetMyOrders &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText) &&
+            (identical(other.from, from) || other.from == from) &&
+            (identical(other.to, to) || other.to == to));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, limit, skip, filter, searchText, from, to);
+
+  @override
+  String toString() {
+    return 'OrderEvent.getMyOrders(limit: $limit, skip: $skip, filter: $filter, searchText: $searchText, from: $from, to: $to)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$GetMyOrdersCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$GetMyOrdersCopyWith(
+          _GetMyOrders value, $Res Function(_GetMyOrders) _then) =
+      __$GetMyOrdersCopyWithImpl;
+  @useResult
+  $Res call(
+      {int limit,
+      int skip,
+      String filter,
+      String? searchText,
+      String? from,
+      String? to});
+}
+
+/// @nodoc
+class __$GetMyOrdersCopyWithImpl<$Res> implements _$GetMyOrdersCopyWith<$Res> {
+  __$GetMyOrdersCopyWithImpl(this._self, this._then);
+
+  final _GetMyOrders _self;
+  final $Res Function(_GetMyOrders) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? limit = null,
+    Object? skip = null,
+    Object? filter = null,
+    Object? searchText = freezed,
+    Object? from = freezed,
+    Object? to = freezed,
+  }) {
+    return _then(_GetMyOrders(
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      filter: null == filter
+          ? _self.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String,
+      searchText: freezed == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      from: freezed == from
+          ? _self.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String?,
+      to: freezed == to
+          ? _self.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$OrderState {
   Status get getOrderListStatus;
   List<OrderResponse> get ordersList;
@@ -1511,6 +1650,12 @@ mixin _$OrderState {
   Status get removeBagStatus;
   Status get moveBagStatus;
   List<ServiceListDatamodel> get servicesList;
+  Status get getMyOrderListStatus;
+  List<OrderResponse> get myordersList;
+  int get myOrdersCount;
+  bool get myOrdershasMore;
+  bool get myOrdersisLoadingMore;
+  Status get myOrderspaginationStatus;
 
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -1552,31 +1697,51 @@ mixin _$OrderState {
             (identical(other.moveBagStatus, moveBagStatus) ||
                 other.moveBagStatus == moveBagStatus) &&
             const DeepCollectionEquality()
-                .equals(other.servicesList, servicesList));
+                .equals(other.servicesList, servicesList) &&
+            (identical(other.getMyOrderListStatus, getMyOrderListStatus) ||
+                other.getMyOrderListStatus == getMyOrderListStatus) &&
+            const DeepCollectionEquality()
+                .equals(other.myordersList, myordersList) &&
+            (identical(other.myOrdersCount, myOrdersCount) ||
+                other.myOrdersCount == myOrdersCount) &&
+            (identical(other.myOrdershasMore, myOrdershasMore) ||
+                other.myOrdershasMore == myOrdershasMore) &&
+            (identical(other.myOrdersisLoadingMore, myOrdersisLoadingMore) ||
+                other.myOrdersisLoadingMore == myOrdersisLoadingMore) &&
+            (identical(
+                    other.myOrderspaginationStatus, myOrderspaginationStatus) ||
+                other.myOrderspaginationStatus == myOrderspaginationStatus));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      getOrderListStatus,
-      const DeepCollectionEquality().hash(ordersList),
-      totalCount,
-      hasMore,
-      isLoadingMore,
-      paginationStatus,
-      getOrderDetailStatus,
-      orderDetails,
-      confirmPickupStatus,
-      addBagStatus,
-      createNewBagStatus,
-      getServicesListStatus,
-      removeBagStatus,
-      moveBagStatus,
-      const DeepCollectionEquality().hash(servicesList));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        getOrderListStatus,
+        const DeepCollectionEquality().hash(ordersList),
+        totalCount,
+        hasMore,
+        isLoadingMore,
+        paginationStatus,
+        getOrderDetailStatus,
+        orderDetails,
+        confirmPickupStatus,
+        addBagStatus,
+        createNewBagStatus,
+        getServicesListStatus,
+        removeBagStatus,
+        moveBagStatus,
+        const DeepCollectionEquality().hash(servicesList),
+        getMyOrderListStatus,
+        const DeepCollectionEquality().hash(myordersList),
+        myOrdersCount,
+        myOrdershasMore,
+        myOrdersisLoadingMore,
+        myOrderspaginationStatus
+      ]);
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList, getMyOrderListStatus: $getMyOrderListStatus, myordersList: $myordersList, myOrdersCount: $myOrdersCount, myOrdershasMore: $myOrdershasMore, myOrdersisLoadingMore: $myOrdersisLoadingMore, myOrderspaginationStatus: $myOrderspaginationStatus)';
   }
 }
 
@@ -1601,7 +1766,13 @@ abstract mixin class $OrderStateCopyWith<$Res> {
       Status getServicesListStatus,
       Status removeBagStatus,
       Status moveBagStatus,
-      List<ServiceListDatamodel> servicesList});
+      List<ServiceListDatamodel> servicesList,
+      Status getMyOrderListStatus,
+      List<OrderResponse> myordersList,
+      int myOrdersCount,
+      bool myOrdershasMore,
+      bool myOrdersisLoadingMore,
+      Status myOrderspaginationStatus});
 
   $StatusCopyWith<$Res> get getOrderListStatus;
   $StatusCopyWith<$Res> get paginationStatus;
@@ -1613,6 +1784,8 @@ abstract mixin class $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get getServicesListStatus;
   $StatusCopyWith<$Res> get removeBagStatus;
   $StatusCopyWith<$Res> get moveBagStatus;
+  $StatusCopyWith<$Res> get getMyOrderListStatus;
+  $StatusCopyWith<$Res> get myOrderspaginationStatus;
 }
 
 /// @nodoc
@@ -1642,6 +1815,12 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
     Object? removeBagStatus = null,
     Object? moveBagStatus = null,
     Object? servicesList = null,
+    Object? getMyOrderListStatus = null,
+    Object? myordersList = null,
+    Object? myOrdersCount = null,
+    Object? myOrdershasMore = null,
+    Object? myOrdersisLoadingMore = null,
+    Object? myOrderspaginationStatus = null,
   }) {
     return _then(_self.copyWith(
       getOrderListStatus: null == getOrderListStatus
@@ -1704,6 +1883,30 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
           ? _self.servicesList
           : servicesList // ignore: cast_nullable_to_non_nullable
               as List<ServiceListDatamodel>,
+      getMyOrderListStatus: null == getMyOrderListStatus
+          ? _self.getMyOrderListStatus
+          : getMyOrderListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      myordersList: null == myordersList
+          ? _self.myordersList
+          : myordersList // ignore: cast_nullable_to_non_nullable
+              as List<OrderResponse>,
+      myOrdersCount: null == myOrdersCount
+          ? _self.myOrdersCount
+          : myOrdersCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      myOrdershasMore: null == myOrdershasMore
+          ? _self.myOrdershasMore
+          : myOrdershasMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      myOrdersisLoadingMore: null == myOrdersisLoadingMore
+          ? _self.myOrdersisLoadingMore
+          : myOrdersisLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      myOrderspaginationStatus: null == myOrderspaginationStatus
+          ? _self.myOrderspaginationStatus
+          : myOrderspaginationStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
     ));
   }
 
@@ -1805,6 +2008,26 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get moveBagStatus {
     return $StatusCopyWith<$Res>(_self.moveBagStatus, (value) {
       return _then(_self.copyWith(moveBagStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get getMyOrderListStatus {
+    return $StatusCopyWith<$Res>(_self.getMyOrderListStatus, (value) {
+      return _then(_self.copyWith(getMyOrderListStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get myOrderspaginationStatus {
+    return $StatusCopyWith<$Res>(_self.myOrderspaginationStatus, (value) {
+      return _then(_self.copyWith(myOrderspaginationStatus: value));
     });
   }
 }
@@ -1917,7 +2140,13 @@ extension OrderStatePatterns on OrderState {
             Status getServicesListStatus,
             Status removeBagStatus,
             Status moveBagStatus,
-            List<ServiceListDatamodel> servicesList)?
+            List<ServiceListDatamodel> servicesList,
+            Status getMyOrderListStatus,
+            List<OrderResponse> myordersList,
+            int myOrdersCount,
+            bool myOrdershasMore,
+            bool myOrdersisLoadingMore,
+            Status myOrderspaginationStatus)?
         $default, {
     required TResult orElse(),
   }) {
@@ -1939,7 +2168,13 @@ extension OrderStatePatterns on OrderState {
             _that.getServicesListStatus,
             _that.removeBagStatus,
             _that.moveBagStatus,
-            _that.servicesList);
+            _that.servicesList,
+            _that.getMyOrderListStatus,
+            _that.myordersList,
+            _that.myOrdersCount,
+            _that.myOrdershasMore,
+            _that.myOrdersisLoadingMore,
+            _that.myOrderspaginationStatus);
       case _:
         return orElse();
     }
@@ -1975,7 +2210,13 @@ extension OrderStatePatterns on OrderState {
             Status getServicesListStatus,
             Status removeBagStatus,
             Status moveBagStatus,
-            List<ServiceListDatamodel> servicesList)
+            List<ServiceListDatamodel> servicesList,
+            Status getMyOrderListStatus,
+            List<OrderResponse> myordersList,
+            int myOrdersCount,
+            bool myOrdershasMore,
+            bool myOrdersisLoadingMore,
+            Status myOrderspaginationStatus)
         $default,
   ) {
     final _that = this;
@@ -1996,7 +2237,13 @@ extension OrderStatePatterns on OrderState {
             _that.getServicesListStatus,
             _that.removeBagStatus,
             _that.moveBagStatus,
-            _that.servicesList);
+            _that.servicesList,
+            _that.getMyOrderListStatus,
+            _that.myordersList,
+            _that.myOrdersCount,
+            _that.myOrdershasMore,
+            _that.myOrdersisLoadingMore,
+            _that.myOrderspaginationStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -2031,7 +2278,13 @@ extension OrderStatePatterns on OrderState {
             Status getServicesListStatus,
             Status removeBagStatus,
             Status moveBagStatus,
-            List<ServiceListDatamodel> servicesList)?
+            List<ServiceListDatamodel> servicesList,
+            Status getMyOrderListStatus,
+            List<OrderResponse> myordersList,
+            int myOrdersCount,
+            bool myOrdershasMore,
+            bool myOrdersisLoadingMore,
+            Status myOrderspaginationStatus)?
         $default,
   ) {
     final _that = this;
@@ -2052,7 +2305,13 @@ extension OrderStatePatterns on OrderState {
             _that.getServicesListStatus,
             _that.removeBagStatus,
             _that.moveBagStatus,
-            _that.servicesList);
+            _that.servicesList,
+            _that.getMyOrderListStatus,
+            _that.myordersList,
+            _that.myOrdersCount,
+            _that.myOrdershasMore,
+            _that.myOrdersisLoadingMore,
+            _that.myOrderspaginationStatus);
       case _:
         return null;
     }
@@ -2077,9 +2336,16 @@ class _OrderState implements OrderState {
       required this.getServicesListStatus,
       required this.removeBagStatus,
       required this.moveBagStatus,
-      required final List<ServiceListDatamodel> servicesList})
+      required final List<ServiceListDatamodel> servicesList,
+      required this.getMyOrderListStatus,
+      required final List<OrderResponse> myordersList,
+      required this.myOrdersCount,
+      required this.myOrdershasMore,
+      required this.myOrdersisLoadingMore,
+      required this.myOrderspaginationStatus})
       : _ordersList = ordersList,
-        _servicesList = servicesList;
+        _servicesList = servicesList,
+        _myordersList = myordersList;
 
   @override
   final Status getOrderListStatus;
@@ -2123,6 +2389,25 @@ class _OrderState implements OrderState {
     return EqualUnmodifiableListView(_servicesList);
   }
 
+  @override
+  final Status getMyOrderListStatus;
+  final List<OrderResponse> _myordersList;
+  @override
+  List<OrderResponse> get myordersList {
+    if (_myordersList is EqualUnmodifiableListView) return _myordersList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_myordersList);
+  }
+
+  @override
+  final int myOrdersCount;
+  @override
+  final bool myOrdershasMore;
+  @override
+  final bool myOrdersisLoadingMore;
+  @override
+  final Status myOrderspaginationStatus;
+
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
   @override
@@ -2164,31 +2449,51 @@ class _OrderState implements OrderState {
             (identical(other.moveBagStatus, moveBagStatus) ||
                 other.moveBagStatus == moveBagStatus) &&
             const DeepCollectionEquality()
-                .equals(other._servicesList, _servicesList));
+                .equals(other._servicesList, _servicesList) &&
+            (identical(other.getMyOrderListStatus, getMyOrderListStatus) ||
+                other.getMyOrderListStatus == getMyOrderListStatus) &&
+            const DeepCollectionEquality()
+                .equals(other._myordersList, _myordersList) &&
+            (identical(other.myOrdersCount, myOrdersCount) ||
+                other.myOrdersCount == myOrdersCount) &&
+            (identical(other.myOrdershasMore, myOrdershasMore) ||
+                other.myOrdershasMore == myOrdershasMore) &&
+            (identical(other.myOrdersisLoadingMore, myOrdersisLoadingMore) ||
+                other.myOrdersisLoadingMore == myOrdersisLoadingMore) &&
+            (identical(
+                    other.myOrderspaginationStatus, myOrderspaginationStatus) ||
+                other.myOrderspaginationStatus == myOrderspaginationStatus));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      getOrderListStatus,
-      const DeepCollectionEquality().hash(_ordersList),
-      totalCount,
-      hasMore,
-      isLoadingMore,
-      paginationStatus,
-      getOrderDetailStatus,
-      orderDetails,
-      confirmPickupStatus,
-      addBagStatus,
-      createNewBagStatus,
-      getServicesListStatus,
-      removeBagStatus,
-      moveBagStatus,
-      const DeepCollectionEquality().hash(_servicesList));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        getOrderListStatus,
+        const DeepCollectionEquality().hash(_ordersList),
+        totalCount,
+        hasMore,
+        isLoadingMore,
+        paginationStatus,
+        getOrderDetailStatus,
+        orderDetails,
+        confirmPickupStatus,
+        addBagStatus,
+        createNewBagStatus,
+        getServicesListStatus,
+        removeBagStatus,
+        moveBagStatus,
+        const DeepCollectionEquality().hash(_servicesList),
+        getMyOrderListStatus,
+        const DeepCollectionEquality().hash(_myordersList),
+        myOrdersCount,
+        myOrdershasMore,
+        myOrdersisLoadingMore,
+        myOrderspaginationStatus
+      ]);
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList, getMyOrderListStatus: $getMyOrderListStatus, myordersList: $myordersList, myOrdersCount: $myOrdersCount, myOrdershasMore: $myOrdershasMore, myOrdersisLoadingMore: $myOrdersisLoadingMore, myOrderspaginationStatus: $myOrderspaginationStatus)';
   }
 }
 
@@ -2215,7 +2520,13 @@ abstract mixin class _$OrderStateCopyWith<$Res>
       Status getServicesListStatus,
       Status removeBagStatus,
       Status moveBagStatus,
-      List<ServiceListDatamodel> servicesList});
+      List<ServiceListDatamodel> servicesList,
+      Status getMyOrderListStatus,
+      List<OrderResponse> myordersList,
+      int myOrdersCount,
+      bool myOrdershasMore,
+      bool myOrdersisLoadingMore,
+      Status myOrderspaginationStatus});
 
   @override
   $StatusCopyWith<$Res> get getOrderListStatus;
@@ -2237,6 +2548,10 @@ abstract mixin class _$OrderStateCopyWith<$Res>
   $StatusCopyWith<$Res> get removeBagStatus;
   @override
   $StatusCopyWith<$Res> get moveBagStatus;
+  @override
+  $StatusCopyWith<$Res> get getMyOrderListStatus;
+  @override
+  $StatusCopyWith<$Res> get myOrderspaginationStatus;
 }
 
 /// @nodoc
@@ -2266,6 +2581,12 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
     Object? removeBagStatus = null,
     Object? moveBagStatus = null,
     Object? servicesList = null,
+    Object? getMyOrderListStatus = null,
+    Object? myordersList = null,
+    Object? myOrdersCount = null,
+    Object? myOrdershasMore = null,
+    Object? myOrdersisLoadingMore = null,
+    Object? myOrderspaginationStatus = null,
   }) {
     return _then(_OrderState(
       getOrderListStatus: null == getOrderListStatus
@@ -2328,6 +2649,30 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
           ? _self._servicesList
           : servicesList // ignore: cast_nullable_to_non_nullable
               as List<ServiceListDatamodel>,
+      getMyOrderListStatus: null == getMyOrderListStatus
+          ? _self.getMyOrderListStatus
+          : getMyOrderListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      myordersList: null == myordersList
+          ? _self._myordersList
+          : myordersList // ignore: cast_nullable_to_non_nullable
+              as List<OrderResponse>,
+      myOrdersCount: null == myOrdersCount
+          ? _self.myOrdersCount
+          : myOrdersCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      myOrdershasMore: null == myOrdershasMore
+          ? _self.myOrdershasMore
+          : myOrdershasMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      myOrdersisLoadingMore: null == myOrdersisLoadingMore
+          ? _self.myOrdersisLoadingMore
+          : myOrdersisLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      myOrderspaginationStatus: null == myOrderspaginationStatus
+          ? _self.myOrderspaginationStatus
+          : myOrderspaginationStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
     ));
   }
 
@@ -2429,6 +2774,26 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get moveBagStatus {
     return $StatusCopyWith<$Res>(_self.moveBagStatus, (value) {
       return _then(_self.copyWith(moveBagStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get getMyOrderListStatus {
+    return $StatusCopyWith<$Res>(_self.getMyOrderListStatus, (value) {
+      return _then(_self.copyWith(getMyOrderListStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get myOrderspaginationStatus {
+    return $StatusCopyWith<$Res>(_self.myOrderspaginationStatus, (value) {
+      return _then(_self.copyWith(myOrderspaginationStatus: value));
     });
   }
 }

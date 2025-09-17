@@ -118,7 +118,7 @@ class _ServicesWidgetState extends State<ServicesWidget> {
                         children: [
                           QuickOrderBags(
                             orderId: widget.orderId,
-                            scannedBags: widget.scannedQRCodes,
+                            // scannedBags: widget.scannedQRCodes,
                             status: widget.orderState.orderDetails.status,
                           ),
                           if (widget.orderState.orderDetails.status != 'pickedUp') ...[

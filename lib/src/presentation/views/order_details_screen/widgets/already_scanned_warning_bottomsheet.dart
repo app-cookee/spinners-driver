@@ -193,7 +193,7 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
     return Container(
       padding: EdgeInsets.all(12.dp),
       decoration: BoxDecoration(
-        color: const Color(0xFFD6FFD5),
+        color: const Color(0xFFEEEEEE),
         borderRadius: BorderRadius.circular(10.dp),
       ),
       child: Column(
@@ -202,7 +202,7 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
         children: [
           Text(
             'Bag Already Assigned to',
-            style: AppTypography.sfProRoundedBold.copyWith(fontSize: 14.sp, color: const Color(0xFF2D733C)),
+            style: AppTypography.sfProRoundedMedium.copyWith(fontSize: 12.sp, color: const Color(0xFF575757)),
           ),
           Gap(10.dp),
           Container(
