@@ -35,17 +35,17 @@ class QuickOrderBags extends StatelessWidget {
         // Group scanned bags by service
         final Map<String, Map<String, dynamic>> serviceGroups = {};
 
-        for (final item in state.orderDetails.orderedItems) {
-          if (item.service.scannedBags.isNotEmpty) {
-            final serviceId = item.service.id;
+        for (final service  in state.orderDetails.orderedServices) {
+          if (service.bags.isNotEmpty) {
+            final serviceId = service.service.id;
             if (!serviceGroups.containsKey(serviceId)) {
               serviceGroups[serviceId] = {
-                'serviceName': item.service.name,
-                'serviceId': item.service.id,
-                'serviceColor': item.service.color,
-                'serviceIcon': item.service.icon,
-                'scannedCount': item.service.scannedBags.length,
-                'orderItemId': item.id,
+                'serviceName': service.service.name,
+                'serviceId': service.service.id,
+                'serviceColor': service.service.color,
+                'serviceIcon': service.service.icon,
+                'scannedCount': service.bags.length,
+                'orderItemId': service.id,
               };
             }
           }

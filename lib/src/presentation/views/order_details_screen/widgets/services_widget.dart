@@ -49,15 +49,16 @@ class _ServicesWidgetState extends State<ServicesWidget> {
     // Update additional notes when order state changes
     if (oldWidget.orderState.orderDetails.id != widget.orderState.orderDetails.id ||
         oldWidget.orderState.orderDetails.status != widget.orderState.orderDetails.status ||
-        oldWidget.orderState.orderDetails.driverNotes != widget.orderState.orderDetails.driverNotes) {
+        oldWidget.orderState.orderDetails.driverNote?.note != widget.orderState.orderDetails.driverNote?.note) {
       _populateAdditionalNotes();
     }
   }
+  
 
   void _populateAdditionalNotes() {
     // If status is pickedUp and there are driver notes, populate the controller
-    if (widget.orderState.orderDetails.status == "pickedUp" && widget.orderState.orderDetails.driverNotes.isNotEmpty) {
-      widget.additionalNotesController.text = widget.orderState.orderDetails.driverNotes;
+    if (widget.orderState.orderDetails.status == "pickedUp" && widget.orderState.orderDetails.driverNote != null&& widget.orderState.orderDetails.driverNote!.note.isNotEmpty) {
+      widget.additionalNotesController.text = widget.orderState.orderDetails.driverNote!.note;
     } else {
       // Clear the controller if there are no driver notes or status is not pickedUp
       // This ensures notes from previous orders don't persist
@@ -68,17 +69,20 @@ class _ServicesWidgetState extends State<ServicesWidget> {
   @override
   Widget build(BuildContext context) {
     // Debug logging to see when the widget rebuilds
-    log('ServicesWidget rebuilding with ${widget.orderState.orderDetails.orderedItems.length} ordered items');
-    for (final item in widget.orderState.orderDetails.orderedItems) {
-      log('Service ${item.service.name}: ${item.service.scannedBags.length} bags');
-    }
+    log('ServicesWidget rebuilding with ${widget.orderState.orderDetails.orderedServices.length} ordered items');
+       
+    for (final service in widget.orderState.orderDetails.orderedServices) {
+         log('Single Service $service');
+
+    log('Service ${service.service.name}: ${service.bags.length} bags');
+  }
 
     return BlocListener<OrderBloc, OrderState>(
-      listenWhen: (previous, current) => previous.orderDetails.orderedItems != current.orderDetails.orderedItems,
+      listenWhen: (previous, current) => previous.orderDetails.orderedServices != current.orderDetails.orderedServices,
       listener: (context, state) {
-        log('ServicesWidget: Order details changed - ${state.orderDetails.orderedItems.length} ordered items');
-        for (final item in state.orderDetails.orderedItems) {
-          log('Service ${item.service.name}: ${item.service.scannedBags.length} bags');
+        log('ServicesWidget: Order details changed - ${state.orderDetails.orderedServices.length} ordered items');
+        for (final item in state.orderDetails.orderedServices) {
+          log('Service ${item.service.name}: ${item.bags.length} bags');
         }
       },
       child: Column(
@@ -94,7 +98,7 @@ class _ServicesWidgetState extends State<ServicesWidget> {
               children: [
                 const DashedDivider(),
                 Gap(20.dp),
-                if (widget.orderState.orderDetails.orderedItems.isNotEmpty) ...[
+                if (widget.orderState.orderDetails.orderedServices.isNotEmpty) ...[
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.dp),
                     child: Text(

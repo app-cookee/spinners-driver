@@ -26,7 +26,7 @@ class _FooterButtonsState extends State<FooterButtons> {
   bool _canConfirmPickup(OrderState state) {
     final orderDetails = state.orderDetails;
     final orderType = orderDetails.type;
-    final orderedItems = orderDetails.orderedItems;
+    final orderedItems = orderDetails.orderedServices;
 
     // If no ordered items, cannot confirm
     if (orderedItems.isEmpty) {
@@ -35,18 +35,22 @@ class _FooterButtonsState extends State<FooterButtons> {
 
     // For normal orders, all bags must be scanned
     if (orderType == 'normalOrder') {
-      for (final item in orderedItems) {
+      for (final service in orderedItems) {
         // Check if the number of scanned bags equals the quantity for each service
-        if (item.service.scannedBags.length < item.quantity) {
-          return false;
-        }
+        // if (item.service.scannedBags.length < item.quantity) {
+        //   return false;
+        // }
+         final totalItemQuantity = service.item.fold<int>(0, (sum, item) => sum + item.quantity);
+      if (service.bags.length < totalItemQuantity) {
+        return false;
+      }
       }
       return true;
     } else {
       // For non-normal orders (express, quick, etc.), at least one bag must be scanned
       int totalScannedBags = 0;
-      for (final item in orderedItems) {
-        totalScannedBags += item.service.scannedBags.length;
+      for (final service  in orderedItems) {
+        totalScannedBags += service.bags.length;
       }
       return totalScannedBags > 0;
     }
@@ -56,19 +60,20 @@ class _FooterButtonsState extends State<FooterButtons> {
   String _getErrorMessage(OrderState state) {
     final orderDetails = state.orderDetails;
     final orderType = orderDetails.type;
-    final orderedItems = orderDetails.orderedItems;
+    final orderedServices  = orderDetails.orderedServices;
 
-    if (orderedItems.isEmpty) {
+    if (orderedServices .isEmpty) {
       return "No items found in this order";
     }
 
     if (orderType == 'normalOrder') {
       // Check which services are missing bags
       List<String> missingServices = [];
-      for (final item in orderedItems) {
-        if (item.service.scannedBags.length < item.quantity) {
-          missingServices.add(item.service.name);
-        }
+      for (final service in orderedServices) {
+         final totalItemQuantity = service.item.fold<int>(0, (sum, item) => sum + item.quantity);
+      if (service.bags.length < totalItemQuantity) {
+        missingServices.add(service.service.name);
+      }
       }
       
       if (missingServices.isNotEmpty) {
@@ -77,8 +82,8 @@ class _FooterButtonsState extends State<FooterButtons> {
     } else {
       // For non-normal orders, check if any bags are scanned
       int totalScannedBags = 0;
-      for (final item in orderedItems) {
-        totalScannedBags += item.service.scannedBags.length;
+      for (final service  in orderedServices) {
+        totalScannedBags += service.bags.length;
       }
       
       if (totalScannedBags == 0 && orderType!='normalOrder') {
@@ -151,7 +156,7 @@ class _FooterButtonsState extends State<FooterButtons> {
                   isLoading: isLoading,
                   text: "Confirm Pickup",
                   height: 48.dp,
-                  backgroundColor: canConfirm ? null : AppColors.grey1Color,
+                  // backgroundColor: canConfirm ? null : AppColors.grey1Color,
                   // You can add different styling for disabled state if your PrimaryButtonWidget supports it
                 ),
                 Gap(8.dp),

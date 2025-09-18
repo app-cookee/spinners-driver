@@ -294,7 +294,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
       builder: (context, state) {
         // Get unique services by ID to avoid duplicates
         final Map<String, dynamic> uniqueServicesMap = {};
-        for (final item in state.orderDetails.orderedItems) {
+        for (final item in state.orderDetails.orderedServices) {
           if (!uniqueServicesMap.containsKey(item.service.id)) {
             uniqueServicesMap[item.service.id] = item.service;
           }
@@ -519,19 +519,19 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
     Color? existingServiceColor;
     String? existingScannedBagId;
 
-    for (final item in state.orderDetails.orderedItems) {
-                    final existingBag = item.service.scannedBags.firstWhere(
+    for (final service in state.orderDetails.orderedServices) {
+                    final existingBag = service.bags.firstWhere(
                 (bag) => bag.bagId == bagId,
                 orElse: () => const ScannedBags(),
               );
 
       if (existingBag.bagId.isNotEmpty) {
         // Check if bag exists in the same service that user is trying to add to
-        if (item.service.id == selectedServiceId) {
+        if (service.service.id == selectedServiceId) {
           bagExistsInSameService = true;
-          existingServiceName = item.service.name;
-          existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
-          existingServiceColor = hexToColor(item.service.color);
+          existingServiceName = service.service.name;
+          existingServiceImage = '${ApiUrls.stagingUrl}/${service.service.icon}';
+          existingServiceColor = hexToColor(service.service.color);
           existingScannedBagId = existingBag.id;
           break;
         }
@@ -573,9 +573,9 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
       ));
     } else {
       // Find the ordered item for this service
-      final orderedItem = state.orderDetails.orderedItems.firstWhere(
-        (item) => item.service.id == selectedServiceId,
-        orElse: () => state.orderDetails.orderedItems.first,
+      final orderedItem = state.orderDetails.orderedServices.firstWhere(
+        (service) => service.service.id == selectedServiceId,
+        orElse: () => state.orderDetails.orderedServices.first,
       );
 
       context.read<OrderBloc>().add(OrderEvent.moveBag(

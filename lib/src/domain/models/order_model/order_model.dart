@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+
 part 'order_model.freezed.dart';
 part 'order_model.g.dart';
 @freezed
@@ -38,7 +39,7 @@ abstract class OrderResponse with _$OrderResponse {
     @JsonKey(name: 'discount') @Default("") String discount,
     @JsonKey(name: 'paidAmount') @Default("") String paidAmount,
     @JsonKey(name: 'customer') Customer? customer,
-    @JsonKey(name: 'orderedItems') @Default([]) List<OrderedItem> orderedItems,
+    @JsonKey(name: 'orderedServices') @Default([]) List<OrderedServices> orderedServices,
     @JsonKey(name: 'selectedAddress') SelectedAddress? selectedAddress,
     @JsonKey(name: 'store') Store? store,
     @JsonKey(name: 'pickupSlot') TimeSlot? pickupSlot,
@@ -70,7 +71,7 @@ abstract class OrderStatus with _$OrderStatus {
 abstract class CustomerNote with _$CustomerNote{
   const factory CustomerNote({
     @JsonKey(name: 'note') @Default("") String note,
-    @JsonKey(name: 'handledAt') @Default("") String handledAt,
+    @JsonKey(name: 'handledAt') @Default("") String? handledAt,
      @JsonKey(name: 'createdAt') @Default("") String createdAt,
     @JsonKey(name: 'id') @Default("") String id,
       @JsonKey(name: 'actionTaken') @Default("") String actionTaken,
@@ -140,19 +141,23 @@ abstract class User with _$User {
 }
 
 @freezed
-abstract class OrderedItem with _$OrderedItem {
-  const factory OrderedItem({
-    @JsonKey(name: 'orderServiceId') @Default("") String id,
-    @JsonKey(name: 'quantity') @Default(0) int quantity,
-    @JsonKey(name: 'soldPrice') @Default("") String soldPrice,
-    @JsonKey(name: 'listedPrice') @Default("") String listedPrice,
+abstract class OrderedServices with _$OrderedServices {
+  const factory OrderedServices({
+    @JsonKey(name: 'id') @Default("") String id,
     @JsonKey(name: 'service') Service? service,
-    @JsonKey(name: 'item') Item? item,
-  }) = _OrderedItem;
+     @JsonKey(name: 'items') @Default([]) List<Item> item,
+      // @JsonKey(name: 'bags') @Default([]) List<ScannedBags> bags,
+    // @JsonKey(name: 'quantity') @Default(0) int quantity,
+    // @JsonKey(name: 'soldPrice') @Default("") String soldPrice,
+    // @JsonKey(name: 'listedPrice') @Default("") String listedPrice,
+    
+   
+  }) = _OrderedServices;
 
-  factory OrderedItem.fromJson(Map<String, dynamic> json) =>
-      _$OrderedItemFromJson(json);
+  factory OrderedServices.fromJson(Map<String, dynamic> json) =>
+      _$OrderedServicesFromJson(json);
 }
+
 
 @freezed
 abstract class Service with _$Service {
@@ -176,13 +181,33 @@ abstract class Service with _$Service {
 @freezed
 abstract class Item with _$Item {
   const factory Item({
-    @JsonKey(name: 'id') @Default("") String id,
-    @JsonKey(name: 'name') @Default("") String name,
-    @JsonKey(name: 'salePrice') @Default("") String salePrice,
-    @JsonKey(name: 'category') Category? category,
+     @JsonKey(name: 'id') @Default("") String id,
+    @JsonKey(name: 'orderedServiceId') @Default("") String orderedServiceId,
+    @JsonKey(name: 'quantity') @Default(0) int quantity,
+    @JsonKey(name: 'itemId') @Default("") String itemId,
+    @JsonKey(name: 'soldPrice') @Default("") String soldPrice,
+    @JsonKey(name: 'listedPrice') @Default("") String listedPrice,
+    @JsonKey(name: 'item') ItemDetails? item,
   }) = _Item;
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
+}
+
+@freezed
+abstract class ItemDetails with _$ItemDetails {
+  const factory ItemDetails({
+    @JsonKey(name: 'id') @Default("") String id,
+    @JsonKey(name: 'categoryId') @Default("") String categoryId,
+    @JsonKey(name: 'name') @Default("") String name,
+    @JsonKey(name: 'salePrice') @Default("") String salePrice,
+    @JsonKey(name: 'listingPrice') @Default("") String listingPrice,
+    @JsonKey(name: 'active') @Default(false) bool active,
+    @JsonKey(name: 'deleted') @Default(false) bool deleted,
+    @JsonKey(name: 'sortOrder') @Default(0) int sortOrder,
+    @JsonKey(name: 'createdAt') @Default("") String createdAt,
+  }) = _ItemDetails;
+
+  factory ItemDetails.fromJson(Map<String, dynamic> json) => _$ItemDetailsFromJson(json);
 }
 
 @freezed

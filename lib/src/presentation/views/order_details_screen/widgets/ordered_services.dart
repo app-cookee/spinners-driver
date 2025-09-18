@@ -31,11 +31,11 @@ class OrderedServices extends StatelessWidget {
       final seenServices = <String>{};
       final uniqueServices = <dynamic>[];
       
-      for (final orderedItem in state.orderDetails.orderedItems) {
-        final serviceName = orderedItem.service.name;
+      for (final orderedService  in state.orderDetails.orderedServices) {
+        final serviceName = orderedService.service.name;
         if (!seenServices.contains(serviceName)) {
           seenServices.add(serviceName);
-          uniqueServices.add(orderedItem);
+          uniqueServices.add(orderedService);
         }
       }
 
@@ -49,8 +49,8 @@ class OrderedServices extends StatelessWidget {
   }
 
   Widget _orderedServiceCard(int index, List<dynamic> uniqueServices, OrderState state, BuildContext context) {
-    final orderedItem = uniqueServices[index];
-    final scannedBagsCount = orderedItem.service.scannedBags.length;
+    final orderedService  = uniqueServices[index];
+    final scannedBagsCount =  orderedService.bags.length;
     return Container(
       margin: EdgeInsets.only(bottom: 8.dp),
       padding: EdgeInsets.all(16.dp),
@@ -82,9 +82,9 @@ class OrderedServices extends StatelessWidget {
           Row(
             children: [
               // Show service icon if available, otherwise show a placeholder
-              if (orderedItem.service.icon.isNotEmpty)
+              if (orderedService.service.icon.isNotEmpty)
                 CachedNetworkImage(
-                  imageUrl: '${ApiUrls.stagingUrl}/${orderedItem.service.icon}',
+                  imageUrl: '${ApiUrls.stagingUrl}/${orderedService .service.icon}',
                   height: 32.dp,
                   width: 32.dp,
                   placeholder: (context, url) => SizedBox(
@@ -119,7 +119,7 @@ class OrderedServices extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      orderedItem.service.name,
+                      orderedService.service.name,
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                         fontSize: 16.sp,
                         color: AppColors.neutral950,
@@ -134,12 +134,12 @@ class OrderedServices extends StatelessWidget {
                           width: 20.dp,
                           child: Image.asset(
                             AppImages.bag,
-                            color: hexToColor(orderedItem.service.color),
+                            color: hexToColor(orderedService.service.color),
                           ),
                         ),
                         Gap(4.dp),
                         Text(
-                          'x ${orderedItem.service.scannedBags.length}',
+                          'x ${orderedService.bags.length}',
                           style: AppTypography.sfProRoundedBold.copyWith(
                             fontSize: 14.sp,
                             color: AppColors.primaryColor500,
@@ -166,8 +166,8 @@ class OrderedServices extends StatelessWidget {
                         child: ScanNewBagBottomsheet(
                           bagId: result,
                           orderId: orderId,
-                          serviceId: orderedItem.service.id,
-                          serviceName: orderedItem.service.name,
+                          serviceId: orderedService.service.id,
+                          serviceName: orderedService.service.name,
                           isQuickOrder: false,
                         ),
                       ).show();

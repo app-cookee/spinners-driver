@@ -314,7 +314,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                                   .contains('delivered'),
                               orderId: dState.orderDetails.id,
                               totalItemsCount:
-                                  dState.orderDetails.orderedItems.length,
+                                  dState.orderDetails.orderedServices.length,
                               totalAmount: dState.orderDetails.payment
                                   .where((p) =>
                                       p.status.toLowerCase() == "pending")

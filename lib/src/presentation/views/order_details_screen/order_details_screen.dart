@@ -79,11 +79,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   previous.orderDetails.id != current.orderDetails.id ||
                   previous.getOrderDetailStatus !=
                       current.getOrderDetailStatus ||
-                  previous.orderDetails.orderedItems !=
-                      current.orderDetails.orderedItems,
+                  previous.orderDetails.orderedServices !=
+                      current.orderDetails.orderedServices,
               listener: (context, state) {
                 // Log when the listener is triggered
-                log('OrderBloc state changed - Order ID: ${state.orderDetails.id}, Ordered Items: ${state.orderDetails.orderedItems.length}');
+                log('OrderBloc state changed - Order ID: ${state.orderDetails.id}, Ordered Items: ${state.orderDetails.orderedServices.length}');
 
                 // Clear additional notes when order details change or when a new order is fetched
                 if (state.orderDetails.id.isNotEmpty &&
@@ -97,7 +97,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     state.getOrderDetailStatus is StatusSuccess) {
                   // Only clear if there are no driver notes for picked up orders
                   if (state.orderDetails.status != "pickedUp" ||
-                      state.orderDetails.driverNotes.isEmpty) {
+                      state.orderDetails.driverNote==null) {
                     additionalNotesController.clear();
                     log('Cleared additional notes for current order: ${state.orderDetails.id}');
                   }
@@ -105,7 +105,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               },
               child: BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
-                  log('ServicesWidget  with ${state.orderDetails.orderedItems} ordered items');
+                  log('ServicesWidget  with ${state.orderDetails.orderedServices} ordered items');
                   return Stack(
                     children: [
                       GestureDetector(
@@ -124,7 +124,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               slivers: [
                                 _orderInfo(state),
                                 OrderDetailnfo(
-                                  notes: state.orderDetails.customerNote,
+                                  notes: state.orderDetails.customerNote?.note??"",
                                   customer: _getCustomerName(
                                       state.orderDetails.customer),
                                   amount: state.orderDetails.totalAmount,

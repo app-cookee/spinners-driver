@@ -60,28 +60,25 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                 ),
                 Gap(12.dp),
            
-    ...((state.orderDetails.orderedItems).map((orderedItem) {
-      // Format name: "2 Shirts"
-      final itemName =
-          "${orderedItem.quantity} ${orderedItem.item?.name ?? ''}";
-
-      // Format price: "AED 24"
-      final price =
-          "AED ${orderedItem.quantity * int.parse(orderedItem.soldPrice)}";
-
-      return  price!="AED 0"? Column(
-        children: [
-          InvoiceItemRow(
-            itemName: itemName,
-            price: price,
-          ),
-          Gap(8.dp),
-          const DashedDivider(),
-          Gap(8.dp),
-        ],
-      ):const SizedBox.shrink();
-    }
-    )),
+...(state.orderDetails.orderedServices.map((orderedService) {
+  return orderedService.item.map((orderItem) {
+    final itemName = "${orderItem.quantity} ${orderItem.item?.name ?? 'Unknown Item'}";
+    final totalPrice = orderItem.quantity * (int.tryParse(orderItem.soldPrice) ?? 0);
+    final price = "AED $totalPrice";
+    
+    return price != "AED 0" ? Column(
+      children: [
+        InvoiceItemRow(
+          itemName: itemName,
+          price: price,
+        ),
+        Gap(8.dp),
+        const DashedDivider(),
+        Gap(8.dp),
+      ],
+    ) : const SizedBox.shrink();
+  }).toList();
+}).expand((list) => list).toList()),
    if (state.orderDetails.additionalCharges.isNotEmpty) ...[
   Gap(6.dp),
   Column(

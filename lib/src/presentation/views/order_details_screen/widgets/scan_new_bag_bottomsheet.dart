@@ -460,8 +460,8 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
 
               // Debug logging
               log('Debug: selectedServiceId: $selectedServiceId');
-              log('Debug: orderDetails.orderedItems.length: ${state.orderDetails.orderedItems.length}');
-              log('Debug: orderDetails.orderedItems: ${state.orderDetails.orderedItems.map((item) => '${item.service.id}:${item.service.name}').toList()}');
+              log('Debug: orderDetails.orderedItems.length: ${state.orderDetails.orderedServices.length}');
+              log('Debug: orderDetails.orderedItems: ${state.orderDetails.orderedServices.map((item) => '${item.service.id}:${item.service.name}').toList()}');
 
               // Check if bag ID already exists in any service
               bool bagAlreadyExists = false;
@@ -472,31 +472,31 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               // String? existingOrderServiceId;
               String? existingScannedBagId;
 
-              for (final item in state.orderDetails.orderedItems) {
+              for (final service  in state.orderDetails.orderedServices) {
                 // Check if scannedBags list is not empty before calling firstWhere
-                if (item.service.scannedBags.isNotEmpty) {
-                  final existingBag = item.service.scannedBags.firstWhere(
+                if (service.bags.isNotEmpty) {
+                  final existingBag = service.bags.firstWhere(
                     (bag) => bag.bagId == bagId,
                     orElse: () => const ScannedBags(),
                   );
 
                   if (existingBag.bagId.isNotEmpty) {
                     bagAlreadyExists = true;
-                    existingServiceName = item.service.name;
-                    existingServiceImage = '${ApiUrls.stagingUrl}/${item.service.icon}';
-                    existingServiceColor = hexToColor(item.service.color);
+                    existingServiceName = service.service.name;
+                    existingServiceImage = '${ApiUrls.stagingUrl}/${service.service.icon}';
+                    existingServiceColor = hexToColor(service.service.color);
                     // existingOrderServiceId = item.id;
                     existingScannedBagId = existingBag.id;
 
                     // Check if bag exists in the same service that user is trying to add to
                     if (widget.isQuickOrder) {
                       // For quick orders, check if the service ID matches
-                      if (item.service.id == selectedServiceId) {
+                      if (service.service.id == selectedServiceId) {
                         bagExistsInSameService = true;
                       }
                     } else {
                       // For normal orders, check if the service ID matches
-                      if (item.service.id == selectedServiceId) {
+                      if (service.service.id == selectedServiceId) {
                         bagExistsInSameService = true;
                       }
                     }
@@ -547,7 +547,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               // For normal orders, we need to check if the service exists in ordered items
               if (widget.isQuickOrder == false) {
                 // Normal order flow - check if ordered items exist
-                if (state.orderDetails.orderedItems.isEmpty) {
+                if (state.orderDetails.orderedServices.isEmpty) {
                   log('Error: No ordered items found in order details');
                   TheToast.show(
                     isError: true,
@@ -558,8 +558,8 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                 }
 
                 // Check if the selected service exists in the ordered items
-                final serviceExists = state.orderDetails.orderedItems.any(
-                  (item) => item.service.id == selectedServiceId,
+                final serviceExists = state.orderDetails.orderedServices.any(
+                  (service) => service.service.id == selectedServiceId,
                 );
 
                 if (!serviceExists) {
@@ -573,9 +573,9 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                 }
 
                 // Find the ordered item for this service
-                final orderedItem = state.orderDetails.orderedItems.firstWhere(
+                final orderedItem = state.orderDetails.orderedServices.firstWhere(
                   (item) => item.service.id == selectedServiceId,
-                  orElse: () => state.orderDetails.orderedItems.first,
+                  orElse: () => state.orderDetails.orderedServices.first,
                 );
 
                 // Call addBag API for normal orders
