@@ -15,6 +15,7 @@ abstract class OrderEvent with _$OrderEvent {
   const factory OrderEvent.removeBagLocally({required String id}) = _RemoveBagLocally;
   const factory OrderEvent.moveBag({required String bagId, required String fromScannedBagId, required String toOrderItemId, required String toServiceId, required String orderId, required bool isQuickOrder}) = _MoveBag;
     const factory OrderEvent.getMyOrders({required int limit,required int skip,required String filter, String? searchText,String? from,String? to}) = _GetMyOrders;
+        const factory OrderEvent.paginateMyOrdersList({required int skip, required int limit,required String filter, String? searchText,String? from,String? to}) = _paginateMyOrdersList;
 
 }
 

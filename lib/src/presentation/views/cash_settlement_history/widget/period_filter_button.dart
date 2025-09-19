@@ -54,9 +54,9 @@ class PeriodFilterButton extends StatelessWidget {
             border: Border.all(color: AppColors.loginFieldBorderColor),
           ),
           padding: EdgeInsets.all(6.dp),
-          child: Row(
+          child: Row(mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(AppImages.calendarIcon, height: 24.dp, width: 24.dp),
+              Image.asset(AppImages.calendarIcon, height: 24.dp, width: 24.dp,),
               Gap(8.dp),
               Container(
                 width: 1.dp,

@@ -39,6 +39,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_RemoveBagLocally>(_onRemoveBagLocally);
     on<_MoveBag>(_onMoveBag);
      on<_GetMyOrders>(_onGetMyOrders);
+       on<_paginateMyOrdersList>(_onPaginateMyOrdersList);
   }
   
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
@@ -462,5 +463,33 @@ FutureOr<void> _onGetMyOrders(_GetMyOrders event, Emitter<OrderState> emit) asyn
       ));
     }
   }
+
+
+  FutureOr<void> _onPaginateMyOrdersList(_paginateMyOrdersList event, Emitter<OrderState> emit)async {
+        try{
+      log("paginating pick and dropoff history");
+              emit(state.copyWith(
+      myOrdersisLoadingMore: true
+    ));
+      var response = await orderRepository.getMyOrdersList(event.limit,event.skip,event.filter,event.searchText,event.from,event.to);
+       final newList = [...state.myordersList, ...response.orderList];
+           final bool hasMoreItems = response.orderList.length >= event.limit;
+              emit(state.copyWith(
+       myordersList : newList,
+        myOrdersCount: response.totalCount,
+        
+        myOrdershasMore: hasMoreItems,
+        myOrdersisLoadingMore: false,
+      ));
+    }
+    catch (e) {
+      log("error in paginating pick and dropoff history");
+      emit(state.copyWith(
+       myOrdersisLoadingMore: false
+      ));
+    }
+  }
   
 }
+
+

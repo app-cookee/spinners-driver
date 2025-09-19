@@ -64,6 +64,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(_RemoveBagLocally value)? removeBagLocally,
     TResult Function(_MoveBag value)? moveBag,
     TResult Function(_GetMyOrders value)? getMyOrders,
+    TResult Function(_paginateMyOrdersList value)? paginateMyOrdersList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -95,6 +96,8 @@ extension OrderEventPatterns on OrderEvent {
         return moveBag(_that);
       case _GetMyOrders() when getMyOrders != null:
         return getMyOrders(_that);
+      case _paginateMyOrdersList() when paginateMyOrdersList != null:
+        return paginateMyOrdersList(_that);
       case _:
         return orElse();
     }
@@ -130,6 +133,7 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(_RemoveBagLocally value) removeBagLocally,
     required TResult Function(_MoveBag value) moveBag,
     required TResult Function(_GetMyOrders value) getMyOrders,
+    required TResult Function(_paginateMyOrdersList value) paginateMyOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -159,6 +163,8 @@ extension OrderEventPatterns on OrderEvent {
         return moveBag(_that);
       case _GetMyOrders():
         return getMyOrders(_that);
+      case _paginateMyOrdersList():
+        return paginateMyOrdersList(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -193,6 +199,7 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(_RemoveBagLocally value)? removeBagLocally,
     TResult? Function(_MoveBag value)? moveBag,
     TResult? Function(_GetMyOrders value)? getMyOrders,
+    TResult? Function(_paginateMyOrdersList value)? paginateMyOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -223,6 +230,8 @@ extension OrderEventPatterns on OrderEvent {
         return moveBag(_that);
       case _GetMyOrders() when getMyOrders != null:
         return getMyOrders(_that);
+      case _paginateMyOrdersList() when paginateMyOrdersList != null:
+        return paginateMyOrdersList(_that);
       case _:
         return null;
     }
@@ -271,6 +280,9 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(int limit, int skip, String filter, String? searchText,
             String? from, String? to)?
         getMyOrders,
+    TResult Function(int skip, int limit, String filter, String? searchText,
+            String? from, String? to)?
+        paginateMyOrdersList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -317,6 +329,9 @@ extension OrderEventPatterns on OrderEvent {
             _that.toServiceId, _that.orderId, _that.isQuickOrder);
       case _GetMyOrders() when getMyOrders != null:
         return getMyOrders(_that.limit, _that.skip, _that.filter,
+            _that.searchText, _that.from, _that.to);
+      case _paginateMyOrdersList() when paginateMyOrdersList != null:
+        return paginateMyOrdersList(_that.skip, _that.limit, _that.filter,
             _that.searchText, _that.from, _that.to);
       case _:
         return orElse();
@@ -379,6 +394,9 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(int limit, int skip, String filter,
             String? searchText, String? from, String? to)
         getMyOrders,
+    required TResult Function(int skip, int limit, String filter,
+            String? searchText, String? from, String? to)
+        paginateMyOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -423,6 +441,9 @@ extension OrderEventPatterns on OrderEvent {
             _that.toServiceId, _that.orderId, _that.isQuickOrder);
       case _GetMyOrders():
         return getMyOrders(_that.limit, _that.skip, _that.filter,
+            _that.searchText, _that.from, _that.to);
+      case _paginateMyOrdersList():
+        return paginateMyOrdersList(_that.skip, _that.limit, _that.filter,
             _that.searchText, _that.from, _that.to);
       case _:
         throw StateError('Unexpected subclass');
@@ -472,6 +493,9 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(int limit, int skip, String filter, String? searchText,
             String? from, String? to)?
         getMyOrders,
+    TResult? Function(int skip, int limit, String filter, String? searchText,
+            String? from, String? to)?
+        paginateMyOrdersList,
   }) {
     final _that = this;
     switch (_that) {
@@ -517,6 +541,9 @@ extension OrderEventPatterns on OrderEvent {
             _that.toServiceId, _that.orderId, _that.isQuickOrder);
       case _GetMyOrders() when getMyOrders != null:
         return getMyOrders(_that.limit, _that.skip, _that.filter,
+            _that.searchText, _that.from, _that.to);
+      case _paginateMyOrdersList() when paginateMyOrdersList != null:
+        return paginateMyOrdersList(_that.skip, _that.limit, _that.filter,
             _that.searchText, _that.from, _that.to);
       case _:
         return null;
@@ -1612,6 +1639,120 @@ class __$GetMyOrdersCopyWithImpl<$Res> implements _$GetMyOrdersCopyWith<$Res> {
       skip: null == skip
           ? _self.skip
           : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      filter: null == filter
+          ? _self.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String,
+      searchText: freezed == searchText
+          ? _self.searchText
+          : searchText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      from: freezed == from
+          ? _self.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String?,
+      to: freezed == to
+          ? _self.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _paginateMyOrdersList implements OrderEvent {
+  const _paginateMyOrdersList(
+      {required this.skip,
+      required this.limit,
+      required this.filter,
+      this.searchText,
+      this.from,
+      this.to});
+
+  final int skip;
+  final int limit;
+  final String filter;
+  final String? searchText;
+  final String? from;
+  final String? to;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$paginateMyOrdersListCopyWith<_paginateMyOrdersList> get copyWith =>
+      __$paginateMyOrdersListCopyWithImpl<_paginateMyOrdersList>(
+          this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _paginateMyOrdersList &&
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.searchText, searchText) ||
+                other.searchText == searchText) &&
+            (identical(other.from, from) || other.from == from) &&
+            (identical(other.to, to) || other.to == to));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, skip, limit, filter, searchText, from, to);
+
+  @override
+  String toString() {
+    return 'OrderEvent.paginateMyOrdersList(skip: $skip, limit: $limit, filter: $filter, searchText: $searchText, from: $from, to: $to)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$paginateMyOrdersListCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$paginateMyOrdersListCopyWith(_paginateMyOrdersList value,
+          $Res Function(_paginateMyOrdersList) _then) =
+      __$paginateMyOrdersListCopyWithImpl;
+  @useResult
+  $Res call(
+      {int skip,
+      int limit,
+      String filter,
+      String? searchText,
+      String? from,
+      String? to});
+}
+
+/// @nodoc
+class __$paginateMyOrdersListCopyWithImpl<$Res>
+    implements _$paginateMyOrdersListCopyWith<$Res> {
+  __$paginateMyOrdersListCopyWithImpl(this._self, this._then);
+
+  final _paginateMyOrdersList _self;
+  final $Res Function(_paginateMyOrdersList) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? skip = null,
+    Object? limit = null,
+    Object? filter = null,
+    Object? searchText = freezed,
+    Object? from = freezed,
+    Object? to = freezed,
+  }) {
+    return _then(_paginateMyOrdersList(
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
               as int,
       filter: null == filter
           ? _self.filter

@@ -34,13 +34,13 @@ class PickUpDropoffHistoryScreen extends StatefulWidget {
 class _PickUpDropoffHistoryScreenState
     extends State<PickUpDropoffHistoryScreen> {
    
-  TimePeriod selectedPeriod = TimePeriod.thisMonth;
+  TimePeriod selectedPeriod = TimePeriod.allTime;
 
  
 String _formatDate(DateTime date) {
   return DateFormat('yyyy-MM-dd').format(date);
 }
-
+// Alternative approach using a more robust date calculation
 Map<String, String> getDateRangeForPeriod(TimePeriod period) {
   final now = DateTime.now();
   DateTime from;
@@ -50,20 +50,30 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
     case TimePeriod.thisMonth:
       from = DateTime(now.year, now.month, 1);
       break;
+      
     case TimePeriod.lastMonth:
-      final lastMonth = DateTime(now.year, now.month - 1, 1);
-      from = lastMonth;
-      to = DateTime(now.year, now.month, 0);
+      // More robust: subtract 1 month from current date
+      from = DateTime(now.year, now.month - 1, 1);
+      // Handle negative months
+      if (from.month <= 0) {
+        from = DateTime(from.year - 1, from.month + 12, 1);
+      }
+      // Get last day of that month
+      to = DateTime(from.year, from.month + 1, 0);
       break;
+      
     case TimePeriod.lastThree:
-      from = DateTime(now.year, now.month - 3, 1);
+      from = _subtractMonths(now, 3);
+      from = DateTime(from.year, from.month, 1);
       break;
+      
     case TimePeriod.lastSix:
-      from = DateTime(now.year, now.month - 6, 1);
+      from = _subtractMonths(now, 6);
+      from = DateTime(from.year, from.month, 1);
       break;
+      
     case TimePeriod.allTime:
-       return {};
-     
+      return {};
   }
 
   return {
@@ -72,8 +82,18 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
   };
 }
 
-
-
+// Helper function to properly subtract months
+DateTime _subtractMonths(DateTime date, int months) {
+  int newYear = date.year;
+  int newMonth = date.month - months;
+  
+  while (newMonth <= 0) {
+    newMonth += 12;
+    newYear -= 1;
+  }
+  
+  return DateTime(newYear, newMonth, date.day);
+}
 
   final _pickup = [
     OrderFilter.pickedUp,
@@ -90,7 +110,11 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
   @override
   void initState() {
     currentOrderFilter = _pickup;
-    _fetchOrders(currentOrderFilter);
+    //   final range = getDateRangeForPeriod(selectedPeriod);
+    //  final from = range['from'];
+    //  final to = range['to'];
+  
+    _fetchOrders(currentOrderFilter,);
     // Separate listeners for each toggle
     _scrollController = ScrollController();
 
@@ -100,7 +124,6 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
 
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        // log("scrolled");
         _loadMoreItems();
       }
     });
@@ -112,35 +135,47 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
     final orderState = context.read<OrderBloc>().state;
 
     // Prevent duplicate calls
-    if (orderState.isLoadingMore || !orderState.hasMore) return;
+    if (orderState.myOrdersisLoadingMore || !orderState.myOrdershasMore) return;
 
     // Convert filters to string
     final statusStrings = currentOrderFilter.map(statusToString).toList();
     final statusString = statusStrings.join(',');
 
+
+     final range = getDateRangeForPeriod(selectedPeriod);
+     final from = range['from'];
+     final to = range['to'];
+
     // Trigger pagination with filters
-    // context.read<OrderBloc>().add(
-    //       OrderEvent.paginateOrdersList(
-    //           skip: orderState.ordersList.length,
-    //           limit: _itemsPerPage,
-    //           filter: statusString,
+    context.read<OrderBloc>().add(
+          OrderEvent.paginateMyOrdersList(
+              skip: orderState.ordersList.length,
+              limit: _itemsPerPage,
+              filter: statusString,
              
-    //           searchText:
-    //               _currentSearchQuery.isEmpty ? null : _currentSearchQuery),
-    //     );
+              searchText:
+                  _currentSearchQuery.isEmpty ? null : _currentSearchQuery,
+                  from: from,
+                  to: to
+               
+                  ),
+        );
   }
 
   void _onSearchChanged(String query) {
     _currentSearchQuery = query; // Store the current search query
+       final range = getDateRangeForPeriod(selectedPeriod);
+     final from = range['from'];
+     final to = range['to'];
     _debouncer.run(() {
       // if (query.isNotEmpty) {
-      _fetchOrders(currentOrderFilter, searchQuery: query);
+      _fetchOrders(currentOrderFilter, searchQuery: _currentSearchQuery,from: from,to: to);
 
       // }
     });
   }
 
-  void _fetchOrders(List<OrderFilter> statuses, {String? searchQuery}) {
+  void _fetchOrders(List<OrderFilter> statuses, {String? searchQuery,String? from,String? to}) {
     
     final statusStrings = statuses.map(statusToString).toList();
 log(statusStrings.toString());
@@ -150,7 +185,9 @@ log(statusStrings.toString());
               skip: 0,
               filter: statusStrings.join(','),
            
-              searchText: searchQuery
+              searchText: searchQuery,
+              from: from,
+              to: to
               ),
         );
   }
@@ -177,10 +214,10 @@ log(statusStrings.toString());
               onTabChanged: (index) {
                 if (index == 0) {
                   currentOrderFilter = _pickup;
-                  _fetchOrders(_pickup);
+                  _fetchOrders(currentOrderFilter);
                 } else if (index == 1) {
                   currentOrderFilter = _dropOff;
-                  _fetchOrders(_dropOff);
+                  _fetchOrders(currentOrderFilter);
                 }
               },
             ),
@@ -188,7 +225,7 @@ log(statusStrings.toString());
             Row(
               children: [
                 Expanded(
-                  flex: 5,
+                  flex: 4,
                   child: CommonTextField(height: 36,
                     controller: _searchController,
                     hintText: "Search",
@@ -212,6 +249,7 @@ log(statusStrings.toString());
     final from = range['from'];
     final to = range['to'];
 
+_fetchOrders(currentOrderFilter, searchQuery: _currentSearchQuery, from: from, to: to);
 
     debugPrint('Selected Period: $period');
     debugPrint('From: $from, To: $to');
@@ -275,9 +313,11 @@ log(statusStrings.toString());
     ).first,
 
                             status: state.myordersList[index].status,
-                            isDropoff: (state.myordersList[index].status ==
-                                       
-                                        "pickedUp")
+                            isDropoff: 
+                        
+                              state.myordersList[index].statusHistory
+    .any((e) => e.status == 'pickedUp')
+ 
                                 ? false
                                 : true,
                             isQuickOrder:
