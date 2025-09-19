@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/services/api_services/environment/env_config.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
@@ -96,7 +97,7 @@ class _ProfileUserDetailState extends State<ProfileUserDetail> with SingleTicker
             CachedNetworkImage(
                                           imageUrl: (widget.profileImage !=
                                                       '' )
-                                              ? '${ApiUrls.stagingUrl}/${widget.profileImage}'
+                                              ? '${EnvConfiguration.current.baseUrl.substring(0, EnvConfiguration.current.baseUrl.lastIndexOf('/') + 1)}${widget.profileImage}'
                                               : '',
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
+import 'package:spinners_driver/app/services/api_services/environment/env_config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
@@ -216,7 +217,7 @@ class _AlreadyScannedWarningBottomsheetState extends State<AlreadyScannedWarning
                  // Show service icon if available, otherwise show a placeholder
                  if (serviceImage.isNotEmpty)
                    CachedNetworkImage(
-                     imageUrl: '${ApiUrls.stagingUrl}/$serviceImage',
+                     imageUrl: '${EnvConfiguration.current.baseUrl.substring(0, EnvConfiguration.current.baseUrl.lastIndexOf('/') + 1)}$serviceImage',
                      width: 24.dp,
                      height: 24.dp,
                      placeholder: (context, url) => SizedBox(

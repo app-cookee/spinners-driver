@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
+import 'package:spinners_driver/app/services/api_services/environment/env_config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -43,7 +44,6 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-// log('${ApiUrls.stagingUrl}/${widget.profileImage}');
     return Row(
       children: [
         Container(
@@ -91,7 +91,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
             CachedNetworkImage(
                                           imageUrl: (widget.profileImage !=
                                                       '' )
-                                              ? '${ApiUrls.stagingUrl}/${widget.profileImage}'
+                                              ? '${EnvConfiguration.current.baseUrl.substring(0, EnvConfiguration.current.baseUrl.lastIndexOf('/') + 1)}${widget.profileImage}'
                                               : '',
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>

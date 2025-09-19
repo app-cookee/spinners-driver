@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
+import 'package:spinners_driver/app/services/api_services/environment/env_config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
@@ -483,7 +484,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   if (existingBag.bagId.isNotEmpty) {
                     bagAlreadyExists = true;
                     existingServiceName = service.service.name;
-                    existingServiceImage = '${ApiUrls.stagingUrl}/${service.service.icon}';
+                    existingServiceImage = '${EnvConfiguration.current.baseUrl.substring(0, EnvConfiguration.current.baseUrl.lastIndexOf('/') + 1)}${service.service.icon}';
                     existingServiceColor = hexToColor(service.service.color);
                     // existingOrderServiceId = item.id;
                     existingScannedBagId = existingBag.id;

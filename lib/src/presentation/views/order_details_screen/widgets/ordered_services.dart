@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
+import 'package:spinners_driver/app/services/api_services/environment/env_config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
@@ -84,7 +85,7 @@ class OrderedServices extends StatelessWidget {
               // Show service icon if available, otherwise show a placeholder
               if (orderedService.service.icon.isNotEmpty)
                 CachedNetworkImage(
-                  imageUrl: '${ApiUrls.stagingUrl}/${orderedService .service.icon}',
+                  imageUrl: '${EnvConfiguration.current.baseUrl.substring(0, EnvConfiguration.current.baseUrl.lastIndexOf('/') + 1)}${orderedService.service.icon}',
                   height: 32.dp,
                   width: 32.dp,
                   placeholder: (context, url) => SizedBox(
