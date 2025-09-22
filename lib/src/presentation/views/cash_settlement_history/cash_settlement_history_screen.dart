@@ -1,9 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/period_filter_button.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/time_period.dart';
@@ -34,42 +38,49 @@ class _CashSettlementHistoryScreenState
     //   // }
     // });
   }
- 
-String _formatDate(DateTime date) {
-  return DateFormat('yyyy-MM-dd').format(date);
-}
 
-Map<String, String> getDateRangeForPeriod(TimePeriod period) {
-  final now = DateTime.now();
-  DateTime from;
-  DateTime to = now;
-
-  switch (period) {
-    case TimePeriod.thisMonth:
-      from = DateTime(now.year, now.month, 1);
-      break;
-    case TimePeriod.lastMonth:
-      final lastMonth = DateTime(now.year, now.month - 1, 1);
-      from = lastMonth;
-      to = DateTime(now.year, now.month, 0);
-      break;
-    case TimePeriod.lastThree:
-      from = DateTime(now.year, now.month - 3, 1);
-      break;
-    case TimePeriod.lastSix:
-      from = DateTime(now.year, now.month - 6, 1);
-      break;
-    case TimePeriod.allTime:
-      from = DateTime(2000, 1, 1);
-      break;
+  @override
+  void initState() {
+      context
+        .read<DashboardDataBloc>()
+        .add(const DashboardDataEvent.getDashboardData());
+    super.initState();
   }
 
-  return {
-    'from': _formatDate(from),
-    'to': _formatDate(to),
-  };
-}
+  String _formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
 
+  Map<String, String> getDateRangeForPeriod(TimePeriod period) {
+    final now = DateTime.now();
+    DateTime from;
+    DateTime to = now;
+
+    switch (period) {
+      case TimePeriod.thisMonth:
+        from = DateTime(now.year, now.month, 1);
+        break;
+      case TimePeriod.lastMonth:
+        final lastMonth = DateTime(now.year, now.month - 1, 1);
+        from = lastMonth;
+        to = DateTime(now.year, now.month, 0);
+        break;
+      case TimePeriod.lastThree:
+        from = DateTime(now.year, now.month - 3, 1);
+        break;
+      case TimePeriod.lastSix:
+        from = DateTime(now.year, now.month - 6, 1);
+        break;
+      case TimePeriod.allTime:
+        from = DateTime(2000, 1, 1);
+        break;
+    }
+
+    return {
+      'from': _formatDate(from),
+      'to': _formatDate(to),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +128,22 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
                             color: AppColors.textGrey, fontSize: 14.sp),
                       ),
                       const Spacer(),
-                      Text("AED 120",
-                          style: AppTypography.sfProRoundedSemiBold.copyWith(
-                              color: AppColors.primaryColor, fontSize: 24.sp))
+                      BlocBuilder<DashboardDataBloc, DashboardDataState>(
+                        builder: (context, state) {
+                          return Skeletonizer(
+                            enabled: (state.getDashboardDataStatus
+                                            is StatusInitial ||
+                                        state.getDashboardDataStatus
+                                            is StatusLoading),
+                            child: Text(
+                                "AED ${state.dashboardDataModel.totalCollectedCash}",
+                                style: AppTypography.sfProRoundedSemiBold
+                                    .copyWith(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 24.sp)),
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),
@@ -146,21 +170,21 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
                       ),
                       Gap(8.dp),
                       Expanded(
-                          flex: 3,
-                          child:  PeriodFilterButton(
+                        flex: 3,
+                        child: PeriodFilterButton(
                           selected: selectedPeriod,
                           onSelected: (period) {
                             setState(() => selectedPeriod = period);
 
-                                final range = getDateRangeForPeriod(period);
-    final from = range['from'];
-    final to = range['to'];
+                            final range = getDateRangeForPeriod(period);
+                            final from = range['from'];
+                            final to = range['to'];
 
-
-    debugPrint('Selected Period: $period');
-    debugPrint('From: $from, To: $to');
+                            debugPrint('Selected Period: $period');
+                            debugPrint('From: $from, To: $to');
                           },
-                        ),)
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -204,7 +228,7 @@ Map<String, String> getDateRangeForPeriod(TimePeriod period) {
       padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
       width: double.infinity,
       decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12.dp),
+        borderRadius: BorderRadius.circular(12.dp),
         gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,

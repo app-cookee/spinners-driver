@@ -38,6 +38,9 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
       context.read<AuthBloc>().add(AuthEvent.profileAuth());
+      context
+        .read<DashboardDataBloc>()
+        .add(const DashboardDataEvent.getDashboardData());
     super.initState();
   }
   @override
@@ -147,30 +150,30 @@ class _AccountScreenState extends State<AccountScreen> {
                               child: BlocBuilder<DashboardDataBloc,
                                   DashboardDataState>(
                                 builder: (context, state) {
-                                  return Skeletonizer(
-                                    enabled: (state.getDashboardDataStatus
-                                            is StatusInitial ||
-                                        state.getDashboardDataStatus
-                                            is StatusLoading),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          AppImages.moneysIcon,
-                                          height: 24.dp,
-                                          width: 24.dp,
+                                  return Row(
+                                    children: [
+                                      Image.asset(
+                                        AppImages.moneysIcon,
+                                        height: 24.dp,
+                                        width: 24.dp,
+                                      ),
+                                      Gap(4.dp),
+                                      Text(
+                                        "Cash In Hand",
+                                        style: AppTypography
+                                            .sfProRoundedMedium
+                                            .copyWith(
+                                          color: AppColors.textGrey,
+                                          fontSize: 14.sp,
                                         ),
-                                        Gap(4.dp),
-                                        Text(
-                                          "Cash In Hand",
-                                          style: AppTypography
-                                              .sfProRoundedMedium
-                                              .copyWith(
-                                            color: AppColors.textGrey,
-                                            fontSize: 14.sp,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        Text(
+                                      ),
+                                      const Spacer(),
+                                      Skeletonizer(
+                                        enabled: (state.getDashboardDataStatus
+                                          is StatusInitial ||
+                                      state.getDashboardDataStatus
+                                          is StatusLoading),
+                                        child: Text(
                                           "AED ${state.dashboardDataModel.totalCollectedCash}",
                                           style: AppTypography
                                               .sfProRoundedSemiBold
@@ -178,9 +181,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                             color: AppColors.primaryColor,
                                             fontSize: 24.sp,
                                           ),
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      )
+                                    ],
                                   );
                                 },
                               ),
