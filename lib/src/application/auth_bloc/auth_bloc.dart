@@ -46,10 +46,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
    FutureOr<void> _verifyOtp(_VerifyOtp event, Emitter<AuthState> emit) async {
     try {
       emit(state.copyWith(otpVerifyStatus: Status.loading()));
-      // String fcmToken = await fcmService.getFirebaseToken();
-      // log(fcmToken);
+      String fcmToken = await fcmService.getFirebaseToken();
+      log(fcmToken);
       var response =
-          await authRepository.verifyOtp(event.phoneNumber,event.otp,"");
+          await authRepository.verifyOtp(event.phoneNumber,event.otp,fcmToken);
       emit(
           state.copyWith(otpVerifyStatus: Status.success(), 
           appUser: response, 

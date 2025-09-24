@@ -213,7 +213,7 @@ class _CashSettlementHistoryScreenState
                     borderRadius: BorderRadius.circular(12.dp),
                     border: Border.all(color: AppColors.shadowColor),
                   ),
-                  child: _details(),
+                  child: _details(intex: index),
                 );
               },
             ),
@@ -223,7 +223,7 @@ class _CashSettlementHistoryScreenState
     );
   }
 
-  Container _details() {
+  Container _details({required int intex}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
       width: double.infinity,
@@ -261,7 +261,7 @@ class _CashSettlementHistoryScreenState
               Gap(20.dp),
               SizedBox(
                   width: 100,
-                  child: Text("AED 200",
+                  child: Text("AED ${intex*100}",
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                           fontSize: 12.dp, color: AppColors.addressColor))),
               const Spacer(),
@@ -281,7 +281,7 @@ class _CashSettlementHistoryScreenState
                     ),
                   ),
                   Gap(4.dp),
-                  Text("09:00 AM",
+                  Text("0$intex:00 AM",
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                           fontSize: 12.dp, color: AppColors.neutral900)),
                 ],

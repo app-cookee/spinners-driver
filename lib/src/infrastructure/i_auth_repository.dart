@@ -42,7 +42,7 @@ import 'package:spinners_driver/src/domain/models/app_user_model/app_user_model.
       final Map<String, dynamic> data = {
         "phoneNumber": phoneNumber,
         "otp": otp,
-      
+        "firebaseToken": firebaseToken,
       };
       var response =
           await api.general.post(ApiEndpoints().verifyOtp, data: data);
