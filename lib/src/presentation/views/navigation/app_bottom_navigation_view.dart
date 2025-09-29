@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
@@ -10,6 +11,7 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
 import 'package:spinners_driver/src/presentation/views/orders/order_screen.dart';
 import 'package:spinners_driver/src/presentation/views/profile/account_screen.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/custom_dialogue_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/no_network_widget.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -61,15 +63,30 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NetworkBloc, NetworkState>(
-      builder: (context, state) {
-        return Scaffold(
-            //backgroundColor: AppColors.transparent,
-            resizeToAvoidBottomInset: false,
-            extendBody: true,
-            bottomNavigationBar: bottomNavBar(),
-            body: _buildBody(state));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
+        if (selectedIndex.value != 0) {
+          selectedIndex.value = 0;
+          return;
+        }
+        final shouldPop = await _showExitConfirmationDialog(context);
+        if (shouldPop && mounted) {
+          SystemNavigator.pop();
+        }
       },
+      child: BlocBuilder<NetworkBloc, NetworkState>(
+        builder: (context, state) {
+          return Scaffold(
+              //backgroundColor: AppColors.transparent,
+              resizeToAvoidBottomInset: false,
+              extendBody: true,
+              bottomNavigationBar: bottomNavBar(),
+              body: _buildBody(state));
+        },
+      ),
     );
   }
 
@@ -101,22 +118,22 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
     );
   }
 
-  // Future<dynamic> _showExitConfirmationDialog(BuildContext context) {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (context) => CustomDialogueWidget(
-  //       title: 'Are you sure you want to exit?',
-  //       content: 'Are you sure you want to exit from actizo investments',
-  //       confirmText: 'Exit',
-  //       onCancel: () {
-  //         Navigator.of(context).pop(false);
-  //       },
-  //       onConfirm: () {
-  //         Navigator.of(context).pop(true);
-  //       },
-  //     ),
-  //   );
-  // }
+  Future<dynamic> _showExitConfirmationDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => CustomDialogueWidget(
+        title: 'Are you sure you want to exit?',
+        content: 'Are you sure you want to exit from spinners driver app?',
+        confirmText: 'Exit',
+        onCancel: () {
+          Navigator.of(context).pop(false);
+        },
+        onConfirm: () {
+          Navigator.of(context).pop(true);
+        },
+      ),
+    );
+  }
 
   Widget bottomNavBar() {
     return Stack(
