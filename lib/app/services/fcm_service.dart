@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
@@ -20,7 +21,8 @@ class FCMService {
     playSound: true,
   );
 
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   Future<void> initialize() async {
@@ -79,30 +81,52 @@ class FCMService {
   }
 
   Future<void> _initializeBackgroundMessage() async {
-
     try {
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
       FirebaseMessaging.onMessageOpenedApp.listen(_messageOpenedAppHandler);
-      log('Background messaging initialized', name: 'FIREBASE BACKGROUND NOTIFICATION');
+      log('Background messaging initialized',
+          name: 'FIREBASE BACKGROUND NOTIFICATION');
     } catch (e) {
-      log('Background Services Initializing Error : $e', name: 'ERROR: FIREBASE BACKGROUND NOTIFICATION');
+      log('Background Services Initializing Error : $e',
+          name: 'ERROR: FIREBASE BACKGROUND NOTIFICATION');
     }
   }
 
   Future<void> _initializeLocalMessage() async {
-    await _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
-    const initializationSettingsAndroid = AndroidInitializationSettings('drawable/ic_notification');
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('drawable/ic_notification');
     const initializationSettingsIOS = DarwinInitializationSettings();
     const initialSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
     // await _flutterLocalNotificationsPlugin.initialize(initialSettings);
-    await _flutterLocalNotificationsPlugin.initialize(initialSettings, onDidReceiveNotificationResponse: (payload) async {
-      // Handle notification click when the app is in foreground
-      RemoteMessage message = RemoteMessage(data: {"payload": payload});
-      _messageOpenedAppHandlerForeground(message);
-        });
+    // await _flutterLocalNotificationsPlugin.initialize(initialSettings, onDidReceiveNotificationResponse: (response) async {
+    //   // Handle notification click when the app is in foreground
+    //   RemoteMessage message = RemoteMessage(data: {"payload": payload});
+    //   _messageOpenedAppHandlerForeground(message);
+    //     });
+    await _flutterLocalNotificationsPlugin.initialize(
+      initialSettings,
+      onDidReceiveNotificationResponse: (response) async {
+        if (response.payload != null) {
+          try {
+            final Map<String, dynamic> data =
+                jsonDecode(response.payload!) as Map<String, dynamic>;
+            log('📲 Local Notification Clicked with data: $data', name: 'FCM');
+            final message = RemoteMessage(data: data);
+            _messageOpenedAppHandlerForeground(message);
+          } catch (e) {
+            log('❌ Error parsing notification payload: $e', name: 'FCM');
+          }
+        }
+      },
+    );
+
     FirebaseMessaging.onMessage.listen(_foregroundMessageHandler);
     await _fcm.setForegroundNotificationPresentationOptions(
       alert: true,
@@ -112,18 +136,19 @@ class FCMService {
   }
 
   void _foregroundMessageHandler(RemoteMessage message) async {
-    
-    
+    // Log the entire message object
+    log('🔔 Foreground FCM Message: ${message.toMap()}', name: 'FCM');
     // navigatorKey.currentContext!.read<ActivityLogBloc>().add(const ActivityLogEvent.getActivityLogs(status: 'sent', limit: 10, skip: 0));
     // if (Platform.isAndroid) {
     // For iOS, we'll use a different approach
-  if (Platform.isIOS) {
-    // Don't show a local notification on iOS - let the system handle it
-    // But we need to ensure the system actually shows the notification
-    // This is just to log that we received the message
-    log('Received foreground message on iOS: ${message.notification?.title}', name: 'FCM');
-    return;
-  }
+    if (Platform.isIOS) {
+      // Don't show a local notification on iOS - let the system handle it
+      // But we need to ensure the system actually shows the notification
+      // This is just to log that we received the message
+      log('Received foreground message on iOS: ${message.notification?.title}',
+          name: 'FCM');
+      return;
+    }
     final notification = message.notification;
     final androidNotificationDetails = AndroidNotificationDetails(
       channel.id,
@@ -148,7 +173,7 @@ class FCMService {
         iOS: iosNotificationDetails,
         android: androidNotificationDetails,
       ),
-      payload: message.data['payload'].toString(),
+      payload: jsonEncode(message.data),
     );
     // }
   }
@@ -162,12 +187,14 @@ class FCMService {
   }
 
   void _messageOpenedAppHandler(RemoteMessage message) {
-    FCMNavigationService().init(message,false);
+    log('📲 Opened FCM Message: ${message.toMap()}', name: 'FCM');
+    FCMNavigationService().init(message, false);
     log('Notification opened', name: 'FCM');
   }
 
   void _messageOpenedAppHandlerForeground(RemoteMessage message) {
-    FCMNavigationService().init(message,true);
+    log('📲 Foreground Opened FCM Message: ${message.toMap()}', name: 'FCM');
+    FCMNavigationService().init(message, true);
     log('Notification opened', name: 'FCM');
   }
 }
@@ -177,8 +204,47 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  log('📩 Background FCM Message: ${message.toMap()}', name: 'FCM');
   final receiver = ReceivePort();
   IsolateNameServer.registerPortWithName(receiver.sendPort, 'ringtone');
   receiver.listen((message) async {});
+}
+
+extension RemoteMessageLogger on RemoteMessage {
+  Map<String, dynamic> toMap() {
+    return {
+      'messageId': messageId,
+      'sentTime': sentTime?.toIso8601String(),
+      'from': from,
+      'category': category,
+      'collapseKey': collapseKey,
+      'contentAvailable': contentAvailable,
+      'mutableContent': mutableContent,
+      'ttl': ttl,
+      'data': data,
+      'notification': notification == null
+          ? null
+          : {
+              'title': notification?.title,
+              'body': notification?.body,
+              'android': {
+                'channelId': notification?.android?.channelId,
+                'clickAction': notification?.android?.clickAction,
+                'color': notification?.android?.color,
+                'count': notification?.android?.count,
+                'imageUrl': notification?.android?.imageUrl,
+                'link': notification?.android?.link,
+                'smallIcon': notification?.android?.smallIcon,
+                'sound': notification?.android?.sound,
+                'ticker': notification?.android?.ticker,
+                'visibility': notification?.android?.visibility,
+              },
+              'apple': {
+                'subtitle': notification?.apple?.subtitle,
+                'badge': notification?.apple?.badge,
+                'sound': notification?.apple?.sound?.name,
+              }
+            }
+    };
+  }
 }

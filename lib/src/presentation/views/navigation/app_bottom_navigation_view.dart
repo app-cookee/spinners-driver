@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
@@ -14,9 +15,10 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class AppBottomNavigationView extends StatefulWidget {
-  const AppBottomNavigationView({super.key, required this.selectedIndex,this.isFromNotification = false});
+  const AppBottomNavigationView({super.key, required this.selectedIndex,this.isFromNotification = false,this.orderId});
   final int selectedIndex;
   final bool isFromNotification;
+  final String? orderId;
   @override
   State<AppBottomNavigationView> createState() =>
       _AppBottomNavigationViewState();
@@ -37,16 +39,23 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
   ];
 
   final selectedIndex = ValueNotifier(0);
-  List<Widget> screens = [
-    const HomeView(),
-    const OrderScreen(),
-    const AccountScreen(),
+  late List<Widget> screens;
 
-    // const AccountScreen(),
-  ];
   @override
   void initState() {
     selectedIndex.value = widget.selectedIndex;
+    screens = [
+    const HomeView(),
+    const OrderScreen(),
+    const AccountScreen(),
+  ];
+  //WHEN THERE IS AN ORDER ID, NAVIGATE TO ORDER DETAILS
+    if (widget.orderId != null && widget.isFromNotification) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.router.push(OrderDetailRoute(
+            orderId: widget.orderId!));
+      });
+    }
     super.initState();
   }
 

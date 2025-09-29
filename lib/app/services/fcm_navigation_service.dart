@@ -1,23 +1,22 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
+import 'package:spinners_driver/app/constants/storage_constants.dart';
+import 'package:spinners_driver/app/services/local_storage_service.dart';
 
 class FCMNavigationService {
   init(RemoteMessage message, bool isForegroundNoti) {
     var bottomNavigationTabIndex = 0;
-    var categoryTabIndex = 0;
 
-    // String payload = '';
-
-    // if (isForegroundNoti) {
-    //   var notificationResponse =
-    //       message.data['payload'] as NotificationResponse;
-    //   payload = notificationResponse.payload.toString();
-    // } else {
-    //   payload = message.data['payload'];
-    // }
+    final orderId = message.data['orderId'];
+    final damageReportId = message.data['damageReportId'];
+    log('🔔 FCM Message Data: ${message.data}', name: 'FCM');
+    log('orderId: $orderId', name: 'FCM');
+    log('damageReportId: $damageReportId', name: 'FCM');
+    if(orderId != null) {
+      bottomNavigationTabIndex = 1;
+    }
 
     // if (payload == 'InterestReceived') {
     //   bottomNavigationTabIndex = 2;
@@ -31,43 +30,32 @@ class FCMNavigationService {
     // } else if (payload == 'Chat') {
     //   bottomNavigationTabIndex = 3;
     // }
-    navigate(bottomNavigationTabIndex, categoryTabIndex, isForegroundNoti);
+    navigate(bottomNavigationTabIndex, isForegroundNoti,orderId: orderId, damageReportId: damageReportId);
   }
 
-  navigate(int bottomNavigationTabIndex, int categoryTabIndex,
-      bool isForegroundNotif) {
+  navigate(int bottomNavigationTabIndex,
+      bool isForegroundNotif,{String? orderId, String? damageReportId}) {
+        String? accessToken = LocalStorage.getString(StorageKey.accessToken);
     if (isForegroundNotif) {
-      AppRouter.instance
-        .pushAndPopUntil(AppBottomNavigationRoute(selectedIndex: bottomNavigationTabIndex,isFromNotification: true), predicate: (route) => false);
-      // Navigator.pushNamedAndRemoveUntil(navigatorKey.currentState!.context,
-      //     RouterConstants.bottomNavRoute, (route) => false);
-
-      // navigatorKey.currentState!.context.read<NavigationBloc>().add(
-      //       NavigationEvent.tabChange(
-      //         selectedIndex: bottomNavigationTabIndex,
-      //         arguments: {
-      //           'categoryIndex': categoryTabIndex,
-      //           'subCategoryIndex': 0,
-      //         },
-      //       ),
-      //     );
-    } else {
-      AppRouter.instance
+      if(accessToken == null) {
+        AppRouter.instance
         .pushAndPopUntil(SplashRoute(
+          orderId: orderId,
           isFromNotification: true,
           bottomNavigationTabIndex: bottomNavigationTabIndex,
         ), predicate: (route) => false);
-      // Navigator.pushAndRemoveUntil(
-      //   navigatorKey.currentState!.context,
-      //   MaterialPageRoute(
-      //     builder: (context) => SplashScreen(
-      //       isFromNotification: true,
-      //       bottomNavigationTabIndex: bottomNavigationTabIndex,
-      //       categoryTabIndex: categoryTabIndex,
-      //     ),
-      //   ),
-      //   (route) => false,
-      // );
+        return;
+      }
+      AppRouter.instance
+        .pushAndPopUntil(AppBottomNavigationRoute(selectedIndex: bottomNavigationTabIndex,isFromNotification: true,orderId: orderId,
+          ), predicate: (route) => false);
+    } else {
+      AppRouter.instance
+        .pushAndPopUntil(SplashRoute(
+          orderId: orderId,
+          isFromNotification: true,
+          bottomNavigationTabIndex: bottomNavigationTabIndex,
+        ), predicate: (route) => false);
     }
   }
 }

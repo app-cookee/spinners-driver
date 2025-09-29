@@ -18,6 +18,7 @@ class AppBottomNavigationRoute
     Key? key,
     required int selectedIndex,
     bool isFromNotification = false,
+    String? orderId,
     List<PageRouteInfo>? children,
   }) : super(
           AppBottomNavigationRoute.name,
@@ -25,6 +26,7 @@ class AppBottomNavigationRoute
             key: key,
             selectedIndex: selectedIndex,
             isFromNotification: isFromNotification,
+            orderId: orderId,
           ),
           initialChildren: children,
         );
@@ -39,6 +41,7 @@ class AppBottomNavigationRoute
         key: args.key,
         selectedIndex: args.selectedIndex,
         isFromNotification: args.isFromNotification,
+        orderId: args.orderId,
       );
     },
   );
@@ -49,6 +52,7 @@ class AppBottomNavigationRouteArgs {
     this.key,
     required this.selectedIndex,
     this.isFromNotification = false,
+    this.orderId,
   });
 
   final Key? key;
@@ -57,9 +61,11 @@ class AppBottomNavigationRouteArgs {
 
   final bool isFromNotification;
 
+  final String? orderId;
+
   @override
   String toString() {
-    return 'AppBottomNavigationRouteArgs{key: $key, selectedIndex: $selectedIndex, isFromNotification: $isFromNotification}';
+    return 'AppBottomNavigationRouteArgs{key: $key, selectedIndex: $selectedIndex, isFromNotification: $isFromNotification, orderId: $orderId}';
   }
 
   @override
@@ -68,12 +74,16 @@ class AppBottomNavigationRouteArgs {
     if (other is! AppBottomNavigationRouteArgs) return false;
     return key == other.key &&
         selectedIndex == other.selectedIndex &&
-        isFromNotification == other.isFromNotification;
+        isFromNotification == other.isFromNotification &&
+        orderId == other.orderId;
   }
 
   @override
   int get hashCode =>
-      key.hashCode ^ selectedIndex.hashCode ^ isFromNotification.hashCode;
+      key.hashCode ^
+      selectedIndex.hashCode ^
+      isFromNotification.hashCode ^
+      orderId.hashCode;
 }
 
 /// generated route for
@@ -338,6 +348,7 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
     Key? key,
     bool isFromNotification = false,
     int bottomNavigationTabIndex = 0,
+    String? orderId,
     List<PageRouteInfo>? children,
   }) : super(
           SplashRoute.name,
@@ -345,6 +356,7 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
             key: key,
             isFromNotification: isFromNotification,
             bottomNavigationTabIndex: bottomNavigationTabIndex,
+            orderId: orderId,
           ),
           initialChildren: children,
         );
@@ -361,6 +373,7 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
         key: args.key,
         isFromNotification: args.isFromNotification,
         bottomNavigationTabIndex: args.bottomNavigationTabIndex,
+        orderId: args.orderId,
       );
     },
   );
@@ -371,6 +384,7 @@ class SplashRouteArgs {
     this.key,
     this.isFromNotification = false,
     this.bottomNavigationTabIndex = 0,
+    this.orderId,
   });
 
   final Key? key;
@@ -379,9 +393,11 @@ class SplashRouteArgs {
 
   final int bottomNavigationTabIndex;
 
+  final String? orderId;
+
   @override
   String toString() {
-    return 'SplashRouteArgs{key: $key, isFromNotification: $isFromNotification, bottomNavigationTabIndex: $bottomNavigationTabIndex}';
+    return 'SplashRouteArgs{key: $key, isFromNotification: $isFromNotification, bottomNavigationTabIndex: $bottomNavigationTabIndex, orderId: $orderId}';
   }
 
   @override
@@ -390,12 +406,14 @@ class SplashRouteArgs {
     if (other is! SplashRouteArgs) return false;
     return key == other.key &&
         isFromNotification == other.isFromNotification &&
-        bottomNavigationTabIndex == other.bottomNavigationTabIndex;
+        bottomNavigationTabIndex == other.bottomNavigationTabIndex &&
+        orderId == other.orderId;
   }
 
   @override
   int get hashCode =>
       key.hashCode ^
       isFromNotification.hashCode ^
-      bottomNavigationTabIndex.hashCode;
+      bottomNavigationTabIndex.hashCode ^
+      orderId.hashCode;
 }
