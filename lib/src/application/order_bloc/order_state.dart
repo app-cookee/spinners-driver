@@ -24,6 +24,12 @@ abstract class OrderState with _$OrderState {
      required bool myOrdershasMore,
     required bool myOrdersisLoadingMore,
     required Status myOrderspaginationStatus,
+    required Status getCashSettlmentListStatus,
+    required List<CashSettlementResponse> cashSettlmentsList,
+    required int cashSettlmentsCount,
+     required bool cashSettlmentshasMore,
+    required bool cashSettlmentsisLoadingMore,
+    required Status cashSettlmentspaginationStatus,
   }) = _OrderState;
   factory OrderState.initial() => OrderState(
         getOrderListStatus: Status.initial(),
@@ -46,7 +52,13 @@ abstract class OrderState with _$OrderState {
         myOrdersCount: 0,
         myOrdershasMore: true,
         myOrdersisLoadingMore: false,
-        myOrderspaginationStatus: Status.initial()
+        myOrderspaginationStatus: Status.initial(),
+        getCashSettlmentListStatus: Status.initial(),
+        cashSettlmentsList: [],
+        cashSettlmentsCount: 0,
+        cashSettlmentshasMore: true,
+        cashSettlmentsisLoadingMore: false,
+        cashSettlmentspaginationStatus: Status.initial()
 
       );
 }

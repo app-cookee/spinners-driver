@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
+import 'package:spinners_driver/src/domain/models/cash_settlement_model/cash_settlement_model.dart';
 import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart' hide OrderedServices;
 
@@ -40,6 +41,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_MoveBag>(_onMoveBag);
      on<_GetMyOrders>(_onGetMyOrders);
        on<_paginateMyOrdersList>(_onPaginateMyOrdersList);
+    on<_GetCashSettlments>(_onGetCashSettlments);
+    on<_PaginateCashSettlmentsList>(_onPaginateCashSettlmentsList);
   }
   
   FutureOr<void> _onGetOrderDetails(event, Emitter<OrderState> emit) async {
@@ -490,6 +493,51 @@ FutureOr<void> _onGetMyOrders(_GetMyOrders event, Emitter<OrderState> emit) asyn
     }
   }
   
+
+  FutureOr<void> _onGetCashSettlments(_GetCashSettlments event, Emitter<OrderState> emit) async {
+    try {
+      emit(state.copyWith(
+        getCashSettlmentListStatus: Status.loading(),
+      ));
+         var response = await orderRepository.getCashSettlmentsList(event.limit,event.skip,event.from,event.to);
+        final bool hasMoreItems = response.cashSettlementList.length == event.limit;
+        emit(state.copyWith(getCashSettlmentListStatus: Status.success(), 
+      cashSettlmentsList: response.cashSettlementList,   cashSettlmentsCount: response.totalCount,
+      cashSettlmentshasMore: hasMoreItems,
+      cashSettlmentsisLoadingMore: false));
+    } catch (e) {
+      emit(state.copyWith(
+       getCashSettlmentListStatus: Status.failure(
+          e.toString(),
+        ),
+      ));
+    }
+  }
+
+  FutureOr<void> _onPaginateCashSettlmentsList(_PaginateCashSettlmentsList event, Emitter<OrderState> emit) async {
+    try{
+      log("paginating pick and cash settlement history");
+              emit(state.copyWith(
+      cashSettlmentsisLoadingMore: true
+    ));
+      var response = await orderRepository.getCashSettlmentsList(event.limit,event.skip,event.from,event.to);
+       final newList = [...state.cashSettlmentsList, ...response.cashSettlementList];
+           final bool hasMoreItems = response.cashSettlementList.length >= event.limit;
+              emit(state.copyWith(
+       cashSettlmentsList : newList,
+        cashSettlmentsCount: response.totalCount,
+        
+        cashSettlmentshasMore: hasMoreItems,
+        cashSettlmentsisLoadingMore: false,
+      ));
+    }
+    catch (e) {
+      log("error in paginating cash settlement history");
+      emit(state.copyWith(
+       cashSettlmentsisLoadingMore: false
+      ));
+    }
+  }
 }
 
 

@@ -65,6 +65,9 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(_MoveBag value)? moveBag,
     TResult Function(_GetMyOrders value)? getMyOrders,
     TResult Function(_paginateMyOrdersList value)? paginateMyOrdersList,
+    TResult Function(_GetCashSettlments value)? getCashSettlments,
+    TResult Function(_PaginateCashSettlmentsList value)?
+        paginateCashSettlmentsList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -98,6 +101,11 @@ extension OrderEventPatterns on OrderEvent {
         return getMyOrders(_that);
       case _paginateMyOrdersList() when paginateMyOrdersList != null:
         return paginateMyOrdersList(_that);
+      case _GetCashSettlments() when getCashSettlments != null:
+        return getCashSettlments(_that);
+      case _PaginateCashSettlmentsList()
+          when paginateCashSettlmentsList != null:
+        return paginateCashSettlmentsList(_that);
       case _:
         return orElse();
     }
@@ -134,6 +142,9 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(_MoveBag value) moveBag,
     required TResult Function(_GetMyOrders value) getMyOrders,
     required TResult Function(_paginateMyOrdersList value) paginateMyOrdersList,
+    required TResult Function(_GetCashSettlments value) getCashSettlments,
+    required TResult Function(_PaginateCashSettlmentsList value)
+        paginateCashSettlmentsList,
   }) {
     final _that = this;
     switch (_that) {
@@ -165,6 +176,10 @@ extension OrderEventPatterns on OrderEvent {
         return getMyOrders(_that);
       case _paginateMyOrdersList():
         return paginateMyOrdersList(_that);
+      case _GetCashSettlments():
+        return getCashSettlments(_that);
+      case _PaginateCashSettlmentsList():
+        return paginateCashSettlmentsList(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -200,6 +215,9 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(_MoveBag value)? moveBag,
     TResult? Function(_GetMyOrders value)? getMyOrders,
     TResult? Function(_paginateMyOrdersList value)? paginateMyOrdersList,
+    TResult? Function(_GetCashSettlments value)? getCashSettlments,
+    TResult? Function(_PaginateCashSettlmentsList value)?
+        paginateCashSettlmentsList,
   }) {
     final _that = this;
     switch (_that) {
@@ -232,6 +250,11 @@ extension OrderEventPatterns on OrderEvent {
         return getMyOrders(_that);
       case _paginateMyOrdersList() when paginateMyOrdersList != null:
         return paginateMyOrdersList(_that);
+      case _GetCashSettlments() when getCashSettlments != null:
+        return getCashSettlments(_that);
+      case _PaginateCashSettlmentsList()
+          when paginateCashSettlmentsList != null:
+        return paginateCashSettlmentsList(_that);
       case _:
         return null;
     }
@@ -283,6 +306,10 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(int skip, int limit, String filter, String? searchText,
             String? from, String? to)?
         paginateMyOrdersList,
+    TResult Function(int limit, int skip, String? from, String? to)?
+        getCashSettlments,
+    TResult Function(int skip, int limit, String? from, String? to)?
+        paginateCashSettlmentsList,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -333,6 +360,12 @@ extension OrderEventPatterns on OrderEvent {
       case _paginateMyOrdersList() when paginateMyOrdersList != null:
         return paginateMyOrdersList(_that.skip, _that.limit, _that.filter,
             _that.searchText, _that.from, _that.to);
+      case _GetCashSettlments() when getCashSettlments != null:
+        return getCashSettlments(_that.limit, _that.skip, _that.from, _that.to);
+      case _PaginateCashSettlmentsList()
+          when paginateCashSettlmentsList != null:
+        return paginateCashSettlmentsList(
+            _that.skip, _that.limit, _that.from, _that.to);
       case _:
         return orElse();
     }
@@ -397,6 +430,10 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(int skip, int limit, String filter,
             String? searchText, String? from, String? to)
         paginateMyOrdersList,
+    required TResult Function(int limit, int skip, String? from, String? to)
+        getCashSettlments,
+    required TResult Function(int skip, int limit, String? from, String? to)
+        paginateCashSettlmentsList,
   }) {
     final _that = this;
     switch (_that) {
@@ -445,6 +482,11 @@ extension OrderEventPatterns on OrderEvent {
       case _paginateMyOrdersList():
         return paginateMyOrdersList(_that.skip, _that.limit, _that.filter,
             _that.searchText, _that.from, _that.to);
+      case _GetCashSettlments():
+        return getCashSettlments(_that.limit, _that.skip, _that.from, _that.to);
+      case _PaginateCashSettlmentsList():
+        return paginateCashSettlmentsList(
+            _that.skip, _that.limit, _that.from, _that.to);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -496,6 +538,10 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(int skip, int limit, String filter, String? searchText,
             String? from, String? to)?
         paginateMyOrdersList,
+    TResult? Function(int limit, int skip, String? from, String? to)?
+        getCashSettlments,
+    TResult? Function(int skip, int limit, String? from, String? to)?
+        paginateCashSettlmentsList,
   }) {
     final _that = this;
     switch (_that) {
@@ -545,6 +591,12 @@ extension OrderEventPatterns on OrderEvent {
       case _paginateMyOrdersList() when paginateMyOrdersList != null:
         return paginateMyOrdersList(_that.skip, _that.limit, _that.filter,
             _that.searchText, _that.from, _that.to);
+      case _GetCashSettlments() when getCashSettlments != null:
+        return getCashSettlments(_that.limit, _that.skip, _that.from, _that.to);
+      case _PaginateCashSettlmentsList()
+          when paginateCashSettlmentsList != null:
+        return paginateCashSettlmentsList(
+            _that.skip, _that.limit, _that.from, _that.to);
       case _:
         return null;
     }
@@ -1775,6 +1827,180 @@ class __$paginateMyOrdersListCopyWithImpl<$Res>
 }
 
 /// @nodoc
+
+class _GetCashSettlments implements OrderEvent {
+  const _GetCashSettlments(
+      {required this.limit, required this.skip, this.from, this.to});
+
+  final int limit;
+  final int skip;
+  final String? from;
+  final String? to;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$GetCashSettlmentsCopyWith<_GetCashSettlments> get copyWith =>
+      __$GetCashSettlmentsCopyWithImpl<_GetCashSettlments>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _GetCashSettlments &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.from, from) || other.from == from) &&
+            (identical(other.to, to) || other.to == to));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, limit, skip, from, to);
+
+  @override
+  String toString() {
+    return 'OrderEvent.getCashSettlments(limit: $limit, skip: $skip, from: $from, to: $to)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$GetCashSettlmentsCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$GetCashSettlmentsCopyWith(
+          _GetCashSettlments value, $Res Function(_GetCashSettlments) _then) =
+      __$GetCashSettlmentsCopyWithImpl;
+  @useResult
+  $Res call({int limit, int skip, String? from, String? to});
+}
+
+/// @nodoc
+class __$GetCashSettlmentsCopyWithImpl<$Res>
+    implements _$GetCashSettlmentsCopyWith<$Res> {
+  __$GetCashSettlmentsCopyWithImpl(this._self, this._then);
+
+  final _GetCashSettlments _self;
+  final $Res Function(_GetCashSettlments) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? limit = null,
+    Object? skip = null,
+    Object? from = freezed,
+    Object? to = freezed,
+  }) {
+    return _then(_GetCashSettlments(
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      from: freezed == from
+          ? _self.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String?,
+      to: freezed == to
+          ? _self.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _PaginateCashSettlmentsList implements OrderEvent {
+  const _PaginateCashSettlmentsList(
+      {required this.skip, required this.limit, this.from, this.to});
+
+  final int skip;
+  final int limit;
+  final String? from;
+  final String? to;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$PaginateCashSettlmentsListCopyWith<_PaginateCashSettlmentsList>
+      get copyWith => __$PaginateCashSettlmentsListCopyWithImpl<
+          _PaginateCashSettlmentsList>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _PaginateCashSettlmentsList &&
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.from, from) || other.from == from) &&
+            (identical(other.to, to) || other.to == to));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, skip, limit, from, to);
+
+  @override
+  String toString() {
+    return 'OrderEvent.paginateCashSettlmentsList(skip: $skip, limit: $limit, from: $from, to: $to)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$PaginateCashSettlmentsListCopyWith<$Res>
+    implements $OrderEventCopyWith<$Res> {
+  factory _$PaginateCashSettlmentsListCopyWith(
+          _PaginateCashSettlmentsList value,
+          $Res Function(_PaginateCashSettlmentsList) _then) =
+      __$PaginateCashSettlmentsListCopyWithImpl;
+  @useResult
+  $Res call({int skip, int limit, String? from, String? to});
+}
+
+/// @nodoc
+class __$PaginateCashSettlmentsListCopyWithImpl<$Res>
+    implements _$PaginateCashSettlmentsListCopyWith<$Res> {
+  __$PaginateCashSettlmentsListCopyWithImpl(this._self, this._then);
+
+  final _PaginateCashSettlmentsList _self;
+  final $Res Function(_PaginateCashSettlmentsList) _then;
+
+  /// Create a copy of OrderEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? skip = null,
+    Object? limit = null,
+    Object? from = freezed,
+    Object? to = freezed,
+  }) {
+    return _then(_PaginateCashSettlmentsList(
+      skip: null == skip
+          ? _self.skip
+          : skip // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _self.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      from: freezed == from
+          ? _self.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String?,
+      to: freezed == to
+          ? _self.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$OrderState {
   Status get getOrderListStatus;
   List<OrderResponse> get ordersList;
@@ -1797,6 +2023,12 @@ mixin _$OrderState {
   bool get myOrdershasMore;
   bool get myOrdersisLoadingMore;
   Status get myOrderspaginationStatus;
+  Status get getCashSettlmentListStatus;
+  List<CashSettlementResponse> get cashSettlmentsList;
+  int get cashSettlmentsCount;
+  bool get cashSettlmentshasMore;
+  bool get cashSettlmentsisLoadingMore;
+  Status get cashSettlmentspaginationStatus;
 
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -1849,9 +2081,26 @@ mixin _$OrderState {
                 other.myOrdershasMore == myOrdershasMore) &&
             (identical(other.myOrdersisLoadingMore, myOrdersisLoadingMore) ||
                 other.myOrdersisLoadingMore == myOrdersisLoadingMore) &&
-            (identical(
-                    other.myOrderspaginationStatus, myOrderspaginationStatus) ||
-                other.myOrderspaginationStatus == myOrderspaginationStatus));
+            (identical(other.myOrderspaginationStatus, myOrderspaginationStatus) ||
+                other.myOrderspaginationStatus == myOrderspaginationStatus) &&
+            (identical(other.getCashSettlmentListStatus,
+                    getCashSettlmentListStatus) ||
+                other.getCashSettlmentListStatus ==
+                    getCashSettlmentListStatus) &&
+            const DeepCollectionEquality()
+                .equals(other.cashSettlmentsList, cashSettlmentsList) &&
+            (identical(other.cashSettlmentsCount, cashSettlmentsCount) ||
+                other.cashSettlmentsCount == cashSettlmentsCount) &&
+            (identical(other.cashSettlmentshasMore, cashSettlmentshasMore) ||
+                other.cashSettlmentshasMore == cashSettlmentshasMore) &&
+            (identical(other.cashSettlmentsisLoadingMore,
+                    cashSettlmentsisLoadingMore) ||
+                other.cashSettlmentsisLoadingMore ==
+                    cashSettlmentsisLoadingMore) &&
+            (identical(other.cashSettlmentspaginationStatus,
+                    cashSettlmentspaginationStatus) ||
+                other.cashSettlmentspaginationStatus ==
+                    cashSettlmentspaginationStatus));
   }
 
   @override
@@ -1877,12 +2126,18 @@ mixin _$OrderState {
         myOrdersCount,
         myOrdershasMore,
         myOrdersisLoadingMore,
-        myOrderspaginationStatus
+        myOrderspaginationStatus,
+        getCashSettlmentListStatus,
+        const DeepCollectionEquality().hash(cashSettlmentsList),
+        cashSettlmentsCount,
+        cashSettlmentshasMore,
+        cashSettlmentsisLoadingMore,
+        cashSettlmentspaginationStatus
       ]);
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList, getMyOrderListStatus: $getMyOrderListStatus, myordersList: $myordersList, myOrdersCount: $myOrdersCount, myOrdershasMore: $myOrdershasMore, myOrdersisLoadingMore: $myOrdersisLoadingMore, myOrderspaginationStatus: $myOrderspaginationStatus)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList, getMyOrderListStatus: $getMyOrderListStatus, myordersList: $myordersList, myOrdersCount: $myOrdersCount, myOrdershasMore: $myOrdershasMore, myOrdersisLoadingMore: $myOrdersisLoadingMore, myOrderspaginationStatus: $myOrderspaginationStatus, getCashSettlmentListStatus: $getCashSettlmentListStatus, cashSettlmentsList: $cashSettlmentsList, cashSettlmentsCount: $cashSettlmentsCount, cashSettlmentshasMore: $cashSettlmentshasMore, cashSettlmentsisLoadingMore: $cashSettlmentsisLoadingMore, cashSettlmentspaginationStatus: $cashSettlmentspaginationStatus)';
   }
 }
 
@@ -1913,7 +2168,13 @@ abstract mixin class $OrderStateCopyWith<$Res> {
       int myOrdersCount,
       bool myOrdershasMore,
       bool myOrdersisLoadingMore,
-      Status myOrderspaginationStatus});
+      Status myOrderspaginationStatus,
+      Status getCashSettlmentListStatus,
+      List<CashSettlementResponse> cashSettlmentsList,
+      int cashSettlmentsCount,
+      bool cashSettlmentshasMore,
+      bool cashSettlmentsisLoadingMore,
+      Status cashSettlmentspaginationStatus});
 
   $StatusCopyWith<$Res> get getOrderListStatus;
   $StatusCopyWith<$Res> get paginationStatus;
@@ -1927,6 +2188,8 @@ abstract mixin class $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get moveBagStatus;
   $StatusCopyWith<$Res> get getMyOrderListStatus;
   $StatusCopyWith<$Res> get myOrderspaginationStatus;
+  $StatusCopyWith<$Res> get getCashSettlmentListStatus;
+  $StatusCopyWith<$Res> get cashSettlmentspaginationStatus;
 }
 
 /// @nodoc
@@ -1962,6 +2225,12 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
     Object? myOrdershasMore = null,
     Object? myOrdersisLoadingMore = null,
     Object? myOrderspaginationStatus = null,
+    Object? getCashSettlmentListStatus = null,
+    Object? cashSettlmentsList = null,
+    Object? cashSettlmentsCount = null,
+    Object? cashSettlmentshasMore = null,
+    Object? cashSettlmentsisLoadingMore = null,
+    Object? cashSettlmentspaginationStatus = null,
   }) {
     return _then(_self.copyWith(
       getOrderListStatus: null == getOrderListStatus
@@ -2047,6 +2316,30 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
       myOrderspaginationStatus: null == myOrderspaginationStatus
           ? _self.myOrderspaginationStatus
           : myOrderspaginationStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      getCashSettlmentListStatus: null == getCashSettlmentListStatus
+          ? _self.getCashSettlmentListStatus
+          : getCashSettlmentListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      cashSettlmentsList: null == cashSettlmentsList
+          ? _self.cashSettlmentsList
+          : cashSettlmentsList // ignore: cast_nullable_to_non_nullable
+              as List<CashSettlementResponse>,
+      cashSettlmentsCount: null == cashSettlmentsCount
+          ? _self.cashSettlmentsCount
+          : cashSettlmentsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      cashSettlmentshasMore: null == cashSettlmentshasMore
+          ? _self.cashSettlmentshasMore
+          : cashSettlmentshasMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      cashSettlmentsisLoadingMore: null == cashSettlmentsisLoadingMore
+          ? _self.cashSettlmentsisLoadingMore
+          : cashSettlmentsisLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      cashSettlmentspaginationStatus: null == cashSettlmentspaginationStatus
+          ? _self.cashSettlmentspaginationStatus
+          : cashSettlmentspaginationStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -2169,6 +2462,26 @@ class _$OrderStateCopyWithImpl<$Res> implements $OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get myOrderspaginationStatus {
     return $StatusCopyWith<$Res>(_self.myOrderspaginationStatus, (value) {
       return _then(_self.copyWith(myOrderspaginationStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get getCashSettlmentListStatus {
+    return $StatusCopyWith<$Res>(_self.getCashSettlmentListStatus, (value) {
+      return _then(_self.copyWith(getCashSettlmentListStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get cashSettlmentspaginationStatus {
+    return $StatusCopyWith<$Res>(_self.cashSettlmentspaginationStatus, (value) {
+      return _then(_self.copyWith(cashSettlmentspaginationStatus: value));
     });
   }
 }
@@ -2287,7 +2600,13 @@ extension OrderStatePatterns on OrderState {
             int myOrdersCount,
             bool myOrdershasMore,
             bool myOrdersisLoadingMore,
-            Status myOrderspaginationStatus)?
+            Status myOrderspaginationStatus,
+            Status getCashSettlmentListStatus,
+            List<CashSettlementResponse> cashSettlmentsList,
+            int cashSettlmentsCount,
+            bool cashSettlmentshasMore,
+            bool cashSettlmentsisLoadingMore,
+            Status cashSettlmentspaginationStatus)?
         $default, {
     required TResult orElse(),
   }) {
@@ -2315,7 +2634,13 @@ extension OrderStatePatterns on OrderState {
             _that.myOrdersCount,
             _that.myOrdershasMore,
             _that.myOrdersisLoadingMore,
-            _that.myOrderspaginationStatus);
+            _that.myOrderspaginationStatus,
+            _that.getCashSettlmentListStatus,
+            _that.cashSettlmentsList,
+            _that.cashSettlmentsCount,
+            _that.cashSettlmentshasMore,
+            _that.cashSettlmentsisLoadingMore,
+            _that.cashSettlmentspaginationStatus);
       case _:
         return orElse();
     }
@@ -2357,7 +2682,13 @@ extension OrderStatePatterns on OrderState {
             int myOrdersCount,
             bool myOrdershasMore,
             bool myOrdersisLoadingMore,
-            Status myOrderspaginationStatus)
+            Status myOrderspaginationStatus,
+            Status getCashSettlmentListStatus,
+            List<CashSettlementResponse> cashSettlmentsList,
+            int cashSettlmentsCount,
+            bool cashSettlmentshasMore,
+            bool cashSettlmentsisLoadingMore,
+            Status cashSettlmentspaginationStatus)
         $default,
   ) {
     final _that = this;
@@ -2384,7 +2715,13 @@ extension OrderStatePatterns on OrderState {
             _that.myOrdersCount,
             _that.myOrdershasMore,
             _that.myOrdersisLoadingMore,
-            _that.myOrderspaginationStatus);
+            _that.myOrderspaginationStatus,
+            _that.getCashSettlmentListStatus,
+            _that.cashSettlmentsList,
+            _that.cashSettlmentsCount,
+            _that.cashSettlmentshasMore,
+            _that.cashSettlmentsisLoadingMore,
+            _that.cashSettlmentspaginationStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -2425,7 +2762,13 @@ extension OrderStatePatterns on OrderState {
             int myOrdersCount,
             bool myOrdershasMore,
             bool myOrdersisLoadingMore,
-            Status myOrderspaginationStatus)?
+            Status myOrderspaginationStatus,
+            Status getCashSettlmentListStatus,
+            List<CashSettlementResponse> cashSettlmentsList,
+            int cashSettlmentsCount,
+            bool cashSettlmentshasMore,
+            bool cashSettlmentsisLoadingMore,
+            Status cashSettlmentspaginationStatus)?
         $default,
   ) {
     final _that = this;
@@ -2452,7 +2795,13 @@ extension OrderStatePatterns on OrderState {
             _that.myOrdersCount,
             _that.myOrdershasMore,
             _that.myOrdersisLoadingMore,
-            _that.myOrderspaginationStatus);
+            _that.myOrderspaginationStatus,
+            _that.getCashSettlmentListStatus,
+            _that.cashSettlmentsList,
+            _that.cashSettlmentsCount,
+            _that.cashSettlmentshasMore,
+            _that.cashSettlmentsisLoadingMore,
+            _that.cashSettlmentspaginationStatus);
       case _:
         return null;
     }
@@ -2483,10 +2832,17 @@ class _OrderState implements OrderState {
       required this.myOrdersCount,
       required this.myOrdershasMore,
       required this.myOrdersisLoadingMore,
-      required this.myOrderspaginationStatus})
+      required this.myOrderspaginationStatus,
+      required this.getCashSettlmentListStatus,
+      required final List<CashSettlementResponse> cashSettlmentsList,
+      required this.cashSettlmentsCount,
+      required this.cashSettlmentshasMore,
+      required this.cashSettlmentsisLoadingMore,
+      required this.cashSettlmentspaginationStatus})
       : _ordersList = ordersList,
         _servicesList = servicesList,
-        _myordersList = myordersList;
+        _myordersList = myordersList,
+        _cashSettlmentsList = cashSettlmentsList;
 
   @override
   final Status getOrderListStatus;
@@ -2548,6 +2904,25 @@ class _OrderState implements OrderState {
   final bool myOrdersisLoadingMore;
   @override
   final Status myOrderspaginationStatus;
+  @override
+  final Status getCashSettlmentListStatus;
+  final List<CashSettlementResponse> _cashSettlmentsList;
+  @override
+  List<CashSettlementResponse> get cashSettlmentsList {
+    if (_cashSettlmentsList is EqualUnmodifiableListView)
+      return _cashSettlmentsList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_cashSettlmentsList);
+  }
+
+  @override
+  final int cashSettlmentsCount;
+  @override
+  final bool cashSettlmentshasMore;
+  @override
+  final bool cashSettlmentsisLoadingMore;
+  @override
+  final Status cashSettlmentspaginationStatus;
 
   /// Create a copy of OrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -2601,9 +2976,26 @@ class _OrderState implements OrderState {
                 other.myOrdershasMore == myOrdershasMore) &&
             (identical(other.myOrdersisLoadingMore, myOrdersisLoadingMore) ||
                 other.myOrdersisLoadingMore == myOrdersisLoadingMore) &&
-            (identical(
-                    other.myOrderspaginationStatus, myOrderspaginationStatus) ||
-                other.myOrderspaginationStatus == myOrderspaginationStatus));
+            (identical(other.myOrderspaginationStatus, myOrderspaginationStatus) ||
+                other.myOrderspaginationStatus == myOrderspaginationStatus) &&
+            (identical(other.getCashSettlmentListStatus,
+                    getCashSettlmentListStatus) ||
+                other.getCashSettlmentListStatus ==
+                    getCashSettlmentListStatus) &&
+            const DeepCollectionEquality()
+                .equals(other._cashSettlmentsList, _cashSettlmentsList) &&
+            (identical(other.cashSettlmentsCount, cashSettlmentsCount) ||
+                other.cashSettlmentsCount == cashSettlmentsCount) &&
+            (identical(other.cashSettlmentshasMore, cashSettlmentshasMore) ||
+                other.cashSettlmentshasMore == cashSettlmentshasMore) &&
+            (identical(other.cashSettlmentsisLoadingMore,
+                    cashSettlmentsisLoadingMore) ||
+                other.cashSettlmentsisLoadingMore ==
+                    cashSettlmentsisLoadingMore) &&
+            (identical(other.cashSettlmentspaginationStatus,
+                    cashSettlmentspaginationStatus) ||
+                other.cashSettlmentspaginationStatus ==
+                    cashSettlmentspaginationStatus));
   }
 
   @override
@@ -2629,12 +3021,18 @@ class _OrderState implements OrderState {
         myOrdersCount,
         myOrdershasMore,
         myOrdersisLoadingMore,
-        myOrderspaginationStatus
+        myOrderspaginationStatus,
+        getCashSettlmentListStatus,
+        const DeepCollectionEquality().hash(_cashSettlmentsList),
+        cashSettlmentsCount,
+        cashSettlmentshasMore,
+        cashSettlmentsisLoadingMore,
+        cashSettlmentspaginationStatus
       ]);
 
   @override
   String toString() {
-    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList, getMyOrderListStatus: $getMyOrderListStatus, myordersList: $myordersList, myOrdersCount: $myOrdersCount, myOrdershasMore: $myOrdershasMore, myOrdersisLoadingMore: $myOrdersisLoadingMore, myOrderspaginationStatus: $myOrderspaginationStatus)';
+    return 'OrderState(getOrderListStatus: $getOrderListStatus, ordersList: $ordersList, totalCount: $totalCount, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationStatus: $paginationStatus, getOrderDetailStatus: $getOrderDetailStatus, orderDetails: $orderDetails, confirmPickupStatus: $confirmPickupStatus, addBagStatus: $addBagStatus, createNewBagStatus: $createNewBagStatus, getServicesListStatus: $getServicesListStatus, removeBagStatus: $removeBagStatus, moveBagStatus: $moveBagStatus, servicesList: $servicesList, getMyOrderListStatus: $getMyOrderListStatus, myordersList: $myordersList, myOrdersCount: $myOrdersCount, myOrdershasMore: $myOrdershasMore, myOrdersisLoadingMore: $myOrdersisLoadingMore, myOrderspaginationStatus: $myOrderspaginationStatus, getCashSettlmentListStatus: $getCashSettlmentListStatus, cashSettlmentsList: $cashSettlmentsList, cashSettlmentsCount: $cashSettlmentsCount, cashSettlmentshasMore: $cashSettlmentshasMore, cashSettlmentsisLoadingMore: $cashSettlmentsisLoadingMore, cashSettlmentspaginationStatus: $cashSettlmentspaginationStatus)';
   }
 }
 
@@ -2667,7 +3065,13 @@ abstract mixin class _$OrderStateCopyWith<$Res>
       int myOrdersCount,
       bool myOrdershasMore,
       bool myOrdersisLoadingMore,
-      Status myOrderspaginationStatus});
+      Status myOrderspaginationStatus,
+      Status getCashSettlmentListStatus,
+      List<CashSettlementResponse> cashSettlmentsList,
+      int cashSettlmentsCount,
+      bool cashSettlmentshasMore,
+      bool cashSettlmentsisLoadingMore,
+      Status cashSettlmentspaginationStatus});
 
   @override
   $StatusCopyWith<$Res> get getOrderListStatus;
@@ -2693,6 +3097,10 @@ abstract mixin class _$OrderStateCopyWith<$Res>
   $StatusCopyWith<$Res> get getMyOrderListStatus;
   @override
   $StatusCopyWith<$Res> get myOrderspaginationStatus;
+  @override
+  $StatusCopyWith<$Res> get getCashSettlmentListStatus;
+  @override
+  $StatusCopyWith<$Res> get cashSettlmentspaginationStatus;
 }
 
 /// @nodoc
@@ -2728,6 +3136,12 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
     Object? myOrdershasMore = null,
     Object? myOrdersisLoadingMore = null,
     Object? myOrderspaginationStatus = null,
+    Object? getCashSettlmentListStatus = null,
+    Object? cashSettlmentsList = null,
+    Object? cashSettlmentsCount = null,
+    Object? cashSettlmentshasMore = null,
+    Object? cashSettlmentsisLoadingMore = null,
+    Object? cashSettlmentspaginationStatus = null,
   }) {
     return _then(_OrderState(
       getOrderListStatus: null == getOrderListStatus
@@ -2813,6 +3227,30 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
       myOrderspaginationStatus: null == myOrderspaginationStatus
           ? _self.myOrderspaginationStatus
           : myOrderspaginationStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      getCashSettlmentListStatus: null == getCashSettlmentListStatus
+          ? _self.getCashSettlmentListStatus
+          : getCashSettlmentListStatus // ignore: cast_nullable_to_non_nullable
+              as Status,
+      cashSettlmentsList: null == cashSettlmentsList
+          ? _self._cashSettlmentsList
+          : cashSettlmentsList // ignore: cast_nullable_to_non_nullable
+              as List<CashSettlementResponse>,
+      cashSettlmentsCount: null == cashSettlmentsCount
+          ? _self.cashSettlmentsCount
+          : cashSettlmentsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      cashSettlmentshasMore: null == cashSettlmentshasMore
+          ? _self.cashSettlmentshasMore
+          : cashSettlmentshasMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      cashSettlmentsisLoadingMore: null == cashSettlmentsisLoadingMore
+          ? _self.cashSettlmentsisLoadingMore
+          : cashSettlmentsisLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      cashSettlmentspaginationStatus: null == cashSettlmentspaginationStatus
+          ? _self.cashSettlmentspaginationStatus
+          : cashSettlmentspaginationStatus // ignore: cast_nullable_to_non_nullable
               as Status,
     ));
   }
@@ -2935,6 +3373,26 @@ class __$OrderStateCopyWithImpl<$Res> implements _$OrderStateCopyWith<$Res> {
   $StatusCopyWith<$Res> get myOrderspaginationStatus {
     return $StatusCopyWith<$Res>(_self.myOrderspaginationStatus, (value) {
       return _then(_self.copyWith(myOrderspaginationStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get getCashSettlmentListStatus {
+    return $StatusCopyWith<$Res>(_self.getCashSettlmentListStatus, (value) {
+      return _then(_self.copyWith(getCashSettlmentListStatus: value));
+    });
+  }
+
+  /// Create a copy of OrderState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusCopyWith<$Res> get cashSettlmentspaginationStatus {
+    return $StatusCopyWith<$Res>(_self.cashSettlmentspaginationStatus, (value) {
+      return _then(_self.copyWith(cashSettlmentspaginationStatus: value));
     });
   }
 }

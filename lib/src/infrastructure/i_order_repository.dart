@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:spinners_driver/app/constants/api_constants.dart';
 import 'package:spinners_driver/app/extensions/map_extension.dart';
 import 'package:spinners_driver/app/services/api_services/api_service.dart';
+import 'package:spinners_driver/src/domain/models/cash_settlement_model/cash_settlement_model.dart';
 import 'package:spinners_driver/src/domain/models/order_details_response_model/order_details_response_model.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/domain/models/service_list_datamodel/service_list_datamodel.dart';
@@ -144,6 +145,20 @@ class OrderRepositoryImplementation implements OrderRepository {
       var response = await api.profile.get(ApiEndpoints().driverOrders, queryParameters: params);
       OrderModel orders = OrderModel.fromJson(response.data);
       return orders;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<CashSettlementModel> getCashSettlmentsList(int limit, int skip, String? from, String? to) async {
+  try {
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "from":from,"to":to}.clean();
+
+      log(params.toString(), name: "params");
+      var response = await api.profile.get(ApiEndpoints().cashSettlments, queryParameters: params);
+      CashSettlementModel settlementData = CashSettlementModel.fromJson(response.data);
+      return settlementData;
     } catch (e) {
       rethrow;
     }

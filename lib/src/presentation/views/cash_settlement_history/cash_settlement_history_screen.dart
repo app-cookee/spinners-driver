@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -8,11 +11,14 @@ import 'package:spinners_driver/app/constants/status/status.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart';
+import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/period_filter_button.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/time_period.dart';
+import 'package:spinners_driver/src/presentation/views/home/placeholders/order_list_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
+import 'package:spinners_driver/src/presentation/views/widgets/empty_placeholder.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
@@ -26,29 +32,58 @@ class CashSettlementHistoryScreen extends StatefulWidget {
 
 class _CashSettlementHistoryScreenState
     extends State<CashSettlementHistoryScreen> {
-  final TextEditingController _searchController = TextEditingController();
   TimePeriod selectedPeriod = TimePeriod.thisMonth;
-
-  void _onSearchChanged(String query) {
-    // _currentSearchQuery = query; // Store the current search query
-    // _debouncer.run(() {
-    //   // if (query.isNotEmpty) {
-    //   _fetchOrders(currentOrderFilter, searchQuery: query);
-
-    //   // }
-    // });
-  }
+  final int _itemsPerPage = 10;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
-      context
+    context
         .read<DashboardDataBloc>()
         .add(const DashboardDataEvent.getDashboardData());
+    _fetchOrders();
+    // Separate listeners for each toggle
+    _scrollController = ScrollController();
+
+    // Add scroll listener to track scrolling state
+    _scrollController.addListener(() {
+      // log("Scroll listener fired - pixels: ${_scrollController.position.pixels}");
+
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        _loadMoreItems();
+      }
+    });
     super.initState();
   }
 
-  String _formatDate(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
+  void _loadMoreItems() {
+    // log("load more itrms");
+    final orderState = context.read<OrderBloc>().state;
+
+    // Prevent duplicate calls
+    if (orderState.cashSettlmentsisLoadingMore ||
+        !orderState.cashSettlmentshasMore) return;
+
+    final range = getDateRangeForPeriod(selectedPeriod);
+    final from = range['from'];
+    final to = range['to'];
+
+    // Trigger pagination with filters
+    context.read<OrderBloc>().add(
+          OrderEvent.paginateCashSettlmentsList(
+              skip: orderState.cashSettlmentsList.length,
+              limit: _itemsPerPage,
+              from: from,
+              to: to),
+        );
+  }
+
+  void _fetchOrders({String? from, String? to}) {
+    context.read<OrderBloc>().add(
+          OrderEvent.getCashSettlments(
+              limit: _itemsPerPage, skip: 0, from: from, to: to),
+        );
   }
 
   Map<String, String> getDateRangeForPeriod(TimePeriod period) {
@@ -60,26 +95,58 @@ class _CashSettlementHistoryScreenState
       case TimePeriod.thisMonth:
         from = DateTime(now.year, now.month, 1);
         break;
+
       case TimePeriod.lastMonth:
-        final lastMonth = DateTime(now.year, now.month - 1, 1);
-        from = lastMonth;
-        to = DateTime(now.year, now.month, 0);
+        // More robust: subtract 1 month from current date
+        from = DateTime(now.year, now.month - 1, 1);
+        // Handle negative months
+        if (from.month <= 0) {
+          from = DateTime(from.year - 1, from.month + 12, 1);
+        }
+        // Get last day of that month
+        to = DateTime(from.year, from.month + 1, 0);
         break;
+
       case TimePeriod.lastThree:
-        from = DateTime(now.year, now.month - 3, 1);
+        from = _subtractMonths(now, 3);
+        from = DateTime(from.year, from.month, 1);
         break;
+
       case TimePeriod.lastSix:
-        from = DateTime(now.year, now.month - 6, 1);
+        from = _subtractMonths(now, 6);
+        from = DateTime(from.year, from.month, 1);
         break;
+
       case TimePeriod.allTime:
-        from = DateTime(2000, 1, 1);
-        break;
+        return {};
     }
 
     return {
       'from': _formatDate(from),
       'to': _formatDate(to),
     };
+  }
+
+  String _formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  DateTime _subtractMonths(DateTime date, int months) {
+    int newYear = date.year;
+    int newMonth = date.month - months;
+
+    while (newMonth <= 0) {
+      newMonth += 12;
+      newYear -= 1;
+    }
+
+    return DateTime(newYear, newMonth, date.day);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -132,9 +199,8 @@ class _CashSettlementHistoryScreenState
                         builder: (context, state) {
                           return Skeletonizer(
                             enabled: (state.getDashboardDataStatus
-                                            is StatusInitial ||
-                                        state.getDashboardDataStatus
-                                            is StatusLoading),
+                                    is StatusInitial ||
+                                state.getDashboardDataStatus is StatusLoading),
                             child: Text(
                                 "AED ${state.dashboardDataModel.totalCollectedCash}",
                                 style: AppTypography.sfProRoundedSemiBold
@@ -151,39 +217,20 @@ class _CashSettlementHistoryScreenState
                   padding: EdgeInsets.symmetric(horizontal: 16.dp),
                   child: Row(
                     children: [
-                      Expanded(
-                        flex: 5,
-                        child: CommonTextField(
-                          borderRadius: 8.dp,
-                          height: 36,
-                          hintStyle: AppTypography.sfProRoundedMedium.copyWith(
-                              fontSize: 12.dp, color: AppColors.neutral500),
-                          controller: _searchController,
-                          hintText: "Search",
-                          prefixIcon: Image.asset(
-                            AppImages.searchIcon,
-                            height: 20.dp,
-                            width: 20.dp,
-                          ),
-                          onChanged: _onSearchChanged,
-                        ),
-                      ),
-                      Gap(8.dp),
-                      Expanded(
-                        flex: 3,
-                        child: PeriodFilterButton(
-                          selected: selectedPeriod,
-                          onSelected: (period) {
-                            setState(() => selectedPeriod = period);
+                      PeriodFilterButton(
+                        selected: selectedPeriod,
+                        onSelected: (period) {
+                          setState(() => selectedPeriod = period);
 
-                            final range = getDateRangeForPeriod(period);
-                            final from = range['from'];
-                            final to = range['to'];
+                          final range = getDateRangeForPeriod(period);
+                          final from = range['from'];
+                          final to = range['to'];
 
-                            debugPrint('Selected Period: $period');
-                            debugPrint('From: $from, To: $to');
-                          },
-                        ),
+                          _fetchOrders(from: from, to: to);
+
+                          debugPrint('Selected Period: $period');
+                          debugPrint('From: $from, To: $to');
+                        },
                       )
                     ],
                   ),
@@ -192,28 +239,66 @@ class _CashSettlementHistoryScreenState
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.only(
-                  top: 24.dp, left: 16.dp, right: 16.dp, bottom: 16.dp),
-              itemCount: 16,
-              itemBuilder: (context, index) {
-                return Container(
-                  // padding: EdgeInsets.only(top: 16.dp),
-                  margin: EdgeInsets.only(bottom: 12.dp),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: .11),
-                        offset: const Offset(0, 2),
-                        blurRadius: 5,
-                        spreadRadius: 0.0,
-                      )
-                    ],
-                    borderRadius: BorderRadius.circular(12.dp),
-                    border: Border.all(color: AppColors.shadowColor),
+            child: BlocBuilder<OrderBloc, OrderState>(
+              builder: (context, state) {
+                if (state.getCashSettlmentListStatus is StatusLoading ||
+                    state.getCashSettlmentListStatus is StatusInitial) {
+                  return Padding(
+                    padding:
+                        EdgeInsets.only(left: 16.dp, right: 16.dp, top: 16.dp),
+                    child: const OrderListPlaceholder(),
+                  );
+                }
+                if (state.cashSettlmentsList.isEmpty) {
+                  return Padding(
+                    padding: EdgeInsetsGeometry.only(top: 6.h),
+                    child: const Center(child: EmptyPlaceholder()),
+                  );
+                }
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    _fetchOrders();
+                  },
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.only(
+                        top: 24.dp, left: 16.dp, right: 16.dp, bottom: 16.dp),
+                    itemCount: state.cashSettlmentsList.length +
+                        (state.cashSettlmentsisLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == state.cashSettlmentsList.length) {
+                        return const SpinKitCircle(
+                          color: AppColors.primaryColor,
+                        );
+                      }
+                      return Container(
+                        // padding: EdgeInsets.only(top: 16.dp),
+                        margin: EdgeInsets.only(bottom: 12.dp),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.black.withValues(alpha: .11),
+                              offset: const Offset(0, 2),
+                              blurRadius: 5,
+                              spreadRadius: 0.0,
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(12.dp),
+                          border: Border.all(color: AppColors.shadowColor),
+                        ),
+                        child: _details(
+                            amount: state.cashSettlmentsList[index].amount,
+                            time: formatUaeDateTime(
+                                    state.cashSettlmentsList[index].createdAt)
+                                .last,
+                            date: formatUaeDateTime(
+                                    state.cashSettlmentsList[index].createdAt)
+                                .first),
+                      );
+                    },
                   ),
-                  child: _details(intex: index),
                 );
               },
             ),
@@ -223,7 +308,24 @@ class _CashSettlementHistoryScreenState
     );
   }
 
-  Container _details({required int intex}) {
+  List<String> formatUaeDateTime(String utcString) {
+    // Parse the UTC string
+    final utcDate = DateTime.parse(utcString);
+
+    // Convert to UAE timezone (UTC+4)
+    final uaeDate = utcDate.add(const Duration(hours: 4));
+
+    // Format date part: 26 Aug 2025
+    final datePart = DateFormat('dd MMM yyyy').format(uaeDate);
+
+    // Format time part: 09:00 AM
+    final timePart = DateFormat('hh:mm a').format(uaeDate);
+
+    return [datePart, timePart];
+  }
+
+  Container _details(
+      {required String date, required String time, required String amount}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
       width: double.infinity,
@@ -261,13 +363,13 @@ class _CashSettlementHistoryScreenState
               Gap(20.dp),
               SizedBox(
                   width: 100,
-                  child: Text("AED ${intex*100}",
+                  child: Text('AED $amount',
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                           fontSize: 12.dp, color: AppColors.addressColor))),
               const Spacer(),
               Row(
                 children: [
-                  Text("26 Aug 2025",
+                  Text(date,
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                           fontSize: 12.dp, color: AppColors.neutral900)),
                   //a round point here
@@ -281,7 +383,7 @@ class _CashSettlementHistoryScreenState
                     ),
                   ),
                   Gap(4.dp),
-                  Text("0$intex:00 AM",
+                  Text(time,
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                           fontSize: 12.dp, color: AppColors.neutral900)),
                 ],
