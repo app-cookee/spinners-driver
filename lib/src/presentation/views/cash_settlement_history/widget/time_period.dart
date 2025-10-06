@@ -20,9 +20,9 @@ extension TimePeriodExtension on TimePeriod {
       case TimePeriod.lastMonth:
         return 'Last Month';
       case TimePeriod.lastThree:
-        return 'Last 3 Month'; // Short for 3 months
+        return 'Last 3 Months'; // Short for 3 months
       case TimePeriod.lastSix:
-        return 'Last 6 Month'; // Short for 6 months
+        return 'Last 6 Months'; // Short for 6 months
       case TimePeriod.allTime:
         return 'All';
     }

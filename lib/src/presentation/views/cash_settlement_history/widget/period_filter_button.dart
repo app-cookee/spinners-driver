@@ -81,6 +81,7 @@ class PeriodFilterButton extends StatelessWidget {
                   ),
                 ),
               ),
+              Gap(2.dp)
             ],
           ),
         ),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +11,9 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/settlements_list_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/period_filter_button.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/time_period.dart';
-import 'package:spinners_driver/src/presentation/views/home/placeholders/order_list_placeholder.dart';
-import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/empty_placeholder.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -32,7 +29,7 @@ class CashSettlementHistoryScreen extends StatefulWidget {
 
 class _CashSettlementHistoryScreenState
     extends State<CashSettlementHistoryScreen> {
-  TimePeriod selectedPeriod = TimePeriod.thisMonth;
+  TimePeriod selectedPeriod = TimePeriod.allTime;
   final int _itemsPerPage = 10;
   late ScrollController _scrollController;
 
@@ -41,7 +38,7 @@ class _CashSettlementHistoryScreenState
     context
         .read<DashboardDataBloc>()
         .add(const DashboardDataEvent.getDashboardData());
-    _fetchOrders();
+    _fetchHistorys();
     // Separate listeners for each toggle
     _scrollController = ScrollController();
 
@@ -79,7 +76,7 @@ class _CashSettlementHistoryScreenState
         );
   }
 
-  void _fetchOrders({String? from, String? to}) {
+  void _fetchHistorys({String? from, String? to}) {
     context.read<OrderBloc>().add(
           OrderEvent.getCashSettlments(
               limit: _itemsPerPage, skip: 0, from: from, to: to),
@@ -170,7 +167,8 @@ class _CashSettlementHistoryScreenState
                 AppColors.primaryColor.withValues(alpha: 0),
                 AppColors.primaryColor.withValues(alpha: 0)
               ],
-            )),
+            )
+            ),
             width: 100.w,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -178,12 +176,19 @@ class _CashSettlementHistoryScreenState
                 const DashedDivider(
                   dashPattern: [5.5, 5],
                 ),
-                Padding(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
                   padding:
-                      EdgeInsets.symmetric(vertical: 16.dp, horizontal: 16.dp),
-                  child: Row(
+                      EdgeInsets.only(left: 16.dp, top: 16.dp, bottom: 0.dp,right: 16.dp),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
                         AppImages.moneysIcon,
                         height: 24.dp,
                         width: 24.dp,
@@ -194,7 +199,9 @@ class _CashSettlementHistoryScreenState
                         style: AppTypography.sfProRoundedMedium.copyWith(
                             color: AppColors.textGrey, fontSize: 14.sp),
                       ),
-                      const Spacer(),
+                        ],
+                      ),
+                      Gap(6.dp),
                       BlocBuilder<DashboardDataBloc, DashboardDataState>(
                         builder: (context, state) {
                           return Skeletonizer(
@@ -213,6 +220,7 @@ class _CashSettlementHistoryScreenState
                     ],
                   ),
                 ),
+                const Spacer(),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.dp),
                   child: Row(
@@ -226,7 +234,7 @@ class _CashSettlementHistoryScreenState
                           final from = range['from'];
                           final to = range['to'];
 
-                          _fetchOrders(from: from, to: to);
+                          _fetchHistorys(from: from, to: to);
 
                           debugPrint('Selected Period: $period');
                           debugPrint('From: $from, To: $to');
@@ -235,6 +243,8 @@ class _CashSettlementHistoryScreenState
                     ],
                   ),
                 ),
+                  ],
+                )
               ],
             ),
           ),
@@ -246,7 +256,7 @@ class _CashSettlementHistoryScreenState
                   return Padding(
                     padding:
                         EdgeInsets.only(left: 16.dp, right: 16.dp, top: 16.dp),
-                    child: const OrderListPlaceholder(),
+                    child: const SettlementsListPlaceholder(),
                   );
                 }
                 if (state.cashSettlmentsList.isEmpty) {
@@ -257,7 +267,8 @@ class _CashSettlementHistoryScreenState
                 }
                 return RefreshIndicator(
                   onRefresh: () async {
-                    _fetchOrders();
+                    setState(() => selectedPeriod = TimePeriod.allTime);
+                    _fetchHistorys();
                   },
                   child: ListView.builder(
                     controller: _scrollController,

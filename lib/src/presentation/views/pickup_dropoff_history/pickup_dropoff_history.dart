@@ -14,10 +14,10 @@ import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/debouncer.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/period_filter_button.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/time_period.dart';
-import 'package:spinners_driver/src/presentation/views/home/placeholders/order_list_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/orders/order_screen.dart';
 import 'package:spinners_driver/src/presentation/views/pickup_dropoff_history/widgets/pickup_drop_filter_tabs.dart';
 import 'package:spinners_driver/src/presentation/views/pickup_dropoff_history/widgets/pickup_drop_history_card.dart';
+import 'package:spinners_driver/src/presentation/views/pickup_dropoff_history/widgets/pickup_drop_list_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/empty_placeholder.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
@@ -212,6 +212,7 @@ log(statusStrings.toString());
             Gap(8.dp),
             PickupDropoffFilterTabs(
               onTabChanged: (index) {
+                setState(() => selectedPeriod = TimePeriod.allTime);
                 if (index == 0) {
                   currentOrderFilter = _pickup;
                   _fetchOrders(currentOrderFilter);
@@ -264,7 +265,7 @@ _fetchOrders(currentOrderFilter, searchQuery: _currentSearchQuery, from: from, t
                 builder: (context, state) {
                   if (state.getMyOrderListStatus is StatusLoading ||
                       state.getMyOrderListStatus is StatusInitial) {
-                    return const OrderListPlaceholder();
+                    return const PickupDropListPlaceholder();
                   }
                   if (state.myordersList.isEmpty) {
                     return Padding(
@@ -275,7 +276,7 @@ _fetchOrders(currentOrderFilter, searchQuery: _currentSearchQuery, from: from, t
                   return RefreshIndicator(
                     onRefresh: () async {
                       _searchController.clear();
-
+                      setState(() => selectedPeriod = TimePeriod.allTime);
                       _currentSearchQuery = "";
                       _fetchOrders(currentOrderFilter);
                     },
