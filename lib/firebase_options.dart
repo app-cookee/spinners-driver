@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'spinners-laundry.firebasestorage.app',
     iosBundleId: 'com.driver.spinners',
   );
+
 }

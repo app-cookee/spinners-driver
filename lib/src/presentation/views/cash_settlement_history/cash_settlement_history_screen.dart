@@ -30,7 +30,7 @@ class CashSettlementHistoryScreen extends StatefulWidget {
 class _CashSettlementHistoryScreenState
     extends State<CashSettlementHistoryScreen> {
   TimePeriod selectedPeriod = TimePeriod.allTime;
-  final int _itemsPerPage = 10;
+  final int _itemsPerPage = 13;
   late ScrollController _scrollController;
 
   @override
