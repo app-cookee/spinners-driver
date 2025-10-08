@@ -31,6 +31,7 @@ class ScanNewBagBottomsheet extends StatefulWidget {
     this.serviceId,
     this.serviceName,
     this.isQuickOrder = false,
+    this.editableId=false
   });
 
   final String? bagId;
@@ -38,6 +39,7 @@ class ScanNewBagBottomsheet extends StatefulWidget {
   final String? serviceId;
   final String? serviceName; // Added for display
   final bool isQuickOrder;
+  final bool editableId;
 
   @override
   State<ScanNewBagBottomsheet> createState() => _ScanNewBagBottomsheetState();
@@ -58,6 +60,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     if (widget.bagId != null) {
       bagIdController.text = widget.bagId!;
       log('Auto-filled bag ID: ${widget.bagId}');
+      log(widget.editableId.toString());
     }
 
     // Auto-fill service if provided (for normal orders)
@@ -76,14 +79,27 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     bagIdController.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
-    log('Building ScanNewBagBottomsheet');
-    // Calculate dynamic sizes based on dropdown state
-    final double initialSize = isDropdownOpen ? 0.73 : 0.5;
-    final double minSize = isDropdownOpen ? 0.55 : 0.4;
-    final double maxSize = isDropdownOpen ? 0.95 : 0.8;
+
+        log('Building ScanNewBagBottomsheet');
+    // Check if keyboard is visible
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isKeyboardVisible = keyboardHeight > 0;
+    
+    // Calculate dynamic sizes based on dropdown state and keyboard visibility
+    final double initialSize = isKeyboardVisible 
+        ? 0.80 
+        : (isDropdownOpen ? 0.73 : 0.5);
+    final double minSize = isKeyboardVisible 
+        ? 0.7 
+        : (isDropdownOpen ? 0.55 : 0.4);
+    final double maxSize = isKeyboardVisible 
+        ? 0.95 
+        : (isDropdownOpen ? 0.95 : 0.8);
+
+
 
     return DraggableScrollableSheet(
       initialChildSize: initialSize,
@@ -117,7 +133,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
                   controller: controller,
                   child: Column(
                     children: [
-                      _bagID(),
+                      _bagID(widget.editableId),
                       Gap(10.dp),
                       _serviceDropdown(),
                       // Gap(24.dp),
@@ -146,7 +162,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     );
   }
 
-  Widget _bagID() {
+  Widget _bagID(bool isEditableId) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.dp),
       child: Column(
@@ -159,7 +175,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
             controller: bagIdController,
             hintText: 'Enter Bag ID',
             textStyle: AppTypography.sfProRoundedBold.copyWith(fontSize: 16.sp, color: AppColors.grey1Color),
-            readOnly: widget.bagId != null,
+            readOnly: !isEditableId,
           ),
         ],
       ),

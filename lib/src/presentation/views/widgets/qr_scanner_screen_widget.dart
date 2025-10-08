@@ -48,7 +48,10 @@ class _QRScannerScreenWidgetState extends State<QRScannerScreenWidget> {
   void _submitManualQr(BuildContext context) {
     final qrValue = _manualQrController.text.trim();
     if (qrValue.isNotEmpty) {
-      Navigator.pop(context, qrValue);
+      Navigator.pop(context,  {
+        "bagId": qrValue,
+        "isManual": true,
+      });
     } else {
       // Show validation message
       TheToast.show(context: context, message: 'Please enter a QR code value', isError: true);
@@ -178,7 +181,8 @@ class _QRScannerScreenWidgetState extends State<QRScannerScreenWidget> {
                     final value = barcode.rawValue;
                     if (value != null) {
                       debugPrint("✅ Scanned: $value");
-                      Navigator.pop(context, value);
+                      Navigator.pop(context, { "bagId": value,
+        "isManual": false,});
                       break;
                     }
                   }

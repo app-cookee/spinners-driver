@@ -140,17 +140,20 @@ class _ServicesWidgetState extends State<ServicesWidget> {
                                 ),
                                 onPressed: () async {
                                   // await _handleQuickOrderScan(context);
-                                  final result = await Navigator.push<String>(
+                                  final result = await Navigator.push<Map<String, dynamic>>(
                                     context,
                                     MaterialPageRoute(builder: (context) => const QRScannerScreenWidget()),
                                   );
 
                                   // Only show bottomsheet if QR value is provided
                                   if (result != null && result.isNotEmpty) {
+                                      final bagId = result["bagId"];
+                                  final isManual = result["isManual"] ;
                                     CustomBottomSheetWidget(
                                       context: context,
                                       child: ScanNewBagBottomsheet(
-                                        bagId: result,
+                                          bagId:bagId,
+                                    editableId: isManual,
                                         orderId: widget.orderId,
                                         isQuickOrder: true,
                                       ),
