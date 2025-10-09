@@ -167,7 +167,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(state.copyWith(
         getServicesListStatus: Status.loading(),
       ));
-      var response = await orderRepository.getServices(event.limit, event.skip);
+      var response = await orderRepository.getServices(event.limit, event.skip,event.serviceMenuId);
       emit(state.copyWith(
         getServicesListStatus: Status.success(),
         servicesList: response,

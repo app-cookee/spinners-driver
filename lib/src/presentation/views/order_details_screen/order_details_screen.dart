@@ -171,6 +171,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 ),
                                 SliverToBoxAdapter(
                                   child: ServicesWidget(
+                                    
                                     orderState: state,
                                     orderId: widget.orderId,
                                     scannedQRCodes: scannedQRCodes,

@@ -31,7 +31,8 @@ class ScanNewBagBottomsheet extends StatefulWidget {
     this.serviceId,
     this.serviceName,
     this.isQuickOrder = false,
-    this.editableId=false
+    this.editableId=false,
+     this.serviceMenuId,
   });
 
   final String? bagId;
@@ -40,6 +41,7 @@ class ScanNewBagBottomsheet extends StatefulWidget {
   final String? serviceName; // Added for display
   final bool isQuickOrder;
   final bool editableId;
+  final String? serviceMenuId;
 
   @override
   State<ScanNewBagBottomsheet> createState() => _ScanNewBagBottomsheetState();
@@ -55,7 +57,8 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
   void initState() {
     super.initState();
 
-    context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
+log(widget.serviceMenuId.toString(),name: "service mednuid");
+    context.read<OrderBloc>().add( OrderEvent.getServicesList(limit: 100, skip: 0,serviceMenuId: widget.serviceMenuId));
     // Auto-fill bag ID if provided
     if (widget.bagId != null) {
       bagIdController.text = widget.bagId!;
@@ -232,7 +235,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
               else if (hasError)
                 GestureDetector(
                   onTap: () {
-                    context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
+                    context.read<OrderBloc>().add( OrderEvent.getServicesList(limit: 100, skip: 0,serviceMenuId: widget.serviceMenuId));
                   },
                   child: Container(
                     width: double.infinity,

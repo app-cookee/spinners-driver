@@ -69,6 +69,10 @@ _OrderDetailsResponseModel _$OrderDetailsResponseModelFromJson(
                   (e) => AdditionalCharges.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      serviceMenu: json['serviceMenu'] == null
+          ? null
+          : ServiceCategoryItemModel.fromJson(
+              json['serviceMenu'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OrderDetailsResponseModelToJson(
@@ -104,6 +108,37 @@ Map<String, dynamic> _$OrderDetailsResponseModelToJson(
       'promoUsages': instance.promoUsages,
       'payment': instance.payment,
       'additionalCharges': instance.additionalCharges,
+      'serviceMenu': instance.serviceMenu,
+    };
+
+_ServiceCategoryItemModel _$ServiceCategoryItemModelFromJson(
+        Map<String, dynamic> json) =>
+    _ServiceCategoryItemModel(
+      id: json['id'] as String? ?? '',
+      active: json['active'] as bool? ?? true,
+      type: json['type'] as String? ?? '',
+      subTitle: json['subTitle'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      shortDesc: json['shortDesc'] as String? ?? '',
+      coverPhoto: json['coverPhoto'] as String? ?? '',
+      sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
+      placeOrderText: json['placeOrderText'] as String? ?? '',
+      quickPickupText: json['quickPickupText'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$ServiceCategoryItemModelToJson(
+        _ServiceCategoryItemModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'active': instance.active,
+      'type': instance.type,
+      'subTitle': instance.subTitle,
+      'title': instance.title,
+      'shortDesc': instance.shortDesc,
+      'coverPhoto': instance.coverPhoto,
+      'sortOrder': instance.sortOrder,
+      'placeOrderText': instance.placeOrderText,
+      'quickPickupText': instance.quickPickupText,
     };
 
 _DriverNote _$DriverNoteFromJson(Map<String, dynamic> json) => _DriverNote(

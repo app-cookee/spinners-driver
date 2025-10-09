@@ -48,11 +48,13 @@ abstract class OrderResponse with _$OrderResponse {
     @JsonKey(name: 'promoUsages') @Default([]) List<PromoItem> promoUsages,
     @JsonKey(name: 'payment') @Default([]) List<Payment> payment,
     @JsonKey(name: 'additionalCharges') @Default([]) List<AdditionalCharges> additionalCharges,
+  
   }) = _OrderResponse;
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) =>
       _$OrderResponseFromJson(json);
 }
+
 
 @freezed
 abstract class OrderStatus with _$OrderStatus {

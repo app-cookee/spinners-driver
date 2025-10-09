@@ -46,6 +46,8 @@ mixin _$OrderDetailsResponseModel {
   List<PromoItem> get promoUsages;
   List<Payment> get payment;
   List<AdditionalCharges> get additionalCharges;
+  @JsonKey(name: 'serviceMenu')
+  ServiceCategoryItemModel? get serviceMenu;
 
   /// Create a copy of OrderDetailsResponseModel
   /// with the given fields replaced by the non-null parameter values.
@@ -117,7 +119,9 @@ mixin _$OrderDetailsResponseModel {
                 .equals(other.promoUsages, promoUsages) &&
             const DeepCollectionEquality().equals(other.payment, payment) &&
             const DeepCollectionEquality()
-                .equals(other.additionalCharges, additionalCharges));
+                .equals(other.additionalCharges, additionalCharges) &&
+            (identical(other.serviceMenu, serviceMenu) ||
+                other.serviceMenu == serviceMenu));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -153,12 +157,13 @@ mixin _$OrderDetailsResponseModel {
         const DeepCollectionEquality().hash(orderedServices),
         const DeepCollectionEquality().hash(promoUsages),
         const DeepCollectionEquality().hash(payment),
-        const DeepCollectionEquality().hash(additionalCharges)
+        const DeepCollectionEquality().hash(additionalCharges),
+        serviceMenu
       ]);
 
   @override
   String toString() {
-    return 'OrderDetailsResponseModel(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, assignedPickupDriverId: $assignedPickupDriverId, assignedDeliveryDriverId: $assignedDeliveryDriverId, driverNote: $driverNote, customer: $customer, statusHistory: $statusHistory, selectedAddress: $selectedAddress, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, orderedServices: $orderedServices, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges)';
+    return 'OrderDetailsResponseModel(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, assignedPickupDriverId: $assignedPickupDriverId, assignedDeliveryDriverId: $assignedDeliveryDriverId, driverNote: $driverNote, customer: $customer, statusHistory: $statusHistory, selectedAddress: $selectedAddress, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, orderedServices: $orderedServices, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, serviceMenu: $serviceMenu)';
   }
 }
 
@@ -198,7 +203,8 @@ abstract mixin class $OrderDetailsResponseModelCopyWith<$Res> {
       List<OrderedServices> orderedServices,
       List<PromoItem> promoUsages,
       List<Payment> payment,
-      List<AdditionalCharges> additionalCharges});
+      List<AdditionalCharges> additionalCharges,
+      @JsonKey(name: 'serviceMenu') ServiceCategoryItemModel? serviceMenu});
 
   $CustomerNoteCopyWith<$Res>? get customerNote;
   $DriverNoteCopyWith<$Res>? get driverNote;
@@ -206,6 +212,7 @@ abstract mixin class $OrderDetailsResponseModelCopyWith<$Res> {
   $SelectedAddressCopyWith<$Res> get selectedAddress;
   $TimeSlotCopyWith<$Res> get pickupSlot;
   $TimeSlotCopyWith<$Res> get deliverySlot;
+  $ServiceCategoryItemModelCopyWith<$Res>? get serviceMenu;
 }
 
 /// @nodoc
@@ -251,6 +258,7 @@ class _$OrderDetailsResponseModelCopyWithImpl<$Res>
     Object? promoUsages = null,
     Object? payment = null,
     Object? additionalCharges = null,
+    Object? serviceMenu = freezed,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -373,6 +381,10 @@ class _$OrderDetailsResponseModelCopyWithImpl<$Res>
           ? _self.additionalCharges
           : additionalCharges // ignore: cast_nullable_to_non_nullable
               as List<AdditionalCharges>,
+      serviceMenu: freezed == serviceMenu
+          ? _self.serviceMenu
+          : serviceMenu // ignore: cast_nullable_to_non_nullable
+              as ServiceCategoryItemModel?,
     ));
   }
 
@@ -441,6 +453,20 @@ class _$OrderDetailsResponseModelCopyWithImpl<$Res>
   $TimeSlotCopyWith<$Res> get deliverySlot {
     return $TimeSlotCopyWith<$Res>(_self.deliverySlot, (value) {
       return _then(_self.copyWith(deliverySlot: value));
+    });
+  }
+
+  /// Create a copy of OrderDetailsResponseModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ServiceCategoryItemModelCopyWith<$Res>? get serviceMenu {
+    if (_self.serviceMenu == null) {
+      return null;
+    }
+
+    return $ServiceCategoryItemModelCopyWith<$Res>(_self.serviceMenu!, (value) {
+      return _then(_self.copyWith(serviceMenu: value));
     });
   }
 }
@@ -568,7 +594,9 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             List<OrderedServices> orderedServices,
             List<PromoItem> promoUsages,
             List<Payment> payment,
-            List<AdditionalCharges> additionalCharges)?
+            List<AdditionalCharges> additionalCharges,
+            @JsonKey(name: 'serviceMenu')
+            ServiceCategoryItemModel? serviceMenu)?
         $default, {
     required TResult orElse(),
   }) {
@@ -605,7 +633,8 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             _that.orderedServices,
             _that.promoUsages,
             _that.payment,
-            _that.additionalCharges);
+            _that.additionalCharges,
+            _that.serviceMenu);
       case _:
         return orElse();
     }
@@ -656,7 +685,8 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             List<OrderedServices> orderedServices,
             List<PromoItem> promoUsages,
             List<Payment> payment,
-            List<AdditionalCharges> additionalCharges)
+            List<AdditionalCharges> additionalCharges,
+            @JsonKey(name: 'serviceMenu') ServiceCategoryItemModel? serviceMenu)
         $default,
   ) {
     final _that = this;
@@ -692,7 +722,8 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             _that.orderedServices,
             _that.promoUsages,
             _that.payment,
-            _that.additionalCharges);
+            _that.additionalCharges,
+            _that.serviceMenu);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -742,7 +773,9 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             List<OrderedServices> orderedServices,
             List<PromoItem> promoUsages,
             List<Payment> payment,
-            List<AdditionalCharges> additionalCharges)?
+            List<AdditionalCharges> additionalCharges,
+            @JsonKey(name: 'serviceMenu')
+            ServiceCategoryItemModel? serviceMenu)?
         $default,
   ) {
     final _that = this;
@@ -778,7 +811,8 @@ extension OrderDetailsResponseModelPatterns on OrderDetailsResponseModel {
             _that.orderedServices,
             _that.promoUsages,
             _that.payment,
-            _that.additionalCharges);
+            _that.additionalCharges,
+            _that.serviceMenu);
       case _:
         return null;
     }
@@ -818,7 +852,8 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
       final List<OrderedServices> orderedServices = const [],
       final List<PromoItem> promoUsages = const [],
       final List<Payment> payment = const [],
-      final List<AdditionalCharges> additionalCharges = const []})
+      final List<AdditionalCharges> additionalCharges = const [],
+      @JsonKey(name: 'serviceMenu') this.serviceMenu})
       : _statusHistory = statusHistory,
         _orderedServices = orderedServices,
         _promoUsages = promoUsages,
@@ -948,6 +983,10 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
     return EqualUnmodifiableListView(_additionalCharges);
   }
 
+  @override
+  @JsonKey(name: 'serviceMenu')
+  final ServiceCategoryItemModel? serviceMenu;
+
   /// Create a copy of OrderDetailsResponseModel
   /// with the given fields replaced by the non-null parameter values.
   @override
@@ -1024,7 +1063,9 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
                 .equals(other._promoUsages, _promoUsages) &&
             const DeepCollectionEquality().equals(other._payment, _payment) &&
             const DeepCollectionEquality()
-                .equals(other._additionalCharges, _additionalCharges));
+                .equals(other._additionalCharges, _additionalCharges) &&
+            (identical(other.serviceMenu, serviceMenu) ||
+                other.serviceMenu == serviceMenu));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1060,12 +1101,13 @@ class _OrderDetailsResponseModel implements OrderDetailsResponseModel {
         const DeepCollectionEquality().hash(_orderedServices),
         const DeepCollectionEquality().hash(_promoUsages),
         const DeepCollectionEquality().hash(_payment),
-        const DeepCollectionEquality().hash(_additionalCharges)
+        const DeepCollectionEquality().hash(_additionalCharges),
+        serviceMenu
       ]);
 
   @override
   String toString() {
-    return 'OrderDetailsResponseModel(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, assignedPickupDriverId: $assignedPickupDriverId, assignedDeliveryDriverId: $assignedDeliveryDriverId, driverNote: $driverNote, customer: $customer, statusHistory: $statusHistory, selectedAddress: $selectedAddress, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, orderedServices: $orderedServices, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges)';
+    return 'OrderDetailsResponseModel(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, assignedPickupDriverId: $assignedPickupDriverId, assignedDeliveryDriverId: $assignedDeliveryDriverId, driverNote: $driverNote, customer: $customer, statusHistory: $statusHistory, selectedAddress: $selectedAddress, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, orderedServices: $orderedServices, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, serviceMenu: $serviceMenu)';
   }
 }
 
@@ -1107,7 +1149,8 @@ abstract mixin class _$OrderDetailsResponseModelCopyWith<$Res>
       List<OrderedServices> orderedServices,
       List<PromoItem> promoUsages,
       List<Payment> payment,
-      List<AdditionalCharges> additionalCharges});
+      List<AdditionalCharges> additionalCharges,
+      @JsonKey(name: 'serviceMenu') ServiceCategoryItemModel? serviceMenu});
 
   @override
   $CustomerNoteCopyWith<$Res>? get customerNote;
@@ -1121,6 +1164,8 @@ abstract mixin class _$OrderDetailsResponseModelCopyWith<$Res>
   $TimeSlotCopyWith<$Res> get pickupSlot;
   @override
   $TimeSlotCopyWith<$Res> get deliverySlot;
+  @override
+  $ServiceCategoryItemModelCopyWith<$Res>? get serviceMenu;
 }
 
 /// @nodoc
@@ -1166,6 +1211,7 @@ class __$OrderDetailsResponseModelCopyWithImpl<$Res>
     Object? promoUsages = null,
     Object? payment = null,
     Object? additionalCharges = null,
+    Object? serviceMenu = freezed,
   }) {
     return _then(_OrderDetailsResponseModel(
       id: null == id
@@ -1288,6 +1334,10 @@ class __$OrderDetailsResponseModelCopyWithImpl<$Res>
           ? _self._additionalCharges
           : additionalCharges // ignore: cast_nullable_to_non_nullable
               as List<AdditionalCharges>,
+      serviceMenu: freezed == serviceMenu
+          ? _self.serviceMenu
+          : serviceMenu // ignore: cast_nullable_to_non_nullable
+              as ServiceCategoryItemModel?,
     ));
   }
 
@@ -1357,6 +1407,584 @@ class __$OrderDetailsResponseModelCopyWithImpl<$Res>
     return $TimeSlotCopyWith<$Res>(_self.deliverySlot, (value) {
       return _then(_self.copyWith(deliverySlot: value));
     });
+  }
+
+  /// Create a copy of OrderDetailsResponseModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ServiceCategoryItemModelCopyWith<$Res>? get serviceMenu {
+    if (_self.serviceMenu == null) {
+      return null;
+    }
+
+    return $ServiceCategoryItemModelCopyWith<$Res>(_self.serviceMenu!, (value) {
+      return _then(_self.copyWith(serviceMenu: value));
+    });
+  }
+}
+
+/// @nodoc
+mixin _$ServiceCategoryItemModel {
+  @JsonKey(name: 'id')
+  String get id;
+  @JsonKey(name: 'active')
+  bool get active;
+  @JsonKey(name: 'type')
+  String get type;
+  @JsonKey(name: 'subTitle')
+  String get subTitle;
+  @JsonKey(name: 'title')
+  String get title;
+  @JsonKey(name: 'shortDesc')
+  String get shortDesc;
+  @JsonKey(name: 'coverPhoto')
+  String get coverPhoto;
+  @JsonKey(name: 'sortOrder')
+  int get sortOrder;
+  @JsonKey(name: 'placeOrderText')
+  String get placeOrderText;
+  @JsonKey(name: 'quickPickupText')
+  String get quickPickupText;
+
+  /// Create a copy of ServiceCategoryItemModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $ServiceCategoryItemModelCopyWith<ServiceCategoryItemModel> get copyWith =>
+      _$ServiceCategoryItemModelCopyWithImpl<ServiceCategoryItemModel>(
+          this as ServiceCategoryItemModel, _$identity);
+
+  /// Serializes this ServiceCategoryItemModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ServiceCategoryItemModel &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.subTitle, subTitle) ||
+                other.subTitle == subTitle) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.shortDesc, shortDesc) ||
+                other.shortDesc == shortDesc) &&
+            (identical(other.coverPhoto, coverPhoto) ||
+                other.coverPhoto == coverPhoto) &&
+            (identical(other.sortOrder, sortOrder) ||
+                other.sortOrder == sortOrder) &&
+            (identical(other.placeOrderText, placeOrderText) ||
+                other.placeOrderText == placeOrderText) &&
+            (identical(other.quickPickupText, quickPickupText) ||
+                other.quickPickupText == quickPickupText));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, active, type, subTitle,
+      title, shortDesc, coverPhoto, sortOrder, placeOrderText, quickPickupText);
+
+  @override
+  String toString() {
+    return 'ServiceCategoryItemModel(id: $id, active: $active, type: $type, subTitle: $subTitle, title: $title, shortDesc: $shortDesc, coverPhoto: $coverPhoto, sortOrder: $sortOrder, placeOrderText: $placeOrderText, quickPickupText: $quickPickupText)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $ServiceCategoryItemModelCopyWith<$Res> {
+  factory $ServiceCategoryItemModelCopyWith(ServiceCategoryItemModel value,
+          $Res Function(ServiceCategoryItemModel) _then) =
+      _$ServiceCategoryItemModelCopyWithImpl;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'id') String id,
+      @JsonKey(name: 'active') bool active,
+      @JsonKey(name: 'type') String type,
+      @JsonKey(name: 'subTitle') String subTitle,
+      @JsonKey(name: 'title') String title,
+      @JsonKey(name: 'shortDesc') String shortDesc,
+      @JsonKey(name: 'coverPhoto') String coverPhoto,
+      @JsonKey(name: 'sortOrder') int sortOrder,
+      @JsonKey(name: 'placeOrderText') String placeOrderText,
+      @JsonKey(name: 'quickPickupText') String quickPickupText});
+}
+
+/// @nodoc
+class _$ServiceCategoryItemModelCopyWithImpl<$Res>
+    implements $ServiceCategoryItemModelCopyWith<$Res> {
+  _$ServiceCategoryItemModelCopyWithImpl(this._self, this._then);
+
+  final ServiceCategoryItemModel _self;
+  final $Res Function(ServiceCategoryItemModel) _then;
+
+  /// Create a copy of ServiceCategoryItemModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? active = null,
+    Object? type = null,
+    Object? subTitle = null,
+    Object? title = null,
+    Object? shortDesc = null,
+    Object? coverPhoto = null,
+    Object? sortOrder = null,
+    Object? placeOrderText = null,
+    Object? quickPickupText = null,
+  }) {
+    return _then(_self.copyWith(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _self.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      subTitle: null == subTitle
+          ? _self.subTitle
+          : subTitle // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _self.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      shortDesc: null == shortDesc
+          ? _self.shortDesc
+          : shortDesc // ignore: cast_nullable_to_non_nullable
+              as String,
+      coverPhoto: null == coverPhoto
+          ? _self.coverPhoto
+          : coverPhoto // ignore: cast_nullable_to_non_nullable
+              as String,
+      sortOrder: null == sortOrder
+          ? _self.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as int,
+      placeOrderText: null == placeOrderText
+          ? _self.placeOrderText
+          : placeOrderText // ignore: cast_nullable_to_non_nullable
+              as String,
+      quickPickupText: null == quickPickupText
+          ? _self.quickPickupText
+          : quickPickupText // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// Adds pattern-matching-related methods to [ServiceCategoryItemModel].
+extension ServiceCategoryItemModelPatterns on ServiceCategoryItemModel {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_ServiceCategoryItemModel value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _ServiceCategoryItemModel() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_ServiceCategoryItemModel value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ServiceCategoryItemModel():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_ServiceCategoryItemModel value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ServiceCategoryItemModel() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'type') String type,
+            @JsonKey(name: 'subTitle') String subTitle,
+            @JsonKey(name: 'title') String title,
+            @JsonKey(name: 'shortDesc') String shortDesc,
+            @JsonKey(name: 'coverPhoto') String coverPhoto,
+            @JsonKey(name: 'sortOrder') int sortOrder,
+            @JsonKey(name: 'placeOrderText') String placeOrderText,
+            @JsonKey(name: 'quickPickupText') String quickPickupText)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _ServiceCategoryItemModel() when $default != null:
+        return $default(
+            _that.id,
+            _that.active,
+            _that.type,
+            _that.subTitle,
+            _that.title,
+            _that.shortDesc,
+            _that.coverPhoto,
+            _that.sortOrder,
+            _that.placeOrderText,
+            _that.quickPickupText);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'type') String type,
+            @JsonKey(name: 'subTitle') String subTitle,
+            @JsonKey(name: 'title') String title,
+            @JsonKey(name: 'shortDesc') String shortDesc,
+            @JsonKey(name: 'coverPhoto') String coverPhoto,
+            @JsonKey(name: 'sortOrder') int sortOrder,
+            @JsonKey(name: 'placeOrderText') String placeOrderText,
+            @JsonKey(name: 'quickPickupText') String quickPickupText)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ServiceCategoryItemModel():
+        return $default(
+            _that.id,
+            _that.active,
+            _that.type,
+            _that.subTitle,
+            _that.title,
+            _that.shortDesc,
+            _that.coverPhoto,
+            _that.sortOrder,
+            _that.placeOrderText,
+            _that.quickPickupText);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'id') String id,
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'type') String type,
+            @JsonKey(name: 'subTitle') String subTitle,
+            @JsonKey(name: 'title') String title,
+            @JsonKey(name: 'shortDesc') String shortDesc,
+            @JsonKey(name: 'coverPhoto') String coverPhoto,
+            @JsonKey(name: 'sortOrder') int sortOrder,
+            @JsonKey(name: 'placeOrderText') String placeOrderText,
+            @JsonKey(name: 'quickPickupText') String quickPickupText)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _ServiceCategoryItemModel() when $default != null:
+        return $default(
+            _that.id,
+            _that.active,
+            _that.type,
+            _that.subTitle,
+            _that.title,
+            _that.shortDesc,
+            _that.coverPhoto,
+            _that.sortOrder,
+            _that.placeOrderText,
+            _that.quickPickupText);
+      case _:
+        return null;
+    }
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _ServiceCategoryItemModel implements ServiceCategoryItemModel {
+  _ServiceCategoryItemModel(
+      {@JsonKey(name: 'id') this.id = '',
+      @JsonKey(name: 'active') this.active = true,
+      @JsonKey(name: 'type') this.type = '',
+      @JsonKey(name: 'subTitle') this.subTitle = '',
+      @JsonKey(name: 'title') this.title = '',
+      @JsonKey(name: 'shortDesc') this.shortDesc = '',
+      @JsonKey(name: 'coverPhoto') this.coverPhoto = '',
+      @JsonKey(name: 'sortOrder') this.sortOrder = 0,
+      @JsonKey(name: 'placeOrderText') this.placeOrderText = '',
+      @JsonKey(name: 'quickPickupText') this.quickPickupText = ''});
+  factory _ServiceCategoryItemModel.fromJson(Map<String, dynamic> json) =>
+      _$ServiceCategoryItemModelFromJson(json);
+
+  @override
+  @JsonKey(name: 'id')
+  final String id;
+  @override
+  @JsonKey(name: 'active')
+  final bool active;
+  @override
+  @JsonKey(name: 'type')
+  final String type;
+  @override
+  @JsonKey(name: 'subTitle')
+  final String subTitle;
+  @override
+  @JsonKey(name: 'title')
+  final String title;
+  @override
+  @JsonKey(name: 'shortDesc')
+  final String shortDesc;
+  @override
+  @JsonKey(name: 'coverPhoto')
+  final String coverPhoto;
+  @override
+  @JsonKey(name: 'sortOrder')
+  final int sortOrder;
+  @override
+  @JsonKey(name: 'placeOrderText')
+  final String placeOrderText;
+  @override
+  @JsonKey(name: 'quickPickupText')
+  final String quickPickupText;
+
+  /// Create a copy of ServiceCategoryItemModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ServiceCategoryItemModelCopyWith<_ServiceCategoryItemModel> get copyWith =>
+      __$ServiceCategoryItemModelCopyWithImpl<_ServiceCategoryItemModel>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$ServiceCategoryItemModelToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ServiceCategoryItemModel &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.subTitle, subTitle) ||
+                other.subTitle == subTitle) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.shortDesc, shortDesc) ||
+                other.shortDesc == shortDesc) &&
+            (identical(other.coverPhoto, coverPhoto) ||
+                other.coverPhoto == coverPhoto) &&
+            (identical(other.sortOrder, sortOrder) ||
+                other.sortOrder == sortOrder) &&
+            (identical(other.placeOrderText, placeOrderText) ||
+                other.placeOrderText == placeOrderText) &&
+            (identical(other.quickPickupText, quickPickupText) ||
+                other.quickPickupText == quickPickupText));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, active, type, subTitle,
+      title, shortDesc, coverPhoto, sortOrder, placeOrderText, quickPickupText);
+
+  @override
+  String toString() {
+    return 'ServiceCategoryItemModel(id: $id, active: $active, type: $type, subTitle: $subTitle, title: $title, shortDesc: $shortDesc, coverPhoto: $coverPhoto, sortOrder: $sortOrder, placeOrderText: $placeOrderText, quickPickupText: $quickPickupText)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ServiceCategoryItemModelCopyWith<$Res>
+    implements $ServiceCategoryItemModelCopyWith<$Res> {
+  factory _$ServiceCategoryItemModelCopyWith(_ServiceCategoryItemModel value,
+          $Res Function(_ServiceCategoryItemModel) _then) =
+      __$ServiceCategoryItemModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'id') String id,
+      @JsonKey(name: 'active') bool active,
+      @JsonKey(name: 'type') String type,
+      @JsonKey(name: 'subTitle') String subTitle,
+      @JsonKey(name: 'title') String title,
+      @JsonKey(name: 'shortDesc') String shortDesc,
+      @JsonKey(name: 'coverPhoto') String coverPhoto,
+      @JsonKey(name: 'sortOrder') int sortOrder,
+      @JsonKey(name: 'placeOrderText') String placeOrderText,
+      @JsonKey(name: 'quickPickupText') String quickPickupText});
+}
+
+/// @nodoc
+class __$ServiceCategoryItemModelCopyWithImpl<$Res>
+    implements _$ServiceCategoryItemModelCopyWith<$Res> {
+  __$ServiceCategoryItemModelCopyWithImpl(this._self, this._then);
+
+  final _ServiceCategoryItemModel _self;
+  final $Res Function(_ServiceCategoryItemModel) _then;
+
+  /// Create a copy of ServiceCategoryItemModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? active = null,
+    Object? type = null,
+    Object? subTitle = null,
+    Object? title = null,
+    Object? shortDesc = null,
+    Object? coverPhoto = null,
+    Object? sortOrder = null,
+    Object? placeOrderText = null,
+    Object? quickPickupText = null,
+  }) {
+    return _then(_ServiceCategoryItemModel(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _self.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      subTitle: null == subTitle
+          ? _self.subTitle
+          : subTitle // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _self.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      shortDesc: null == shortDesc
+          ? _self.shortDesc
+          : shortDesc // ignore: cast_nullable_to_non_nullable
+              as String,
+      coverPhoto: null == coverPhoto
+          ? _self.coverPhoto
+          : coverPhoto // ignore: cast_nullable_to_non_nullable
+              as String,
+      sortOrder: null == sortOrder
+          ? _self.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as int,
+      placeOrderText: null == placeOrderText
+          ? _self.placeOrderText
+          : placeOrderText // ignore: cast_nullable_to_non_nullable
+              as String,
+      quickPickupText: null == quickPickupText
+          ? _self.quickPickupText
+          : quickPickupText // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

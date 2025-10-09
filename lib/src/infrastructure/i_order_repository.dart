@@ -102,9 +102,10 @@ class OrderRepositoryImplementation implements OrderRepository {
   }
 
   @override
-  Future<List<ServiceListDatamodel>> getServices(int limit, int skip) async {
+  Future<List<ServiceListDatamodel>> getServices(int limit, int skip,String? serviceMenuId) async {
     try {
-      final Map<String, dynamic> params = {"limit": limit, "skip": skip}.clean();
+      // log(serviceMenuId.toString(),name: "service mednu id chenking fron order repository");
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip,"serviceMenuId": serviceMenuId,}.clean();
 
       log('Fetching services with params: $params', name: "getServices");
       var response = await api.profile.get(ApiEndpoints().serviceList, queryParameters: params);

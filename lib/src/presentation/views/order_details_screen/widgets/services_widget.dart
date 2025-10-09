@@ -25,12 +25,13 @@ class ServicesWidget extends StatefulWidget {
     required this.orderState,
     required this.orderId,
     required this.scannedQRCodes,
-    required this.additionalNotesController,
+    required this.additionalNotesController, 
   });
   final OrderState orderState;
   final String orderId;
   final ValueNotifier<Set<String>> scannedQRCodes;
   final TextEditingController additionalNotesController;
+
 
   @override
   State<ServicesWidget> createState() => _ServicesWidgetState();
@@ -152,6 +153,7 @@ class _ServicesWidgetState extends State<ServicesWidget> {
                                     CustomBottomSheetWidget(
                                       context: context,
                                       child: ScanNewBagBottomsheet(
+                                        serviceMenuId:widget.orderState.orderDetails.serviceMenu?.id ,
                                           bagId:bagId,
                                     editableId: isManual,
                                         orderId: widget.orderId,

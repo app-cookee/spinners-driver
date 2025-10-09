@@ -285,7 +285,8 @@ extension OrderEventPatterns on OrderEvent {
     TResult Function(String orderItemId, String bagId)? addBag,
     TResult Function(String bagId, String orderId, String serviceId)?
         createNewBag,
-    TResult Function(int limit, int skip)? getServicesList,
+    TResult Function(int limit, int skip, String? serviceMenuId)?
+        getServicesList,
     TResult Function(String orderItemId, String bagId)?
         updateScannedBagsLocally,
     TResult Function(String serviceId, String bagId)?
@@ -341,7 +342,7 @@ extension OrderEventPatterns on OrderEvent {
       case _CreateNewBag() when createNewBag != null:
         return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
       case _GetServicesList() when getServicesList != null:
-        return getServicesList(_that.limit, _that.skip);
+        return getServicesList(_that.limit, _that.skip, _that.serviceMenuId);
       case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
         return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
       case _UpdateScannedBagsForNewBag()
@@ -409,7 +410,8 @@ extension OrderEventPatterns on OrderEvent {
     required TResult Function(String orderItemId, String bagId) addBag,
     required TResult Function(String bagId, String orderId, String serviceId)
         createNewBag,
-    required TResult Function(int limit, int skip) getServicesList,
+    required TResult Function(int limit, int skip, String? serviceMenuId)
+        getServicesList,
     required TResult Function(String orderItemId, String bagId)
         updateScannedBagsLocally,
     required TResult Function(String serviceId, String bagId)
@@ -464,7 +466,7 @@ extension OrderEventPatterns on OrderEvent {
       case _CreateNewBag():
         return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
       case _GetServicesList():
-        return getServicesList(_that.limit, _that.skip);
+        return getServicesList(_that.limit, _that.skip, _that.serviceMenuId);
       case _UpdateScannedBagsLocally():
         return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
       case _UpdateScannedBagsForNewBag():
@@ -517,7 +519,8 @@ extension OrderEventPatterns on OrderEvent {
     TResult? Function(String orderItemId, String bagId)? addBag,
     TResult? Function(String bagId, String orderId, String serviceId)?
         createNewBag,
-    TResult? Function(int limit, int skip)? getServicesList,
+    TResult? Function(int limit, int skip, String? serviceMenuId)?
+        getServicesList,
     TResult? Function(String orderItemId, String bagId)?
         updateScannedBagsLocally,
     TResult? Function(String serviceId, String bagId)?
@@ -572,7 +575,7 @@ extension OrderEventPatterns on OrderEvent {
       case _CreateNewBag() when createNewBag != null:
         return createNewBag(_that.bagId, _that.orderId, _that.serviceId);
       case _GetServicesList() when getServicesList != null:
-        return getServicesList(_that.limit, _that.skip);
+        return getServicesList(_that.limit, _that.skip, _that.serviceMenuId);
       case _UpdateScannedBagsLocally() when updateScannedBagsLocally != null:
         return updateScannedBagsLocally(_that.orderItemId, _that.bagId);
       case _UpdateScannedBagsForNewBag()
@@ -1142,10 +1145,12 @@ class __$CreateNewBagCopyWithImpl<$Res>
 /// @nodoc
 
 class _GetServicesList implements OrderEvent {
-  const _GetServicesList({required this.limit, required this.skip});
+  const _GetServicesList(
+      {required this.limit, required this.skip, this.serviceMenuId});
 
   final int limit;
   final int skip;
+  final String? serviceMenuId;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1160,15 +1165,17 @@ class _GetServicesList implements OrderEvent {
         (other.runtimeType == runtimeType &&
             other is _GetServicesList &&
             (identical(other.limit, limit) || other.limit == limit) &&
-            (identical(other.skip, skip) || other.skip == skip));
+            (identical(other.skip, skip) || other.skip == skip) &&
+            (identical(other.serviceMenuId, serviceMenuId) ||
+                other.serviceMenuId == serviceMenuId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, limit, skip);
+  int get hashCode => Object.hash(runtimeType, limit, skip, serviceMenuId);
 
   @override
   String toString() {
-    return 'OrderEvent.getServicesList(limit: $limit, skip: $skip)';
+    return 'OrderEvent.getServicesList(limit: $limit, skip: $skip, serviceMenuId: $serviceMenuId)';
   }
 }
 
@@ -1179,7 +1186,7 @@ abstract mixin class _$GetServicesListCopyWith<$Res>
           _GetServicesList value, $Res Function(_GetServicesList) _then) =
       __$GetServicesListCopyWithImpl;
   @useResult
-  $Res call({int limit, int skip});
+  $Res call({int limit, int skip, String? serviceMenuId});
 }
 
 /// @nodoc
@@ -1196,6 +1203,7 @@ class __$GetServicesListCopyWithImpl<$Res>
   $Res call({
     Object? limit = null,
     Object? skip = null,
+    Object? serviceMenuId = freezed,
   }) {
     return _then(_GetServicesList(
       limit: null == limit
@@ -1206,6 +1214,10 @@ class __$GetServicesListCopyWithImpl<$Res>
           ? _self.skip
           : skip // ignore: cast_nullable_to_non_nullable
               as int,
+      serviceMenuId: freezed == serviceMenuId
+          ? _self.serviceMenuId
+          : serviceMenuId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }

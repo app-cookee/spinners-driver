@@ -39,10 +39,32 @@ abstract class OrderDetailsResponseModel with _$OrderDetailsResponseModel{
      @Default([]) List<PromoItem> promoUsages,
    @Default([]) List<Payment> payment,
     @Default([]) List<AdditionalCharges> additionalCharges,
+      @JsonKey(name: 'serviceMenu') ServiceCategoryItemModel? serviceMenu,
   }) = _OrderDetailsResponseModel;
 
   factory OrderDetailsResponseModel.fromJson(Map<String, dynamic> json) => _$OrderDetailsResponseModelFromJson(json);
 }
+
+
+
+
+@freezed
+abstract class ServiceCategoryItemModel with _$ServiceCategoryItemModel {
+  factory ServiceCategoryItemModel(
+      {@JsonKey(name: 'id') @Default('') String id,
+      @JsonKey(name: 'active') @Default(true) bool active,
+      @JsonKey(name: 'type') @Default('') String type,
+      @JsonKey(name: 'subTitle') @Default('') String subTitle,
+      @JsonKey(name: 'title') @Default('') String title,
+      @JsonKey(name: 'shortDesc') @Default('') String shortDesc,
+      @JsonKey(name: 'coverPhoto') @Default('') String coverPhoto,
+      @JsonKey(name: 'sortOrder') @Default(0) int sortOrder,
+      @JsonKey(name: 'placeOrderText') @Default('') String placeOrderText,
+      @JsonKey(name: 'quickPickupText') @Default('') String quickPickupText,}) = _ServiceCategoryItemModel;
+
+  factory ServiceCategoryItemModel.fromJson(Map<String, dynamic> json) => _$ServiceCategoryItemModelFromJson(json);
+}
+
 
 @freezed
 abstract class DriverNote with _$DriverNote{

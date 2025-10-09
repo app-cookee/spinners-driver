@@ -8,7 +8,7 @@ abstract class OrderEvent with _$OrderEvent {
   const factory OrderEvent.confirmPickup({required String orderId, required String driverNotes}) = _ConfirmPickup;
   const factory OrderEvent.addBag({required String orderItemId, required String bagId}) = _AddBag;
   const factory OrderEvent.createNewBag({required String bagId, required String orderId, required String serviceId}) = _CreateNewBag;
-  const factory OrderEvent.getServicesList({required int limit, required int skip}) = _GetServicesList;
+  const factory OrderEvent.getServicesList({required int limit, required int skip,String? serviceMenuId}) = _GetServicesList;
   const factory OrderEvent.updateScannedBagsLocally({required String orderItemId, required String bagId}) = _UpdateScannedBagsLocally;
   const factory OrderEvent.updateScannedBagsForNewBag({required String serviceId, required String bagId}) = _UpdateScannedBagsForNewBag;
   const factory OrderEvent.removeBag({required String id}) = _RemoveBag;
