@@ -257,21 +257,10 @@ abstract class SelectedAddress with _$SelectedAddress {
 @freezed
 abstract class Store with _$Store {
   const factory Store({
-    @JsonKey(name: 'user') StoreUser? user,
+    @JsonKey(name: 'contactNumber') @Default("") String contactNumber,
   }) = _Store;
 
   factory Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);
-}
-
-@freezed
-abstract class StoreUser with _$StoreUser {
-  const factory StoreUser({
-    @JsonKey(name: 'firstName') @Default("") String firstName,
-    @JsonKey(name: 'lastName') @Default("") String lastName,
-  }) = _StoreUser;
-
-  factory StoreUser.fromJson(Map<String, dynamic> json) =>
-      _$StoreUserFromJson(json);
 }
 
 @freezed

@@ -7565,8 +7565,8 @@ class __$SelectedAddressCopyWithImpl<$Res>
 
 /// @nodoc
 mixin _$Store {
-  @JsonKey(name: 'user')
-  StoreUser? get user;
+  @JsonKey(name: 'contactNumber')
+  String get contactNumber;
 
   /// Create a copy of Store
   /// with the given fields replaced by the non-null parameter values.
@@ -7583,16 +7583,17 @@ mixin _$Store {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is Store &&
-            (identical(other.user, user) || other.user == user));
+            (identical(other.contactNumber, contactNumber) ||
+                other.contactNumber == contactNumber));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, user);
+  int get hashCode => Object.hash(runtimeType, contactNumber);
 
   @override
   String toString() {
-    return 'Store(user: $user)';
+    return 'Store(contactNumber: $contactNumber)';
   }
 }
 
@@ -7601,9 +7602,7 @@ abstract mixin class $StoreCopyWith<$Res> {
   factory $StoreCopyWith(Store value, $Res Function(Store) _then) =
       _$StoreCopyWithImpl;
   @useResult
-  $Res call({@JsonKey(name: 'user') StoreUser? user});
-
-  $StoreUserCopyWith<$Res>? get user;
+  $Res call({@JsonKey(name: 'contactNumber') String contactNumber});
 }
 
 /// @nodoc
@@ -7618,28 +7617,14 @@ class _$StoreCopyWithImpl<$Res> implements $StoreCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? user = freezed,
+    Object? contactNumber = null,
   }) {
     return _then(_self.copyWith(
-      user: freezed == user
-          ? _self.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as StoreUser?,
+      contactNumber: null == contactNumber
+          ? _self.contactNumber
+          : contactNumber // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
-  }
-
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $StoreUserCopyWith<$Res>? get user {
-    if (_self.user == null) {
-      return null;
-    }
-
-    return $StoreUserCopyWith<$Res>(_self.user!, (value) {
-      return _then(_self.copyWith(user: value));
-    });
   }
 }
 
@@ -7736,13 +7721,14 @@ extension StorePatterns on Store {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(@JsonKey(name: 'user') StoreUser? user)? $default, {
+    TResult Function(@JsonKey(name: 'contactNumber') String contactNumber)?
+        $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _Store() when $default != null:
-        return $default(_that.user);
+        return $default(_that.contactNumber);
       case _:
         return orElse();
     }
@@ -7763,12 +7749,13 @@ extension StorePatterns on Store {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(@JsonKey(name: 'user') StoreUser? user) $default,
+    TResult Function(@JsonKey(name: 'contactNumber') String contactNumber)
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _Store():
-        return $default(_that.user);
+        return $default(_that.contactNumber);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -7788,12 +7775,13 @@ extension StorePatterns on Store {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(@JsonKey(name: 'user') StoreUser? user)? $default,
+    TResult? Function(@JsonKey(name: 'contactNumber') String contactNumber)?
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _Store() when $default != null:
-        return $default(_that.user);
+        return $default(_that.contactNumber);
       case _:
         return null;
     }
@@ -7803,12 +7791,12 @@ extension StorePatterns on Store {
 /// @nodoc
 @JsonSerializable()
 class _Store implements Store {
-  const _Store({@JsonKey(name: 'user') this.user});
+  const _Store({@JsonKey(name: 'contactNumber') this.contactNumber = ""});
   factory _Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);
 
   @override
-  @JsonKey(name: 'user')
-  final StoreUser? user;
+  @JsonKey(name: 'contactNumber')
+  final String contactNumber;
 
   /// Create a copy of Store
   /// with the given fields replaced by the non-null parameter values.
@@ -7830,16 +7818,17 @@ class _Store implements Store {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Store &&
-            (identical(other.user, user) || other.user == user));
+            (identical(other.contactNumber, contactNumber) ||
+                other.contactNumber == contactNumber));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, user);
+  int get hashCode => Object.hash(runtimeType, contactNumber);
 
   @override
   String toString() {
-    return 'Store(user: $user)';
+    return 'Store(contactNumber: $contactNumber)';
   }
 }
 
@@ -7849,10 +7838,7 @@ abstract mixin class _$StoreCopyWith<$Res> implements $StoreCopyWith<$Res> {
       __$StoreCopyWithImpl;
   @override
   @useResult
-  $Res call({@JsonKey(name: 'user') StoreUser? user});
-
-  @override
-  $StoreUserCopyWith<$Res>? get user;
+  $Res call({@JsonKey(name: 'contactNumber') String contactNumber});
 }
 
 /// @nodoc
@@ -7867,358 +7853,12 @@ class __$StoreCopyWithImpl<$Res> implements _$StoreCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? user = freezed,
+    Object? contactNumber = null,
   }) {
     return _then(_Store(
-      user: freezed == user
-          ? _self.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as StoreUser?,
-    ));
-  }
-
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $StoreUserCopyWith<$Res>? get user {
-    if (_self.user == null) {
-      return null;
-    }
-
-    return $StoreUserCopyWith<$Res>(_self.user!, (value) {
-      return _then(_self.copyWith(user: value));
-    });
-  }
-}
-
-/// @nodoc
-mixin _$StoreUser {
-  @JsonKey(name: 'firstName')
-  String get firstName;
-  @JsonKey(name: 'lastName')
-  String get lastName;
-
-  /// Create a copy of StoreUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $StoreUserCopyWith<StoreUser> get copyWith =>
-      _$StoreUserCopyWithImpl<StoreUser>(this as StoreUser, _$identity);
-
-  /// Serializes this StoreUser to a JSON map.
-  Map<String, dynamic> toJson();
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is StoreUser &&
-            (identical(other.firstName, firstName) ||
-                other.firstName == firstName) &&
-            (identical(other.lastName, lastName) ||
-                other.lastName == lastName));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, firstName, lastName);
-
-  @override
-  String toString() {
-    return 'StoreUser(firstName: $firstName, lastName: $lastName)';
-  }
-}
-
-/// @nodoc
-abstract mixin class $StoreUserCopyWith<$Res> {
-  factory $StoreUserCopyWith(StoreUser value, $Res Function(StoreUser) _then) =
-      _$StoreUserCopyWithImpl;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'firstName') String firstName,
-      @JsonKey(name: 'lastName') String lastName});
-}
-
-/// @nodoc
-class _$StoreUserCopyWithImpl<$Res> implements $StoreUserCopyWith<$Res> {
-  _$StoreUserCopyWithImpl(this._self, this._then);
-
-  final StoreUser _self;
-  final $Res Function(StoreUser) _then;
-
-  /// Create a copy of StoreUser
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? firstName = null,
-    Object? lastName = null,
-  }) {
-    return _then(_self.copyWith(
-      firstName: null == firstName
-          ? _self.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastName: null == lastName
-          ? _self.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// Adds pattern-matching-related methods to [StoreUser].
-extension StoreUserPatterns on StoreUser {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
-
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_StoreUser value)? $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _StoreUser() when $default != null:
-        return $default(_that);
-      case _:
-        return orElse();
-    }
-  }
-
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
-
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_StoreUser value) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StoreUser():
-        return $default(_that);
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
-
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
-
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_StoreUser value)? $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StoreUser() when $default != null:
-        return $default(_that);
-      case _:
-        return null;
-    }
-  }
-
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
-
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(@JsonKey(name: 'firstName') String firstName,
-            @JsonKey(name: 'lastName') String lastName)?
-        $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _StoreUser() when $default != null:
-        return $default(_that.firstName, _that.lastName);
-      case _:
-        return orElse();
-    }
-  }
-
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
-
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(@JsonKey(name: 'firstName') String firstName,
-            @JsonKey(name: 'lastName') String lastName)
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StoreUser():
-        return $default(_that.firstName, _that.lastName);
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
-
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
-
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(@JsonKey(name: 'firstName') String firstName,
-            @JsonKey(name: 'lastName') String lastName)?
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StoreUser() when $default != null:
-        return $default(_that.firstName, _that.lastName);
-      case _:
-        return null;
-    }
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _StoreUser implements StoreUser {
-  const _StoreUser(
-      {@JsonKey(name: 'firstName') this.firstName = "",
-      @JsonKey(name: 'lastName') this.lastName = ""});
-  factory _StoreUser.fromJson(Map<String, dynamic> json) =>
-      _$StoreUserFromJson(json);
-
-  @override
-  @JsonKey(name: 'firstName')
-  final String firstName;
-  @override
-  @JsonKey(name: 'lastName')
-  final String lastName;
-
-  /// Create a copy of StoreUser
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$StoreUserCopyWith<_StoreUser> get copyWith =>
-      __$StoreUserCopyWithImpl<_StoreUser>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$StoreUserToJson(
-      this,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _StoreUser &&
-            (identical(other.firstName, firstName) ||
-                other.firstName == firstName) &&
-            (identical(other.lastName, lastName) ||
-                other.lastName == lastName));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, firstName, lastName);
-
-  @override
-  String toString() {
-    return 'StoreUser(firstName: $firstName, lastName: $lastName)';
-  }
-}
-
-/// @nodoc
-abstract mixin class _$StoreUserCopyWith<$Res>
-    implements $StoreUserCopyWith<$Res> {
-  factory _$StoreUserCopyWith(
-          _StoreUser value, $Res Function(_StoreUser) _then) =
-      __$StoreUserCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'firstName') String firstName,
-      @JsonKey(name: 'lastName') String lastName});
-}
-
-/// @nodoc
-class __$StoreUserCopyWithImpl<$Res> implements _$StoreUserCopyWith<$Res> {
-  __$StoreUserCopyWithImpl(this._self, this._then);
-
-  final _StoreUser _self;
-  final $Res Function(_StoreUser) _then;
-
-  /// Create a copy of StoreUser
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? firstName = null,
-    Object? lastName = null,
-  }) {
-    return _then(_StoreUser(
-      firstName: null == firstName
-          ? _self.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastName: null == lastName
-          ? _self.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
+      contactNumber: null == contactNumber
+          ? _self.contactNumber
+          : contactNumber // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

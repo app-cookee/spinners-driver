@@ -358,24 +358,11 @@ Map<String, dynamic> _$SelectedAddressToJson(_SelectedAddress instance) =>
     };
 
 _Store _$StoreFromJson(Map<String, dynamic> json) => _Store(
-      user: json['user'] == null
-          ? null
-          : StoreUser.fromJson(json['user'] as Map<String, dynamic>),
+      contactNumber: json['contactNumber'] as String? ?? "",
     );
 
 Map<String, dynamic> _$StoreToJson(_Store instance) => <String, dynamic>{
-      'user': instance.user,
-    };
-
-_StoreUser _$StoreUserFromJson(Map<String, dynamic> json) => _StoreUser(
-      firstName: json['firstName'] as String? ?? "",
-      lastName: json['lastName'] as String? ?? "",
-    );
-
-Map<String, dynamic> _$StoreUserToJson(_StoreUser instance) =>
-    <String, dynamic>{
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
+      'contactNumber': instance.contactNumber,
     };
 
 _TimeSlot _$TimeSlotFromJson(Map<String, dynamic> json) => _TimeSlot(

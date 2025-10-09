@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -301,13 +303,16 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                       height: 4.dp,
                     ),
                   ),
+                
+                 
                   Positioned(
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      child: dState.orderDetails.id.isEmpty
+                      child: dState.orderDetails.id.isEmpty||dState.orderDetails.status=="delivered"
                           ? const SizedBox.shrink()
-                          : _footerButton(
+                         
+                          : _footerButton(state: dState,
                               isCompleted: dState.orderDetails.statusHistory
                                   .map((status) => status.status)
                                   .toSet()
@@ -361,7 +366,8 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
       {required int totalItemsCount,
       required double totalAmount,
       required bool isCompleted,
-      required String orderId}) {
+      required String orderId,
+      required DeliveryState state}) {
     return Container(
       padding:
           EdgeInsets.only(top: 12.dp, left: 16.dp, right: 16.dp, bottom: 24.dp),
@@ -485,10 +491,13 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
               ),
             ),
           Gap(8.dp),
+           
           PrimaryButtonWidget(
             buttonBgImage: AppImages.buttonGreyBg,
             backgroundColor: AppColors.grey1Color,
-            onPressed: () {},
+            onPressed: () {
+              LauncherUtils.launchWhatsApp(state.orderDetails.store?.contactNumber??"", "");
+            },
             text: 'Report Issue',
           ),
         ],
