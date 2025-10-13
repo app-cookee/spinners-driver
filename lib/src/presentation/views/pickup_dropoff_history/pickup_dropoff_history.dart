@@ -134,8 +134,6 @@ DateTime _subtractMonths(DateTime date, int months) {
     // log("load more itrms");
     final orderState = context.read<OrderBloc>().state;
 
-                 log(orderState.myOrdersisLoadingMore .toString(),name: "dddddddddddddddddddddddddddddddddd");
-      log(orderState.myOrdershasMore.toString(),name: "gggggggggggggggggg");
    
 
     // Prevent duplicate calls
