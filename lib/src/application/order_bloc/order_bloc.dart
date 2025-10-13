@@ -146,7 +146,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     ));
       var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText);
        final newList = [...state.ordersList, ...response.orderList];
-           final bool hasMoreItems = response.orderList.length >= event.limit;
+          
+              final bool hasMoreItems = newList.length < response.totalCount;
               emit(state.copyWith(
        ordersList : newList,
         totalCount: response.totalCount,
@@ -476,7 +477,9 @@ FutureOr<void> _onGetMyOrders(_GetMyOrders event, Emitter<OrderState> emit) asyn
     ));
       var response = await orderRepository.getMyOrdersList(event.limit,event.skip,event.filter,event.searchText,event.from,event.to);
        final newList = [...state.myordersList, ...response.orderList];
-           final bool hasMoreItems = response.orderList.length >= event.limit;
+
+           final bool hasMoreItems = newList.length < response.totalCount;
+
               emit(state.copyWith(
        myordersList : newList,
         myOrdersCount: response.totalCount,
@@ -522,7 +525,7 @@ FutureOr<void> _onGetMyOrders(_GetMyOrders event, Emitter<OrderState> emit) asyn
     ));
       var response = await orderRepository.getCashSettlmentsList(event.limit,event.skip,event.from,event.to);
        final newList = [...state.cashSettlmentsList, ...response.cashSettlementList];
-           final bool hasMoreItems = response.cashSettlementList.length >= event.limit;
+             final bool hasMoreItems = newList.length < response.totalCount;
               emit(state.copyWith(
        cashSettlmentsList : newList,
         cashSettlmentsCount: response.totalCount,

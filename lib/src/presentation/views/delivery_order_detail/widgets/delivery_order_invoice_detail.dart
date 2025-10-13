@@ -293,10 +293,7 @@ Row(
     ],
   ),
                 Gap(16.dp),
-                if(state.orderDetails.status=="delivered")
-                const InvoiceButton(
-                    imagePath: AppImages.pin,
-                    text: "Download Invoice (PDF)"),
+              
                 SizedBox(
                   height: 20.h + 18.dp,
                 )

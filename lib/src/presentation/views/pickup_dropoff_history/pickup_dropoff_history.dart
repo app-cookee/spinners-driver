@@ -134,6 +134,10 @@ DateTime _subtractMonths(DateTime date, int months) {
     // log("load more itrms");
     final orderState = context.read<OrderBloc>().state;
 
+                 log(orderState.myOrdersisLoadingMore .toString(),name: "dddddddddddddddddddddddddddddddddd");
+      log(orderState.myOrdershasMore.toString(),name: "gggggggggggggggggg");
+   
+
     // Prevent duplicate calls
     if (orderState.myOrdersisLoadingMore || !orderState.myOrdershasMore) return;
 
@@ -149,7 +153,7 @@ DateTime _subtractMonths(DateTime date, int months) {
     // Trigger pagination with filters
     context.read<OrderBloc>().add(
           OrderEvent.paginateMyOrdersList(
-              skip: orderState.ordersList.length,
+              skip: orderState.myordersList.length, 
               limit: _itemsPerPage,
               filter: statusString,
              
