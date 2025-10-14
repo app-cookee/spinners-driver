@@ -105,6 +105,8 @@ void _loadMoreItems() {
   final lat = latitudeNotifier.value;
   final lng = longitudeNotifier.value;
 
+    final params = getTodayParams();
+
   // Trigger pagination with filters
   context.read<OrderBloc>().add(
     OrderEvent.paginateOrdersList(
@@ -114,10 +116,29 @@ void _loadMoreItems() {
       expressOnly: isExpressOnlyEnabled,
       latitude: lat,
       longitude: lng,
-      searchText: _currentSearchQuery.isEmpty ? null : _currentSearchQuery
+      searchText: _currentSearchQuery.isEmpty ? null : _currentSearchQuery,
+         pickupFrom: params["from"]??"",
+  pickupTo: params["to"]??"",
+  deliveryFrom:params["from"]??"",
+  deliveryTo:params["to"]??""
+,
     ),
   );
 }
+
+
+Map<String, String> getTodayParams() {
+  final now = DateTime.now();
+  final from = DateFormat("yyyy-MM-dd").format(now);
+    final tomorrow = now.add(const Duration(days: 1));
+  final to = DateFormat("yyyy-MM-dd").format(tomorrow);
+
+  return {
+    "from": from,
+    "to": to,
+  };
+}
+
   void _onSearchChanged(String query) {
     _currentSearchQuery = query; // Store the current search query
     _debouncer.run(() {
@@ -160,7 +181,7 @@ void _loadMoreItems() {
  void _fetchOrders(List<OrderFilter> statuses,{String? searchQuery}) {
     final statusStrings = statuses.map(statusToString).toList();
     bool isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
-
+  final params = getTodayParams();
     context.read<OrderBloc>().add(
       OrderEvent.getOrdersList(
         limit: _itemsPerPage,
@@ -169,7 +190,13 @@ void _loadMoreItems() {
         expressOnly: isExpressOnlyEnabled,
         latitude: latitudeNotifier.value, 
         longitude: longitudeNotifier.value,
-        searchText: searchQuery
+        searchText: searchQuery,
+         pickupFrom: params["from"]??"",
+  pickupTo: params["to"]??"",
+  deliveryFrom:params["from"]??"",
+  deliveryTo:params["to"]??""
+
+
       ),
     );
   }

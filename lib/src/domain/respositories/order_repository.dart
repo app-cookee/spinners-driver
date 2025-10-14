@@ -10,7 +10,9 @@ abstract class OrderRepository {
   Future<void> addBag(String orderItemId, String bagId);
   Future<String> createNewBag(String bagId, String orderId, String serviceId);
   Future<List<ServiceListDatamodel>> getServices(int limit, int skip,String? serviceMenuId);
-  Future<OrderModel> getOrdersList(int limit,int skip,String filter,bool expressOnly,double? latitude,double? longitude,String? searchText);
+  Future<OrderModel> getOrdersList(int limit,int skip,String filter,bool expressOnly,double? latitude,double? longitude,String? searchText,String pickupFrom,String pickupTo,String deliveryFrom
+,String deliveryTo,
+);
     Future<void> removeBag(String id);
      Future<OrderModel> getMyOrdersList(int limit,int skip,String filter,String? searchText,String? from,String? to);
   Future<CashSettlementModel> getCashSettlmentsList(int limit,int skip,String? from,String? to);

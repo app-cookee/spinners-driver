@@ -121,7 +121,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(state.copyWith(
         getOrderListStatus: Status.loading(),
       ));
-         var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText);
+         var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText,event.pickupFrom,event.pickupTo,event.deliveryFrom,event.deliveryTo);
              final bool hasMoreItems =  response.orderList.length < response.totalCount;
         
         emit(state.copyWith(
@@ -145,7 +145,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
               emit(state.copyWith(
       isLoadingMore: true
     ));
-      var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText);
+      var response = await orderRepository.getOrdersList(event.limit,event.skip,event.filter,event.expressOnly,event.latitude,event.longitude,event.searchText,event.pickupFrom,event.pickupTo,event.deliveryFrom,event.deliveryTo);
        final newList = [...state.ordersList, ...response.orderList];
           
               final bool hasMoreItems = newList.length < response.totalCount;

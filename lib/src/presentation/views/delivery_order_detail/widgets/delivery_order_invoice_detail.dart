@@ -83,11 +83,23 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
   Gap(6.dp),
   Column(
     children: state.orderDetails.additionalCharges.map((charge) {
+          final double totalAmount =
+          double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0;
+
+      // sum of all additional charges
+      final double totalAdditionalCharges = state.orderDetails.additionalCharges
+          .map((c) => double.tryParse(c.amount ?? "0") ?? 0)
+          .fold(0, (a, b) => a + b);
+
+      // base amount = total - additional charges
+      final double baseAmount = totalAmount - totalAdditionalCharges;
+
+      // current charge amount
       final double amount = double.tryParse(charge.amount ?? "0") ?? 0;
-      final double totalAmount = double.tryParse(state.orderDetails.totalAmount ?? "0") ?? 0;
-      final double percentage = totalAmount > amount
-          ? (amount / (totalAmount - amount)) * 100
-          : 0;
+
+      // percentage for this charge (relative to base)
+      final double percentage =
+          baseAmount > 0 ? (amount / baseAmount) * 100 : 0;
       return Padding(
         padding: EdgeInsets.only(bottom: 6.dp),
         child: Row(
@@ -102,7 +114,7 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            if (charge.type != 'Quick Order Charge')
+            if (charge.type== 'Express Service Charge')
             Text(
               "+${percentage.toStringAsFixed(2)}%",
               style: AppTypography.sfProRoundedRegular.copyWith(
@@ -110,10 +122,10 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                 color: AppColors.secondary600,
               ),
             ),
-              if (charge.type != 'Quick Order Charge')
+              if (charge.type  == 'Express Service Charge')
             Gap(8.dp),
             Text(
-              "AED ${charge.amount}",
+              "AED ${amount.toStringAsFixed(2)}",
               style: AppTypography.sfProRoundedRegular.copyWith(
                 fontSize: 14.dp,
                 color: 

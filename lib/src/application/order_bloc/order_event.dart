@@ -2,8 +2,8 @@ part of 'order_bloc.dart';
 
 @freezed
 abstract class OrderEvent with _$OrderEvent {
-     const factory OrderEvent.getOrdersList({required int limit,required int skip,required String filter,required bool expressOnly, double? latitude, double? longitude, String? searchText}) = _GetOrdersList;
-       const factory OrderEvent.paginateOrdersList({required int skip, required int limit,required String filter,required bool expressOnly, double? latitude, double? longitude, String? searchText}) = _PaginateOrdersList;
+     const factory OrderEvent.getOrdersList({required int limit,required int skip,required String filter,required bool expressOnly, double? latitude, double? longitude, String? searchText,required String pickupFrom,required String pickupTo,required String deliveryFrom,required String deliveryTo}) = _GetOrdersList;
+       const factory OrderEvent.paginateOrdersList({required int skip, required int limit,required String filter,required bool expressOnly, double? latitude, double? longitude, String? searchText,required String pickupFrom,required String pickupTo,required String deliveryFrom,required String deliveryTo}) = _PaginateOrdersList;
   const factory OrderEvent.getOrderDetails({required String orderId}) = _GetOrderDetails;
   const factory OrderEvent.confirmPickup({required String orderId, required String driverNotes}) = _ConfirmPickup;
   const factory OrderEvent.addBag({required String orderItemId, required String bagId}) = _AddBag;

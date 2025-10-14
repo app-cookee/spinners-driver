@@ -17,9 +17,12 @@ class OrderRepositoryImplementation implements OrderRepository {
   OrderRepositoryImplementation({required this.api});
 
   @override
-  Future<OrderModel> getOrdersList(int limit, int skip, String filter, bool expressOnly, double? latitude, double? longitude, String? searchText) async {
+  Future<OrderModel> getOrdersList(int limit, int skip, String filter, bool expressOnly, double? latitude, double? longitude, String? searchText,String pickupFrom,String pickupTo,String deliveryFrom
+,String deliveryTo,) async {
     try {
-      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "status": filter, "expressOnly": expressOnly, "latitude": latitude, "longitude": longitude, "searchText": searchText}.clean();
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "status": filter, "expressOnly": expressOnly, "latitude": latitude, "longitude": longitude, "searchText": searchText,  "pickupFrom": pickupFrom,
+  "pickupTo": pickupTo,"deliveryFrom": deliveryFrom,"deliveryTo": deliveryTo
+,}.clean();
 
       log(params.toString(), name: "params");
       var response = await api.profile.get(ApiEndpoints().ordersList, queryParameters: params);

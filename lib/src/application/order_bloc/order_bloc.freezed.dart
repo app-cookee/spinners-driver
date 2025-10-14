@@ -274,11 +274,31 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int limit, int skip, String filter, bool expressOnly,
-            double? latitude, double? longitude, String? searchText)?
+    TResult Function(
+            int limit,
+            int skip,
+            String filter,
+            bool expressOnly,
+            double? latitude,
+            double? longitude,
+            String? searchText,
+            String pickupFrom,
+            String pickupTo,
+            String deliveryFrom,
+            String deliveryTo)?
         getOrdersList,
-    TResult Function(int skip, int limit, String filter, bool expressOnly,
-            double? latitude, double? longitude, String? searchText)?
+    TResult Function(
+            int skip,
+            int limit,
+            String filter,
+            bool expressOnly,
+            double? latitude,
+            double? longitude,
+            String? searchText,
+            String pickupFrom,
+            String pickupTo,
+            String deliveryFrom,
+            String deliveryTo)?
         paginateOrdersList,
     TResult Function(String orderId)? getOrderDetails,
     TResult Function(String orderId, String driverNotes)? confirmPickup,
@@ -323,7 +343,11 @@ extension OrderEventPatterns on OrderEvent {
             _that.expressOnly,
             _that.latitude,
             _that.longitude,
-            _that.searchText);
+            _that.searchText,
+            _that.pickupFrom,
+            _that.pickupTo,
+            _that.deliveryFrom,
+            _that.deliveryTo);
       case _PaginateOrdersList() when paginateOrdersList != null:
         return paginateOrdersList(
             _that.skip,
@@ -332,7 +356,11 @@ extension OrderEventPatterns on OrderEvent {
             _that.expressOnly,
             _that.latitude,
             _that.longitude,
-            _that.searchText);
+            _that.searchText,
+            _that.pickupFrom,
+            _that.pickupTo,
+            _that.deliveryFrom,
+            _that.deliveryTo);
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that.orderId);
       case _ConfirmPickup() when confirmPickup != null:
@@ -394,7 +422,11 @@ extension OrderEventPatterns on OrderEvent {
             bool expressOnly,
             double? latitude,
             double? longitude,
-            String? searchText)
+            String? searchText,
+            String pickupFrom,
+            String pickupTo,
+            String deliveryFrom,
+            String deliveryTo)
         getOrdersList,
     required TResult Function(
             int skip,
@@ -403,7 +435,11 @@ extension OrderEventPatterns on OrderEvent {
             bool expressOnly,
             double? latitude,
             double? longitude,
-            String? searchText)
+            String? searchText,
+            String pickupFrom,
+            String pickupTo,
+            String deliveryFrom,
+            String deliveryTo)
         paginateOrdersList,
     required TResult Function(String orderId) getOrderDetails,
     required TResult Function(String orderId, String driverNotes) confirmPickup,
@@ -447,7 +483,11 @@ extension OrderEventPatterns on OrderEvent {
             _that.expressOnly,
             _that.latitude,
             _that.longitude,
-            _that.searchText);
+            _that.searchText,
+            _that.pickupFrom,
+            _that.pickupTo,
+            _that.deliveryFrom,
+            _that.deliveryTo);
       case _PaginateOrdersList():
         return paginateOrdersList(
             _that.skip,
@@ -456,7 +496,11 @@ extension OrderEventPatterns on OrderEvent {
             _that.expressOnly,
             _that.latitude,
             _that.longitude,
-            _that.searchText);
+            _that.searchText,
+            _that.pickupFrom,
+            _that.pickupTo,
+            _that.deliveryFrom,
+            _that.deliveryTo);
       case _GetOrderDetails():
         return getOrderDetails(_that.orderId);
       case _ConfirmPickup():
@@ -508,11 +552,31 @@ extension OrderEventPatterns on OrderEvent {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int limit, int skip, String filter, bool expressOnly,
-            double? latitude, double? longitude, String? searchText)?
+    TResult? Function(
+            int limit,
+            int skip,
+            String filter,
+            bool expressOnly,
+            double? latitude,
+            double? longitude,
+            String? searchText,
+            String pickupFrom,
+            String pickupTo,
+            String deliveryFrom,
+            String deliveryTo)?
         getOrdersList,
-    TResult? Function(int skip, int limit, String filter, bool expressOnly,
-            double? latitude, double? longitude, String? searchText)?
+    TResult? Function(
+            int skip,
+            int limit,
+            String filter,
+            bool expressOnly,
+            double? latitude,
+            double? longitude,
+            String? searchText,
+            String pickupFrom,
+            String pickupTo,
+            String deliveryFrom,
+            String deliveryTo)?
         paginateOrdersList,
     TResult? Function(String orderId)? getOrderDetails,
     TResult? Function(String orderId, String driverNotes)? confirmPickup,
@@ -556,7 +620,11 @@ extension OrderEventPatterns on OrderEvent {
             _that.expressOnly,
             _that.latitude,
             _that.longitude,
-            _that.searchText);
+            _that.searchText,
+            _that.pickupFrom,
+            _that.pickupTo,
+            _that.deliveryFrom,
+            _that.deliveryTo);
       case _PaginateOrdersList() when paginateOrdersList != null:
         return paginateOrdersList(
             _that.skip,
@@ -565,7 +633,11 @@ extension OrderEventPatterns on OrderEvent {
             _that.expressOnly,
             _that.latitude,
             _that.longitude,
-            _that.searchText);
+            _that.searchText,
+            _that.pickupFrom,
+            _that.pickupTo,
+            _that.deliveryFrom,
+            _that.deliveryTo);
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that.orderId);
       case _ConfirmPickup() when confirmPickup != null:
@@ -616,7 +688,11 @@ class _GetOrdersList implements OrderEvent {
       required this.expressOnly,
       this.latitude,
       this.longitude,
-      this.searchText});
+      this.searchText,
+      required this.pickupFrom,
+      required this.pickupTo,
+      required this.deliveryFrom,
+      required this.deliveryTo});
 
   final int limit;
   final int skip;
@@ -625,6 +701,10 @@ class _GetOrdersList implements OrderEvent {
   final double? latitude;
   final double? longitude;
   final String? searchText;
+  final String pickupFrom;
+  final String pickupTo;
+  final String deliveryFrom;
+  final String deliveryTo;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -648,16 +728,35 @@ class _GetOrdersList implements OrderEvent {
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             (identical(other.searchText, searchText) ||
-                other.searchText == searchText));
+                other.searchText == searchText) &&
+            (identical(other.pickupFrom, pickupFrom) ||
+                other.pickupFrom == pickupFrom) &&
+            (identical(other.pickupTo, pickupTo) ||
+                other.pickupTo == pickupTo) &&
+            (identical(other.deliveryFrom, deliveryFrom) ||
+                other.deliveryFrom == deliveryFrom) &&
+            (identical(other.deliveryTo, deliveryTo) ||
+                other.deliveryTo == deliveryTo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
-      latitude, longitude, searchText);
+  int get hashCode => Object.hash(
+      runtimeType,
+      limit,
+      skip,
+      filter,
+      expressOnly,
+      latitude,
+      longitude,
+      searchText,
+      pickupFrom,
+      pickupTo,
+      deliveryFrom,
+      deliveryTo);
 
   @override
   String toString() {
-    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
+    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText, pickupFrom: $pickupFrom, pickupTo: $pickupTo, deliveryFrom: $deliveryFrom, deliveryTo: $deliveryTo)';
   }
 }
 
@@ -675,7 +774,11 @@ abstract mixin class _$GetOrdersListCopyWith<$Res>
       bool expressOnly,
       double? latitude,
       double? longitude,
-      String? searchText});
+      String? searchText,
+      String pickupFrom,
+      String pickupTo,
+      String deliveryFrom,
+      String deliveryTo});
 }
 
 /// @nodoc
@@ -697,6 +800,10 @@ class __$GetOrdersListCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? searchText = freezed,
+    Object? pickupFrom = null,
+    Object? pickupTo = null,
+    Object? deliveryFrom = null,
+    Object? deliveryTo = null,
   }) {
     return _then(_GetOrdersList(
       limit: null == limit
@@ -727,6 +834,22 @@ class __$GetOrdersListCopyWithImpl<$Res>
           ? _self.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
               as String?,
+      pickupFrom: null == pickupFrom
+          ? _self.pickupFrom
+          : pickupFrom // ignore: cast_nullable_to_non_nullable
+              as String,
+      pickupTo: null == pickupTo
+          ? _self.pickupTo
+          : pickupTo // ignore: cast_nullable_to_non_nullable
+              as String,
+      deliveryFrom: null == deliveryFrom
+          ? _self.deliveryFrom
+          : deliveryFrom // ignore: cast_nullable_to_non_nullable
+              as String,
+      deliveryTo: null == deliveryTo
+          ? _self.deliveryTo
+          : deliveryTo // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -741,7 +864,11 @@ class _PaginateOrdersList implements OrderEvent {
       required this.expressOnly,
       this.latitude,
       this.longitude,
-      this.searchText});
+      this.searchText,
+      required this.pickupFrom,
+      required this.pickupTo,
+      required this.deliveryFrom,
+      required this.deliveryTo});
 
   final int skip;
   final int limit;
@@ -750,6 +877,10 @@ class _PaginateOrdersList implements OrderEvent {
   final double? latitude;
   final double? longitude;
   final String? searchText;
+  final String pickupFrom;
+  final String pickupTo;
+  final String deliveryFrom;
+  final String deliveryTo;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -773,16 +904,35 @@ class _PaginateOrdersList implements OrderEvent {
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             (identical(other.searchText, searchText) ||
-                other.searchText == searchText));
+                other.searchText == searchText) &&
+            (identical(other.pickupFrom, pickupFrom) ||
+                other.pickupFrom == pickupFrom) &&
+            (identical(other.pickupTo, pickupTo) ||
+                other.pickupTo == pickupTo) &&
+            (identical(other.deliveryFrom, deliveryFrom) ||
+                other.deliveryFrom == deliveryFrom) &&
+            (identical(other.deliveryTo, deliveryTo) ||
+                other.deliveryTo == deliveryTo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, skip, limit, filter, expressOnly,
-      latitude, longitude, searchText);
+  int get hashCode => Object.hash(
+      runtimeType,
+      skip,
+      limit,
+      filter,
+      expressOnly,
+      latitude,
+      longitude,
+      searchText,
+      pickupFrom,
+      pickupTo,
+      deliveryFrom,
+      deliveryTo);
 
   @override
   String toString() {
-    return 'OrderEvent.paginateOrdersList(skip: $skip, limit: $limit, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText)';
+    return 'OrderEvent.paginateOrdersList(skip: $skip, limit: $limit, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText, pickupFrom: $pickupFrom, pickupTo: $pickupTo, deliveryFrom: $deliveryFrom, deliveryTo: $deliveryTo)';
   }
 }
 
@@ -800,7 +950,11 @@ abstract mixin class _$PaginateOrdersListCopyWith<$Res>
       bool expressOnly,
       double? latitude,
       double? longitude,
-      String? searchText});
+      String? searchText,
+      String pickupFrom,
+      String pickupTo,
+      String deliveryFrom,
+      String deliveryTo});
 }
 
 /// @nodoc
@@ -822,6 +976,10 @@ class __$PaginateOrdersListCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? searchText = freezed,
+    Object? pickupFrom = null,
+    Object? pickupTo = null,
+    Object? deliveryFrom = null,
+    Object? deliveryTo = null,
   }) {
     return _then(_PaginateOrdersList(
       skip: null == skip
@@ -852,6 +1010,22 @@ class __$PaginateOrdersListCopyWithImpl<$Res>
           ? _self.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
               as String?,
+      pickupFrom: null == pickupFrom
+          ? _self.pickupFrom
+          : pickupFrom // ignore: cast_nullable_to_non_nullable
+              as String,
+      pickupTo: null == pickupTo
+          ? _self.pickupTo
+          : pickupTo // ignore: cast_nullable_to_non_nullable
+              as String,
+      deliveryFrom: null == deliveryFrom
+          ? _self.deliveryFrom
+          : deliveryFrom // ignore: cast_nullable_to_non_nullable
+              as String,
+      deliveryTo: null == deliveryTo
+          ? _self.deliveryTo
+          : deliveryTo // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
