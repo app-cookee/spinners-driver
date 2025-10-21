@@ -40,7 +40,8 @@ class TodaysCollectedCOD extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              'AED ${state.dashboardDataModel.todayCollectedCash}',
+             'AED ${double.tryParse(state.dashboardDataModel.todayCollectedCash)?.toStringAsFixed(2)}'
+,
               style: AppTypography.sfProRoundedBold.copyWith(fontSize: 32.sp, color: AppColors.neutral900),
             )
           ],
