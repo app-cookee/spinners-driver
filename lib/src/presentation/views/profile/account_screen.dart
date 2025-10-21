@@ -273,9 +273,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               },
                                 imagePath: AppImages.arrowRight,
                                 text: "Cash Settlement History"),
-                            const AccountSettings(
-                                imagePath: AppImages.arrowRight,
-                                text: "Terms of Service"),
+                           
                             AccountSettings(
                               imagePath: AppImages.arrowRight,
                               text: "Log Out",
