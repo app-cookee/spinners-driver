@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/constants/status/status.dart';
@@ -27,6 +28,7 @@ import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.
 
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
+
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
 
@@ -35,6 +37,9 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+
+   String version = '';
+
   @override
   void initState() {
       context.read<AuthBloc>().add(AuthEvent.profileAuth());
@@ -45,6 +50,13 @@ class _AccountScreenState extends State<AccountScreen> {
   }
   @override
   Widget build(BuildContext context) {
+        PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      setState(() {
+        version = packageInfo.version;
+      });
+    });
+
+   
     return Scaffold(
       backgroundColor: AppColors.blue1,
       body: BlocListener<AuthBloc, AuthState>(
@@ -318,7 +330,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                 // 3.h
                                 18.h),
                         child: Text(
-                          "App Version 1.0.0",
+                          "App Version $version",
                           style: AppTypography.sfProRoundedMedium.copyWith(
                               color: AppColors.versionColor, fontSize: 9.dp),
                         ),
