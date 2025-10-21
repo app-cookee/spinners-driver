@@ -309,10 +309,17 @@ _fetchOrders(currentOrderFilter, searchQuery: _currentSearchQuery, from: from, t
                             refId: state.myordersList[index].refId.toString(),
                             orderId: state.myordersList[index].id,
 
-                            time: formatUaeDateTime( state.myordersList[index].statusHistory.where((e) => e.status == 'pickedUp').toList().last.changedAt
-    ).last,
+                          time: formatUaeDateTime(
+  state.myordersList[index]
+      .statusHistory
+      .where((e) => e.status == ((currentOrderFilter == _pickup) ? 'pickedUp' : 'delivered'))
+      .toList()
+      .last
+      .changedAt,
+).last,
+
                             // getOrderDisplayDate(state.ordersList[index]),
-                            date: formatUaeDateTime( state.myordersList[index].statusHistory.where((e) => e.status == 'pickedUp').toList().last.changedAt
+                            date: formatUaeDateTime( state.myordersList[index].statusHistory.where((e) => e.status == ((currentOrderFilter == _pickup) ? 'pickedUp' : 'delivered')).toList().last.changedAt
     ).first,
 
                             status: state.myordersList[index].status,
@@ -385,3 +392,7 @@ List<String> formatUaeDateTime(String utcString) {
 }
 
 }
+
+enum OrderFilter { pickupScheduled, readyForDelivery, pickedUp, delivered }
+
+String statusToString(OrderFilter status) => status.name;

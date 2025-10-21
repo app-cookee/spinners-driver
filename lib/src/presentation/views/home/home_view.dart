@@ -27,8 +27,8 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 enum OrderFilter {
   pickupScheduled,
   readyForDelivery,
-  pickedUp,
-  delivered
+  // pickedUp,
+  // delivered
 }
 
 String statusToString(OrderFilter status) => status.name;
@@ -42,8 +42,8 @@ class _HomeViewState extends State<HomeView> {
   final _allOrders = [
     OrderFilter.pickupScheduled,
     OrderFilter.readyForDelivery,
-    OrderFilter.pickedUp,
-    OrderFilter.delivered,
+    // OrderFilter.pickedUp,
+    // OrderFilter.delivered,
   ];
   final _pickup = [
     OrderFilter.pickupScheduled,
@@ -119,14 +119,14 @@ class _HomeViewState extends State<HomeView> {
   String deliveryFrom = "";
   String deliveryTo = "";
 
-  if (currentOrderFilter.contains(OrderFilter.pickupScheduled) ||
-      currentOrderFilter.contains(OrderFilter.pickedUp)) {
+  if (currentOrderFilter.contains(OrderFilter.pickupScheduled) 
+      ) {
     pickupFrom = params["from"] ?? "";
     pickupTo = params["to"] ?? "";
   }
 
-  if (currentOrderFilter.contains(OrderFilter.readyForDelivery) ||
-      currentOrderFilter.contains(OrderFilter.delivered)) {
+  if (currentOrderFilter.contains(OrderFilter.readyForDelivery) 
+      ) {
     deliveryFrom = params["from"] ?? "";
     deliveryTo = params["to"] ?? "";
   }
@@ -210,15 +210,14 @@ Map<String, String> getTodayParams() {
   String deliveryFrom = "";
   String deliveryTo = "";
 
-  if (statuses.contains(OrderFilter.pickupScheduled) ||
-      statuses.contains(OrderFilter.pickedUp)) {
+  if (statuses.contains(OrderFilter.pickupScheduled) 
+      ) {
     // This is pickup-type filter
     pickupFrom = params["from"] ?? "";
     pickupTo = params["to"] ?? "";
   }
 
-  if (statuses.contains(OrderFilter.readyForDelivery) ||
-      statuses.contains(OrderFilter.delivered)) {
+  if (statuses.contains(OrderFilter.readyForDelivery) ) {
     // This is delivery-type filter
     deliveryFrom = params["from"] ?? "";
     deliveryTo = params["to"] ?? "";
