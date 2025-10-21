@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -13,12 +15,13 @@ class TodaysCollectedCOD extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(state.dashboardDataModel.todayCollectedCash.toString());
     return Padding(
       padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 20.5.dp, bottom: 16.dp),
       child: Skeletonizer(containersColor: Colors.grey.shade300,
         enabled:
       (state.getDashboardDataStatus is StatusInitial||state.getDashboardDataStatus is StatusLoading) ,
-        child:state.dashboardDataModel.totalCollectedCash>0?
+        child:(double.tryParse(state.dashboardDataModel.todayCollectedCash)??0)>0?
          Row(
           children: [
             Column(
@@ -37,7 +40,7 @@ class TodaysCollectedCOD extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              'AED ${state.dashboardDataModel.totalCollectedCash}',
+              'AED ${state.dashboardDataModel.todayCollectedCash}',
               style: AppTypography.sfProRoundedBold.copyWith(fontSize: 32.sp, color: AppColors.neutral900),
             )
           ],

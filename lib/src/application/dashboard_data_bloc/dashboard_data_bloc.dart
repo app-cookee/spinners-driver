@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
+
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -24,11 +26,13 @@ class DashboardDataBloc extends Bloc<DashboardDataEvent, DashboardDataState> {
       // // Simulate a network call
       // await Future.delayed(const Duration(seconds: 2));
       var response = await dashboardDataRepository.getDashboardData();
+      log(response.toString(),name: "dashborad data response");
       emit(state.copyWith(
         getDashboardDataStatus: Status.success(),
         dashboardDataModel: response,
       ));
     } catch (e) {
+      log(e.toString());
       emit(state.copyWith(
         getDashboardDataStatus: Status.failure(e.toString()),
       ));

@@ -282,10 +282,10 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String pickupFrom,
-            String pickupTo,
-            String deliveryFrom,
-            String deliveryTo)?
+            String? pickupFrom,
+            String? pickupTo,
+            String? deliveryFrom,
+            String? deliveryTo)?
         getOrdersList,
     TResult Function(
             int skip,
@@ -423,10 +423,10 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String pickupFrom,
-            String pickupTo,
-            String deliveryFrom,
-            String deliveryTo)
+            String? pickupFrom,
+            String? pickupTo,
+            String? deliveryFrom,
+            String? deliveryTo)
         getOrdersList,
     required TResult Function(
             int skip,
@@ -560,10 +560,10 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String pickupFrom,
-            String pickupTo,
-            String deliveryFrom,
-            String deliveryTo)?
+            String? pickupFrom,
+            String? pickupTo,
+            String? deliveryFrom,
+            String? deliveryTo)?
         getOrdersList,
     TResult? Function(
             int skip,
@@ -689,10 +689,10 @@ class _GetOrdersList implements OrderEvent {
       this.latitude,
       this.longitude,
       this.searchText,
-      required this.pickupFrom,
-      required this.pickupTo,
-      required this.deliveryFrom,
-      required this.deliveryTo});
+      this.pickupFrom,
+      this.pickupTo,
+      this.deliveryFrom,
+      this.deliveryTo});
 
   final int limit;
   final int skip;
@@ -701,10 +701,10 @@ class _GetOrdersList implements OrderEvent {
   final double? latitude;
   final double? longitude;
   final String? searchText;
-  final String pickupFrom;
-  final String pickupTo;
-  final String deliveryFrom;
-  final String deliveryTo;
+  final String? pickupFrom;
+  final String? pickupTo;
+  final String? deliveryFrom;
+  final String? deliveryTo;
 
   /// Create a copy of OrderEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -775,10 +775,10 @@ abstract mixin class _$GetOrdersListCopyWith<$Res>
       double? latitude,
       double? longitude,
       String? searchText,
-      String pickupFrom,
-      String pickupTo,
-      String deliveryFrom,
-      String deliveryTo});
+      String? pickupFrom,
+      String? pickupTo,
+      String? deliveryFrom,
+      String? deliveryTo});
 }
 
 /// @nodoc
@@ -800,10 +800,10 @@ class __$GetOrdersListCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? searchText = freezed,
-    Object? pickupFrom = null,
-    Object? pickupTo = null,
-    Object? deliveryFrom = null,
-    Object? deliveryTo = null,
+    Object? pickupFrom = freezed,
+    Object? pickupTo = freezed,
+    Object? deliveryFrom = freezed,
+    Object? deliveryTo = freezed,
   }) {
     return _then(_GetOrdersList(
       limit: null == limit
@@ -834,22 +834,22 @@ class __$GetOrdersListCopyWithImpl<$Res>
           ? _self.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
               as String?,
-      pickupFrom: null == pickupFrom
+      pickupFrom: freezed == pickupFrom
           ? _self.pickupFrom
           : pickupFrom // ignore: cast_nullable_to_non_nullable
-              as String,
-      pickupTo: null == pickupTo
+              as String?,
+      pickupTo: freezed == pickupTo
           ? _self.pickupTo
           : pickupTo // ignore: cast_nullable_to_non_nullable
-              as String,
-      deliveryFrom: null == deliveryFrom
+              as String?,
+      deliveryFrom: freezed == deliveryFrom
           ? _self.deliveryFrom
           : deliveryFrom // ignore: cast_nullable_to_non_nullable
-              as String,
-      deliveryTo: null == deliveryTo
+              as String?,
+      deliveryTo: freezed == deliveryTo
           ? _self.deliveryTo
           : deliveryTo // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }

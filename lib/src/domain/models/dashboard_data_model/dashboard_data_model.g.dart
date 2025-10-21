@@ -17,6 +17,7 @@ _DashboardDataModel _$DashboardDataModelFromJson(Map<String, dynamic> json) =>
       nextActivityAt: json['nextActivityAt'] as String? ?? '',
       activityType: json['activityType'] as String? ?? '',
       lastCollectedCashAt: json['lastCollectedCashAt'] as String? ?? '',
+      todayCollectedCash: json['todayCollectedCash'] as String? ?? "",
     );
 
 Map<String, dynamic> _$DashboardDataModelToJson(_DashboardDataModel instance) =>
@@ -29,4 +30,5 @@ Map<String, dynamic> _$DashboardDataModelToJson(_DashboardDataModel instance) =>
       'nextActivityAt': instance.nextActivityAt,
       'activityType': instance.activityType,
       'lastCollectedCashAt': instance.lastCollectedCashAt,
+      'todayCollectedCash': instance.todayCollectedCash,
     };

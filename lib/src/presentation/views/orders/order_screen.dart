@@ -89,25 +89,44 @@ class _OrderScreenState extends State<OrderScreen> {
 
     super.initState();
   }
-void _loadMoreItems() {
-  // log("load more itrms");
+
+
+
+
+
+
+  void _loadMoreItems() {
   final orderState = context.read<OrderBloc>().state;
 
-  // Prevent duplicate calls
   if (orderState.isLoadingMore || !orderState.hasMore) return;
 
-  // Convert filters to string
   final statusStrings = currentOrderFilter.map(statusToString).toList();
   final statusString = statusStrings.join(',');
 
-  // Current toggles
   final isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
   final lat = latitudeNotifier.value;
   final lng = longitudeNotifier.value;
 
-    final params = getTodayParams();
+  final params = getTodayParams();
 
-  // Trigger pagination with filters
+  // Determine pickup/delivery filters
+  String pickupFrom = "";
+  String pickupTo = "";
+  String deliveryFrom = "";
+  String deliveryTo = "";
+
+  if (currentOrderFilter.contains(OrderFilter.pickupScheduled) ||
+      currentOrderFilter.contains(OrderFilter.pickedUp)) {
+    pickupFrom = params["from"] ?? "";
+    pickupTo = params["to"] ?? "";
+  }
+
+  if (currentOrderFilter.contains(OrderFilter.readyForDelivery) ||
+      currentOrderFilter.contains(OrderFilter.delivered)) {
+    deliveryFrom = params["from"] ?? "";
+    deliveryTo = params["to"] ?? "";
+  }
+
   context.read<OrderBloc>().add(
     OrderEvent.paginateOrdersList(
       skip: orderState.ordersList.length,
@@ -117,14 +136,21 @@ void _loadMoreItems() {
       latitude: lat,
       longitude: lng,
       searchText: _currentSearchQuery.isEmpty ? null : _currentSearchQuery,
-         pickupFrom: params["from"]??"",
-  pickupTo: params["to"]??"",
-  deliveryFrom:params["from"]??"",
-  deliveryTo:params["to"]??""
-,
+      pickupFrom: pickupFrom,
+      pickupTo: pickupTo,
+      deliveryFrom: deliveryFrom,
+      deliveryTo: deliveryTo,
     ),
   );
 }
+
+
+
+
+
+
+
+
 
 
 Map<String, String> getTodayParams() {
@@ -178,28 +204,53 @@ Map<String, String> getTodayParams() {
     }
   }
 
- void _fetchOrders(List<OrderFilter> statuses,{String? searchQuery}) {
-    final statusStrings = statuses.map(statusToString).toList();
-    bool isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
+
+
+void _fetchOrders(List<OrderFilter> statuses, {String? searchQuery}) {
+  final statusStrings = statuses.map(statusToString).toList();
+  bool isExpressOnlyEnabled = expressOnlyNotifier.value == 1;
   final params = getTodayParams();
-    context.read<OrderBloc>().add(
-      OrderEvent.getOrdersList(
-        limit: _itemsPerPage,
-        skip: 0,
-        filter: statusStrings.join(','),
-        expressOnly: isExpressOnlyEnabled,
-        latitude: latitudeNotifier.value, 
-        longitude: longitudeNotifier.value,
-        searchText: searchQuery,
-         pickupFrom: params["from"]??"",
-  pickupTo: params["to"]??"",
-  deliveryFrom:params["from"]??"",
-  deliveryTo:params["to"]??""
 
+  // Determine pickup/delivery filters
+  String pickupFrom = "";
+  String pickupTo = "";
+  String deliveryFrom = "";
+  String deliveryTo = "";
 
-      ),
-    );
+  if (statuses.contains(OrderFilter.pickupScheduled) ||
+      statuses.contains(OrderFilter.pickedUp)) {
+    // This is pickup-type filter
+    pickupFrom = params["from"] ?? "";
+    pickupTo = params["to"] ?? "";
   }
+
+  if (statuses.contains(OrderFilter.readyForDelivery) ||
+      statuses.contains(OrderFilter.delivered)) {
+    // This is delivery-type filter
+    deliveryFrom = params["from"] ?? "";
+    deliveryTo = params["to"] ?? "";
+  }
+
+  context.read<OrderBloc>().add(
+    OrderEvent.getOrdersList(
+      limit: _itemsPerPage,
+      skip: 0,
+      filter: statusStrings.join(','),
+      expressOnly: isExpressOnlyEnabled,
+      latitude: latitudeNotifier.value,
+      longitude: longitudeNotifier.value,
+      searchText: searchQuery,
+      pickupFrom: pickupFrom,
+      pickupTo: pickupTo,
+      deliveryFrom: deliveryFrom,
+      deliveryTo: deliveryTo,
+    ),
+  );
+}
+
+
+
+
   @override
   void dispose() {
       _scrollController.dispose();

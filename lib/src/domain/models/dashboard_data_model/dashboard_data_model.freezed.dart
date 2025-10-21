@@ -22,6 +22,7 @@ mixin _$DashboardDataModel {
   String get nextActivityAt;
   String get activityType;
   String get lastCollectedCashAt;
+  String get todayCollectedCash;
 
   /// Create a copy of DashboardDataModel
   /// with the given fields replaced by the non-null parameter values.
@@ -54,7 +55,9 @@ mixin _$DashboardDataModel {
             (identical(other.activityType, activityType) ||
                 other.activityType == activityType) &&
             (identical(other.lastCollectedCashAt, lastCollectedCashAt) ||
-                other.lastCollectedCashAt == lastCollectedCashAt));
+                other.lastCollectedCashAt == lastCollectedCashAt) &&
+            (identical(other.todayCollectedCash, todayCollectedCash) ||
+                other.todayCollectedCash == todayCollectedCash));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -68,11 +71,12 @@ mixin _$DashboardDataModel {
       totalCollectedCash,
       nextActivityAt,
       activityType,
-      lastCollectedCashAt);
+      lastCollectedCashAt,
+      todayCollectedCash);
 
   @override
   String toString() {
-    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType, lastCollectedCashAt: $lastCollectedCashAt)';
+    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType, lastCollectedCashAt: $lastCollectedCashAt, todayCollectedCash: $todayCollectedCash)';
   }
 }
 
@@ -90,7 +94,8 @@ abstract mixin class $DashboardDataModelCopyWith<$Res> {
       double totalCollectedCash,
       String nextActivityAt,
       String activityType,
-      String lastCollectedCashAt});
+      String lastCollectedCashAt,
+      String todayCollectedCash});
 }
 
 /// @nodoc
@@ -114,6 +119,7 @@ class _$DashboardDataModelCopyWithImpl<$Res>
     Object? nextActivityAt = null,
     Object? activityType = null,
     Object? lastCollectedCashAt = null,
+    Object? todayCollectedCash = null,
   }) {
     return _then(_self.copyWith(
       remainingPickups: null == remainingPickups
@@ -147,6 +153,10 @@ class _$DashboardDataModelCopyWithImpl<$Res>
       lastCollectedCashAt: null == lastCollectedCashAt
           ? _self.lastCollectedCashAt
           : lastCollectedCashAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      todayCollectedCash: null == todayCollectedCash
+          ? _self.todayCollectedCash
+          : todayCollectedCash // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -253,7 +263,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             double totalCollectedCash,
             String nextActivityAt,
             String activityType,
-            String lastCollectedCashAt)?
+            String lastCollectedCashAt,
+            String todayCollectedCash)?
         $default, {
     required TResult orElse(),
   }) {
@@ -268,7 +279,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             _that.totalCollectedCash,
             _that.nextActivityAt,
             _that.activityType,
-            _that.lastCollectedCashAt);
+            _that.lastCollectedCashAt,
+            _that.todayCollectedCash);
       case _:
         return orElse();
     }
@@ -297,7 +309,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             double totalCollectedCash,
             String nextActivityAt,
             String activityType,
-            String lastCollectedCashAt)
+            String lastCollectedCashAt,
+            String todayCollectedCash)
         $default,
   ) {
     final _that = this;
@@ -311,7 +324,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             _that.totalCollectedCash,
             _that.nextActivityAt,
             _that.activityType,
-            _that.lastCollectedCashAt);
+            _that.lastCollectedCashAt,
+            _that.todayCollectedCash);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -339,7 +353,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             double totalCollectedCash,
             String nextActivityAt,
             String activityType,
-            String lastCollectedCashAt)?
+            String lastCollectedCashAt,
+            String todayCollectedCash)?
         $default,
   ) {
     final _that = this;
@@ -353,7 +368,8 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             _that.totalCollectedCash,
             _that.nextActivityAt,
             _that.activityType,
-            _that.lastCollectedCashAt);
+            _that.lastCollectedCashAt,
+            _that.todayCollectedCash);
       case _:
         return null;
     }
@@ -371,7 +387,8 @@ class _DashboardDataModel implements DashboardDataModel {
       this.totalCollectedCash = 0.0,
       this.nextActivityAt = '',
       this.activityType = '',
-      this.lastCollectedCashAt = ''});
+      this.lastCollectedCashAt = '',
+      this.todayCollectedCash = ""});
   factory _DashboardDataModel.fromJson(Map<String, dynamic> json) =>
       _$DashboardDataModelFromJson(json);
 
@@ -399,6 +416,9 @@ class _DashboardDataModel implements DashboardDataModel {
   @override
   @JsonKey()
   final String lastCollectedCashAt;
+  @override
+  @JsonKey()
+  final String todayCollectedCash;
 
   /// Create a copy of DashboardDataModel
   /// with the given fields replaced by the non-null parameter values.
@@ -435,7 +455,9 @@ class _DashboardDataModel implements DashboardDataModel {
             (identical(other.activityType, activityType) ||
                 other.activityType == activityType) &&
             (identical(other.lastCollectedCashAt, lastCollectedCashAt) ||
-                other.lastCollectedCashAt == lastCollectedCashAt));
+                other.lastCollectedCashAt == lastCollectedCashAt) &&
+            (identical(other.todayCollectedCash, todayCollectedCash) ||
+                other.todayCollectedCash == todayCollectedCash));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -449,11 +471,12 @@ class _DashboardDataModel implements DashboardDataModel {
       totalCollectedCash,
       nextActivityAt,
       activityType,
-      lastCollectedCashAt);
+      lastCollectedCashAt,
+      todayCollectedCash);
 
   @override
   String toString() {
-    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType, lastCollectedCashAt: $lastCollectedCashAt)';
+    return 'DashboardDataModel(remainingPickups: $remainingPickups, remainingDeliveries: $remainingDeliveries, completedPickups: $completedPickups, completedDeliveries: $completedDeliveries, totalCollectedCash: $totalCollectedCash, nextActivityAt: $nextActivityAt, activityType: $activityType, lastCollectedCashAt: $lastCollectedCashAt, todayCollectedCash: $todayCollectedCash)';
   }
 }
 
@@ -473,7 +496,8 @@ abstract mixin class _$DashboardDataModelCopyWith<$Res>
       double totalCollectedCash,
       String nextActivityAt,
       String activityType,
-      String lastCollectedCashAt});
+      String lastCollectedCashAt,
+      String todayCollectedCash});
 }
 
 /// @nodoc
@@ -497,6 +521,7 @@ class __$DashboardDataModelCopyWithImpl<$Res>
     Object? nextActivityAt = null,
     Object? activityType = null,
     Object? lastCollectedCashAt = null,
+    Object? todayCollectedCash = null,
   }) {
     return _then(_DashboardDataModel(
       remainingPickups: null == remainingPickups
@@ -530,6 +555,10 @@ class __$DashboardDataModelCopyWithImpl<$Res>
       lastCollectedCashAt: null == lastCollectedCashAt
           ? _self.lastCollectedCashAt
           : lastCollectedCashAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      todayCollectedCash: null == todayCollectedCash
+          ? _self.todayCollectedCash
+          : todayCollectedCash // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
