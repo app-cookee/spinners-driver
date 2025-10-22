@@ -258,28 +258,34 @@ Widget _orderedCardButtons(BuildContext context,) {
   }
 
 Color getBorderColor() {
-  final now = DateTime.now().toUtc(); // current time in UTC
+  final now = DateTime.now().toUtc(); // current date & time in UTC
+
+  // ✅ Extract only the date part (ignore time)
+  final currentDate = DateTime(now.year, now.month, now.day);
+
   try {
     if (status == "pickupScheduled") {
-      final pickupDate = DateTime.parse(pickupAt);
-      if (pickupDate.isBefore(now)) {
-        return Colors.red; // overdue pickup
+      final pickupDateTime = DateTime.parse(pickupAt);
+      final pickupDate = DateTime(pickupDateTime.year, pickupDateTime.month, pickupDateTime.day);
+
+      if (pickupDate.isBefore(currentDate)) {
+        return Colors.red; // overdue pickup (date has passed)
       }
     } else if (status == "readyForDelivery") {
-      final deliveryDate = DateTime.parse(deliveryAt);
-      if (deliveryDate.isBefore(now)) {
-        return Colors.red; // overdue delivery
+      final deliveryDateTime = DateTime.parse(deliveryAt);
+      final deliveryDate = DateTime(deliveryDateTime.year, deliveryDateTime.month, deliveryDateTime.day);
+
+      if (deliveryDate.isBefore(currentDate)) {
+        return Colors.red; // overdue delivery (date has passed)
       }
     }
   } catch (e) {
-    // if parsing fails, fallback
     debugPrint("Date parse error: $e");
   }
 
   // Default border color
   return AppColors.shadowColor;
 }
-
 
 
 }
