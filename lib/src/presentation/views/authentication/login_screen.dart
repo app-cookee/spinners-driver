@@ -91,19 +91,38 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _onKeyPressed(String value) {
-    String current = phoneNumberListener.value;
-    if (value == 'backspace') {
-      if (current.isNotEmpty) {
-        current = current.substring(0, current.length - 1);
-      }
-    } else if (current.length < 9) {
-      // Changed from 10 to 15 for international numbers
-      current += value;
+void _onKeyPressed(String value) {
+  final text = _controller.text; // current text
+  final selection = _controller.selection; // current cursor position
+
+  // If no valid selection, treat as end of text
+  final cursorPos = selection.baseOffset == -1 ? text.length : selection.baseOffset;
+
+  String newText = text;
+  int newCursorPos = cursorPos;
+
+  if (value == 'backspace') {
+    // Delete the character *before* the cursor
+    if (cursorPos > 0 && text.isNotEmpty) {
+      newText = text.substring(0, cursorPos - 1) + text.substring(cursorPos);
+      newCursorPos = cursorPos - 1;
     }
-    phoneNumberListener.value = current;
-    _controller.text = current;
+  } else if (text.length < 9) {
+    // Insert the new value *at* the cursor
+    newText = text.substring(0, cursorPos) + value + text.substring(cursorPos);
+    newCursorPos = cursorPos + 1;
   }
+
+  // Update both text and cursor
+  _controller.value = TextEditingValue(
+    text: newText,
+    selection: TextSelection.collapsed(offset: newCursorPos),
+  );
+
+  // Update your listener
+  phoneNumberListener.value = newText;
+}
+
 
   @override
   Widget build(BuildContext context) {

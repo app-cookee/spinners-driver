@@ -22,7 +22,7 @@ mixin _$DashboardDataModel {
   String get nextActivityAt;
   String get activityType;
   String get lastCollectedCashAt;
-  String get todayCollectedCash;
+  double get todayCollectedCash;
 
   /// Create a copy of DashboardDataModel
   /// with the given fields replaced by the non-null parameter values.
@@ -95,7 +95,7 @@ abstract mixin class $DashboardDataModelCopyWith<$Res> {
       String nextActivityAt,
       String activityType,
       String lastCollectedCashAt,
-      String todayCollectedCash});
+      double todayCollectedCash});
 }
 
 /// @nodoc
@@ -157,7 +157,7 @@ class _$DashboardDataModelCopyWithImpl<$Res>
       todayCollectedCash: null == todayCollectedCash
           ? _self.todayCollectedCash
           : todayCollectedCash // ignore: cast_nullable_to_non_nullable
-              as String,
+              as double,
     ));
   }
 }
@@ -264,7 +264,7 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             String nextActivityAt,
             String activityType,
             String lastCollectedCashAt,
-            String todayCollectedCash)?
+            double todayCollectedCash)?
         $default, {
     required TResult orElse(),
   }) {
@@ -310,7 +310,7 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             String nextActivityAt,
             String activityType,
             String lastCollectedCashAt,
-            String todayCollectedCash)
+            double todayCollectedCash)
         $default,
   ) {
     final _that = this;
@@ -354,7 +354,7 @@ extension DashboardDataModelPatterns on DashboardDataModel {
             String nextActivityAt,
             String activityType,
             String lastCollectedCashAt,
-            String todayCollectedCash)?
+            double todayCollectedCash)?
         $default,
   ) {
     final _that = this;
@@ -388,7 +388,7 @@ class _DashboardDataModel implements DashboardDataModel {
       this.nextActivityAt = '',
       this.activityType = '',
       this.lastCollectedCashAt = '',
-      this.todayCollectedCash = ""});
+      this.todayCollectedCash = 0.0});
   factory _DashboardDataModel.fromJson(Map<String, dynamic> json) =>
       _$DashboardDataModelFromJson(json);
 
@@ -418,7 +418,7 @@ class _DashboardDataModel implements DashboardDataModel {
   final String lastCollectedCashAt;
   @override
   @JsonKey()
-  final String todayCollectedCash;
+  final double todayCollectedCash;
 
   /// Create a copy of DashboardDataModel
   /// with the given fields replaced by the non-null parameter values.
@@ -497,7 +497,7 @@ abstract mixin class _$DashboardDataModelCopyWith<$Res>
       String nextActivityAt,
       String activityType,
       String lastCollectedCashAt,
-      String todayCollectedCash});
+      double todayCollectedCash});
 }
 
 /// @nodoc
@@ -559,7 +559,7 @@ class __$DashboardDataModelCopyWithImpl<$Res>
       todayCollectedCash: null == todayCollectedCash
           ? _self.todayCollectedCash
           : todayCollectedCash // ignore: cast_nullable_to_non_nullable
-              as String,
+              as double,
     ));
   }
 }

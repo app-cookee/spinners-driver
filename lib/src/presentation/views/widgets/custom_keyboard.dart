@@ -26,109 +26,114 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
     const fontSize = 25.0;
     const subTextSize = 10.0;
 
-    return Container(
-      color: AppColors.keyboardBgColor,
-      padding: EdgeInsets.all(6.dp),
-      child: Column(
-        children: [
-          if (!_showSymbols) ...[
-            // Numeric keyboard layout
-            // Row 1: 1, 2, 3
-            Row(
-              children: [
-                _buildKey('1', ' ', keyHeight, fontSize, subTextSize),
-                SizedBox(width: 8.dp),
-                _buildKey('2', 'ABC', keyHeight, fontSize, subTextSize),
-               SizedBox(width: 8.dp),
-                _buildKey('3', 'DEF', keyHeight, fontSize, subTextSize),
-              ],
-            ),
-           SizedBox(height: 100.h*(8/812),),
-
-            // Row 2: 4, 5, 6
-            Row(
-              children: [
-                _buildKey('4', 'GHI', keyHeight, fontSize, subTextSize),
-                SizedBox(width: 8.dp),
-                _buildKey('5', 'JKL', keyHeight, fontSize, subTextSize),
-              SizedBox(width: 8.dp),
-                _buildKey('6', 'MNO', keyHeight, fontSize, subTextSize),
-              ],
-            ),
-            SizedBox(height: 100.h*(8/812),),
-            // Row 3: 7, 8, 9
-            Row(
-              children: [
-                _buildKey('7', 'PQRS', keyHeight, fontSize, subTextSize),
-                SizedBox(width: 8.dp),
-                _buildKey('8', 'TUV', keyHeight, fontSize, subTextSize),
+    return GestureDetector(
+      onTap: () {
+        
+      },
+      child: Container(
+        color: AppColors.keyboardBgColor,
+        padding: EdgeInsets.all(6.dp),
+        child: Column(
+          children: [
+            if (!_showSymbols) ...[
+              // Numeric keyboard layout
+              // Row 1: 1, 2, 3
+              Row(
+                children: [
+                  _buildKey('1', ' ', keyHeight, fontSize, subTextSize),
+                  SizedBox(width: 8.dp),
+                  _buildKey('2', 'ABC', keyHeight, fontSize, subTextSize),
                  SizedBox(width: 8.dp),
-                _buildKey('9', 'WXYZ', keyHeight, fontSize, subTextSize),
-              ],
-            ),
-           SizedBox(height: 100.h*(8/812),),
-
-            // Row 4: symbols, 0, backspace
-            Row(
-              children: [
-                _buildSymbolKey(keyHeight),
+                  _buildKey('3', 'DEF', keyHeight, fontSize, subTextSize),
+                ],
+              ),
+             SizedBox(height: 100.h*(8/812),),
+      
+              // Row 2: 4, 5, 6
+              Row(
+                children: [
+                  _buildKey('4', 'GHI', keyHeight, fontSize, subTextSize),
+                  SizedBox(width: 8.dp),
+                  _buildKey('5', 'JKL', keyHeight, fontSize, subTextSize),
                 SizedBox(width: 8.dp),
-                _buildKey('0', '', keyHeight, fontSize, subTextSize),
+                  _buildKey('6', 'MNO', keyHeight, fontSize, subTextSize),
+                ],
+              ),
+              SizedBox(height: 100.h*(8/812),),
+              // Row 3: 7, 8, 9
+              Row(
+                children: [
+                  _buildKey('7', 'PQRS', keyHeight, fontSize, subTextSize),
+                  SizedBox(width: 8.dp),
+                  _buildKey('8', 'TUV', keyHeight, fontSize, subTextSize),
+                   SizedBox(width: 8.dp),
+                  _buildKey('9', 'WXYZ', keyHeight, fontSize, subTextSize),
+                ],
+              ),
+             SizedBox(height: 100.h*(8/812),),
+      
+              // Row 4: symbols, 0, backspace
+              Row(
+                children: [
+                  _buildSymbolKey(keyHeight),
+                  SizedBox(width: 8.dp),
+                  _buildKey('0', '', keyHeight, fontSize, subTextSize),
+                 SizedBox(width: 8.dp),
+                  _buildBackspaceKey(keyHeight),
+                ],
+              ),
+            ] else ...[
+              // Symbol keyboard layout
+              // Row 1
+              Row(
+                children: [
+                  _buildSymbolOnlyKey('!', keyHeight),
+                SizedBox(width: 8.dp),
+                  _buildSymbolOnlyKey('@', keyHeight),
                SizedBox(width: 8.dp),
-                _buildBackspaceKey(keyHeight),
-              ],
-            ),
-          ] else ...[
-            // Symbol keyboard layout
-            // Row 1
-            Row(
-              children: [
-                _buildSymbolOnlyKey('!', keyHeight),
-              SizedBox(width: 8.dp),
-                _buildSymbolOnlyKey('@', keyHeight),
-             SizedBox(width: 8.dp),
-                _buildSymbolOnlyKey('#', keyHeight),
-              ],
-            ),
+                  _buildSymbolOnlyKey('#', keyHeight),
+                ],
+              ),
+             SizedBox(height: 100.h*(8/812),),
+      
+              // Row 2
+              Row(
+                children: [
+                  _buildSymbolOnlyKey('\$', keyHeight),
+                  SizedBox(width: 8.dp),
+                  _buildSymbolOnlyKey('%', keyHeight),
+                 SizedBox(width: 8.dp),
+                  _buildSymbolOnlyKey('^', keyHeight),
+                ],
+              ),
            SizedBox(height: 100.h*(8/812),),
-
-            // Row 2
-            Row(
-              children: [
-                _buildSymbolOnlyKey('\$', keyHeight),
+      
+              // Row 3
+              Row(
+                children: [
+                  _buildSymbolOnlyKey('&', keyHeight),
                 SizedBox(width: 8.dp),
-                _buildSymbolOnlyKey('%', keyHeight),
-               SizedBox(width: 8.dp),
-                _buildSymbolOnlyKey('^', keyHeight),
-              ],
-            ),
-         SizedBox(height: 100.h*(8/812),),
-
-            // Row 3
-            Row(
-              children: [
-                _buildSymbolOnlyKey('&', keyHeight),
+                  _buildSymbolOnlyKey('*', keyHeight),
               SizedBox(width: 8.dp),
-                _buildSymbolOnlyKey('*', keyHeight),
-            SizedBox(width: 8.dp),
-                _buildSymbolOnlyKey('(', keyHeight),
-              ],
-            ),
-            SizedBox(height: 100.h*(8/812),),
-
-            // Row 4: back to numbers, ), backspace
-            Row(
-              children: [
-                _buildNumbersKey(keyHeight),
-                SizedBox(width: 8.dp),
-                _buildSymbolOnlyKey(')', keyHeight),
-                SizedBox(width: 8.dp),
-                _buildBackspaceKey(keyHeight),
-              ],
-            ),
+                  _buildSymbolOnlyKey('(', keyHeight),
+                ],
+              ),
+              SizedBox(height: 100.h*(8/812),),
+      
+              // Row 4: back to numbers, ), backspace
+              Row(
+                children: [
+                  _buildNumbersKey(keyHeight),
+                  SizedBox(width: 8.dp),
+                  _buildSymbolOnlyKey(')', keyHeight),
+                  SizedBox(width: 8.dp),
+                  _buildBackspaceKey(keyHeight),
+                ],
+              ),
+            ],
+             SizedBox(height: 100.h*(56/812),),
           ],
-           SizedBox(height: 100.h*(56/812),),
-        ],
+        ),
       ),
     );
   }

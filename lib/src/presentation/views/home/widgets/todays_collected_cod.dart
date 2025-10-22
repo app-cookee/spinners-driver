@@ -21,7 +21,7 @@ class TodaysCollectedCOD extends StatelessWidget {
       child: Skeletonizer(containersColor: Colors.grey.shade300,
         enabled:
       (state.getDashboardDataStatus is StatusInitial||state.getDashboardDataStatus is StatusLoading) ,
-        child:(double.tryParse(state.dashboardDataModel.todayCollectedCash)??0)>0?
+        child:(state.dashboardDataModel.todayCollectedCash)>0?
          Row(
           children: [
             Column(
@@ -40,7 +40,7 @@ class TodaysCollectedCOD extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-             'AED ${double.tryParse(state.dashboardDataModel.todayCollectedCash)?.toStringAsFixed(2)}'
+             'AED ${state.dashboardDataModel.todayCollectedCash.toStringAsFixed(2)}'
 ,
               style: AppTypography.sfProRoundedBold.copyWith(fontSize: 32.sp, color: AppColors.neutral900),
             )
