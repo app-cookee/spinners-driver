@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:dotted_border/dotted_border.dart';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
@@ -15,11 +13,13 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/views/home/widgets/quick_order_label.dart';
-import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/scan_new_bag_bottomsheet.dart';
+
 import 'package:spinners_driver/src/presentation/views/orders/widgets/ordered_card_button.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/the_toast_widget.dart';
 
 class OrderCard extends StatelessWidget {
+  final String pickupAt;
+  final String deliveryAt;
   final String orderId;
   final String refId;
   
@@ -48,7 +48,7 @@ class OrderCard extends StatelessWidget {
     required this.lat,
     required this.lon,
     this.apiCallOnPop,
-    required this.mobileNumber,
+    required this.mobileNumber, required this.pickupAt, required this.deliveryAt,
   }) : super(key: key);
 
   Color getColor(String status) {
@@ -82,7 +82,7 @@ class OrderCard extends StatelessWidget {
     
         )],
         borderRadius: BorderRadius.circular(12.dp),
-        border: Border.all(color: AppColors.shadowColor),
+        border:  Border.all(color:getBorderColor()),
       
       ),
       child: Column(
@@ -94,32 +94,7 @@ class OrderCard extends StatelessWidget {
           _details(),
     
           Gap(8.dp),
-    
-          // // Pickup Row
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 16.dp),
-          //   child: Row(
-          //     children: [
-          //       Image.asset(isDropoff ? AppImages.box : AppImages.bike, height: 16.dp, width: 16.dp),
-          //       const Spacer(),
-          //       Text(status, style: AppTypography.sfProRoundedRegular.copyWith(fontSize: 12.dp, color: getColor(status)))
-          //     ],
-          //   ),
-          // ),
-          // Gap(2.dp),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 16.dp),
-          //   child: Row(
-          //     children: [
-          //       Text(isDropoff ? 'Drop-off' : "Pickup", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.black)),
-          //       const Spacer(),
-          //       Text(time, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral900))
-          //     ],
-          //   ),
-          // ),
-    
-          // Dotted Divider
-          // _divider(),
+
            _orderedCardButtons(context,)
          
         ],
@@ -164,7 +139,7 @@ class OrderCard extends StatelessWidget {
           Row(
             children: [  Image.asset(isDropoff ? AppImages.box : AppImages.bike, height: 16.dp, width: 16.dp),Gap(4.dp),
               Text(isDropoff ? 'Drop-off' : "Pickup", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.primaryColor500)),
-                                 Spacer(),
+                                const Spacer(),
                   Text(status=="pickupScheduled"?"Pickup Scheduled":status=="pickedUp"?"Picked Up":status=="readyForDelivery"?"Ready For Delivery":"Delivered", style: AppTypography.sfProRoundedRegular.copyWith(fontSize: 12.dp, color: getColor(status)))
             ],
           ),
@@ -178,21 +153,6 @@ class OrderCard extends StatelessWidget {
             Text(time, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral900))
 
           ],)
-        
-              //  Wrap(
-              //     spacing: 8.dp,
-              //     runSpacing: 6.dp,
-              //     children: services.map((label) {
-              //       return Row(
-              //         mainAxisSize: MainAxisSize.min,
-              //         children: [
-              //           Image.asset(AppImages.bag, height: 16.dp, width: 16.dp),
-              //           Gap(2.dp),
-              //           Text(label, style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 12.dp, color: AppColors.neutral950)),
-              //         ],
-              //       );
-              //     }).toList(),
-              //   ),
         ],
       ),
     );
@@ -296,4 +256,30 @@ Widget _orderedCardButtons(BuildContext context,) {
       ),
     );
   }
+
+Color getBorderColor() {
+  final now = DateTime.now().toUtc(); // current time in UTC
+  try {
+    if (status == "pickupScheduled") {
+      final pickupDate = DateTime.parse(pickupAt);
+      if (pickupDate.isBefore(now)) {
+        return Colors.red; // overdue pickup
+      }
+    } else if (status == "readyForDelivery") {
+      final deliveryDate = DateTime.parse(deliveryAt);
+      if (deliveryDate.isBefore(now)) {
+        return Colors.red; // overdue delivery
+      }
+    }
+  } catch (e) {
+    // if parsing fails, fallback
+    debugPrint("Date parse error: $e");
+  }
+
+  // Default border color
+  return AppColors.shadowColor;
+}
+
+
+
 }

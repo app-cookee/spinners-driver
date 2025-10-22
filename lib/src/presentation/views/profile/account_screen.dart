@@ -50,6 +50,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
   @override
   Widget build(BuildContext context) {
+ 
         PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       setState(() {
         version = packageInfo.version;
@@ -162,6 +163,8 @@ class _AccountScreenState extends State<AccountScreen> {
                               child: BlocBuilder<DashboardDataBloc,
                                   DashboardDataState>(
                                 builder: (context, state) {
+                                     final cashInHand = state.dashboardDataModel.totalCollectedCash;
+                 final formattedCash = (cashInHand % 1 == 0) ? cashInHand.toInt().toString() : cashInHand.toStringAsFixed(2);
                                   return Row(
                                     children: [
                                       Image.asset(
@@ -186,7 +189,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       state.getDashboardDataStatus
                                           is StatusLoading),
                                         child: Text(
-                                          "AED ${state.dashboardDataModel.totalCollectedCash}",
+                                          "AED $formattedCash",
                                           style: AppTypography
                                               .sfProRoundedSemiBold
                                               .copyWith(

@@ -13,9 +13,16 @@ class TodaysCollectedCOD extends StatelessWidget {
   const TodaysCollectedCOD({super.key, required this.state});
   final DashboardDataState state;
 
+
+
+
   @override
   Widget build(BuildContext context) {
-    log(state.dashboardDataModel.todayCollectedCash.toString());
+    
+    // log(state.dashboardDataModel.todayCollectedCash.toString());
+        final cash = state.dashboardDataModel.todayCollectedCash;
+    final formattedCash =
+        (cash % 1 == 0) ? cash.toInt().toString() : cash.toStringAsFixed(2);
     return Padding(
       padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 20.5.dp, bottom: 16.dp),
       child: Skeletonizer(containersColor: Colors.grey.shade300,
@@ -40,7 +47,7 @@ class TodaysCollectedCOD extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-             'AED ${state.dashboardDataModel.todayCollectedCash.toStringAsFixed(2)}'
+             'AED $formattedCash'
 ,
               style: AppTypography.sfProRoundedBold.copyWith(fontSize: 32.sp, color: AppColors.neutral900),
             )

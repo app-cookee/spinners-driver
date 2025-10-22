@@ -112,20 +112,20 @@ class _OrderScreenState extends State<OrderScreen> {
   final params = getTodayParams();
 
   // Determine pickup/delivery filters
-  String pickupFrom = "";
+ 
   String pickupTo = "";
-  String deliveryFrom = "";
+
   String deliveryTo = "";
 
   if (currentOrderFilter.contains(OrderFilter.pickupScheduled) 
       ) {
-    pickupFrom = params["from"] ?? "";
+   
     pickupTo = params["to"] ?? "";
   }
 
   if (currentOrderFilter.contains(OrderFilter.readyForDelivery) 
     ) {
-    deliveryFrom = params["from"] ?? "";
+    
     deliveryTo = params["to"] ?? "";
   }
 
@@ -138,9 +138,9 @@ class _OrderScreenState extends State<OrderScreen> {
       latitude: lat,
       longitude: lng,
       searchText: _currentSearchQuery.isEmpty ? null : _currentSearchQuery,
-      pickupFrom: pickupFrom,
+    
       pickupTo: pickupTo,
-      deliveryFrom: deliveryFrom,
+    
       deliveryTo: deliveryTo,
     ),
   );
@@ -214,20 +214,20 @@ void _fetchOrders(List<OrderFilter> statuses, {String? searchQuery}) {
   final params = getTodayParams();
 
   // Determine pickup/delivery filters
-  String pickupFrom = "";
+  
   String pickupTo = "";
-  String deliveryFrom = "";
+  
   String deliveryTo = "";
 
   if (statuses.contains(OrderFilter.pickupScheduled)) {
     // This is pickup-type filter
-    pickupFrom = params["from"] ?? "";
+   
     pickupTo = params["to"] ?? "";
   }
 
   if (statuses.contains(OrderFilter.readyForDelivery)) {
     // This is delivery-type filter
-    deliveryFrom = params["from"] ?? "";
+  
     deliveryTo = params["to"] ?? "";
   }
 
@@ -240,9 +240,9 @@ void _fetchOrders(List<OrderFilter> statuses, {String? searchQuery}) {
       latitude: latitudeNotifier.value,
       longitude: longitudeNotifier.value,
       searchText: searchQuery,
-      pickupFrom: pickupFrom,
+      // pickupFrom: pickupFrom,
       pickupTo: pickupTo,
-      deliveryFrom: deliveryFrom,
+      // deliveryFrom: deliveryFrom,
       deliveryTo: deliveryTo,
     ),
   );
@@ -402,6 +402,8 @@ _currentSearchQuery="";
 _currentSearchQuery="";
                           _fetchOrders(currentOrderFilter);
                                           },
+                                         pickupAt :state.ordersList[index].pickupAt,
+                                         deliveryAt:state.ordersList[index].deliveryAt ,
                                          
                                           // notes: 'Deliver to reception.',
                                         );

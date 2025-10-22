@@ -17,11 +17,11 @@ class OrderRepositoryImplementation implements OrderRepository {
   OrderRepositoryImplementation({required this.api});
 
   @override
-  Future<OrderModel> getOrdersList(int limit, int skip, String filter, bool expressOnly, double? latitude, double? longitude, String? searchText,String? pickupFrom,String? pickupTo,String? deliveryFrom
+  Future<OrderModel> getOrdersList(int limit, int skip, String filter, bool expressOnly, double? latitude, double? longitude, String? searchText,String? pickupTo
 ,String? deliveryTo,) async {
     try {
-      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "status": filter, "expressOnly": expressOnly, "latitude": latitude, "longitude": longitude, "searchText": searchText,  "pickupFrom": pickupFrom,
-  "pickupTo": pickupTo,"deliveryFrom": deliveryFrom,"deliveryTo": deliveryTo
+      final Map<String, dynamic> params = {"limit": limit, "skip": skip, "status": filter, "expressOnly": expressOnly, "latitude": latitude, "longitude": longitude, "searchText": searchText,
+  "pickupTo": pickupTo,"deliveryTo": deliveryTo
 ,}.clean();
 
       log(params.toString(), name: "params");

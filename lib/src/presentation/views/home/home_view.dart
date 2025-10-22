@@ -114,20 +114,20 @@ class _HomeViewState extends State<HomeView> {
   final params = getTodayParams();
 
   // Determine pickup/delivery filters
-  String pickupFrom = "";
+ 
   String pickupTo = "";
-  String deliveryFrom = "";
+  
   String deliveryTo = "";
 
   if (currentOrderFilter.contains(OrderFilter.pickupScheduled) 
       ) {
-    pickupFrom = params["from"] ?? "";
+   
     pickupTo = params["to"] ?? "";
   }
 
   if (currentOrderFilter.contains(OrderFilter.readyForDelivery) 
       ) {
-    deliveryFrom = params["from"] ?? "";
+    
     deliveryTo = params["to"] ?? "";
   }
 
@@ -140,9 +140,9 @@ class _HomeViewState extends State<HomeView> {
       latitude: lat,
       longitude: lng,
      
-      pickupFrom: pickupFrom,
+    
       pickupTo: pickupTo,
-      deliveryFrom: deliveryFrom,
+     
       deliveryTo: deliveryTo,
     ),
   );
@@ -205,21 +205,21 @@ Map<String, String> getTodayParams() {
   final params = getTodayParams();
 
   // Determine pickup/delivery filters
-  String pickupFrom = "";
+
   String pickupTo = "";
-  String deliveryFrom = "";
+  
   String deliveryTo = "";
 
   if (statuses.contains(OrderFilter.pickupScheduled) 
       ) {
     // This is pickup-type filter
-    pickupFrom = params["from"] ?? "";
+   
     pickupTo = params["to"] ?? "";
   }
 
   if (statuses.contains(OrderFilter.readyForDelivery) ) {
     // This is delivery-type filter
-    deliveryFrom = params["from"] ?? "";
+   
     deliveryTo = params["to"] ?? "";
   }
 
@@ -232,9 +232,9 @@ Map<String, String> getTodayParams() {
       latitude: latitudeNotifier.value,
       longitude: longitudeNotifier.value,
    
-      pickupFrom: pickupFrom,
+      
       pickupTo: pickupTo,
-      deliveryFrom: deliveryFrom,
+  
       deliveryTo: deliveryTo,
     ),
   );
@@ -395,7 +395,9 @@ Map<String, String> getTodayParams() {
                                           apiCallOnPop: (){_fetchOrders(currentOrderFilter);
                                             context.read<DashboardDataBloc>()
       .add(const DashboardDataEvent.getDashboardData());
-                                          }
+                                          },
+                                             pickupAt :state.ordersList[index].pickupAt,
+                                         deliveryAt:state.ordersList[index].deliveryAt ,
                                         );
                                       });
                                 },

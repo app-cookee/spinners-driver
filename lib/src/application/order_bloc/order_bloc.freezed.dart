@@ -282,9 +282,7 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String? pickupFrom,
             String? pickupTo,
-            String? deliveryFrom,
             String? deliveryTo)?
         getOrdersList,
     TResult Function(
@@ -295,9 +293,7 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String pickupFrom,
             String pickupTo,
-            String deliveryFrom,
             String deliveryTo)?
         paginateOrdersList,
     TResult Function(String orderId)? getOrderDetails,
@@ -344,9 +340,7 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText,
-            _that.pickupFrom,
             _that.pickupTo,
-            _that.deliveryFrom,
             _that.deliveryTo);
       case _PaginateOrdersList() when paginateOrdersList != null:
         return paginateOrdersList(
@@ -357,9 +351,7 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText,
-            _that.pickupFrom,
             _that.pickupTo,
-            _that.deliveryFrom,
             _that.deliveryTo);
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that.orderId);
@@ -423,9 +415,7 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String? pickupFrom,
             String? pickupTo,
-            String? deliveryFrom,
             String? deliveryTo)
         getOrdersList,
     required TResult Function(
@@ -436,9 +426,7 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String pickupFrom,
             String pickupTo,
-            String deliveryFrom,
             String deliveryTo)
         paginateOrdersList,
     required TResult Function(String orderId) getOrderDetails,
@@ -484,9 +472,7 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText,
-            _that.pickupFrom,
             _that.pickupTo,
-            _that.deliveryFrom,
             _that.deliveryTo);
       case _PaginateOrdersList():
         return paginateOrdersList(
@@ -497,9 +483,7 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText,
-            _that.pickupFrom,
             _that.pickupTo,
-            _that.deliveryFrom,
             _that.deliveryTo);
       case _GetOrderDetails():
         return getOrderDetails(_that.orderId);
@@ -560,9 +544,7 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String? pickupFrom,
             String? pickupTo,
-            String? deliveryFrom,
             String? deliveryTo)?
         getOrdersList,
     TResult? Function(
@@ -573,9 +555,7 @@ extension OrderEventPatterns on OrderEvent {
             double? latitude,
             double? longitude,
             String? searchText,
-            String pickupFrom,
             String pickupTo,
-            String deliveryFrom,
             String deliveryTo)?
         paginateOrdersList,
     TResult? Function(String orderId)? getOrderDetails,
@@ -621,9 +601,7 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText,
-            _that.pickupFrom,
             _that.pickupTo,
-            _that.deliveryFrom,
             _that.deliveryTo);
       case _PaginateOrdersList() when paginateOrdersList != null:
         return paginateOrdersList(
@@ -634,9 +612,7 @@ extension OrderEventPatterns on OrderEvent {
             _that.latitude,
             _that.longitude,
             _that.searchText,
-            _that.pickupFrom,
             _that.pickupTo,
-            _that.deliveryFrom,
             _that.deliveryTo);
       case _GetOrderDetails() when getOrderDetails != null:
         return getOrderDetails(_that.orderId);
@@ -689,9 +665,7 @@ class _GetOrdersList implements OrderEvent {
       this.latitude,
       this.longitude,
       this.searchText,
-      this.pickupFrom,
       this.pickupTo,
-      this.deliveryFrom,
       this.deliveryTo});
 
   final int limit;
@@ -701,9 +675,7 @@ class _GetOrdersList implements OrderEvent {
   final double? latitude;
   final double? longitude;
   final String? searchText;
-  final String? pickupFrom;
   final String? pickupTo;
-  final String? deliveryFrom;
   final String? deliveryTo;
 
   /// Create a copy of OrderEvent
@@ -729,34 +701,19 @@ class _GetOrdersList implements OrderEvent {
                 other.longitude == longitude) &&
             (identical(other.searchText, searchText) ||
                 other.searchText == searchText) &&
-            (identical(other.pickupFrom, pickupFrom) ||
-                other.pickupFrom == pickupFrom) &&
             (identical(other.pickupTo, pickupTo) ||
                 other.pickupTo == pickupTo) &&
-            (identical(other.deliveryFrom, deliveryFrom) ||
-                other.deliveryFrom == deliveryFrom) &&
             (identical(other.deliveryTo, deliveryTo) ||
                 other.deliveryTo == deliveryTo));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      limit,
-      skip,
-      filter,
-      expressOnly,
-      latitude,
-      longitude,
-      searchText,
-      pickupFrom,
-      pickupTo,
-      deliveryFrom,
-      deliveryTo);
+  int get hashCode => Object.hash(runtimeType, limit, skip, filter, expressOnly,
+      latitude, longitude, searchText, pickupTo, deliveryTo);
 
   @override
   String toString() {
-    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText, pickupFrom: $pickupFrom, pickupTo: $pickupTo, deliveryFrom: $deliveryFrom, deliveryTo: $deliveryTo)';
+    return 'OrderEvent.getOrdersList(limit: $limit, skip: $skip, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText, pickupTo: $pickupTo, deliveryTo: $deliveryTo)';
   }
 }
 
@@ -775,9 +732,7 @@ abstract mixin class _$GetOrdersListCopyWith<$Res>
       double? latitude,
       double? longitude,
       String? searchText,
-      String? pickupFrom,
       String? pickupTo,
-      String? deliveryFrom,
       String? deliveryTo});
 }
 
@@ -800,9 +755,7 @@ class __$GetOrdersListCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? searchText = freezed,
-    Object? pickupFrom = freezed,
     Object? pickupTo = freezed,
-    Object? deliveryFrom = freezed,
     Object? deliveryTo = freezed,
   }) {
     return _then(_GetOrdersList(
@@ -834,17 +787,9 @@ class __$GetOrdersListCopyWithImpl<$Res>
           ? _self.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
               as String?,
-      pickupFrom: freezed == pickupFrom
-          ? _self.pickupFrom
-          : pickupFrom // ignore: cast_nullable_to_non_nullable
-              as String?,
       pickupTo: freezed == pickupTo
           ? _self.pickupTo
           : pickupTo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deliveryFrom: freezed == deliveryFrom
-          ? _self.deliveryFrom
-          : deliveryFrom // ignore: cast_nullable_to_non_nullable
               as String?,
       deliveryTo: freezed == deliveryTo
           ? _self.deliveryTo
@@ -865,9 +810,7 @@ class _PaginateOrdersList implements OrderEvent {
       this.latitude,
       this.longitude,
       this.searchText,
-      required this.pickupFrom,
       required this.pickupTo,
-      required this.deliveryFrom,
       required this.deliveryTo});
 
   final int skip;
@@ -877,9 +820,7 @@ class _PaginateOrdersList implements OrderEvent {
   final double? latitude;
   final double? longitude;
   final String? searchText;
-  final String pickupFrom;
   final String pickupTo;
-  final String deliveryFrom;
   final String deliveryTo;
 
   /// Create a copy of OrderEvent
@@ -905,34 +846,19 @@ class _PaginateOrdersList implements OrderEvent {
                 other.longitude == longitude) &&
             (identical(other.searchText, searchText) ||
                 other.searchText == searchText) &&
-            (identical(other.pickupFrom, pickupFrom) ||
-                other.pickupFrom == pickupFrom) &&
             (identical(other.pickupTo, pickupTo) ||
                 other.pickupTo == pickupTo) &&
-            (identical(other.deliveryFrom, deliveryFrom) ||
-                other.deliveryFrom == deliveryFrom) &&
             (identical(other.deliveryTo, deliveryTo) ||
                 other.deliveryTo == deliveryTo));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      skip,
-      limit,
-      filter,
-      expressOnly,
-      latitude,
-      longitude,
-      searchText,
-      pickupFrom,
-      pickupTo,
-      deliveryFrom,
-      deliveryTo);
+  int get hashCode => Object.hash(runtimeType, skip, limit, filter, expressOnly,
+      latitude, longitude, searchText, pickupTo, deliveryTo);
 
   @override
   String toString() {
-    return 'OrderEvent.paginateOrdersList(skip: $skip, limit: $limit, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText, pickupFrom: $pickupFrom, pickupTo: $pickupTo, deliveryFrom: $deliveryFrom, deliveryTo: $deliveryTo)';
+    return 'OrderEvent.paginateOrdersList(skip: $skip, limit: $limit, filter: $filter, expressOnly: $expressOnly, latitude: $latitude, longitude: $longitude, searchText: $searchText, pickupTo: $pickupTo, deliveryTo: $deliveryTo)';
   }
 }
 
@@ -951,9 +877,7 @@ abstract mixin class _$PaginateOrdersListCopyWith<$Res>
       double? latitude,
       double? longitude,
       String? searchText,
-      String pickupFrom,
       String pickupTo,
-      String deliveryFrom,
       String deliveryTo});
 }
 
@@ -976,9 +900,7 @@ class __$PaginateOrdersListCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? searchText = freezed,
-    Object? pickupFrom = null,
     Object? pickupTo = null,
-    Object? deliveryFrom = null,
     Object? deliveryTo = null,
   }) {
     return _then(_PaginateOrdersList(
@@ -1010,17 +932,9 @@ class __$PaginateOrdersListCopyWithImpl<$Res>
           ? _self.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
               as String?,
-      pickupFrom: null == pickupFrom
-          ? _self.pickupFrom
-          : pickupFrom // ignore: cast_nullable_to_non_nullable
-              as String,
       pickupTo: null == pickupTo
           ? _self.pickupTo
           : pickupTo // ignore: cast_nullable_to_non_nullable
-              as String,
-      deliveryFrom: null == deliveryFrom
-          ? _self.deliveryFrom
-          : deliveryFrom // ignore: cast_nullable_to_non_nullable
               as String,
       deliveryTo: null == deliveryTo
           ? _self.deliveryTo

@@ -263,7 +263,8 @@ class _LoginScreenState extends State<OtpScreen> {
                                                         'state.otpVerifyStatus.errorMessage');
                                                 TheToast.show(
                                                     message:
-                                                        'Invalid or Expired OTP',
+                                                          state.otpVerifyStatus
+                                                        .errorMessage,
                                                     context: context);
                                               }
                                             },
