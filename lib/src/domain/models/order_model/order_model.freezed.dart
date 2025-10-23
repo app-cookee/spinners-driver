@@ -5775,6 +5775,8 @@ mixin _$ItemDetails {
   int get sortOrder;
   @JsonKey(name: 'createdAt')
   String get createdAt;
+  @JsonKey(name: 'category')
+  Category? get category;
 
   /// Create a copy of ItemDetails
   /// with the given fields replaced by the non-null parameter values.
@@ -5804,17 +5806,19 @@ mixin _$ItemDetails {
             (identical(other.sortOrder, sortOrder) ||
                 other.sortOrder == sortOrder) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, categoryId, name, salePrice,
-      listingPrice, active, deleted, sortOrder, createdAt);
+      listingPrice, active, deleted, sortOrder, createdAt, category);
 
   @override
   String toString() {
-    return 'ItemDetails(id: $id, categoryId: $categoryId, name: $name, salePrice: $salePrice, listingPrice: $listingPrice, active: $active, deleted: $deleted, sortOrder: $sortOrder, createdAt: $createdAt)';
+    return 'ItemDetails(id: $id, categoryId: $categoryId, name: $name, salePrice: $salePrice, listingPrice: $listingPrice, active: $active, deleted: $deleted, sortOrder: $sortOrder, createdAt: $createdAt, category: $category)';
   }
 }
 
@@ -5833,7 +5837,10 @@ abstract mixin class $ItemDetailsCopyWith<$Res> {
       @JsonKey(name: 'active') bool active,
       @JsonKey(name: 'deleted') bool deleted,
       @JsonKey(name: 'sortOrder') int sortOrder,
-      @JsonKey(name: 'createdAt') String createdAt});
+      @JsonKey(name: 'createdAt') String createdAt,
+      @JsonKey(name: 'category') Category? category});
+
+  $CategoryCopyWith<$Res>? get category;
 }
 
 /// @nodoc
@@ -5857,6 +5864,7 @@ class _$ItemDetailsCopyWithImpl<$Res> implements $ItemDetailsCopyWith<$Res> {
     Object? deleted = null,
     Object? sortOrder = null,
     Object? createdAt = null,
+    Object? category = freezed,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -5895,7 +5903,25 @@ class _$ItemDetailsCopyWithImpl<$Res> implements $ItemDetailsCopyWith<$Res> {
           ? _self.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
+      category: freezed == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as Category?,
     ));
+  }
+
+  /// Create a copy of ItemDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CategoryCopyWith<$Res>? get category {
+    if (_self.category == null) {
+      return null;
+    }
+
+    return $CategoryCopyWith<$Res>(_self.category!, (value) {
+      return _then(_self.copyWith(category: value));
+    });
   }
 }
 
@@ -6001,7 +6027,8 @@ extension ItemDetailsPatterns on ItemDetails {
             @JsonKey(name: 'active') bool active,
             @JsonKey(name: 'deleted') bool deleted,
             @JsonKey(name: 'sortOrder') int sortOrder,
-            @JsonKey(name: 'createdAt') String createdAt)?
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'category') Category? category)?
         $default, {
     required TResult orElse(),
   }) {
@@ -6017,7 +6044,8 @@ extension ItemDetailsPatterns on ItemDetails {
             _that.active,
             _that.deleted,
             _that.sortOrder,
-            _that.createdAt);
+            _that.createdAt,
+            _that.category);
       case _:
         return orElse();
     }
@@ -6047,7 +6075,8 @@ extension ItemDetailsPatterns on ItemDetails {
             @JsonKey(name: 'active') bool active,
             @JsonKey(name: 'deleted') bool deleted,
             @JsonKey(name: 'sortOrder') int sortOrder,
-            @JsonKey(name: 'createdAt') String createdAt)
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'category') Category? category)
         $default,
   ) {
     final _that = this;
@@ -6062,7 +6091,8 @@ extension ItemDetailsPatterns on ItemDetails {
             _that.active,
             _that.deleted,
             _that.sortOrder,
-            _that.createdAt);
+            _that.createdAt,
+            _that.category);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -6091,7 +6121,8 @@ extension ItemDetailsPatterns on ItemDetails {
             @JsonKey(name: 'active') bool active,
             @JsonKey(name: 'deleted') bool deleted,
             @JsonKey(name: 'sortOrder') int sortOrder,
-            @JsonKey(name: 'createdAt') String createdAt)?
+            @JsonKey(name: 'createdAt') String createdAt,
+            @JsonKey(name: 'category') Category? category)?
         $default,
   ) {
     final _that = this;
@@ -6106,7 +6137,8 @@ extension ItemDetailsPatterns on ItemDetails {
             _that.active,
             _that.deleted,
             _that.sortOrder,
-            _that.createdAt);
+            _that.createdAt,
+            _that.category);
       case _:
         return null;
     }
@@ -6125,7 +6157,8 @@ class _ItemDetails implements ItemDetails {
       @JsonKey(name: 'active') this.active = false,
       @JsonKey(name: 'deleted') this.deleted = false,
       @JsonKey(name: 'sortOrder') this.sortOrder = 0,
-      @JsonKey(name: 'createdAt') this.createdAt = ""});
+      @JsonKey(name: 'createdAt') this.createdAt = "",
+      @JsonKey(name: 'category') this.category});
   factory _ItemDetails.fromJson(Map<String, dynamic> json) =>
       _$ItemDetailsFromJson(json);
 
@@ -6156,6 +6189,9 @@ class _ItemDetails implements ItemDetails {
   @override
   @JsonKey(name: 'createdAt')
   final String createdAt;
+  @override
+  @JsonKey(name: 'category')
+  final Category? category;
 
   /// Create a copy of ItemDetails
   /// with the given fields replaced by the non-null parameter values.
@@ -6190,17 +6226,19 @@ class _ItemDetails implements ItemDetails {
             (identical(other.sortOrder, sortOrder) ||
                 other.sortOrder == sortOrder) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, categoryId, name, salePrice,
-      listingPrice, active, deleted, sortOrder, createdAt);
+      listingPrice, active, deleted, sortOrder, createdAt, category);
 
   @override
   String toString() {
-    return 'ItemDetails(id: $id, categoryId: $categoryId, name: $name, salePrice: $salePrice, listingPrice: $listingPrice, active: $active, deleted: $deleted, sortOrder: $sortOrder, createdAt: $createdAt)';
+    return 'ItemDetails(id: $id, categoryId: $categoryId, name: $name, salePrice: $salePrice, listingPrice: $listingPrice, active: $active, deleted: $deleted, sortOrder: $sortOrder, createdAt: $createdAt, category: $category)';
   }
 }
 
@@ -6221,7 +6259,11 @@ abstract mixin class _$ItemDetailsCopyWith<$Res>
       @JsonKey(name: 'active') bool active,
       @JsonKey(name: 'deleted') bool deleted,
       @JsonKey(name: 'sortOrder') int sortOrder,
-      @JsonKey(name: 'createdAt') String createdAt});
+      @JsonKey(name: 'createdAt') String createdAt,
+      @JsonKey(name: 'category') Category? category});
+
+  @override
+  $CategoryCopyWith<$Res>? get category;
 }
 
 /// @nodoc
@@ -6245,6 +6287,7 @@ class __$ItemDetailsCopyWithImpl<$Res> implements _$ItemDetailsCopyWith<$Res> {
     Object? deleted = null,
     Object? sortOrder = null,
     Object? createdAt = null,
+    Object? category = freezed,
   }) {
     return _then(_ItemDetails(
       id: null == id
@@ -6283,7 +6326,25 @@ class __$ItemDetailsCopyWithImpl<$Res> implements _$ItemDetailsCopyWith<$Res> {
           ? _self.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
+      category: freezed == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as Category?,
     ));
+  }
+
+  /// Create a copy of ItemDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CategoryCopyWith<$Res>? get category {
+    if (_self.category == null) {
+      return null;
+    }
+
+    return $CategoryCopyWith<$Res>(_self.category!, (value) {
+      return _then(_self.copyWith(category: value));
+    });
   }
 }
 

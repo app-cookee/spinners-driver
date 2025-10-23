@@ -207,6 +207,7 @@ abstract class ItemDetails with _$ItemDetails {
     @JsonKey(name: 'deleted') @Default(false) bool deleted,
     @JsonKey(name: 'sortOrder') @Default(0) int sortOrder,
     @JsonKey(name: 'createdAt') @Default("") String createdAt,
+     @JsonKey(name: 'category') Category?  category,
   }) = _ItemDetails;
 
   factory ItemDetails.fromJson(Map<String, dynamic> json) => _$ItemDetailsFromJson(json);

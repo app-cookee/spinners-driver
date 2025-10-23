@@ -41,6 +41,7 @@ static const Color pickedUpColor= Color(0xFFF9A825);
 static const Color readyForDeliveryColor= Color(0xFF2BB2C3);
 static const Color deliveredColor= Color(0xFF43A047);
 static const Color deliveredCompletd= Color(0xFF009081);
+static const Color paidGreen= Color(0xFF37533C);
 
 
 
@@ -120,4 +121,7 @@ static const Color deliveredCompletd= Color(0xFF009081);
   static const Color filterBgColor=Color(0xFFF5FAFF);
   static const Color dateColor=Color(0xFF959595);
   static const Color violet=Color(0xFF2E008A);
+
+
+
 }

@@ -289,6 +289,9 @@ _ItemDetails _$ItemDetailsFromJson(Map<String, dynamic> json) => _ItemDetails(
       deleted: json['deleted'] as bool? ?? false,
       sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
       createdAt: json['createdAt'] as String? ?? "",
+      category: json['category'] == null
+          ? null
+          : Category.fromJson(json['category'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ItemDetailsToJson(_ItemDetails instance) =>
@@ -302,6 +305,7 @@ Map<String, dynamic> _$ItemDetailsToJson(_ItemDetails instance) =>
       'deleted': instance.deleted,
       'sortOrder': instance.sortOrder,
       'createdAt': instance.createdAt,
+      'category': instance.category,
     };
 
 _Category _$CategoryFromJson(Map<String, dynamic> json) => _Category(
