@@ -27,19 +27,13 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                               .map((p) => double.tryParse(p.amount) ?? 0.0)
                               .fold(0.0, (sum, amt) => sum + amt);
 
-final totalPaidAmount = state.orderDetails.payment
-    // include only successful payments
-    .where((p) =>
-        p.status.toLowerCase() == "authorized" ||
-        p.status.toLowerCase() == "completed")
-    // sum up all their amounts
-    .map((p) => double.tryParse(p.amount) ?? 0.0)
-    .fold(0.0, (sum, amt) => sum + amt)
-    // subtract wallet only if it exists
-    -
-    ((state.orderDetails.payment.isNotEmpty &&
-            state.orderDetails.payment.first.walletTransaction != null)
-        ? state.orderDetails.payment.first.walletTransaction!.amount
+final totalPaidAmount =  state.orderDetails.payment
+        .where((p) => p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed")
+        .map((p) => double.tryParse(p.amount) ?? 0.0)
+        .fold(0.0, (sum, amt) => sum + amt) -((state.orderDetails.payment.isNotEmpty &&
+            state.orderDetails.payment
+                          .any((p) => p.walletTransaction != null))
+        ? state.orderDetails.payment.firstWhere((p) => p.walletTransaction != null).walletTransaction!.amount
         : 0.0);
 
     log(totalPaidAmount.toString(),name:"total paid amount");
@@ -303,7 +297,10 @@ final totalPaidAmount = state.orderDetails.payment
                   ),
                   const Spacer(),
                   Text(
-                    "AED ${double.tryParse(state.orderDetails.promoUsages.first.amount)??0.0.toStringAsFixed(2)}",
+                     
+
+                 "AED ${(double.tryParse(state.orderDetails.promoUsages.first.amount) ?? 0.00).toStringAsFixed(2)}"
+,
                     style: AppTypography.sfProRoundedMedium.copyWith(
                       fontSize: 14.dp,
                       color: AppColors.green,
@@ -327,7 +324,7 @@ final totalPaidAmount = state.orderDetails.payment
                   ),
                   const Spacer(),
                   Text(
-                    "AED ${state.orderDetails.payment.first.walletTransaction?.amount.toStringAsFixed(2)?? ""}",
+                    "AED ${state.orderDetails.payment.firstWhere((p) => p.walletTransaction != null).walletTransaction?.amount.toStringAsFixed(2) ?? ""}",
                     style: AppTypography.sfProRoundedMedium.copyWith(
                       fontSize: 14.dp,
                       color: AppColors.green,
