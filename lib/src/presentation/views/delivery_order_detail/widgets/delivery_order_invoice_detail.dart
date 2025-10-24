@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -6,6 +7,7 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/app_utils.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/invoice_button.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/widgets/invoice_item_row.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/dashed_divider.dart';
@@ -112,7 +114,7 @@ final totalPaidAmount = state.orderDetails.payment
                     ),
                     Spacer(),
                     Text(
-                      "AED ${state.orderDetails.orderedServices.fold<int>(0, (sum, orderedItem) => sum + orderedItem.item.fold<int>(0, (itemSum, item) => itemSum + (item.quantity * int.parse(item.soldPrice.isNotEmpty ? item.soldPrice : '0'))))}",
+                      "AED ${state.orderDetails.orderedServices.fold<double>(0.0, (sum, orderedItem) => sum + orderedItem.item.fold<double>(0.0, (itemSum, item) => itemSum + (item.quantity * double.parse(item.soldPrice.isNotEmpty ? item.soldPrice : '0.0')))).toStringAsFixed(2)}",
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                 fontSize: 14.sp,
                 color: AppColors.neutral950,
@@ -179,7 +181,7 @@ final totalPaidAmount = state.orderDetails.payment
                                   const Spacer(),
                                   if (charge.type== 'Express Service Charge')
                                   Text(
-                    "+${percentage.toStringAsFixed(2)}%",
+                    "+${AppUtils.format(percentage)}%",
                     style: AppTypography.sfProRoundedRegular.copyWith(
                       fontSize: 14.dp,
                       color: AppColors.secondary600,
@@ -228,7 +230,7 @@ final totalPaidAmount = state.orderDetails.payment
                         ),
                         const Spacer(),
                         Text(
-                          "AED ${state.orderDetails.totalAmount}",
+                          "AED ${  double.tryParse(state.orderDetails.totalAmount)?.toStringAsFixed(2) ?? "0.00"}",
                           style: AppTypography
                               .sfProRoundedMedium
                               .copyWith(
@@ -301,7 +303,7 @@ final totalPaidAmount = state.orderDetails.payment
                   ),
                   const Spacer(),
                   Text(
-                    "AED ${state.orderDetails.promoUsages.first.amount}",
+                    "AED ${double.tryParse(state.orderDetails.promoUsages.first.amount)??0.0.toStringAsFixed(2)}",
                     style: AppTypography.sfProRoundedMedium.copyWith(
                       fontSize: 14.dp,
                       color: AppColors.green,
@@ -325,7 +327,7 @@ final totalPaidAmount = state.orderDetails.payment
                   ),
                   const Spacer(),
                   Text(
-                    "AED ${state.orderDetails.payment.first.walletTransaction?.amount ?? ""}",
+                    "AED ${state.orderDetails.payment.first.walletTransaction?.amount.toStringAsFixed(2)?? ""}",
                     style: AppTypography.sfProRoundedMedium.copyWith(
                       fontSize: 14.dp,
                       color: AppColors.green,

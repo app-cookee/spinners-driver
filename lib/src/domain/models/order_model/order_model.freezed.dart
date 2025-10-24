@@ -8725,7 +8725,7 @@ mixin _$WalletItem {
   @JsonKey(name: 'description')
   String get description;
   @JsonKey(name: 'amount')
-  int get amount;
+  double get amount;
   @JsonKey(name: 'type')
   String get type;
 
@@ -8774,7 +8774,7 @@ abstract mixin class $WalletItemCopyWith<$Res> {
       {@JsonKey(name: 'id') String id,
       @JsonKey(name: 'walletId') String walletId,
       @JsonKey(name: 'description') String description,
-      @JsonKey(name: 'amount') int amount,
+      @JsonKey(name: 'amount') double amount,
       @JsonKey(name: 'type') String type});
 }
 
@@ -8812,7 +8812,7 @@ class _$WalletItemCopyWithImpl<$Res> implements $WalletItemCopyWith<$Res> {
       amount: null == amount
           ? _self.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -8918,7 +8918,7 @@ extension WalletItemPatterns on WalletItem {
             @JsonKey(name: 'id') String id,
             @JsonKey(name: 'walletId') String walletId,
             @JsonKey(name: 'description') String description,
-            @JsonKey(name: 'amount') int amount,
+            @JsonKey(name: 'amount') double amount,
             @JsonKey(name: 'type') String type)?
         $default, {
     required TResult orElse(),
@@ -8952,7 +8952,7 @@ extension WalletItemPatterns on WalletItem {
             @JsonKey(name: 'id') String id,
             @JsonKey(name: 'walletId') String walletId,
             @JsonKey(name: 'description') String description,
-            @JsonKey(name: 'amount') int amount,
+            @JsonKey(name: 'amount') double amount,
             @JsonKey(name: 'type') String type)
         $default,
   ) {
@@ -8984,7 +8984,7 @@ extension WalletItemPatterns on WalletItem {
             @JsonKey(name: 'id') String id,
             @JsonKey(name: 'walletId') String walletId,
             @JsonKey(name: 'description') String description,
-            @JsonKey(name: 'amount') int amount,
+            @JsonKey(name: 'amount') double amount,
             @JsonKey(name: 'type') String type)?
         $default,
   ) {
@@ -9006,7 +9006,7 @@ class _WalletItem implements WalletItem {
       {@JsonKey(name: 'id') this.id = "",
       @JsonKey(name: 'walletId') this.walletId = "",
       @JsonKey(name: 'description') this.description = "",
-      @JsonKey(name: 'amount') this.amount = 0,
+      @JsonKey(name: 'amount') this.amount = 0.0,
       @JsonKey(name: 'type') this.type = ""});
   factory _WalletItem.fromJson(Map<String, dynamic> json) =>
       _$WalletItemFromJson(json);
@@ -9022,7 +9022,7 @@ class _WalletItem implements WalletItem {
   final String description;
   @override
   @JsonKey(name: 'amount')
-  final int amount;
+  final double amount;
   @override
   @JsonKey(name: 'type')
   final String type;
@@ -9079,7 +9079,7 @@ abstract mixin class _$WalletItemCopyWith<$Res>
       {@JsonKey(name: 'id') String id,
       @JsonKey(name: 'walletId') String walletId,
       @JsonKey(name: 'description') String description,
-      @JsonKey(name: 'amount') int amount,
+      @JsonKey(name: 'amount') double amount,
       @JsonKey(name: 'type') String type});
 }
 
@@ -9117,7 +9117,7 @@ class __$WalletItemCopyWithImpl<$Res> implements _$WalletItemCopyWith<$Res> {
       amount: null == amount
           ? _self.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable

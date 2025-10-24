@@ -294,7 +294,7 @@ abstract class WalletItem with _$WalletItem {
     @JsonKey(name: 'id') @Default("") String id,
        @JsonKey(name: 'walletId') @Default("") String walletId,
           @JsonKey(name: 'description') @Default("") String description,
-    @JsonKey(name: 'amount') @Default(0) int amount,
+    @JsonKey(name: 'amount') @Default(0.0) double amount,
     @JsonKey(name: 'type') @Default("") String type,
   }) = _WalletItem;
   factory WalletItem.fromJson(Map<String, dynamic> json) =>

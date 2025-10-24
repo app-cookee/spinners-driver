@@ -404,7 +404,7 @@ _WalletItem _$WalletItemFromJson(Map<String, dynamic> json) => _WalletItem(
       id: json['id'] as String? ?? "",
       walletId: json['walletId'] as String? ?? "",
       description: json['description'] as String? ?? "",
-      amount: (json['amount'] as num?)?.toInt() ?? 0,
+      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       type: json['type'] as String? ?? "",
     );
 

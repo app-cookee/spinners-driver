@@ -14,6 +14,7 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/app_utils.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/cash_settlement_history_screen.dart';
 import 'package:spinners_driver/src/presentation/views/home/placeholders/userdetail_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/profile/widgets/account_settings.dart';
@@ -164,7 +165,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   DashboardDataState>(
                                 builder: (context, state) {
                                      final cashInHand = state.dashboardDataModel.totalCollectedCash;
-                 final formattedCash = (cashInHand % 1 == 0) ? cashInHand.toInt().toString() : cashInHand.toStringAsFixed(2);
+                 final formattedCash = AppUtils.format(cashInHand);
                                   return Row(
                                     children: [
                                       Image.asset(
