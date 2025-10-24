@@ -158,8 +158,8 @@ class _HomeViewState extends State<HomeView> {
 Map<String, String> getTodayParams() {
   final now = DateTime.now();
   final from = DateFormat("yyyy-MM-dd").format(now);
-    final tomorrow = now.add(const Duration(days: 1));
-  final to = DateFormat("yyyy-MM-dd").format(tomorrow);
+    // final tomorrow = now.add(const Duration(days: 1));
+  final to = DateFormat("yyyy-MM-dd").format(now);
 
   return {
     "from": from,
