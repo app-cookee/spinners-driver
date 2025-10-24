@@ -78,6 +78,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       log('Adding bag: orderItemId=${event.orderItemId}, bagId=${event.bagId}', name: "OrderBloc");
       emit(state.copyWith(
         addBagStatus: Status.loading(),
+        createNewBagStatus: Status.initial()
       ));
       await orderRepository.addBag(event.orderItemId, event.bagId);
       emit(state.copyWith(
@@ -98,7 +99,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     try {
       log('Creating new bag: bagId=${event.bagId}, orderId=${event.orderId}, serviceId=${event.serviceId}', name: "OrderBloc");
       emit(state.copyWith(
-        createNewBagStatus: Status.loading(),
+        createNewBagStatus: Status.loading()
+        ,addBagStatus: Status.initial()
       ));
       await orderRepository.createNewBag(event.bagId, event.orderId, event.serviceId);
       emit(state.copyWith(

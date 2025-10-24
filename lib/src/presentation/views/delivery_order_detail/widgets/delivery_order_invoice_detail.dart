@@ -40,6 +40,8 @@ final totalPaidAmount = state.orderDetails.payment
         ? state.orderDetails.payment.first.walletTransaction!.amount
         : 0.0);
 
+    log(totalPaidAmount.toString(),name:"total paid amount");
+
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -245,7 +247,7 @@ final totalPaidAmount = state.orderDetails.payment
           
           
               if (state.orderDetails.promoUsages.isNotEmpty ||
-    state.orderDetails.payment.any((p) => p.walletTransaction != null) ) ...[
+    state.orderDetails.payment.any((p) => p.walletTransaction != null)||totalPaidAmount>0) ...[
   Column(
     children: [
       Container(
