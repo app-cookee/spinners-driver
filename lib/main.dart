@@ -17,7 +17,7 @@ void main() async {
   EnvConfiguration().init(Env.staging);
 
   ///Device orientation
-  SystemChrome.setPreferredOrientations(
+  await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   );
   // Initializing Firebase
