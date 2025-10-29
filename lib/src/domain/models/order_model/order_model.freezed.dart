@@ -413,6 +413,8 @@ mixin _$OrderResponse {
   List<Payment> get payment;
   @JsonKey(name: 'additionalCharges')
   List<AdditionalCharges> get additionalCharges;
+  @JsonKey(name: 'vats')
+  VatDetail? get vats;
 
   /// Create a copy of OrderResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -480,7 +482,8 @@ mixin _$OrderResponse {
                 .equals(other.promoUsages, promoUsages) &&
             const DeepCollectionEquality().equals(other.payment, payment) &&
             const DeepCollectionEquality()
-                .equals(other.additionalCharges, additionalCharges));
+                .equals(other.additionalCharges, additionalCharges) &&
+            (identical(other.vats, vats) || other.vats == vats));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -515,12 +518,13 @@ mixin _$OrderResponse {
         const DeepCollectionEquality().hash(statusHistory),
         const DeepCollectionEquality().hash(promoUsages),
         const DeepCollectionEquality().hash(payment),
-        const DeepCollectionEquality().hash(additionalCharges)
+        const DeepCollectionEquality().hash(additionalCharges),
+        vats
       ]);
 
   @override
   String toString() {
-    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges)';
+    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, vats: $vats)';
   }
 }
 
@@ -560,7 +564,8 @@ abstract mixin class $OrderResponseCopyWith<$Res> {
       @JsonKey(name: 'promoUsages') List<PromoItem> promoUsages,
       @JsonKey(name: 'payment') List<Payment> payment,
       @JsonKey(name: 'additionalCharges')
-      List<AdditionalCharges> additionalCharges});
+      List<AdditionalCharges> additionalCharges,
+      @JsonKey(name: 'vats') VatDetail? vats});
 
   $CustomerNoteCopyWith<$Res>? get customerNote;
   $CustomerCopyWith<$Res>? get customer;
@@ -568,6 +573,7 @@ abstract mixin class $OrderResponseCopyWith<$Res> {
   $StoreCopyWith<$Res>? get store;
   $TimeSlotCopyWith<$Res>? get pickupSlot;
   $TimeSlotCopyWith<$Res>? get deliverySlot;
+  $VatDetailCopyWith<$Res>? get vats;
 }
 
 /// @nodoc
@@ -612,6 +618,7 @@ class _$OrderResponseCopyWithImpl<$Res>
     Object? promoUsages = null,
     Object? payment = null,
     Object? additionalCharges = null,
+    Object? vats = freezed,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -730,6 +737,10 @@ class _$OrderResponseCopyWithImpl<$Res>
           ? _self.additionalCharges
           : additionalCharges // ignore: cast_nullable_to_non_nullable
               as List<AdditionalCharges>,
+      vats: freezed == vats
+          ? _self.vats
+          : vats // ignore: cast_nullable_to_non_nullable
+              as VatDetail?,
     ));
   }
 
@@ -814,6 +825,20 @@ class _$OrderResponseCopyWithImpl<$Res>
 
     return $TimeSlotCopyWith<$Res>(_self.deliverySlot!, (value) {
       return _then(_self.copyWith(deliverySlot: value));
+    });
+  }
+
+  /// Create a copy of OrderResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $VatDetailCopyWith<$Res>? get vats {
+    if (_self.vats == null) {
+      return null;
+    }
+
+    return $VatDetailCopyWith<$Res>(_self.vats!, (value) {
+      return _then(_self.copyWith(vats: value));
     });
   }
 }
@@ -942,7 +967,8 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'promoUsages') List<PromoItem> promoUsages,
             @JsonKey(name: 'payment') List<Payment> payment,
             @JsonKey(name: 'additionalCharges')
-            List<AdditionalCharges> additionalCharges)?
+            List<AdditionalCharges> additionalCharges,
+            @JsonKey(name: 'vats') VatDetail? vats)?
         $default, {
     required TResult orElse(),
   }) {
@@ -978,7 +1004,8 @@ extension OrderResponsePatterns on OrderResponse {
             _that.statusHistory,
             _that.promoUsages,
             _that.payment,
-            _that.additionalCharges);
+            _that.additionalCharges,
+            _that.vats);
       case _:
         return orElse();
     }
@@ -1030,7 +1057,8 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'promoUsages') List<PromoItem> promoUsages,
             @JsonKey(name: 'payment') List<Payment> payment,
             @JsonKey(name: 'additionalCharges')
-            List<AdditionalCharges> additionalCharges)
+            List<AdditionalCharges> additionalCharges,
+            @JsonKey(name: 'vats') VatDetail? vats)
         $default,
   ) {
     final _that = this;
@@ -1065,7 +1093,8 @@ extension OrderResponsePatterns on OrderResponse {
             _that.statusHistory,
             _that.promoUsages,
             _that.payment,
-            _that.additionalCharges);
+            _that.additionalCharges,
+            _that.vats);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -1116,7 +1145,8 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'promoUsages') List<PromoItem> promoUsages,
             @JsonKey(name: 'payment') List<Payment> payment,
             @JsonKey(name: 'additionalCharges')
-            List<AdditionalCharges> additionalCharges)?
+            List<AdditionalCharges> additionalCharges,
+            @JsonKey(name: 'vats') VatDetail? vats)?
         $default,
   ) {
     final _that = this;
@@ -1151,7 +1181,8 @@ extension OrderResponsePatterns on OrderResponse {
             _that.statusHistory,
             _that.promoUsages,
             _that.payment,
-            _that.additionalCharges);
+            _that.additionalCharges,
+            _that.vats);
       case _:
         return null;
     }
@@ -1194,7 +1225,8 @@ class _OrderResponse implements OrderResponse {
       final List<PromoItem> promoUsages = const [],
       @JsonKey(name: 'payment') final List<Payment> payment = const [],
       @JsonKey(name: 'additionalCharges')
-      final List<AdditionalCharges> additionalCharges = const []})
+      final List<AdditionalCharges> additionalCharges = const [],
+      @JsonKey(name: 'vats') this.vats})
       : _orderedServices = orderedServices,
         _statusHistory = statusHistory,
         _promoUsages = promoUsages,
@@ -1321,6 +1353,10 @@ class _OrderResponse implements OrderResponse {
     return EqualUnmodifiableListView(_additionalCharges);
   }
 
+  @override
+  @JsonKey(name: 'vats')
+  final VatDetail? vats;
+
   /// Create a copy of OrderResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
@@ -1391,7 +1427,8 @@ class _OrderResponse implements OrderResponse {
                 .equals(other._promoUsages, _promoUsages) &&
             const DeepCollectionEquality().equals(other._payment, _payment) &&
             const DeepCollectionEquality()
-                .equals(other._additionalCharges, _additionalCharges));
+                .equals(other._additionalCharges, _additionalCharges) &&
+            (identical(other.vats, vats) || other.vats == vats));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1426,12 +1463,13 @@ class _OrderResponse implements OrderResponse {
         const DeepCollectionEquality().hash(_statusHistory),
         const DeepCollectionEquality().hash(_promoUsages),
         const DeepCollectionEquality().hash(_payment),
-        const DeepCollectionEquality().hash(_additionalCharges)
+        const DeepCollectionEquality().hash(_additionalCharges),
+        vats
       ]);
 
   @override
   String toString() {
-    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges)';
+    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, vats: $vats)';
   }
 }
 
@@ -1473,7 +1511,8 @@ abstract mixin class _$OrderResponseCopyWith<$Res>
       @JsonKey(name: 'promoUsages') List<PromoItem> promoUsages,
       @JsonKey(name: 'payment') List<Payment> payment,
       @JsonKey(name: 'additionalCharges')
-      List<AdditionalCharges> additionalCharges});
+      List<AdditionalCharges> additionalCharges,
+      @JsonKey(name: 'vats') VatDetail? vats});
 
   @override
   $CustomerNoteCopyWith<$Res>? get customerNote;
@@ -1487,6 +1526,8 @@ abstract mixin class _$OrderResponseCopyWith<$Res>
   $TimeSlotCopyWith<$Res>? get pickupSlot;
   @override
   $TimeSlotCopyWith<$Res>? get deliverySlot;
+  @override
+  $VatDetailCopyWith<$Res>? get vats;
 }
 
 /// @nodoc
@@ -1531,6 +1572,7 @@ class __$OrderResponseCopyWithImpl<$Res>
     Object? promoUsages = null,
     Object? payment = null,
     Object? additionalCharges = null,
+    Object? vats = freezed,
   }) {
     return _then(_OrderResponse(
       id: null == id
@@ -1649,6 +1691,10 @@ class __$OrderResponseCopyWithImpl<$Res>
           ? _self._additionalCharges
           : additionalCharges // ignore: cast_nullable_to_non_nullable
               as List<AdditionalCharges>,
+      vats: freezed == vats
+          ? _self.vats
+          : vats // ignore: cast_nullable_to_non_nullable
+              as VatDetail?,
     ));
   }
 
@@ -1734,6 +1780,402 @@ class __$OrderResponseCopyWithImpl<$Res>
     return $TimeSlotCopyWith<$Res>(_self.deliverySlot!, (value) {
       return _then(_self.copyWith(deliverySlot: value));
     });
+  }
+
+  /// Create a copy of OrderResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $VatDetailCopyWith<$Res>? get vats {
+    if (_self.vats == null) {
+      return null;
+    }
+
+    return $VatDetailCopyWith<$Res>(_self.vats!, (value) {
+      return _then(_self.copyWith(vats: value));
+    });
+  }
+}
+
+/// @nodoc
+mixin _$VatDetail {
+  @JsonKey(name: 'vatAmount')
+  String get vatAmount;
+  @JsonKey(name: 'orderId')
+  String get orderId;
+  @JsonKey(name: 'vatRate')
+  String get vatRate;
+  @JsonKey(name: 'id')
+  String get id;
+
+  /// Create a copy of VatDetail
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $VatDetailCopyWith<VatDetail> get copyWith =>
+      _$VatDetailCopyWithImpl<VatDetail>(this as VatDetail, _$identity);
+
+  /// Serializes this VatDetail to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is VatDetail &&
+            (identical(other.vatAmount, vatAmount) ||
+                other.vatAmount == vatAmount) &&
+            (identical(other.orderId, orderId) || other.orderId == orderId) &&
+            (identical(other.vatRate, vatRate) || other.vatRate == vatRate) &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, vatAmount, orderId, vatRate, id);
+
+  @override
+  String toString() {
+    return 'VatDetail(vatAmount: $vatAmount, orderId: $orderId, vatRate: $vatRate, id: $id)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $VatDetailCopyWith<$Res> {
+  factory $VatDetailCopyWith(VatDetail value, $Res Function(VatDetail) _then) =
+      _$VatDetailCopyWithImpl;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'vatAmount') String vatAmount,
+      @JsonKey(name: 'orderId') String orderId,
+      @JsonKey(name: 'vatRate') String vatRate,
+      @JsonKey(name: 'id') String id});
+}
+
+/// @nodoc
+class _$VatDetailCopyWithImpl<$Res> implements $VatDetailCopyWith<$Res> {
+  _$VatDetailCopyWithImpl(this._self, this._then);
+
+  final VatDetail _self;
+  final $Res Function(VatDetail) _then;
+
+  /// Create a copy of VatDetail
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? vatAmount = null,
+    Object? orderId = null,
+    Object? vatRate = null,
+    Object? id = null,
+  }) {
+    return _then(_self.copyWith(
+      vatAmount: null == vatAmount
+          ? _self.vatAmount
+          : vatAmount // ignore: cast_nullable_to_non_nullable
+              as String,
+      orderId: null == orderId
+          ? _self.orderId
+          : orderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      vatRate: null == vatRate
+          ? _self.vatRate
+          : vatRate // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// Adds pattern-matching-related methods to [VatDetail].
+extension VatDetailPatterns on VatDetail {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_VatDetail value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _VatDetail() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_VatDetail value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _VatDetail():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_VatDetail value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _VatDetail() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'vatAmount') String vatAmount,
+            @JsonKey(name: 'orderId') String orderId,
+            @JsonKey(name: 'vatRate') String vatRate,
+            @JsonKey(name: 'id') String id)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _VatDetail() when $default != null:
+        return $default(
+            _that.vatAmount, _that.orderId, _that.vatRate, _that.id);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: 'vatAmount') String vatAmount,
+            @JsonKey(name: 'orderId') String orderId,
+            @JsonKey(name: 'vatRate') String vatRate,
+            @JsonKey(name: 'id') String id)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _VatDetail():
+        return $default(
+            _that.vatAmount, _that.orderId, _that.vatRate, _that.id);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: 'vatAmount') String vatAmount,
+            @JsonKey(name: 'orderId') String orderId,
+            @JsonKey(name: 'vatRate') String vatRate,
+            @JsonKey(name: 'id') String id)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _VatDetail() when $default != null:
+        return $default(
+            _that.vatAmount, _that.orderId, _that.vatRate, _that.id);
+      case _:
+        return null;
+    }
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _VatDetail implements VatDetail {
+  const _VatDetail(
+      {@JsonKey(name: 'vatAmount') this.vatAmount = "",
+      @JsonKey(name: 'orderId') this.orderId = "",
+      @JsonKey(name: 'vatRate') this.vatRate = "",
+      @JsonKey(name: 'id') this.id = ""});
+  factory _VatDetail.fromJson(Map<String, dynamic> json) =>
+      _$VatDetailFromJson(json);
+
+  @override
+  @JsonKey(name: 'vatAmount')
+  final String vatAmount;
+  @override
+  @JsonKey(name: 'orderId')
+  final String orderId;
+  @override
+  @JsonKey(name: 'vatRate')
+  final String vatRate;
+  @override
+  @JsonKey(name: 'id')
+  final String id;
+
+  /// Create a copy of VatDetail
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$VatDetailCopyWith<_VatDetail> get copyWith =>
+      __$VatDetailCopyWithImpl<_VatDetail>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$VatDetailToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _VatDetail &&
+            (identical(other.vatAmount, vatAmount) ||
+                other.vatAmount == vatAmount) &&
+            (identical(other.orderId, orderId) || other.orderId == orderId) &&
+            (identical(other.vatRate, vatRate) || other.vatRate == vatRate) &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, vatAmount, orderId, vatRate, id);
+
+  @override
+  String toString() {
+    return 'VatDetail(vatAmount: $vatAmount, orderId: $orderId, vatRate: $vatRate, id: $id)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$VatDetailCopyWith<$Res>
+    implements $VatDetailCopyWith<$Res> {
+  factory _$VatDetailCopyWith(
+          _VatDetail value, $Res Function(_VatDetail) _then) =
+      __$VatDetailCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'vatAmount') String vatAmount,
+      @JsonKey(name: 'orderId') String orderId,
+      @JsonKey(name: 'vatRate') String vatRate,
+      @JsonKey(name: 'id') String id});
+}
+
+/// @nodoc
+class __$VatDetailCopyWithImpl<$Res> implements _$VatDetailCopyWith<$Res> {
+  __$VatDetailCopyWithImpl(this._self, this._then);
+
+  final _VatDetail _self;
+  final $Res Function(_VatDetail) _then;
+
+  /// Create a copy of VatDetail
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? vatAmount = null,
+    Object? orderId = null,
+    Object? vatRate = null,
+    Object? id = null,
+  }) {
+    return _then(_VatDetail(
+      vatAmount: null == vatAmount
+          ? _self.vatAmount
+          : vatAmount // ignore: cast_nullable_to_non_nullable
+              as String,
+      orderId: null == orderId
+          ? _self.orderId
+          : orderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      vatRate: null == vatRate
+          ? _self.vatRate
+          : vatRate // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

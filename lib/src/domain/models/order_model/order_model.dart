@@ -48,11 +48,30 @@ abstract class OrderResponse with _$OrderResponse {
     @JsonKey(name: 'promoUsages') @Default([]) List<PromoItem> promoUsages,
     @JsonKey(name: 'payment') @Default([]) List<Payment> payment,
     @JsonKey(name: 'additionalCharges') @Default([]) List<AdditionalCharges> additionalCharges,
+    @JsonKey(name: 'vats') VatDetail? vats
+  
   
   }) = _OrderResponse;
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) =>
       _$OrderResponseFromJson(json);
+}
+
+
+
+
+
+@freezed
+abstract class VatDetail with _$VatDetail {
+  const factory VatDetail({
+    @JsonKey(name: 'vatAmount') @Default("") String vatAmount,
+    @JsonKey(name: 'orderId') @Default("") String orderId,
+    @JsonKey(name: 'vatRate') @Default("") String vatRate,
+    @JsonKey(name: 'id') @Default("") String id,
+  }) = _VatDetail;
+
+  factory VatDetail.fromJson(Map<String, dynamic> json) =>
+      _$VatDetailFromJson(json);
 }
 
 

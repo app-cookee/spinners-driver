@@ -80,6 +80,9 @@ _OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
                   (e) => AdditionalCharges.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      vats: json['vats'] == null
+          ? null
+          : VatDetail.fromJson(json['vats'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OrderResponseToJson(_OrderResponse instance) =>
@@ -113,6 +116,22 @@ Map<String, dynamic> _$OrderResponseToJson(_OrderResponse instance) =>
       'promoUsages': instance.promoUsages,
       'payment': instance.payment,
       'additionalCharges': instance.additionalCharges,
+      'vats': instance.vats,
+    };
+
+_VatDetail _$VatDetailFromJson(Map<String, dynamic> json) => _VatDetail(
+      vatAmount: json['vatAmount'] as String? ?? "",
+      orderId: json['orderId'] as String? ?? "",
+      vatRate: json['vatRate'] as String? ?? "",
+      id: json['id'] as String? ?? "",
+    );
+
+Map<String, dynamic> _$VatDetailToJson(_VatDetail instance) =>
+    <String, dynamic>{
+      'vatAmount': instance.vatAmount,
+      'orderId': instance.orderId,
+      'vatRate': instance.vatRate,
+      'id': instance.id,
     };
 
 _OrderStatus _$OrderStatusFromJson(Map<String, dynamic> json) => _OrderStatus(

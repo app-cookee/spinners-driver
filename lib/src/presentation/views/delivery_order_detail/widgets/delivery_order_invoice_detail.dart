@@ -22,19 +22,11 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // log(state.orderDetails.promoUsages.first.promoCode?.name.toString());
-    final codAmount = state.orderDetails.payment
-                              .where((p) => p.status.toLowerCase() == "pending")
-                              .map((p) => double.tryParse(p.amount) ?? 0.0)
-                              .fold(0.0, (sum, amt) => sum + amt);
 
-final totalPaidAmount =  state.orderDetails.payment
+    final totalPaidAmount = state.orderDetails.payment
         .where((p) => p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed")
         .map((p) => double.tryParse(p.amount) ?? 0.0)
-        .fold(0.0, (sum, amt) => sum + amt) -((state.orderDetails.payment.isNotEmpty &&
-            state.orderDetails.payment
-                          .any((p) => p.walletTransaction != null))
-        ? state.orderDetails.payment.firstWhere((p) => p.walletTransaction != null).walletTransaction!.amount
-        : 0.0);
+        .fold(0.0, (sum, amt) => sum + amt);
 
     log(totalPaidAmount.toString(),name:"total paid amount");
 
@@ -202,198 +194,319 @@ final totalPaidAmount =  state.orderDetails.payment
               ),
             ),
           ],
+
+
+
           
           
+       if (state.orderDetails.additionalCharges.isNotEmpty)   
              Gap(8.dp),
-          Column(
-            children: [
-              DashedDivider(),
-              
-              Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 16.dp,vertical: 8.dp),
-                child: Row(
-                      children: [
-                        Text(
-                          "Total",
-                          style: AppTypography
-                              .sfProRoundedMedium
-                              .copyWith(
-                            fontSize: 18.dp,
-                            color: AppColors.neutral950,
+              if(state.orderDetails.promoUsages.isNotEmpty)
+              Container(
+                decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xffEFFFF1), AppColors.white])),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const DashedDivider(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.dp,vertical: 16.dp),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Promocode & Discounts",
+                            style: AppTypography.sfProRoundedSemiBold.copyWith(
+                              fontSize: 12.dp,
+                              color: AppColors.neutral950,
+                            ),
                           ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          "AED ${  double.tryParse(state.orderDetails.totalAmount)?.toStringAsFixed(2) ?? "0.00"}",
-                          style: AppTypography
-                              .sfProRoundedMedium
-                              .copyWith(
-                             fontSize: 18.dp,
-                            color: AppColors.neutral950,
-                          ),
+                          Gap(2.dp),
+                          if (state.orderDetails.promoUsages.isNotEmpty) ...[
+                        Gap(6.dp),
+                        Column(
+                          children: state.orderDetails.promoUsages.map((promo) {
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 0.dp),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Promo Applied",
+                                    style: AppTypography.sfProRoundedRegular.copyWith(
+                                      fontSize: 14.dp,
+                                      color: AppColors.paidGreen,
+                                    ),
+                                  ),
+                                  Gap(6.dp),
+                                  Container(
+                                    height: 3.dp,
+                                    width: 3.dp,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.paidGreen,
+                                    ),
+                                  ),
+                                  Gap(6.dp),
+                                  Text(
+                                    promo.promoCode?.name ?? "",
+                                    style: AppTypography.sfProRoundedRegular.copyWith(
+                                      fontSize: 14.dp,
+                                      color: AppColors.paidGreen,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    "AED ${promo.amount}",
+                                    style: AppTypography.sfProRoundedRegular.copyWith(
+                                      fontSize: 14.dp,
+                                      color: AppColors.green,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ],
+                        ],
+                      ),
                     ),
+                  ],
+                ),
               ),
-              const DashedDivider()
-            ],
-          ),
-                  
-          
-          
-          
-              if (state.orderDetails.promoUsages.isNotEmpty ||
-    state.orderDetails.payment.any((p) => p.walletTransaction != null)||totalPaidAmount>0) ...[
-  Column(
-    children: [
-      Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFEFFFF1), Color(0xFFFFFFFF)],
+
+
+              Column(
+                children: [
+                  const DashedDivider(),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.dp,vertical: 8.dp),
+                      child: Column(
+                        children: [
+                          if(((double.tryParse(state.orderDetails.totalAmount) ?? 0.00) + (num.tryParse(state.orderDetails.vats?.vatAmount ?? '0.00') ?? 0.00))>0)
+                          ...[
+                          Row(
+                            children: [
+                              Text(
+                                "Total Amount + VAT (${state.orderDetails.vats?.vatRate ?? 0}%)",
+                                style: AppTypography.sfProRoundedRegular.copyWith(
+                                  fontSize: 12.dp,
+                                  color: AppColors.neutral950,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                "AED ${AppUtils.format(double.tryParse(state.orderDetails.totalAmount) ?? 0.00)} + (AED ${state.orderDetails.vats?.vatAmount ?? 0})",
+                                style: AppTypography.sfProRoundedMedium.copyWith(
+                                  fontSize: 12.dp,
+                                  color: AppColors.neutral950,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(4.dp),
+                          ],
+                          Row(
+                            children: [
+                              Text(
+                                "Grand Total",
+                                style: AppTypography.sfProRoundedMedium.copyWith(
+                                  fontSize: 18.dp,
+                                  color: AppColors.neutral950,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                "AED ${((double.tryParse(state.orderDetails.totalAmount) ?? 0.00) + (num.tryParse(state.orderDetails.vats?.vatAmount ?? '0.00') ?? 0.00)).toStringAsFixed(2)}",
+                                style: AppTypography.sfProRoundedMedium.copyWith(
+                                  fontSize: 18.dp,
+                                  color: AppColors.neutral950,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+
+                 if(state.orderDetails.payment
+                          .any((p) => p.walletTransaction != null) || totalPaidAmount>0||state.orderDetails.payment
+              .any((p) => p.method == 'onlinePayment' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))||state.orderDetails.payment
+              .any((p) => p.method == 'swipeCard' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))||state.orderDetails.payment
+              .any((p) => p.method == 'cod' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed")))
+              Container(
+                decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xffEFF6FF), AppColors.white])),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const DashedDivider(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.dp,vertical: 16.dp),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Payments Done",
+                            style: AppTypography.sfProRoundedSemiBold.copyWith(
+                              fontSize: 12.dp,
+                              color: AppColors.neutral950,
+                            ),
+                          ),
+                          Gap(2.dp),
+                      if (state.orderDetails.payment
+                          .any((p) => p.walletTransaction != null)) ...[
+                        Gap(6.dp),
+                        Row(
+                          children: [
+                            Text(
+                              "Wallet Applied",
+                              style: AppTypography.sfProRoundedRegular.copyWith(
+                                fontSize: 14.dp,
+                                color: AppColors.paidGreen,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              "AED ${state.orderDetails.payment
+                              .where((p) => p.method == 'wallet' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))
+                              .fold<double>(0.0, (sum, p) => sum + (double.tryParse(p.amount) ?? 0.0))
+                              .toStringAsFixed(2)}",
+                              style: AppTypography.sfProRoundedRegular.copyWith(
+                                fontSize: 14.dp,
+                                color: AppColors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (state.orderDetails.payment
+      .any((p) => p.method == 'onlinePayment' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))) ...[
+    Gap(6.dp),
+    Row(
+      children: [
+        Text(
+          "Online Payment",
+          style: AppTypography.sfProRoundedRegular.copyWith(
+            fontSize: 14.dp,
+            color: AppColors.paidGreen,
           ),
         ),
-        padding: EdgeInsets.only(left: 16.dp,right: 16.dp,top: 20.dp,bottom: 16.dp), 
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-             Text(
-                    "Applied Promos & Payments",
-                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                      fontSize: 12.dp,
-                      color: AppColors.neutral950,
-                    ),
-                  ),
-                  Gap(8.dp),
-      
-            
-            // --- Promo Applied ---
-            if (state.orderDetails.promoUsages.isNotEmpty) ...[
-              Row(
-                children: [
-                  Text(
-                    "Promo Applied",
-                    style: AppTypography.sfProRoundedRegular.copyWith(
-                      fontSize: 14.dp,
-                      color: AppColors.paidGreen,
-                    ),
-                  ),
-                  Gap(6.dp),
-                  Container(
-                    height: 3.dp,
-                    width: 3.dp,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.paidGreen,
-                    ),
-                  ),
-                  Gap(6.dp),
-                  Text(
-                    state.orderDetails.promoUsages.first.promoCode?.name ?? "",
-                    style: AppTypography.sfProRoundedRegular.copyWith(
-                      fontSize: 14.dp,
-                      color: AppColors.paidGreen,
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                     
-
-                 "AED ${(double.tryParse(state.orderDetails.promoUsages.first.amount) ?? 0.00).toStringAsFixed(2)}"
-,
-                    style: AppTypography.sfProRoundedMedium.copyWith(
-                      fontSize: 14.dp,
-                      color: AppColors.green,
-                    ),
-                  ),
-                ],
-              ),
-              Gap(6.dp),
-            ],
-      
-            // --- Wallet Applied ---
-            if (state.orderDetails.payment.any((p) => p.walletTransaction != null)) ...[
-              Row(
-                children: [
-                  Text(
-                    "Wallet Applied",
-                    style: AppTypography.sfProRoundedRegular.copyWith(
-                      fontSize: 14.dp,
-                      color: AppColors.paidGreen,
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    "AED ${state.orderDetails.payment.firstWhere((p) => p.walletTransaction != null).walletTransaction?.amount.toStringAsFixed(2) ?? ""}",
-                    style: AppTypography.sfProRoundedMedium.copyWith(
-                      fontSize: 14.dp,
-                      color: AppColors.green,
-                    ),
-                  ),
-                ],
-              ),
-              Gap(6.dp),
-            ],
-      
-            // --- Paid Amount ---
-            if (totalPaidAmount > 0) ...[
-              Row(
-                children: [
-                  Text(
-                    "Paid Amount",
-                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                      fontSize: 14.dp,
-                      color: AppColors.paidGreen,
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    "AED ${totalPaidAmount.toStringAsFixed(2)}",
-                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                      fontSize: 14.dp,
-                      color: AppColors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-         
-          ],
+        const Spacer(),
+        Text(
+          "AED ${state.orderDetails.payment
+              .where((p) => p.method == 'onlinePayment' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))
+              .fold<double>(0.0, (sum, p) => sum + (double.tryParse(p.amount) ?? 0.0))
+              .toStringAsFixed(2)}",
+          style: AppTypography.sfProRoundedRegular.copyWith(
+            fontSize: 14.dp,
+            color: AppColors.green,
+          ),
         ),
-      ),
-         const DashedDivider()
-    ],
-  ),
-],
+      ],
+    ),
+  ],
 
-           
-              Gap(20.dp),
-            
-            
-              
-           if (codAmount > 0)
-            Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 16.dp),
-              child: Row(
-                children: [
-                  Text(
-                    "Pay on Delivery",
-                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                      fontSize: 20.dp,
-                      color: AppColors.neutral950,
+if (state.orderDetails.payment
+      .any((p) => p.method == 'cod' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))) ...[
+    Gap(6.dp),
+    Row(
+      children: [
+        Text(
+          "Cash on Delivery",
+          style: AppTypography.sfProRoundedRegular.copyWith(
+            fontSize: 14.dp,
+            color: AppColors.paidGreen,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          "AED ${state.orderDetails.payment
+              .where((p) => p.method == 'cod' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))
+              .fold<double>(0.0, (sum, p) => sum + (double.tryParse(p.amount) ?? 0.0))
+              .toStringAsFixed(2)}",
+          style: AppTypography.sfProRoundedRegular.copyWith(
+            fontSize: 14.dp,
+            color: AppColors.green,
+          ),
+        ),
+      ],
+    ),
+  ],
+
+  if (state.orderDetails.payment
+      .any((p) => p.method == 'swipeCard' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))) ...[
+    Gap(6.dp),
+    Row(
+      children: [
+        Text(
+          "Bank Payment",
+          style: AppTypography.sfProRoundedRegular.copyWith(
+            fontSize: 14.dp,
+            color: AppColors.paidGreen,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          "AED ${state.orderDetails.payment
+              .where((p) => p.method == 'swipeCard' && (p.status.toLowerCase() == "authorized" || p.status.toLowerCase() == "completed"))
+              .fold<double>(0.0, (sum, p) => sum + (double.tryParse(p.amount) ?? 0.0))
+              .toStringAsFixed(2)}",
+          style: AppTypography.sfProRoundedRegular.copyWith(
+            fontSize: 14.dp,
+            color: AppColors.green,
+          ),
+        ),
+      ],
+    ),
+  ],
+                      if (totalPaidAmount>0) ...[
+                                    Gap(6.dp),
+                                    Padding(
+                                  padding: EdgeInsets.only(bottom: 6.dp),
+                                  child:  Row(
+                                    children: [
+                                      Text(
+                                        "Total Paid Amount",
+                                        style: AppTypography.sfProRoundedBold.copyWith(
+                                          fontSize: 16.dp,
+                                          color: Color(0xff273F5E),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        "AED ${totalPaidAmount.toStringAsFixed(2)}",
+                                        style: AppTypography.sfProRoundedBold.copyWith(
+                                          fontSize: 16.dp,
+                                          color: Color(0xff317AB6),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                    ),
+                                  
+                              ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    "AED ${codAmount.toStringAsFixed(2)}",
-                    style: AppTypography.sfProRoundedSemiBold.copyWith(
-                      fontSize: 20.dp,
-                      color: AppColors.neutral950,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                      const DashedDivider()
+                  ],
+                ),
+              ),       
+          
+  
               Gap(16.dp),
             
               SizedBox(
@@ -406,9 +519,6 @@ final totalPaidAmount =  state.orderDetails.payment
     );
   }
 }
-
-
-
 
 
 
