@@ -12,6 +12,7 @@ import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart
 import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/domain/models/order_model/order_model.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/app_utils.dart';
 import 'package:spinners_driver/src/presentation/utils/launcher_utils.dart';
 import 'package:spinners_driver/src/presentation/utils/map_navigation_helper.dart';
 import 'package:spinners_driver/src/presentation/views/delivery_order_detail/placeholder/order_detail_shimmer.dart';
@@ -443,7 +444,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                     ),
                     Gap(6.dp),
                     Text(
-                      'AED $totalAmount',
+                      'AED ${AppUtils.format(totalAmount)}',
                       style: AppTypography.sfProRoundedSemiBold.copyWith(
                         fontSize: 12.dp,
                         color: AppColors.white,
