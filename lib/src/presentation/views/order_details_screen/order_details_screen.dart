@@ -127,7 +127,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   notes: state.orderDetails.customerNote?.note??"",
                                   customer: _getCustomerName(
                                       state.orderDetails.customer),
-                                  amount: state.orderDetails.totalAmount,
+                                  amount:state.orderDetails.payment
+                                  .where((p) =>
+                                      p.status.toLowerCase() == "pending")
+                                  .map((p) => double.tryParse(p.amount) ?? 0.0)
+                                  .fold(0.0, (sum, amt) => sum + amt),
                                   title: state.orderDetails.status == 'pickedUp'
                                       ? "Pickedup"
                                       : "Pickup",

@@ -415,6 +415,8 @@ mixin _$OrderResponse {
   List<AdditionalCharges> get additionalCharges;
   @JsonKey(name: 'vats')
   VatDetail? get vats;
+  @JsonKey(name: 'expressPercentage')
+  String get expressPercentage;
 
   /// Create a copy of OrderResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -483,7 +485,9 @@ mixin _$OrderResponse {
             const DeepCollectionEquality().equals(other.payment, payment) &&
             const DeepCollectionEquality()
                 .equals(other.additionalCharges, additionalCharges) &&
-            (identical(other.vats, vats) || other.vats == vats));
+            (identical(other.vats, vats) || other.vats == vats) &&
+            (identical(other.expressPercentage, expressPercentage) ||
+                other.expressPercentage == expressPercentage));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -519,12 +523,13 @@ mixin _$OrderResponse {
         const DeepCollectionEquality().hash(promoUsages),
         const DeepCollectionEquality().hash(payment),
         const DeepCollectionEquality().hash(additionalCharges),
-        vats
+        vats,
+        expressPercentage
       ]);
 
   @override
   String toString() {
-    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, vats: $vats)';
+    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, vats: $vats, expressPercentage: $expressPercentage)';
   }
 }
 
@@ -565,7 +570,8 @@ abstract mixin class $OrderResponseCopyWith<$Res> {
       @JsonKey(name: 'payment') List<Payment> payment,
       @JsonKey(name: 'additionalCharges')
       List<AdditionalCharges> additionalCharges,
-      @JsonKey(name: 'vats') VatDetail? vats});
+      @JsonKey(name: 'vats') VatDetail? vats,
+      @JsonKey(name: 'expressPercentage') String expressPercentage});
 
   $CustomerNoteCopyWith<$Res>? get customerNote;
   $CustomerCopyWith<$Res>? get customer;
@@ -619,6 +625,7 @@ class _$OrderResponseCopyWithImpl<$Res>
     Object? payment = null,
     Object? additionalCharges = null,
     Object? vats = freezed,
+    Object? expressPercentage = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -741,6 +748,10 @@ class _$OrderResponseCopyWithImpl<$Res>
           ? _self.vats
           : vats // ignore: cast_nullable_to_non_nullable
               as VatDetail?,
+      expressPercentage: null == expressPercentage
+          ? _self.expressPercentage
+          : expressPercentage // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 
@@ -968,7 +979,8 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'payment') List<Payment> payment,
             @JsonKey(name: 'additionalCharges')
             List<AdditionalCharges> additionalCharges,
-            @JsonKey(name: 'vats') VatDetail? vats)?
+            @JsonKey(name: 'vats') VatDetail? vats,
+            @JsonKey(name: 'expressPercentage') String expressPercentage)?
         $default, {
     required TResult orElse(),
   }) {
@@ -1005,7 +1017,8 @@ extension OrderResponsePatterns on OrderResponse {
             _that.promoUsages,
             _that.payment,
             _that.additionalCharges,
-            _that.vats);
+            _that.vats,
+            _that.expressPercentage);
       case _:
         return orElse();
     }
@@ -1058,7 +1071,8 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'payment') List<Payment> payment,
             @JsonKey(name: 'additionalCharges')
             List<AdditionalCharges> additionalCharges,
-            @JsonKey(name: 'vats') VatDetail? vats)
+            @JsonKey(name: 'vats') VatDetail? vats,
+            @JsonKey(name: 'expressPercentage') String expressPercentage)
         $default,
   ) {
     final _that = this;
@@ -1094,7 +1108,8 @@ extension OrderResponsePatterns on OrderResponse {
             _that.promoUsages,
             _that.payment,
             _that.additionalCharges,
-            _that.vats);
+            _that.vats,
+            _that.expressPercentage);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -1146,7 +1161,8 @@ extension OrderResponsePatterns on OrderResponse {
             @JsonKey(name: 'payment') List<Payment> payment,
             @JsonKey(name: 'additionalCharges')
             List<AdditionalCharges> additionalCharges,
-            @JsonKey(name: 'vats') VatDetail? vats)?
+            @JsonKey(name: 'vats') VatDetail? vats,
+            @JsonKey(name: 'expressPercentage') String expressPercentage)?
         $default,
   ) {
     final _that = this;
@@ -1182,7 +1198,8 @@ extension OrderResponsePatterns on OrderResponse {
             _that.promoUsages,
             _that.payment,
             _that.additionalCharges,
-            _that.vats);
+            _that.vats,
+            _that.expressPercentage);
       case _:
         return null;
     }
@@ -1226,7 +1243,8 @@ class _OrderResponse implements OrderResponse {
       @JsonKey(name: 'payment') final List<Payment> payment = const [],
       @JsonKey(name: 'additionalCharges')
       final List<AdditionalCharges> additionalCharges = const [],
-      @JsonKey(name: 'vats') this.vats})
+      @JsonKey(name: 'vats') this.vats,
+      @JsonKey(name: 'expressPercentage') this.expressPercentage = ""})
       : _orderedServices = orderedServices,
         _statusHistory = statusHistory,
         _promoUsages = promoUsages,
@@ -1356,6 +1374,9 @@ class _OrderResponse implements OrderResponse {
   @override
   @JsonKey(name: 'vats')
   final VatDetail? vats;
+  @override
+  @JsonKey(name: 'expressPercentage')
+  final String expressPercentage;
 
   /// Create a copy of OrderResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -1428,7 +1449,9 @@ class _OrderResponse implements OrderResponse {
             const DeepCollectionEquality().equals(other._payment, _payment) &&
             const DeepCollectionEquality()
                 .equals(other._additionalCharges, _additionalCharges) &&
-            (identical(other.vats, vats) || other.vats == vats));
+            (identical(other.vats, vats) || other.vats == vats) &&
+            (identical(other.expressPercentage, expressPercentage) ||
+                other.expressPercentage == expressPercentage));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1464,12 +1487,13 @@ class _OrderResponse implements OrderResponse {
         const DeepCollectionEquality().hash(_promoUsages),
         const DeepCollectionEquality().hash(_payment),
         const DeepCollectionEquality().hash(_additionalCharges),
-        vats
+        vats,
+        expressPercentage
       ]);
 
   @override
   String toString() {
-    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, vats: $vats)';
+    return 'OrderResponse(id: $id, customerId: $customerId, storeId: $storeId, orderedFrom: $orderedFrom, customerNote: $customerNote, expressDelivery: $expressDelivery, type: $type, status: $status, refId: $refId, pickupSlotId: $pickupSlotId, deliverySlotId: $deliverySlotId, selectedAddressId: $selectedAddressId, expressService: $expressService, pickupAt: $pickupAt, deliveryAt: $deliveryAt, createdAt: $createdAt, totalAmount: $totalAmount, discount: $discount, paidAmount: $paidAmount, customer: $customer, orderedServices: $orderedServices, selectedAddress: $selectedAddress, store: $store, pickupSlot: $pickupSlot, deliverySlot: $deliverySlot, statusHistory: $statusHistory, promoUsages: $promoUsages, payment: $payment, additionalCharges: $additionalCharges, vats: $vats, expressPercentage: $expressPercentage)';
   }
 }
 
@@ -1512,7 +1536,8 @@ abstract mixin class _$OrderResponseCopyWith<$Res>
       @JsonKey(name: 'payment') List<Payment> payment,
       @JsonKey(name: 'additionalCharges')
       List<AdditionalCharges> additionalCharges,
-      @JsonKey(name: 'vats') VatDetail? vats});
+      @JsonKey(name: 'vats') VatDetail? vats,
+      @JsonKey(name: 'expressPercentage') String expressPercentage});
 
   @override
   $CustomerNoteCopyWith<$Res>? get customerNote;
@@ -1573,6 +1598,7 @@ class __$OrderResponseCopyWithImpl<$Res>
     Object? payment = null,
     Object? additionalCharges = null,
     Object? vats = freezed,
+    Object? expressPercentage = null,
   }) {
     return _then(_OrderResponse(
       id: null == id
@@ -1695,6 +1721,10 @@ class __$OrderResponseCopyWithImpl<$Res>
           ? _self.vats
           : vats // ignore: cast_nullable_to_non_nullable
               as VatDetail?,
+      expressPercentage: null == expressPercentage
+          ? _self.expressPercentage
+          : expressPercentage // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 

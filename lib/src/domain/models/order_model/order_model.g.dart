@@ -83,6 +83,7 @@ _OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       vats: json['vats'] == null
           ? null
           : VatDetail.fromJson(json['vats'] as Map<String, dynamic>),
+      expressPercentage: json['expressPercentage'] as String? ?? "",
     );
 
 Map<String, dynamic> _$OrderResponseToJson(_OrderResponse instance) =>
@@ -117,6 +118,7 @@ Map<String, dynamic> _$OrderResponseToJson(_OrderResponse instance) =>
       'payment': instance.payment,
       'additionalCharges': instance.additionalCharges,
       'vats': instance.vats,
+      'expressPercentage': instance.expressPercentage,
     };
 
 _VatDetail _$VatDetailFromJson(Map<String, dynamic> json) => _VatDetail(

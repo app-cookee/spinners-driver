@@ -48,7 +48,9 @@ abstract class OrderResponse with _$OrderResponse {
     @JsonKey(name: 'promoUsages') @Default([]) List<PromoItem> promoUsages,
     @JsonKey(name: 'payment') @Default([]) List<Payment> payment,
     @JsonKey(name: 'additionalCharges') @Default([]) List<AdditionalCharges> additionalCharges,
-    @JsonKey(name: 'vats') VatDetail? vats
+    @JsonKey(name: 'vats') VatDetail? vats,
+    @JsonKey(name: 'expressPercentage') @Default("") String expressPercentage,
+
   
   
   }) = _OrderResponse;

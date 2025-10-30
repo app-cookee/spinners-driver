@@ -149,8 +149,8 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                         final double amount = double.tryParse(charge.amount ?? "0") ?? 0;
                     
                         // percentage for this charge (relative to base)
-                        final double percentage =
-                                baseAmount > 0 ? (amount / baseAmount) * 100 : 0;
+                        // final double percentage =
+                        //         baseAmount > 0 ? (amount / baseAmount) * 100 : 0;
                         return Padding(
                               padding: EdgeInsets.only(bottom: 6.dp),
                               child: Row(
@@ -167,7 +167,7 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                                   const Spacer(),
                                   if (charge.type== 'Express Service Charge')
                                   Text(
-                    "+${AppUtils.format(percentage)}%",
+                    "+${AppUtils.format(double.tryParse(state.orderDetails.expressPercentage)??0.0)}%",
                     style: AppTypography.sfProRoundedRegular.copyWith(
                       fontSize: 14.dp,
                       color: AppColors.secondary600,
@@ -288,7 +288,7 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 16.dp,vertical: 8.dp),
                       child: Column(
                         children: [
-                          if(((double.tryParse(state.orderDetails.totalAmount) ?? 0.00) + (num.tryParse(state.orderDetails.vats?.vatAmount ?? '0.00') ?? 0.00))>0)
+                          if((((double.tryParse(state.orderDetails.totalAmount) ?? 0.00) - (double.tryParse(state.orderDetails.discount) ?? 0.00) )+ (num.tryParse(state.orderDetails.vats?.vatAmount ?? '0.00') ?? 0.00))>0)
                           ...[
                           Row(
                             children: [
@@ -301,7 +301,7 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                               ),
                               const Spacer(),
                               Text(
-                                "AED ${AppUtils.format(double.tryParse(state.orderDetails.totalAmount) ?? 0.00)} + (AED ${state.orderDetails.vats?.vatAmount ?? 0})",
+                                "AED ${AppUtils.format((double.tryParse(state.orderDetails.totalAmount) ?? 0.00)-(double.tryParse(state.orderDetails.discount) ?? 0.00) )} + (AED ${state.orderDetails.vats?.vatAmount ?? 0})",
                                 style: AppTypography.sfProRoundedMedium.copyWith(
                                   fontSize: 12.dp,
                                   color: AppColors.neutral950,
@@ -322,7 +322,7 @@ class DeliveryOrderInvoiceDetails extends StatelessWidget {
                               ),
                               const Spacer(),
                               Text(
-                                "AED ${((double.tryParse(state.orderDetails.totalAmount) ?? 0.00) + (num.tryParse(state.orderDetails.vats?.vatAmount ?? '0.00') ?? 0.00)).toStringAsFixed(2)}",
+                                "AED ${(((double.tryParse(state.orderDetails.totalAmount) ?? 0.00)-(double.tryParse(state.orderDetails.discount) ?? 0.00) ) + (num.tryParse(state.orderDetails.vats?.vatAmount ?? '0.00') ?? 0.00)).toStringAsFixed(2)}",
                                 style: AppTypography.sfProRoundedMedium.copyWith(
                                   fontSize: 18.dp,
                                   color: AppColors.neutral950,

@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/app_utils.dart';
 import 'package:spinners_driver/src/presentation/views/order_details_screen/widgets/status_history.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
@@ -22,7 +23,7 @@ class OrderDetailnfo extends StatelessWidget {
   });
   final String notes;
   final String customer;
-  final String amount;
+  final double amount;
   final String title;
   final String timeSlot;
   final String address;
@@ -132,7 +133,7 @@ class OrderDetailnfo extends StatelessWidget {
     );
   }
 
-  Widget _codBalance(BuildContext context, final String amount) {
+  Widget _codBalance(BuildContext context, final double amount) {
     return Row(
       spacing: 12.dp,
       children: [
@@ -152,7 +153,7 @@ class OrderDetailnfo extends StatelessWidget {
               ),
             ),
             Text(
-              "AED $amount",
+              "AED ${AppUtils.format(amount)}",
               style: AppTypography.sfProRoundedSemiBold.copyWith(
                 fontSize: 16.dp,
                 color: AppColors.neutral950,
