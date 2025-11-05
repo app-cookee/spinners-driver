@@ -11,6 +11,7 @@ import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/dashboard_data_bloc/dashboard_data_bloc.dart';
 import 'package:spinners_driver/src/application/order_bloc/order_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/app_utils.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/settlements_list_placeholder.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/period_filter_button.dart';
 import 'package:spinners_driver/src/presentation/views/cash_settlement_history/widget/time_period.dart';
@@ -209,7 +210,7 @@ class _CashSettlementHistoryScreenState
                                     is StatusInitial ||
                                 state.getDashboardDataStatus is StatusLoading),
                             child: Text(
-                                "AED ${state.dashboardDataModel.totalCollectedCash}",
+                                "AED ${ AppUtils.format(state.dashboardDataModel.totalCollectedCash)}",
                                 style: AppTypography.sfProRoundedSemiBold
                                     .copyWith(
                                         color: AppColors.primaryColor,

@@ -7,6 +7,7 @@ import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
 import 'package:spinners_driver/src/application/delivery_bloc/delivery_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
+import 'package:spinners_driver/src/presentation/utils/app_utils.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/common_textfield.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/custom_dropdown_widget.dart';
 import 'package:spinners_driver/src/presentation/views/widgets/primary_button_widget.dart';
@@ -180,7 +181,7 @@ class _DeliveryConfirmBottomsheetState
             textStyle: AppTypography.sfProRoundedBold
                 .copyWith(fontSize: 16.sp, color: AppColors.neutral950),
             borderRadius: 12.dp,
-            initialValue: widget.totalCollected.toString(),
+            initialValue:AppUtils.format(widget.totalCollected),
             enabled: false,
           ),
         ],
