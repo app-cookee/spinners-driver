@@ -7,7 +7,7 @@ class ProductionEnvironmentConfig extends EnvConfig {
 
   @override
   String get validToken =>
-      'Bearer YKDS@OQ56pwW2Q3R@1N8BrbE7MenUXa&9lPPQZyHEtAh6N%17aVOTbQ5Dw395*gj5RT&*E4Szv0avu*q1epkRsR6AbTiyoTxd9H&zSdpF@LKlwOFOGqT1?YnoXwljwfroVmk47NNXAC#eOcUZTBqbpHd%bPp#Q@WStgWb6CT76e4aaF@XSmIU3EwmDVq52W?SrLtuFEysKaR4aF5uZHd1JYAR&q&o#2ULKcIF0tg&LYQb!9d3fRO5cwqngP8d2@V';
+      'Bearer I4YkRbf6sgbId8EdTzozsGEVFh@QiRHOALwrV(EsszrtS2eJYx727wH9*cc#o4ESxvDpp9y5ZNcAY7DuBb)Tz4fjtYL8a0YOqczs*1eIb(33bH#)TQUIvYAVeXh4AGoz2aO-iU(TV@y8m8seMkn@R1kNOPy*aNBx4ScaMX#9lAX9#Etz3vr2Kyg6b#ZK(0DwbzGmM1nYcv9bwNjbOPZ9pPeaEgw7hsx*cH3)ay7XGcEmPw9QMdasdaasdasdas';
 
   @override
   String get socketUrl => ApiUrls.productionUrl;

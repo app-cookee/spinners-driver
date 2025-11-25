@@ -14,7 +14,7 @@ void main() async {
 
 
   /// Configure environment [staging, production, qa]
-  EnvConfiguration().init(Env.staging);
+  EnvConfiguration().init(Env.production);
 
   ///Device orientation
   await SystemChrome.setPreferredOrientations(
