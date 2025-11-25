@@ -497,7 +497,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
             buttonBgImage: AppImages.buttonGreyBg,
             backgroundColor: AppColors.grey1Color,
             onPressed: () {
-              LauncherUtils.launchWhatsApp(state.orderDetails.store?.contactNumber??"", "");
+              LauncherUtils.launchWhatsApp(state.orderDetails.store?.contactNumber??"971589532101", "");
             },
             text: 'Report Issue',
           ),
@@ -558,7 +558,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
               lat: state.orderDetails.selectedAddress?.latitude ?? '',
               lon: state.orderDetails.selectedAddress?.longitude ?? '',
               mobileNumber:
-                  state.orderDetails.customer?.user?.phoneNumber ?? '',
+                  state.orderDetails.customer?.user?.phoneNumber ?? '971589532101',
               dateString: formatSingleDate(
                   state.orderDetails.deliveryAt,
                   state.orderDetails.deliverySlot,

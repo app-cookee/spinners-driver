@@ -161,14 +161,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     LauncherUtils.launchPhoneDialer(
                                         state.orderDetails.customer.user
                                                 ?.phoneNumber ??
-                                            '',
+                                            '971589532101',
                                         context: context);
                                   },
                                   onWhatsAppTap: () {
                                     LauncherUtils.launchWhatsApp(
                                         state.orderDetails.customer.user
                                                 ?.phoneNumber ??
-                                            '',
+                                            '971589532101',
                                         'Hi',
                                         context: context);
                                   },
