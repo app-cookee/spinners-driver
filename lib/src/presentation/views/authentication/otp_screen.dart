@@ -65,7 +65,7 @@ class _LoginScreenState extends State<OtpScreen> {
       }
     });
     otpListener.addListener(() {
-      if (otpListener.value.length == 6) {
+      if (otpListener.value.length == 4) {
         // Hide keyboard
         _focusNode.unfocus();
         showKeyboard.value = false;
@@ -90,8 +90,8 @@ class _LoginScreenState extends State<OtpScreen> {
       if (current.isNotEmpty) {
         current = current.substring(0, current.length - 1);
       }
-    } else if (current.length < 6) {
-      // OTP is typically 6 digits
+    } else if (current.length < 4) {
+      // OTP is typically 4 digits
       current += value;
     }
     otpListener.value = current;
@@ -172,7 +172,7 @@ class _LoginScreenState extends State<OtpScreen> {
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 16.dp),
                                             child: Text(
-                                              'We\'ve sent a 6-digit code to ${widget.countryCode} XXXXXXXX',
+                                              'We\'ve sent a 4-digit code to ${widget.countryCode} XXXXXXXX',
                                               style: AppTypography
                                                   .sfProRoundedMedium
                                                   .copyWith(
@@ -341,8 +341,8 @@ class _LoginScreenState extends State<OtpScreen> {
   }
 
   void onButtonSubmit({required String otpp}) {
-    if (otpp.length != 6) {
-      TheToast.show(message: 'Please enter a 6 digit OTP', context: context);
+    if (otpp.length != 4) {
+      TheToast.show(message: 'Please enter a 4 digit OTP', context: context);
     } else {
       log(otpp.toString());
       context.read<AuthBloc>().add(AuthEvent.verifyOtp(

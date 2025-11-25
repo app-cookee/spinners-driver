@@ -28,13 +28,13 @@ class OtpFieldWidget extends StatelessWidget {
           // OTP digit boxes
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(6, (index) {
+            children: List.generate(4, (index) {
               final char = index < otpValue.length ? otpValue[index] : '';
               final isCurrentIndex = index == otpValue.length;
 
               return Container(
-                width: 80.w / 6,
-                height: 75.w / 6,
+                width: 80.w / 4,
+                height: 50.w / 4,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12.dp),
@@ -75,12 +75,12 @@ class OtpFieldWidget extends StatelessWidget {
           Opacity(
             opacity: 0,
             child: TextField(
-               readOnly: true,
-    enableInteractiveSelection: false,
+              readOnly: true,
+              enableInteractiveSelection: false,
               focusNode: focusNode,
               autofocus: true,
               showCursor: true,
-              maxLength: 6,
+              maxLength: 4,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 counterText: "",

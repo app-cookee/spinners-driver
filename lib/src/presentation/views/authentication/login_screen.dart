@@ -239,7 +239,7 @@ void _onKeyPressed(String value) {
                                   context.router.push(OtpRoute(
                                     countryCode: countryCodeListener.value,
                                     phoneNumber:
-                                        phoneNumberListener.value.trim(),
+                                        "+971${phoneNumberListener.value.trim()}",
                                   ));
                                 } else if (state.sendOtpStatus
                                     is StatusFailure) {
@@ -316,7 +316,7 @@ void _onKeyPressed(String value) {
     print('Phone: $phoneNumber');
     context
         .read<AuthBloc>()
-        .add(AuthEvent.sendOtp(phoneNumber: phoneNumber, isResent: false));
+        .add(AuthEvent.sendOtp(phoneNumber: "+971$phoneNumber", isResent: false));
   }
 
   Widget _signInText() {
