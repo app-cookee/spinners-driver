@@ -19,6 +19,9 @@ class AppBottomNavigationRoute
     required int selectedIndex,
     bool isFromNotification = false,
     String? orderId,
+    String? pickupDriver,
+    String? status,
+    String? deliveryDriver,
     List<PageRouteInfo>? children,
   }) : super(
           AppBottomNavigationRoute.name,
@@ -27,6 +30,9 @@ class AppBottomNavigationRoute
             selectedIndex: selectedIndex,
             isFromNotification: isFromNotification,
             orderId: orderId,
+            pickupDriver: pickupDriver,
+            status: status,
+            deliveryDriver: deliveryDriver,
           ),
           initialChildren: children,
         );
@@ -42,6 +48,9 @@ class AppBottomNavigationRoute
         selectedIndex: args.selectedIndex,
         isFromNotification: args.isFromNotification,
         orderId: args.orderId,
+        pickupDriver: args.pickupDriver,
+        status: args.status,
+        deliveryDriver: args.deliveryDriver,
       );
     },
   );
@@ -53,6 +62,9 @@ class AppBottomNavigationRouteArgs {
     required this.selectedIndex,
     this.isFromNotification = false,
     this.orderId,
+    this.pickupDriver,
+    this.status,
+    this.deliveryDriver,
   });
 
   final Key? key;
@@ -63,9 +75,15 @@ class AppBottomNavigationRouteArgs {
 
   final String? orderId;
 
+  final String? pickupDriver;
+
+  final String? status;
+
+  final String? deliveryDriver;
+
   @override
   String toString() {
-    return 'AppBottomNavigationRouteArgs{key: $key, selectedIndex: $selectedIndex, isFromNotification: $isFromNotification, orderId: $orderId}';
+    return 'AppBottomNavigationRouteArgs{key: $key, selectedIndex: $selectedIndex, isFromNotification: $isFromNotification, orderId: $orderId, pickupDriver: $pickupDriver, status: $status, deliveryDriver: $deliveryDriver}';
   }
 
   @override
@@ -75,7 +93,10 @@ class AppBottomNavigationRouteArgs {
     return key == other.key &&
         selectedIndex == other.selectedIndex &&
         isFromNotification == other.isFromNotification &&
-        orderId == other.orderId;
+        orderId == other.orderId &&
+        pickupDriver == other.pickupDriver &&
+        status == other.status &&
+        deliveryDriver == other.deliveryDriver;
   }
 
   @override
@@ -83,7 +104,10 @@ class AppBottomNavigationRouteArgs {
       key.hashCode ^
       selectedIndex.hashCode ^
       isFromNotification.hashCode ^
-      orderId.hashCode;
+      orderId.hashCode ^
+      pickupDriver.hashCode ^
+      status.hashCode ^
+      deliveryDriver.hashCode;
 }
 
 /// generated route for
@@ -349,6 +373,9 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
     bool isFromNotification = false,
     int bottomNavigationTabIndex = 0,
     String? orderId,
+    String? pickupDriver,
+    String? status,
+    String? deliveryDriver,
     List<PageRouteInfo>? children,
   }) : super(
           SplashRoute.name,
@@ -357,6 +384,9 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
             isFromNotification: isFromNotification,
             bottomNavigationTabIndex: bottomNavigationTabIndex,
             orderId: orderId,
+            pickupDriver: pickupDriver,
+            status: status,
+            deliveryDriver: deliveryDriver,
           ),
           initialChildren: children,
         );
@@ -374,6 +404,9 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
         isFromNotification: args.isFromNotification,
         bottomNavigationTabIndex: args.bottomNavigationTabIndex,
         orderId: args.orderId,
+        pickupDriver: args.pickupDriver,
+        status: args.status,
+        deliveryDriver: args.deliveryDriver,
       );
     },
   );
@@ -385,6 +418,9 @@ class SplashRouteArgs {
     this.isFromNotification = false,
     this.bottomNavigationTabIndex = 0,
     this.orderId,
+    this.pickupDriver,
+    this.status,
+    this.deliveryDriver,
   });
 
   final Key? key;
@@ -395,9 +431,15 @@ class SplashRouteArgs {
 
   final String? orderId;
 
+  final String? pickupDriver;
+
+  final String? status;
+
+  final String? deliveryDriver;
+
   @override
   String toString() {
-    return 'SplashRouteArgs{key: $key, isFromNotification: $isFromNotification, bottomNavigationTabIndex: $bottomNavigationTabIndex, orderId: $orderId}';
+    return 'SplashRouteArgs{key: $key, isFromNotification: $isFromNotification, bottomNavigationTabIndex: $bottomNavigationTabIndex, orderId: $orderId, pickupDriver: $pickupDriver, status: $status, deliveryDriver: $deliveryDriver}';
   }
 
   @override
@@ -407,7 +449,10 @@ class SplashRouteArgs {
     return key == other.key &&
         isFromNotification == other.isFromNotification &&
         bottomNavigationTabIndex == other.bottomNavigationTabIndex &&
-        orderId == other.orderId;
+        orderId == other.orderId &&
+        pickupDriver == other.pickupDriver &&
+        status == other.status &&
+        deliveryDriver == other.deliveryDriver;
   }
 
   @override
@@ -415,5 +460,8 @@ class SplashRouteArgs {
       key.hashCode ^
       isFromNotification.hashCode ^
       bottomNavigationTabIndex.hashCode ^
-      orderId.hashCode;
+      orderId.hashCode ^
+      pickupDriver.hashCode ^
+      status.hashCode ^
+      deliveryDriver.hashCode;
 }

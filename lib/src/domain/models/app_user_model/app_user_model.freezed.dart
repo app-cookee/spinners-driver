@@ -16,6 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$AppUser {
   @JsonKey(name: 'id')
   String get userId;
+  @JsonKey(name: 'driverId')
+  String get driverId;
   @JsonKey(name: 'email')
   String get email;
   @JsonKey(name: 'firstName')
@@ -38,6 +40,8 @@ mixin _$AppUser {
   String? get storeAddress;
   @JsonKey(name: 'active')
   bool get active;
+  @JsonKey(name: 'unreadMsgs')
+  int get unreadMsgs;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -55,6 +59,8 @@ mixin _$AppUser {
         (other.runtimeType == runtimeType &&
             other is AppUser &&
             (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.driverId, driverId) ||
+                other.driverId == driverId) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
@@ -73,7 +79,9 @@ mixin _$AppUser {
                 other.storeName == storeName) &&
             (identical(other.storeAddress, storeAddress) ||
                 other.storeAddress == storeAddress) &&
-            (identical(other.active, active) || other.active == active));
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.unreadMsgs, unreadMsgs) ||
+                other.unreadMsgs == unreadMsgs));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -81,6 +89,7 @@ mixin _$AppUser {
   int get hashCode => Object.hash(
       runtimeType,
       userId,
+      driverId,
       email,
       firstName,
       lastName,
@@ -91,11 +100,12 @@ mixin _$AppUser {
       photo,
       storeName,
       storeAddress,
-      active);
+      active,
+      unreadMsgs);
 
   @override
   String toString() {
-    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, vehicleNumber: $vehicleNumber, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
+    return 'AppUser(userId: $userId, driverId: $driverId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, vehicleNumber: $vehicleNumber, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active, unreadMsgs: $unreadMsgs)';
   }
 }
 
@@ -106,6 +116,7 @@ abstract mixin class $AppUserCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'id') String userId,
+      @JsonKey(name: 'driverId') String driverId,
       @JsonKey(name: 'email') String email,
       @JsonKey(name: 'firstName') String firstName,
       @JsonKey(name: 'lastName') String lastName,
@@ -116,7 +127,8 @@ abstract mixin class $AppUserCopyWith<$Res> {
       @JsonKey(name: 'photo') String? photo,
       @JsonKey(name: 'storeName') String? storeName,
       @JsonKey(name: 'storeAddress') String? storeAddress,
-      @JsonKey(name: 'active') bool active});
+      @JsonKey(name: 'active') bool active,
+      @JsonKey(name: 'unreadMsgs') int unreadMsgs});
 }
 
 /// @nodoc
@@ -132,6 +144,7 @@ class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
   @override
   $Res call({
     Object? userId = null,
+    Object? driverId = null,
     Object? email = null,
     Object? firstName = null,
     Object? lastName = null,
@@ -143,11 +156,16 @@ class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
     Object? storeName = freezed,
     Object? storeAddress = freezed,
     Object? active = null,
+    Object? unreadMsgs = null,
   }) {
     return _then(_self.copyWith(
       userId: null == userId
           ? _self.userId
           : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      driverId: null == driverId
+          ? _self.driverId
+          : driverId // ignore: cast_nullable_to_non_nullable
               as String,
       email: null == email
           ? _self.email
@@ -193,6 +211,10 @@ class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
           ? _self.active
           : active // ignore: cast_nullable_to_non_nullable
               as bool,
+      unreadMsgs: null == unreadMsgs
+          ? _self.unreadMsgs
+          : unreadMsgs // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -292,6 +314,7 @@ extension AppUserPatterns on AppUser {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
             @JsonKey(name: 'id') String userId,
+            @JsonKey(name: 'driverId') String driverId,
             @JsonKey(name: 'email') String email,
             @JsonKey(name: 'firstName') String firstName,
             @JsonKey(name: 'lastName') String lastName,
@@ -302,7 +325,8 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'photo') String? photo,
             @JsonKey(name: 'storeName') String? storeName,
             @JsonKey(name: 'storeAddress') String? storeAddress,
-            @JsonKey(name: 'active') bool active)?
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'unreadMsgs') int unreadMsgs)?
         $default, {
     required TResult orElse(),
   }) {
@@ -311,6 +335,7 @@ extension AppUserPatterns on AppUser {
       case _AppUser() when $default != null:
         return $default(
             _that.userId,
+            _that.driverId,
             _that.email,
             _that.firstName,
             _that.lastName,
@@ -321,7 +346,8 @@ extension AppUserPatterns on AppUser {
             _that.photo,
             _that.storeName,
             _that.storeAddress,
-            _that.active);
+            _that.active,
+            _that.unreadMsgs);
       case _:
         return orElse();
     }
@@ -344,6 +370,7 @@ extension AppUserPatterns on AppUser {
   TResult when<TResult extends Object?>(
     TResult Function(
             @JsonKey(name: 'id') String userId,
+            @JsonKey(name: 'driverId') String driverId,
             @JsonKey(name: 'email') String email,
             @JsonKey(name: 'firstName') String firstName,
             @JsonKey(name: 'lastName') String lastName,
@@ -354,7 +381,8 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'photo') String? photo,
             @JsonKey(name: 'storeName') String? storeName,
             @JsonKey(name: 'storeAddress') String? storeAddress,
-            @JsonKey(name: 'active') bool active)
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'unreadMsgs') int unreadMsgs)
         $default,
   ) {
     final _that = this;
@@ -362,6 +390,7 @@ extension AppUserPatterns on AppUser {
       case _AppUser():
         return $default(
             _that.userId,
+            _that.driverId,
             _that.email,
             _that.firstName,
             _that.lastName,
@@ -372,7 +401,8 @@ extension AppUserPatterns on AppUser {
             _that.photo,
             _that.storeName,
             _that.storeAddress,
-            _that.active);
+            _that.active,
+            _that.unreadMsgs);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -394,6 +424,7 @@ extension AppUserPatterns on AppUser {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
             @JsonKey(name: 'id') String userId,
+            @JsonKey(name: 'driverId') String driverId,
             @JsonKey(name: 'email') String email,
             @JsonKey(name: 'firstName') String firstName,
             @JsonKey(name: 'lastName') String lastName,
@@ -404,7 +435,8 @@ extension AppUserPatterns on AppUser {
             @JsonKey(name: 'photo') String? photo,
             @JsonKey(name: 'storeName') String? storeName,
             @JsonKey(name: 'storeAddress') String? storeAddress,
-            @JsonKey(name: 'active') bool active)?
+            @JsonKey(name: 'active') bool active,
+            @JsonKey(name: 'unreadMsgs') int unreadMsgs)?
         $default,
   ) {
     final _that = this;
@@ -412,6 +444,7 @@ extension AppUserPatterns on AppUser {
       case _AppUser() when $default != null:
         return $default(
             _that.userId,
+            _that.driverId,
             _that.email,
             _that.firstName,
             _that.lastName,
@@ -422,7 +455,8 @@ extension AppUserPatterns on AppUser {
             _that.photo,
             _that.storeName,
             _that.storeAddress,
-            _that.active);
+            _that.active,
+            _that.unreadMsgs);
       case _:
         return null;
     }
@@ -434,6 +468,7 @@ extension AppUserPatterns on AppUser {
 class _AppUser implements AppUser {
   _AppUser(
       {@JsonKey(name: 'id') this.userId = '',
+      @JsonKey(name: 'driverId') this.driverId = '',
       @JsonKey(name: 'email') this.email = '',
       @JsonKey(name: 'firstName') this.firstName = '',
       @JsonKey(name: 'lastName') this.lastName = '',
@@ -444,13 +479,17 @@ class _AppUser implements AppUser {
       @JsonKey(name: 'photo') this.photo,
       @JsonKey(name: 'storeName') this.storeName,
       @JsonKey(name: 'storeAddress') this.storeAddress,
-      @JsonKey(name: 'active') this.active = false});
+      @JsonKey(name: 'active') this.active = false,
+      @JsonKey(name: 'unreadMsgs') this.unreadMsgs = 0});
   factory _AppUser.fromJson(Map<String, dynamic> json) =>
       _$AppUserFromJson(json);
 
   @override
   @JsonKey(name: 'id')
   final String userId;
+  @override
+  @JsonKey(name: 'driverId')
+  final String driverId;
   @override
   @JsonKey(name: 'email')
   final String email;
@@ -485,6 +524,9 @@ class _AppUser implements AppUser {
   @override
   @JsonKey(name: 'active')
   final bool active;
+  @override
+  @JsonKey(name: 'unreadMsgs')
+  final int unreadMsgs;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -507,6 +549,8 @@ class _AppUser implements AppUser {
         (other.runtimeType == runtimeType &&
             other is _AppUser &&
             (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.driverId, driverId) ||
+                other.driverId == driverId) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
@@ -525,7 +569,9 @@ class _AppUser implements AppUser {
                 other.storeName == storeName) &&
             (identical(other.storeAddress, storeAddress) ||
                 other.storeAddress == storeAddress) &&
-            (identical(other.active, active) || other.active == active));
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.unreadMsgs, unreadMsgs) ||
+                other.unreadMsgs == unreadMsgs));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -533,6 +579,7 @@ class _AppUser implements AppUser {
   int get hashCode => Object.hash(
       runtimeType,
       userId,
+      driverId,
       email,
       firstName,
       lastName,
@@ -543,11 +590,12 @@ class _AppUser implements AppUser {
       photo,
       storeName,
       storeAddress,
-      active);
+      active,
+      unreadMsgs);
 
   @override
   String toString() {
-    return 'AppUser(userId: $userId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, vehicleNumber: $vehicleNumber, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active)';
+    return 'AppUser(userId: $userId, driverId: $driverId, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, timestamp: $timestamp, vehicleNumber: $vehicleNumber, referralCode: $referralCode, photo: $photo, storeName: $storeName, storeAddress: $storeAddress, active: $active, unreadMsgs: $unreadMsgs)';
   }
 }
 
@@ -559,6 +607,7 @@ abstract mixin class _$AppUserCopyWith<$Res> implements $AppUserCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'id') String userId,
+      @JsonKey(name: 'driverId') String driverId,
       @JsonKey(name: 'email') String email,
       @JsonKey(name: 'firstName') String firstName,
       @JsonKey(name: 'lastName') String lastName,
@@ -569,7 +618,8 @@ abstract mixin class _$AppUserCopyWith<$Res> implements $AppUserCopyWith<$Res> {
       @JsonKey(name: 'photo') String? photo,
       @JsonKey(name: 'storeName') String? storeName,
       @JsonKey(name: 'storeAddress') String? storeAddress,
-      @JsonKey(name: 'active') bool active});
+      @JsonKey(name: 'active') bool active,
+      @JsonKey(name: 'unreadMsgs') int unreadMsgs});
 }
 
 /// @nodoc
@@ -585,6 +635,7 @@ class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? userId = null,
+    Object? driverId = null,
     Object? email = null,
     Object? firstName = null,
     Object? lastName = null,
@@ -596,11 +647,16 @@ class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
     Object? storeName = freezed,
     Object? storeAddress = freezed,
     Object? active = null,
+    Object? unreadMsgs = null,
   }) {
     return _then(_AppUser(
       userId: null == userId
           ? _self.userId
           : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      driverId: null == driverId
+          ? _self.driverId
+          : driverId // ignore: cast_nullable_to_non_nullable
               as String,
       email: null == email
           ? _self.email
@@ -646,6 +702,10 @@ class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
           ? _self.active
           : active // ignore: cast_nullable_to_non_nullable
               as bool,
+      unreadMsgs: null == unreadMsgs
+          ? _self.unreadMsgs
+          : unreadMsgs // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }

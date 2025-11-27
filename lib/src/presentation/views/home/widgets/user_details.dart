@@ -1,11 +1,16 @@
 import 'dart:developer';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/services/api_services/environment/config.dart';
 import 'package:spinners_driver/app/services/api_services/environment/env_config.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
+import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class UserDetail extends StatefulWidget {
@@ -173,9 +178,92 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                     color: AppColors.textGrey,
                     fontSize: 12.sp,
                   ),
-            ):SizedBox.shrink()
+            ):const SizedBox.shrink()
           
           ],
+        ),
+        const Spacer(),
+        BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            return GestureDetector(
+                  onTap: () {
+                    context.router.push(NotificationRoute()).then((value) {
+                      if(state.appUser?.unreadMsgs != 0)
+                      {
+                        context.read<AuthBloc>().add(AuthEvent.profileAuth());
+                      }
+                    });
+                  },
+                  child: Container(
+                    height: 40.dp,
+                    width: 40.dp,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.greyButton,
+                          Colors.transparent,
+                          AppColors.greyButton,
+                        ],
+                        stops: [0.89, 0.89, 1],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          offset: const Offset(0, 8),
+                          blurRadius: 12,
+                          spreadRadius: 0,
+                          color: Colors.black.withValues(alpha: 0.08),
+                        ),
+                        const BoxShadow(
+                          offset: Offset(-2, -2),
+                          blurRadius: 2,
+                          spreadRadius: -2,
+                          color: Colors.white,
+                        ),
+                        const BoxShadow(
+                          offset: Offset(2, 2),
+                          blurRadius: 2,
+                          spreadRadius: -2,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            AppImages.notification,
+                            height: 24.dp,
+                            width: 24.dp,
+                          ),
+                        ),
+                        Positioned(
+                          top: 1.dp,
+                          right: 1.dp,
+                          child: state.appUser?.unreadMsgs != 0 ? Container(
+                            height: 8.dp,
+                            width: 8.dp,
+                            decoration: BoxDecoration(
+                                color: AppColors.notiRed,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        const Color(0xff000000).withValues(alpha: 0.33),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ]),
+                          ):const SizedBox.shrink(),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+          },
         ),
       ],
     );

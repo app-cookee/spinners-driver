@@ -50,9 +50,8 @@ abstract class OrderResponse with _$OrderResponse {
     @JsonKey(name: 'additionalCharges') @Default([]) List<AdditionalCharges> additionalCharges,
     @JsonKey(name: 'vats') VatDetail? vats,
     @JsonKey(name: 'expressPercentage') @Default("") String expressPercentage,
-
-  
-  
+    @JsonKey(name: 'assignedPickupDriverId') String? assignedPickupDriverId,
+    @JsonKey(name: 'assignedDeliveryDriverId') String? assignedDeliveryDriverId,
   }) = _OrderResponse;
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) =>

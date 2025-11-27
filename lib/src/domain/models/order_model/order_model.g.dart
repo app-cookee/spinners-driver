@@ -84,6 +84,8 @@ _OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
           ? null
           : VatDetail.fromJson(json['vats'] as Map<String, dynamic>),
       expressPercentage: json['expressPercentage'] as String? ?? "",
+      assignedPickupDriverId: json['assignedPickupDriverId'] as String?,
+      assignedDeliveryDriverId: json['assignedDeliveryDriverId'] as String?,
     );
 
 Map<String, dynamic> _$OrderResponseToJson(_OrderResponse instance) =>
@@ -119,6 +121,8 @@ Map<String, dynamic> _$OrderResponseToJson(_OrderResponse instance) =>
       'additionalCharges': instance.additionalCharges,
       'vats': instance.vats,
       'expressPercentage': instance.expressPercentage,
+      'assignedPickupDriverId': instance.assignedPickupDriverId,
+      'assignedDeliveryDriverId': instance.assignedDeliveryDriverId,
     };
 
 _VatDetail _$VatDetailFromJson(Map<String, dynamic> json) => _VatDetail(

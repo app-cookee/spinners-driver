@@ -26,4 +26,5 @@ class ApiEndpoints {
   final String removeBag = '$_base/orders/remove_bag';
   final String driverOrders = '$_base/orders/my_orders';
   final String cashSettlments = '$_base/cash_settlements/list';
+  final String getNotificationsList = '$_base/notifications/list';
 }

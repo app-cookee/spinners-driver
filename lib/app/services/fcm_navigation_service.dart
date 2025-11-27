@@ -10,31 +10,22 @@ class FCMNavigationService {
     var bottomNavigationTabIndex = 0;
 
     final orderId = message.data['orderId'];
-    final damageReportId = message.data['damageReportId'];
+    final deliveryDriver = message.data['deliveryDriver'];
+    final status = message.data['status'];
+    final pickupDriver = message.data['pickupDriver'];
     log('🔔 FCM Message Data: ${message.data}', name: 'FCM');
     log('orderId: $orderId', name: 'FCM');
-    log('damageReportId: $damageReportId', name: 'FCM');
+    log('deliveryDriver: $deliveryDriver', name: 'FCM');
+    log('status: $status', name: 'FCM');
+    log('pickupDriver: $pickupDriver', name: 'FCM');
     if(orderId != null) {
       bottomNavigationTabIndex = 1;
     }
-
-    // if (payload == 'InterestReceived') {
-    //   bottomNavigationTabIndex = 2;
-    //   categoryTabIndex = 0;
-    // } else if (payload == 'Profile') {
-    //   bottomNavigationTabIndex = 1;
-    // } else if (payload == 'ProfileImage') {
-    //   bottomNavigationTabIndex = 4;
-    // } else if (payload == 'KYC') {
-    //   bottomNavigationTabIndex = 4;
-    // } else if (payload == 'Chat') {
-    //   bottomNavigationTabIndex = 3;
-    // }
-    navigate(bottomNavigationTabIndex, isForegroundNoti,orderId: orderId, damageReportId: damageReportId);
+    navigate(bottomNavigationTabIndex, isForegroundNoti,orderId: orderId, deliveryDriver: deliveryDriver, status: status, pickupDriver: pickupDriver);
   }
 
   navigate(int bottomNavigationTabIndex,
-      bool isForegroundNotif,{String? orderId, String? damageReportId}) {
+      bool isForegroundNotif,{String? orderId, String? deliveryDriver, String? status, String? pickupDriver}) {
         String? accessToken = LocalStorage.getString(StorageKey.accessToken);
     if (isForegroundNotif) {
       if(accessToken == null) {
@@ -43,11 +34,17 @@ class FCMNavigationService {
           orderId: orderId,
           isFromNotification: true,
           bottomNavigationTabIndex: bottomNavigationTabIndex,
+          pickupDriver: pickupDriver,
+          status: status,
+          deliveryDriver: deliveryDriver,
         ), predicate: (route) => false);
         return;
       }
       AppRouter.instance
         .pushAndPopUntil(AppBottomNavigationRoute(selectedIndex: bottomNavigationTabIndex,isFromNotification: true,orderId: orderId,
+        pickupDriver: pickupDriver,
+          status: status,
+          deliveryDriver: deliveryDriver,
           ), predicate: (route) => false);
     } else {
       AppRouter.instance
@@ -55,6 +52,9 @@ class FCMNavigationService {
           orderId: orderId,
           isFromNotification: true,
           bottomNavigationTabIndex: bottomNavigationTabIndex,
+          pickupDriver: pickupDriver,
+          status: status,
+          deliveryDriver: deliveryDriver,
         ), predicate: (route) => false);
     }
   }

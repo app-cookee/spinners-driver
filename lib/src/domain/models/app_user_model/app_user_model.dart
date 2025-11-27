@@ -13,6 +13,7 @@ abstract class AppUser with _$AppUser {
   
  
     @JsonKey(name: 'id') @Default('') String userId,
+    @JsonKey(name: 'driverId') @Default('') String driverId,
     @JsonKey(name: 'email') @Default('') String email,
     @JsonKey(name: 'firstName') @Default('') String firstName,
     @JsonKey(name: 'lastName') @Default('') String lastName,
@@ -26,6 +27,7 @@ abstract class AppUser with _$AppUser {
     @JsonKey(name: 'storeName') String? storeName,
     @JsonKey(name: 'storeAddress') String? storeAddress,
     @JsonKey(name: 'active') @Default(false) bool active,
+    @JsonKey(name: 'unreadMsgs') @Default(0) int unreadMsgs
   }) = _AppUser;
 
   factory AppUser.fromJson(Map<String, dynamic> json) =>

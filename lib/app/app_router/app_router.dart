@@ -36,10 +36,16 @@ class AppRouter extends RootStackRouter {
         AutoRoute(
             path: '/appBottomNavigationView',
             page: AppBottomNavigationRoute.page),
-      AutoRoute(path: '/orderDetail', page: OrderDetailRoute.page),
+        AutoRoute(path: '/orderDetail', page: OrderDetailRoute.page),
         AutoRoute(path: '/ordersScreen', page: OrderRoute.page),
-         AutoRoute(path: '/deliveryOrderDetail', page: DeliveryOrderDetailRoute.page),
-         AutoRoute(path: '/pickUpDropoffHistoryScreen', page: PickUpDropoffHistoryRoute.page),
-           AutoRoute(path: '/cashSettlementHistoryScreen', page: CashSettlementHistoryRoute.page),
+        AutoRoute(
+            path: '/deliveryOrderDetail', page: DeliveryOrderDetailRoute.page),
+        AutoRoute(
+            path: '/pickUpDropoffHistoryScreen',
+            page: PickUpDropoffHistoryRoute.page),
+        AutoRoute(
+            path: '/cashSettlementHistoryScreen',
+            page: CashSettlementHistoryRoute.page),
+        AutoRoute(path: '/notificationScreen', page: NotificationRoute.page),
       ];
 }

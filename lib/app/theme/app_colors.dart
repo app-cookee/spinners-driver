@@ -6,7 +6,7 @@ class AppColors {
   static const Color primaryColor = Color(0xFF0090D4);
   static const Color primaryColor500 = Color(0xFF00AEEF);
   static const Color primaryColor200 = Color(0xFFB6EAFF);
-  static const Color secondary500=Color(0xFF6A61F3);
+  static const Color secondary500 = Color(0xFF6A61F3);
   static const Color transparent = Color(0x00000000);
   static const Color white = Color(0xffffffff);
   static const Color textGrey = Color(0xff5D5D5D);
@@ -14,114 +14,89 @@ class AppColors {
   static const Color countrycodeColor = Color(0xffB0B0B0);
   static const Color black1 = Color(0xff252627);
   static const Color black = Color(0xff000000);
-  static const Color keyboardBgColor=Color(0xFFD0D4DC);
-  static const Color keyboardButtonBorderColor=Color(0xFF878A8F);
+  static const Color keyboardBgColor = Color(0xFFD0D4DC);
+  static const Color keyboardButtonBorderColor = Color(0xFF878A8F);
   static const Color neutral500 = Color(0xFF6D6D6D);
   static const Color lightGrey = Color(0xFFE7E7E7);
   static const Color neutral50 = Color(0xFFF6F6F6);
-  static const Color lightGrey1=Color(0xFFEEEEEE);
-  static const Color lightSkyBlue=Color(0xFFADD8E9);
-  static const Color greenColor=Color(0xFF34C759);
+  static const Color lightGrey1 = Color(0xFFEEEEEE);
+  static const Color lightSkyBlue = Color(0xFFADD8E9);
+  static const Color greenColor = Color(0xFF34C759);
   static const Color grey1Color = Color(0xFF888888);
   static const Color blue1 = Color(0xffEFFAFF);
-  static const Color blueColor=Color(0xFF0903B3);
-    static const Color scanblue=Color(0xFF77C9E8);
+  static const Color blueColor = Color(0xFF0903B3);
+  static const Color scanblue = Color(0xFF77C9E8);
   static const Color grey2Color = Color(0xFFD9D9D9);
- static const Color grey1 = Color(0xFFEBEBEB);
-static const Color shadowColor = Color(0xFFE2E2E2);
-    static const Color dialogeBgRedColor = Color(0xFFC73A21);
-      static const Color dialogeBorderColor = Color(0xFFA8ABAB);
-        static const Color dialogeBgColor = Color(0xFFE3FFFF);
+  static const Color grey1 = Color(0xFFEBEBEB);
+  static const Color shadowColor = Color(0xFFE2E2E2);
+  static const Color dialogeBgRedColor = Color(0xFFC73A21);
+  static const Color dialogeBorderColor = Color(0xFFA8ABAB);
+  static const Color dialogeBgColor = Color(0xFFE3FFFF);
   static const Color dialogeContentColor = Color(0xFF5D6866);
-    static const Color dividerColor = Color(0xFFE8E9E4);
-    static const Color toggleDisabled = Color(0xFFD0D0D0);
-static const Color addressColor = Color(0xFF002533);
-static const Color pickupScheduledColor= Color(0xFF5C6BC0);
-static const Color pickedUpColor= Color(0xFFF9A825);
-static const Color readyForDeliveryColor= Color(0xFF2BB2C3);
-static const Color deliveredColor= Color(0xFF43A047);
-static const Color deliveredCompletd= Color(0xFF009081);
-static const Color paidGreen= Color(0xFF37533C);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  static const Color dividerColor = Color(0xFFE8E9E4);
+  static const Color toggleDisabled = Color(0xFFD0D0D0);
+  static const Color addressColor = Color(0xFF002533);
+  static const Color pickupScheduledColor = Color(0xFF5C6BC0);
+  static const Color pickedUpColor = Color(0xFFF9A825);
+  static const Color readyForDeliveryColor = Color(0xFF2BB2C3);
+  static const Color deliveredColor = Color(0xFF43A047);
+  static const Color deliveredCompletd = Color(0xFF009081);
+  static const Color paidGreen = Color(0xFF37533C);
+  static const Color notiRed = Color(0xFFFF493B);
   static const Color redColor = Color(0xffF97770);
   static const Color greyColor = Color(0xFFB9B9B9);
   static const Color primaryButtonTextColor = Color(0xff062B2D);
-  
-
   static const Color primary950 = Color(0xFF04334D);
-  
   static const Color gradientbg = Color(0xFFD2F3FF);
   static const Color neutral950 = Color(0xFF030303);
   static const Color secondary950 = Color(0xFF262262);
   static const Color green = Color(0xFF31B64B);
   static const Color yellow = Color(0xFF9D9127);
- 
   static const Color yellowLight = Color(0xFFFFFDED);
   static const Color lightPink = Color(0xFFFFF1F1);
   static const Color secondary50 = Color(0xFFEFEEFF);
-   static const Color secondary600 = Color(0xFF4E44E7);
+  static const Color secondary600 = Color(0xFF4E44E7);
   static const Color neutral200 = Color(0xFFD1D1D1);
   static const Color grey = Color(0xFFF3F3F3);
- 
   static const Color neutral900 = Color(0xFF3D3D3D);
-   static const Color red1 = Color(0xFFFF4E40);
+  static const Color red1 = Color(0xFFFF4E40);
   static const Color red2 = Color(0xFFDA1D1D);
   static const Color red3 = Color(0xFFFFE3E3);
-  
-  
   static const Color green1 = Color(0xff448827);
   static const Color green2 = Color(0xffE9FFDF);
   static const Color green3 = Color(0xffECFFEF);
   static const Color green4 = Color(0xff328F44);
   static const Color green5 = Color(0xffC1ECC8);
   static const Color green6 = Color(0xff1D9296);
-  static const Color green8=Color(0xFF4ABF61);
+  static const Color green8 = Color(0xFF4ABF61);
   static const Color red = Color(0xffA54040);
   static const Color green7 = Color(0xffE1FFE7);
   static const Color yellow1 = Color(0xffC5972C);
   static const Color yellow2 = Color(0xffFFFAE9);
-    static const Color darkBlue = Color(0xff004C68);
-    
-   static const Color secondary100 = Color(0xFFE2E0FF);
-      static const Color redText = Color(0xFFB63737);
-        static const Color versionColor = Color(0xFFC2C2C2);
-               static const Color lightgreen = Color(0xFFE6FFEB);
-    static const Color secGrey = Color(0xFFABB7C2);
-     static const Color greyButton = Color(0xFF529EC4);
-        static const Color discountRed = Color(0xFFD33528);
-        
-            static const Color serviceGreen = Color(0xFF2C8946);
-              static const Color serviceFillGreen = Color(0xFFCEFFE3);
-              static const Color servicedottedGreen = Color(0xFFB7F3D1);
-               static const Color luxuryTagFill = Color(0xFFFFF4DE);
-                 static const Color luxuryTagDotted = Color(0xFFEDDFC2);
-                 static const Color luxuryTagText = Color(0xFFD49100);
-                   static const Color shoeBagTagText = Color(0xFF3A43BE);
-                    static const Color shoeBagTagFill = Color(0xFFE0E2FF);
-                    static const Color shoeBagTagDotted = Color(0xFFC7CBFF);
-                     static const Color luxuryTextgradient1 = Color(0xFFFFCA2A);
-                            static const Color luxuryTextgradient2 = Color(0xFFBC941D);
+  static const Color darkBlue = Color(0xff004C68);
+  static const Color secondary100 = Color(0xFFE2E0FF);
+  static const Color redText = Color(0xFFB63737);
+  static const Color versionColor = Color(0xFFC2C2C2);
+  static const Color lightgreen = Color(0xFFE6FFEB);
+  static const Color secGrey = Color(0xFFABB7C2);
+  static const Color greyButton = Color(0xFF529EC4);
+  static const Color discountRed = Color(0xFFD33528);
+  static const Color serviceGreen = Color(0xFF2C8946);
+  static const Color serviceFillGreen = Color(0xFFCEFFE3);
+  static const Color servicedottedGreen = Color(0xFFB7F3D1);
+  static const Color luxuryTagFill = Color(0xFFFFF4DE);
+  static const Color luxuryTagDotted = Color(0xFFEDDFC2);
+  static const Color luxuryTagText = Color(0xFFD49100);
+  static const Color shoeBagTagText = Color(0xFF3A43BE);
+  static const Color shoeBagTagFill = Color(0xFFE0E2FF);
+  static const Color shoeBagTagDotted = Color(0xFFC7CBFF);
+  static const Color luxuryTextgradient1 = Color(0xFFFFCA2A);
+  static const Color luxuryTextgradient2 = Color(0xFFBC941D);
   static const Color activeGreen = Color(0xFFD1FFDA);
   static const Color activeStrokeGreen = Color(0xFFA1F9B2);
   static const Color activeTextGreen = Color(0xFF31B64B);
-  static const Color grey13=Color(0xFFD7DCCA);
-  static const Color filterBgColor=Color(0xFFF5FAFF);
-  static const Color dateColor=Color(0xFF959595);
-  static const Color violet=Color(0xFF2E008A);
-
-
-
+  static const Color grey13 = Color(0xFFD7DCCA);
+  static const Color filterBgColor = Color(0xFFF5FAFF);
+  static const Color dateColor = Color(0xFF959595);
+  static const Color violet = Color(0xFF2E008A);
 }

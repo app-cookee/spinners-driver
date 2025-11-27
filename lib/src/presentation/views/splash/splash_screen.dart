@@ -15,10 +15,13 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key,this.isFromNotification = false, this.bottomNavigationTabIndex = 0,this.orderId});
+  const SplashScreen({super.key,this.isFromNotification = false, this.bottomNavigationTabIndex = 0,this.orderId, this.pickupDriver, this.status, this.deliveryDriver});
   final bool isFromNotification;
   final int bottomNavigationTabIndex;
   final String? orderId;
+  final String? pickupDriver;
+  final String? status;
+  final String? deliveryDriver;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -80,7 +83,9 @@ class _SplashScreenState extends State<SplashScreen>
               );
             } else {
               context.router.pushAndPopUntil(
-                AppBottomNavigationRoute(selectedIndex: widget.bottomNavigationTabIndex,isFromNotification: widget.isFromNotification,orderId: widget.orderId),
+                AppBottomNavigationRoute(selectedIndex: widget.bottomNavigationTabIndex,isFromNotification: widget.isFromNotification,orderId: widget.orderId,pickupDriver: widget.pickupDriver,
+          status: widget.status,
+          deliveryDriver: widget.deliveryDriver,),
                 predicate: (_) => false,
               );
             }

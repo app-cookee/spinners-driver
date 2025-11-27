@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:spinners_driver/app/app_router/app_router.dart';
 import 'package:spinners_driver/app/theme/app_colors.dart';
 import 'package:spinners_driver/app/theme/app_typography.dart';
+import 'package:spinners_driver/src/application/auth_bloc/auth_bloc.dart';
 import 'package:spinners_driver/src/application/network_bloc/network_bloc.dart';
 import 'package:spinners_driver/src/presentation/constants/app_images.dart';
 import 'package:spinners_driver/src/presentation/views/home/home_view.dart';
@@ -17,10 +18,20 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 @RoutePage()
 class AppBottomNavigationView extends StatefulWidget {
-  const AppBottomNavigationView({super.key, required this.selectedIndex,this.isFromNotification = false,this.orderId});
+  const AppBottomNavigationView(
+      {super.key,
+      required this.selectedIndex,
+      this.isFromNotification = false,
+      this.orderId,
+      this.pickupDriver,
+      this.status,
+      this.deliveryDriver});
   final int selectedIndex;
   final bool isFromNotification;
   final String? orderId;
+  final String? pickupDriver;
+  final String? status;
+  final String? deliveryDriver;
   @override
   State<AppBottomNavigationView> createState() =>
       _AppBottomNavigationViewState();
@@ -54,8 +65,18 @@ class _AppBottomNavigationViewState extends State<AppBottomNavigationView> {
   //WHEN THERE IS AN ORDER ID, NAVIGATE TO ORDER DETAILS
     if (widget.orderId != null && widget.isFromNotification) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.router.push(OrderDetailRoute(
-            orderId: widget.orderId!));
+        if (widget.status == 'pickupScheduled' &&
+            widget.pickupDriver ==
+                context.read<AuthBloc>().state.appUser?.driverId) {
+          context.router.push(OrderDetailRoute(
+            orderId: widget.orderId ?? '',
+          ));
+        } else if (widget.status == 'readyForDelivery' &&
+            widget.deliveryDriver ==
+                context.read<AuthBloc>().state.appUser?.driverId) {
+          context.router.push(DeliveryOrderDetailRoute(
+              orderId: widget.orderId ?? '', refId: ''));
+        }
       });
     }
     super.initState();

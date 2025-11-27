@@ -267,7 +267,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
           Gap(6.dp),
           Text(
-            "Order ID : $orderRefId",
+            orderRefId.isNotEmpty ? "Order ID : $orderRefId" : "Order Details",
             style: AppTypography.sfProRoundedSemiBold.copyWith(
               fontSize: 16.dp,
               color: AppColors.neutral950,
