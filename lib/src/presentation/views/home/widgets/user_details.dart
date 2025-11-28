@@ -16,14 +16,14 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 class UserDetail extends StatefulWidget {
   final String avatar;
   final String name;
-  final String? pickupTime;
+  final String? nextActivity;
   final String profileImage;
 
   const UserDetail({
     super.key,
     required this.avatar,
     required this.name,
-    required this.pickupTime, required this.profileImage,
+    required this.nextActivity, required this.profileImage,
   });
 
   @override
@@ -171,9 +171,9 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                 fontSize: 16,
               ),
             ),
-            widget.pickupTime!=""?
+            widget.nextActivity!=""?
              Text(
-              'Next pickup at ${widget.pickupTime}',
+              'Next ${widget.nextActivity}',
                style: AppTypography.sfProRoundedRegular.copyWith(
                     color: AppColors.textGrey,
                     fontSize: 12.sp,

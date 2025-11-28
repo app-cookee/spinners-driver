@@ -38,6 +38,7 @@ class DeliveryOrderDetailScreen extends StatefulWidget {
 }
 
 class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
+  String refID = '';
   @override
   void initState() {
     context
@@ -59,6 +60,9 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                       children: [
                         BlocBuilder<DeliveryBloc, DeliveryState>(
                           builder: (context, state) {
+                            refID = state.orderDetails.refId.isNotEmpty
+                                ? state.orderDetails.refId
+                                : widget.refId;
                             return GestureDetector(
                                 onTap: () => Navigator.pop(context),
                                 child:
@@ -453,7 +457,7 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
                       child: DeliveryConfirmBottomsheet(
                         orderId: orderId,
                         totalCollected: totalAmount,
-                        orderRefId: widget.refId,
+                        orderRefId: refID,
                       ),
                     ),
                   );

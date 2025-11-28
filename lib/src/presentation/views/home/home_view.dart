@@ -274,8 +274,8 @@ Map<String, String> getTodayParams() {
               return Stack(
                 children: [
                   HomeAppbar(
-                      nextPickuptime:
-                          dashboardDataState.dashboardDataModel.nextActivityAt),
+                      nextActivity:
+                          dashboardDataState.dashboardDataModel.nextActivityAt.isNotEmpty ? "${dashboardDataState.dashboardDataModel.activityType} at ${dashboardDataState.dashboardDataModel.nextActivityAt}" : "",),
                   _scrollableContainer(),
                   Padding(
                       padding: EdgeInsets.only(top: 13.h),

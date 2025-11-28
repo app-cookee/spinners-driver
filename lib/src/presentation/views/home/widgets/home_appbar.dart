@@ -10,8 +10,8 @@ import 'package:spinners_driver/src/presentation/views/home/widgets/user_details
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class HomeAppbar extends StatefulWidget {
-  const HomeAppbar({super.key, required this.nextPickuptime});
-  final String? nextPickuptime;
+  const HomeAppbar({super.key, required this.nextActivity});
+  final String? nextActivity;
 
   @override
   State<HomeAppbar> createState() => _HomeAppbarState();
@@ -96,8 +96,8 @@ class _HomeAppbarState extends State<HomeAppbar> {
               ? user!.firstName[0]
               : "D",
           name: '${getUaeGreeting()}, ${user?.firstName ?? "Driver"} 👋',
-          pickupTime:  
-          widget.nextPickuptime.toString()
+          nextActivity:  
+          widget.nextActivity.toString()
         ),
       );
 
