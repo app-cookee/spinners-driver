@@ -303,9 +303,7 @@ _fetchOrders(currentOrderFilter, searchQuery: _currentSearchQuery, from: from, t
                             '${state.myordersList[index].customer?.user?.firstName??""}${state.myordersList[index].customer?.user?.lastName??""}':state.myordersList[index].customer?.user?.phoneNumber??"",
                             amount:  state.myordersList[index].totalAmount,
                             paymentMethod: 'Cash',
-                            address: state
-                                    .myordersList[index].selectedAddress?.place ??
-                                "",
+                            address: "${state.myordersList[index].selectedAddress?.houseNumber ?? ""},\n${state.myordersList[index].selectedAddress?.place ?? ""}",
                             refId: state.myordersList[index].refId.toString(),
                             orderId: state.myordersList[index].id,
 
@@ -323,13 +321,7 @@ _fetchOrders(currentOrderFilter, searchQuery: _currentSearchQuery, from: from, t
     ).first,
 
                             status: state.myordersList[index].status,
-                            isDropoff: 
-                        
-                              state.myordersList[index].statusHistory
-    .any((e) => e.status == 'pickedUp')
- 
-                                ? false
-                                : true,
+                            isDropoff: currentOrderFilter == _dropOff,
                             isQuickOrder:
                                 state.myordersList[index].type == "oneTapOrder"
                                     ? true

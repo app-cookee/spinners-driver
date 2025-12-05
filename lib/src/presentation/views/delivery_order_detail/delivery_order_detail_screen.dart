@@ -607,13 +607,25 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
               isActuallyCompleted: isStatusCompleted('delivered'),
               statusHistory: state.orderDetails.statusHistory,
               statusKey: 'delivered',
-              deliveryLocation: state.orderDetails.selectedAddress?.place,
+              deliveryLocation: formatAddress("${state.orderDetails.selectedAddress?.houseNumber}\n${state.orderDetails.selectedAddress?.place}"),
             ),
           ],
         ),
       ],
     );
   }
+
+  String formatAddress(String address) {
+  final cleaned = address
+      .split('\n')
+      .where((line) => line.trim().isNotEmpty)
+      .map((line) => line.trim())
+      .toList();
+
+  if (cleaned.length <= 1) return cleaned.join('');
+
+  return "${cleaned.first},\n${cleaned.sublist(1).join('\n')}";
+}
 
   Widget _buildStatusSection({
     required String dateString,
@@ -646,11 +658,14 @@ class _DeliveryOrderDetailScreenState extends State<DeliveryOrderDetailScreen> {
         ),
         if (!isCompleted && deliveryLocation != null) ...[
           Gap(4.dp),
-          Text(
-            "Delivery Location: $deliveryLocation",
-            style: AppTypography.sfProRoundedRegular.copyWith(
-              fontSize: 12.dp,
-              color: AppColors.neutral500,
+          SizedBox(
+            width: 65.w,
+            child: Text(
+              "Address: $deliveryLocation",
+              style: AppTypography.sfProRoundedRegular.copyWith(
+                fontSize: 12.dp,
+                color: AppColors.neutral500,
+              ),
             ),
           ),
           Gap(6.dp),

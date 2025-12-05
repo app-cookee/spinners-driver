@@ -140,7 +140,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                           ? _calculatePickupTime(state)
                                           : _calculatePickupTime(state),
                                   address: formatAddress(
-                                      state.orderDetails.selectedAddress.place),
+                                      "${state.orderDetails.selectedAddress.houseNumber}\n${state.orderDetails.selectedAddress.place}"),
                                   status: state.orderDetails.status,
                                   onNavigateTap: () {
                                     final lat = state
@@ -379,13 +379,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
   }
 }
-
 String formatAddress(String address) {
-  return address
-      .split('\n') // Split by newlines
-      .where((line) => line.trim().isNotEmpty) // Remove empty lines
-      .map((line) => line.trim()) // Trim whitespace from each line
-      .join(', '); // Join with commas
+  final cleaned = address
+      .split('\n')
+      .where((line) => line.trim().isNotEmpty)
+      .map((line) => line.trim())
+      .toList();
+
+  if (cleaned.length <= 1) return cleaned.join('');
+
+  return "${cleaned.first},\n${cleaned.sublist(1).join('\n')}";
 }
 
 String _getCustomerName(Customer customer) {

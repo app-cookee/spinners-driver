@@ -18,118 +18,114 @@ class StatusHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Column(
+        Row(
+          spacing: 8,
+          children: [
+            Image.asset(
+              status == "pickedUp" ?
+              AppImages.orderStatus
+              :AppImages.arrowup, height: 40.dp, width: 40.dp,),
+            _buildStatusSection(
+              title: title,
+              expectedSlot: timeSlot,
+            ),
+          ],
+        ),
+        if (status != "pickedUp") ... [
+          Gap(4.dp),
+          SizedBox(
+            width: 65.w,
+            child: Text(
+              "Address: $address",
+            style: AppTypography.sfProRoundedRegular.copyWith(
+              fontSize: 12.sp,
+              color: AppColors.neutral500,
+            ),
+          ),
+        ),
+        Gap(4.dp),
+        Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              spacing: 8,
-              children: [
-                Image.asset(
-                  status == "pickedUp" ?
-                  AppImages.orderStatus
-                  :AppImages.arrowup, height: 40.dp, width: 40.dp,),
-                _buildStatusSection(
-                  title: title,
-                  expectedSlot: timeSlot,
+            InkWell(
+              onTap: (){
+                onNavigateTap();
+              },
+              child: Container(
+                width:
+                    //  56.w,
+                    ((100.w - 32.dp) / 212) * 100,
+                padding: EdgeInsets.symmetric(vertical: 8.dp),
+                decoration: BoxDecoration(
+                  color: AppColors.blue1,
+                  borderRadius: BorderRadius.circular(8.dp),
+                  border: Border.all(color: AppColors.primaryColor),
                 ),
-              ],
-            ),
-            if (status != "pickedUp") ... [
-              Gap(4.dp),
-              SizedBox(
-                width: 65.w,
-                child: Text(
-                  "Pickup Location: $address",
-                style: AppTypography.sfProRoundedRegular.copyWith(
-                  fontSize: 12.sp,
-                  color: AppColors.neutral500,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      AppImages.mapIcon,
+                      height: 20.dp,
+                      width: 20.dp,
+                      fit: BoxFit.cover,
+                    ),
+                    Gap(4.dp),
+                    Text("Navigate", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 14.sp, color: AppColors.primaryColor)),
+                  ],
                 ),
               ),
             ),
             Gap(4.dp),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                InkWell(
-                  onTap: (){
-                    onNavigateTap();
-                  },
-                  child: Container(
-                    width:
-                        //  56.w,
-                        ((100.w - 32.dp) / 212) * 100,
-                    padding: EdgeInsets.symmetric(vertical: 8.dp),
-                    decoration: BoxDecoration(
-                      color: AppColors.blue1,
-                      borderRadius: BorderRadius.circular(8.dp),
-                      border: Border.all(color: AppColors.primaryColor),
+            InkWell(
+              onTap: () {
+                onCallTap();
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.dp),
+                  border: Border.all(color: AppColors.greyColor),
+                ),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      AppImages.phoneIcon,
+                      height: 20.dp,
+                      width: 20.dp,
+                      fit: BoxFit.cover,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          AppImages.mapIcon,
-                          height: 20.dp,
-                          width: 20.dp,
-                          fit: BoxFit.cover,
-                        ),
-                        Gap(4.dp),
-                        Text("Navigate", style: AppTypography.sfProRoundedSemiBold.copyWith(fontSize: 14.sp, color: AppColors.primaryColor)),
-                      ],
-                    ),
+                  ],
+                ),
+              ),
+            ),
+            Gap(4.dp),
+            InkWell(
+              onTap: () {
+                onWhatsAppTap();
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.dp),
+                  border: Border.all(color: AppColors.greyColor),
+                ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    AppImages.whatsapp,
+                    height: 20.dp,
+                    width: 20.dp,
+                    fit: BoxFit.cover,
                   ),
-                ),
-                Gap(4.dp),
-                InkWell(
-                  onTap: () {
-                    onCallTap();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.dp),
-                      border: Border.all(color: AppColors.greyColor),
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          AppImages.phoneIcon,
-                          height: 20.dp,
-                          width: 20.dp,
-                          fit: BoxFit.cover,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Gap(4.dp),
-                InkWell(
-                  onTap: () {
-                    onWhatsAppTap();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.dp),
-                      border: Border.all(color: AppColors.greyColor),
-                    ),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        AppImages.whatsapp,
-                        height: 20.dp,
-                        width: 20.dp,
-                        fit: BoxFit.cover,
-                      ),
-                    ],
-                  ),
-                ),
-                ),
-              ],
-            )]
+                ],
+              ),
+            ),
+            ),
           ],
-        ),
+        )]
       ],
     );
   }

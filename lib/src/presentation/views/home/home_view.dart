@@ -383,7 +383,7 @@ Map<String, String> getTodayParams() {
                               }
                                         return OrderCard(lat:state.ordersList[index].selectedAddress?.latitude??"" ,lon:state.ordersList[index].selectedAddress?.longitude??"" ,
                                           isExpressService: state.ordersList[index].expressService,
-                                          address: state.ordersList[index].selectedAddress?.place ?? "",
+                                          address: "${state.ordersList[index].selectedAddress?.houseNumber},\n${state.ordersList[index].selectedAddress?.place}",
                                           refId: state.ordersList[index].refId.toString(),
                                           orderId: state.ordersList[index].id,
                                           time: getOrderDisplayDate(state.ordersList[index]),
