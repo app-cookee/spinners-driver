@@ -58,7 +58,7 @@ class _ScanNewBagBottomsheetState extends State<ScanNewBagBottomsheet> {
     super.initState();
 
 log(widget.serviceMenuId.toString(),name: "service mednuid");
-    context.read<OrderBloc>().add( OrderEvent.getServicesList(limit: 100, skip: 0,serviceMenuId: widget.serviceMenuId));
+    _loadServices();
     // Auto-fill bag ID if provided
     if (widget.bagId != null) {
       bagIdController.text = widget.bagId!;
@@ -75,6 +75,19 @@ log(widget.serviceMenuId.toString(),name: "service mednuid");
 
     // Log widget parameters for debugging
     log('Widget initialized with: isQuickOrder=${widget.isQuickOrder}, orderId=${widget.orderId}, serviceId=${widget.serviceId}');
+  }
+
+  void _loadServices() {
+    final order = context.read<OrderBloc>().state.orderDetails;
+    final storeId = order.orderedFrom == 'manualEntry' && order.type == 'oneTapOrder'
+        ? order.storeId
+        : null;
+    context.read<OrderBloc>().add(OrderEvent.getServicesList(
+      limit: 100,
+      skip: 0,
+      serviceMenuId: widget.serviceMenuId,
+      storeId: storeId,
+    ));
   }
 
   @override
@@ -235,7 +248,7 @@ log(widget.serviceMenuId.toString(),name: "service mednuid");
               else if (hasError)
                 GestureDetector(
                   onTap: () {
-                    context.read<OrderBloc>().add( OrderEvent.getServicesList(limit: 100, skip: 0,serviceMenuId: widget.serviceMenuId));
+                    _loadServices();
                   },
                   child: Container(
                     width: double.infinity,

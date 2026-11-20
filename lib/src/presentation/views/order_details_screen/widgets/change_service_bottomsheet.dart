@@ -55,13 +55,25 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
     super.initState();
     
     // Load services list
-    context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
+    _loadServices();
     
     // Auto-fill bag ID if provided
     if (widget.bagId != null) {
       bagIdController.text = widget.bagId!;
       log('Auto-filled bag ID: ${widget.bagId}');
     }
+  }
+
+  void _loadServices() {
+    final order = context.read<OrderBloc>().state.orderDetails;
+    final storeId = order.orderedFrom == 'manualEntry' && order.type == 'oneTapOrder'
+        ? order.storeId
+        : null;
+    context.read<OrderBloc>().add(OrderEvent.getServicesList(
+      limit: 100,
+      skip: 0,
+      storeId: storeId,
+    ));
   }
 
   @override
@@ -348,7 +360,7 @@ class _ChangeServiceBottomsheetState extends State<ChangeServiceBottomsheet> {
               else if (hasError)
                 GestureDetector(
                   onTap: () {
-                    context.read<OrderBloc>().add(const OrderEvent.getServicesList(limit: 100, skip: 0));
+                    _loadServices();
                   },
                   child: Container(
                     width: double.infinity,
